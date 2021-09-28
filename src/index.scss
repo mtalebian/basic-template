@@ -1,0 +1,172 @@
+//@import "../node_modules/react-basic-design/dist/index.scss";
+@import "node_modules/react-basic-design/dist/index.scss";
+
+@import "./components/scss/input.scss";
+@import "./components/scss/table.scss";
+@import "./components/scss/utils.scss";
+@import "./components/basic/table/basic-table.scss";
+
+/*
+    Layout
+*/
+.theme-light {
+    .header > .appbar-default {
+        box-shadow: none;
+        border-bottom: 1px solid #ddd;
+        //background-color: #f5f5f5;
+    }
+    main.content {
+        background-color: #f6f6f6;
+    }
+}
+
+/*
+*/
+.Toastify__toast {
+    font-family: inherit !important;
+}
+
+.modal-header {
+    border-bottom: none;
+}
+
+.theme-dark {
+    $palette: map-get($theme, dark);
+    $text: map-get($palette, text);
+    $bg: map-get($palette, bg);
+
+    .modal {
+        .modal-backdrop {
+            opacity: 0.65;
+        }
+        .modal-content {
+            color: $text;
+            background-color: mix($text, $bg, 12%);
+            border: 1px solid mix($text, $bg, 25%);
+        }
+    }
+}
+
+/*
+    Sidebar
+*/
+
+.theme-light {
+    .sidebar {
+        background-color: #242830;
+        background-color: #eaeaea;
+        background-color: #1a1e22;
+        //box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.3);
+        box-shadow: 0 0 3px 1px #ccc;
+        //border: 1px solid #ddd;
+        z-index: 10000;
+
+        .sidebar-content {
+            @include scrollbar(5px, #777);
+        }
+    }
+}
+
+.theme-dark {
+    .sidebar {
+        background-color: #1a1e22;
+        box-shadow: 0 0 5px 1px #333;
+        z-index: 10000;
+
+        .sidebar-content {
+            @include scrollbar(5px, #777);
+        }
+    }
+}
+
+/*
+landing
+*/
+
+.landing {
+    color: #333;
+
+    .appbar-default {
+        color: inherit !important;
+    }
+}
+
+.features {
+    background-color: #fff;
+    color: #333;
+    p {
+        padding: 20px 0 30px 0;
+    }
+}
+
+.page-footer {
+    padding: 40px 0 20px 0;
+    text-align: center;
+    color: #ccc;
+    background-color: #333;
+
+    .links {
+        padding: 0;
+
+        li {
+            display: inline-block;
+            list-style: none;
+            padding: 5px 10px;
+            a {
+                color: #acf;
+                text-decoration: none;
+
+                &:hover {
+                    color: #fff;
+                }
+            }
+        }
+    }
+}
+
+/*
+Main Tab
+*/
+.main-tab {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    .nav-link {
+        border: none;
+        background-color: transparent !important;
+    }
+
+    .nav-link.active {
+        border-bottom: 3px solid currentColor;
+    }
+}
+
+@mixin main-tab-theme($palette) {
+    $text: map-get($palette, text);
+    $bg: map-get($palette, bg);
+    $border: rgba($text, 0.17);
+
+    $primary-palette: map-get($palette, primary);
+    $primary: map-get($primary-palette, main);
+    $primary-text: map-get($primary-palette, text);
+
+    .main-tab {
+        background-color: $bg;
+        border-bottom: 1px solid $border;
+        .nav-link {
+            color: $text;
+        }
+        .nav-link.active {
+            color: $primary;
+        }
+    }
+}
+
+.theme-light {
+    @include main-tab-theme(map-get($theme, light));
+}
+
+.theme-dark {
+    @include main-tab-theme(map-get($theme, dark));
+}

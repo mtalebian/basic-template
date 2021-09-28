@@ -1,0 +1,14 @@
+$sidebar-width: 280px !default;
+$sidebar-collapsed-width: 80px !default;
+
+$header-height: 64px !default;
+$footer-height: 64px !default;
+
+$breakpoint-xs: 480px !default;
+$breakpoint-sm: 576px !default;
+$breakpoint-md: 768px !default;
+$breakpoint-lg: 992px !default;
+$breakpoint-xl: 1200px !default;
+$breakpoint-xxl: 1600px !default;
+
+$breakpoints: ( "break-point-xs": $breakpoint-xs, "break-point-sm": $breakpoint-sm, "break-point-md": $breakpoint-md, "break-point-lg": $breakpoint-lg, "break-point-xl": $breakpoint-xl, "break-point-xxl": $breakpoint-xxl, );

@@ -1,0 +1,24 @@
+﻿using Accounts.Core;
+using Accounts.Services;
+
+namespace Microsoft.Extensions.DependencyInjection
+{
+    public static class DependencyInjection
+    {
+        public static void AddMenuService(this IServiceCollection services) 
+        {
+            services.AddScoped<IMenuService, MenuService>();
+        }
+
+        public static void AddWindowsAccountsService<TUser>(this IServiceCollection services) where TUser : User
+        {
+            services.AddScoped<IAuthenticationService<TUser>, WindowsAuthenticationService<TUser>>();
+        }
+
+        public static void AddFormAccountsService<TUser>(this IServiceCollection services) where TUser : User
+        {
+            services.AddScoped<IAuthenticationService<TUser>, FormAuthenticationService<TUser>>();
+        }
+
+    }
+}

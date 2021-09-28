@@ -1,0 +1,47 @@
+$sidebar-width: 250px;
+$sidebar-collapsed-width: 70px;
+$header-height: auto;
+$footer-height: auto;
+
+$breakpoint-xs: 480px !default;
+$breakpoint-sm: 576px !default;
+$breakpoint-md: 768px !default;
+$breakpoint-lg: 992px !default;
+$breakpoint-xl: 1200px !default;
+$breakpoint-xxl: 1600px !default;
+
+@import "./css-pro-layout.scss";
+@import "./sidebar.scss";
+
+
+
+html,
+body,
+#root {
+    height: 100%;
+    margin: 0;
+}
+
+
+.layout {
+    max-height: 100%;
+
+    .sidebar.collapsed:hover {
+        width: $sidebar-width;
+        min-width: $sidebar-width;
+    }
+
+    .layout {
+        overflow: auto;
+    }
+
+    &.has-sidebar > main.content {
+        overflow: auto;
+    }
+
+    &.scrollable-content > main.content,
+    &.scrollable-content > .layout.has-sidebar > .layout > main.content,
+    &.scrollable-content > .layout > main.content {
+        overflow: auto;
+    }
+}

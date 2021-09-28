@@ -1,0 +1,42 @@
+@mixin input-focus-effect($palette, $light-theme) {
+    $text: map-get($palette, text);
+    $bg: map-get($palette, bg);
+
+    $primary-palette: map-get($palette, primary);
+    $primary: map-get($primary-palette, main);
+
+    $secondary-palette: map-get($palette, secondary);
+    $secondary: map-get($secondary-palette, main);
+
+    $border: mix($text, $bg, 20%);
+    $hover: $bg;
+    $focus-border: mix($bg, $primary, 40%); //#86b7fe
+
+    input[type="text"],
+    input[type="password"],
+    textarea {
+        @if $light-theme {
+        } @else {
+            $bg: mix($text, $bg, 7%);
+        }
+
+        background-color: $bg;
+        color: $text;
+        border-color: $border;
+
+        &:focus {
+            background-color: $bg !important;
+            color: $text;
+            border-color: $focus-border;
+            box-shadow: 0 0 0 0.25rem rgba($primary, 0.2);
+        }
+    }
+}
+
+.theme-light {
+    @include input-focus-effect(map-get($theme, light), true);
+}
+
+.theme-dark {
+    @include input-focus-effect(map-get($theme, dark), false);
+}

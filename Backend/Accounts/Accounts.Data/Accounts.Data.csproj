@@ -1,0 +1,53 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup Label="Globals">
+    <SccProjectName>SAK</SccProjectName>
+    <SccProvider>SAK</SccProvider>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccLocalPath>SAK</SccLocalPath>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="5.0.9" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="5.0.9">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="5.0.9" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="5.0.9" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="5.0.9">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Common\Common.csproj" />
+    <ProjectReference Include="..\Accounts.Core\Accounts.Core.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="0\Menu\" />
+    <Folder Include="0\" />
+    <Folder Include="0\Authorization\" />
+    <Folder Include="0\AzField\" />
+    <Folder Include="0\AzObjectField\" />
+    <Folder Include="0\AzObject\" />
+    <Folder Include="0\AzValue\" />
+    <Folder Include="0\CompositeRole\" />
+    <Folder Include="0\MenuFolder\" />
+    <Folder Include="0\Project\" />
+    <Folder Include="0\Role\" />
+    <Folder Include="0\TCode\" />
+    <Folder Include="0\UserAgent\" />
+    <Folder Include="0\UserCompositeRole\" />
+    <Folder Include="0\UserRole\" />
+    <Folder Include="0\UserSession\" />
+    <Folder Include="0\User\" />
+  </ItemGroup>
+
+</Project>

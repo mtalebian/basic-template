@@ -1,0 +1,46 @@
+@mixin apply-scrollbar($size: 6px, $bg) {
+    &::-webkit-scrollbar {
+        width: $size;
+        height: $size;
+    }
+    /* Track */
+    &::-webkit-scrollbar-track {
+        background: transparent;
+    }
+    /* Handle */
+    &::-webkit-scrollbar-thumb {
+        border-radius: 3px;
+        background: $bg;
+    }
+    /* Handle on hover */
+    &::-webkit-scrollbar-thumb:hover {
+        background: $bg;
+    }
+}
+
+/*
+*/
+@mixin nano-scroll($palette) {
+    $text: map-get($palette, text);
+    $bg: map-get($palette, bg);
+
+    $primary-palette: map-get($palette, primary);
+    $primary: map-get($primary-palette, main);
+
+    $secondary-palette: map-get($palette, secondary);
+    $secondary: map-get($secondary-palette, main);
+
+    .nano-scroll {
+        $c: mix($text, $bg, 25%);
+        @include apply-scrollbar(7px, $c);
+        //border: 1px solid mix($text, $bg, 14%);
+    }
+}
+
+.theme-light {
+    @include nano-scroll(map-get($theme, light));
+}
+
+.theme-dark {
+    @include nano-scroll(map-get($theme, dark));
+}

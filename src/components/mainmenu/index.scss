@@ -1,0 +1,237 @@
+
+/*FIRST OF ALL: FIX  'react-slidedown' */
+.react-slidedown {
+    overflow: hidden
+}
+
+
+.mainmenu {
+    padding: 0;
+    margin: 0;
+    line-height: 1;
+    font-size: 14px;
+    white-space: nowrap;
+    // ROOT
+    & > li.mi-folder > .mi-item > a {
+        //font-weight: bold;
+        padding: 25px 20px 10px 20px;
+        font-size: .8rem
+    }
+
+    .mi-item {
+        position: relative;
+    }
+
+    ul {
+        padding: 0;
+    }
+
+    li {
+        list-style: none;
+    }
+    /* SUB FOLDERS */
+    div {
+        transition: all 0.25s;
+    }
+    /* INDENTION */
+    li li li a {
+        [dir=rtl] &, .rtl & {
+            margin-right: 1rem;
+        }
+
+        [dir=ltr] &, .ltr & {
+            margin-left: 1rem;
+        }
+
+        .collapsed & {
+            margin: 0;
+        }
+    }
+    /* MENU-ITEM */
+    a {
+        display: flex;
+        align-items: center;
+        text-decoration: none;
+        transition: all 0.25s;
+
+        [dir=rtl] &, .rtl & {
+            padding: .5rem 1rem .5rem 5px;
+        }
+
+        [dir=ltr] &, .ltr & {
+            padding: .5rem 5px .5rem 1rem;
+        }
+    }
+    /* ICON */
+    i {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        width: 35px;
+        height: 35px;
+        border-radius: 5px;
+        transition: all 0.25s;
+
+        [dir=rtl] &, .rtl & {
+            margin-left: 6px;
+        }
+
+        [dir=ltr] &, .ltr & {
+            margin-right: 6px;
+        }
+    }
+
+    ul ul i {
+        width: 28px;
+        height: 28px;
+    }
+    /* TEXT */
+    span {
+        flex: 1;
+        transition: all 0.25s;
+    }
+
+    .mi-active {
+        &:before {
+            content: "";
+            position: absolute;
+            top: 0;
+            width: 3px;
+            height: 100%;
+            background: #0094f2;
+
+            [dir=rtl] &, .rtl & {
+                right: 0;
+            }
+
+            [dir=ltr] &, .ltr & {
+                left: 0;
+            }
+        }
+    }
+    /* BADGE */
+    .mi-badge {
+        transition: all 0.25s;
+    }
+    /* CARET */
+    b {
+        transition: all 0.25s;
+
+        [dir=rtl] &, .rtl & {
+            transform: rotateZ(0);
+        }
+
+        [dir=ltr] &, .ltr & {
+            transform: rotateZ(-180deg);
+        }
+    }
+
+    .mi-open b {
+        transform: rotateZ(-90deg);
+    }
+
+    .sidebar.collapsed & {
+        span, b {
+            opacity: 0;
+        }
+    }
+
+    .sidebar.collapsed:hover & {
+        span, b {
+            opacity: 1;
+        }
+    }
+}
+
+
+
+
+.mainmenu-light {
+    // ROOT
+    & > li.mi-folder > .mi-item > a {
+        color: #89a;
+    }
+    // MENU
+    a {
+        color: #444;
+
+        &:hover {
+            color: #000;
+        }
+    }
+    // ICON
+    & > li > .mi-item > a > i,
+    & > li > div > ul > li > .mi-item > a > i {
+        background-color: rgba(0,50,100, 0.08);
+    }
+
+    svg {
+        fill: #555;
+    }
+    /* ACTIVE & HOVER */
+    a.mi-active, a.mi-active svg {
+        color: #06f;
+        fill: #06f;
+    }
+
+    a.mi-active i,
+    a:hover > i {
+        background-color: rgba(50,150,255, 0.3) !important;
+    }
+    // SUB FOLDER - BG
+    li {
+        ul {
+            ul {
+                background-color: rgba(0,0,0, .06);
+            }
+        }
+    }
+}
+
+
+
+
+
+.mainmenu-dark {
+    // ROOT
+    & > li.mi-folder > .mi-item > a {
+        color: #89a;
+    }
+    // MENU
+    a {
+        color: #ccc;
+
+        &:hover {
+            color: #fff;
+        }
+    }
+    // ICON
+    & > li > .mi-item > a > i,
+    & > li > div > ul > li > .mi-item > a > i {
+        background-color: rgba(150,150,150, 0.16);
+    }
+
+    svg {
+        fill: #ABAEB0;
+    }
+    /* ACTIVE & HOVER */
+    a.mi-active, a.mi-active svg {
+        color: #5cf;
+        fill: #5cf;
+    }
+
+    a.mi-active i,
+    a:hover > i {
+        background-color: rgba(50,150,255, 0.4) !important;
+        background-color: rgba(50,150,255, 0.4) !important;
+    }
+    // SUB FOLDER - BG
+    li {
+        ul {
+            ul {
+                background-color: rgba(150, 150, 150, 0.08);
+            }
+        }
+    }
+}

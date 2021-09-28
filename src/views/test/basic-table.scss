@@ -1,0 +1,66 @@
+$bt-bg-header: #f2f5f5;
+$bt-border: #ccc;
+
+.basic-table-wrapper {
+    position: relative;
+    clear: both;
+}
+
+.basic-table {
+    overflow: auto;
+    //border: 1px solid #555;
+
+    & > table {
+        border-spacing: 0;
+        border: 1px solid $bt-border;
+
+        thead,
+        tfoot {
+            background-color: $bt-bg-header;
+        }
+
+        tfoot {
+            border-top: 1px solid $bt-border;
+        }
+
+        tr {
+            &:last-child {
+                td {
+                    border-bottom: 0;
+                }
+            }
+        }
+
+        th,
+        td {
+            margin: 0;
+            padding: 0.5rem;
+            border-bottom: 1px solid $bt-border;
+            border-right: 1px solid $bt-border;
+
+            &:last-child {
+                border-right: 0;
+            }
+        }
+
+        tbody {
+            input,
+            select {
+                font-size: 1rem;
+                padding: 0;
+                margin: 0;
+                border: 0;
+            }
+        }
+    }
+}
+
+.basic-table-statusbar {
+}
+
+.basic-table-info {
+}
+
+.basic-table-pagination {
+    padding: 0.5rem;
+}

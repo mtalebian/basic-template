@@ -1,0 +1,2 @@
+﻿Add-Migration -StartupProject Accounts.Migrations
+Update-Database

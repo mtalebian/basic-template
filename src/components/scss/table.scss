@@ -1,0 +1,41 @@
+@mixin table($palette) {
+    $text: map-get($palette, text);
+    $bg: map-get($palette, bg);
+
+    $primary-palette: map-get($palette, primary);
+    $primary: map-get($primary-palette, main);
+
+    $secondary-palette: map-get($palette, secondary);
+    $secondary: map-get($secondary-palette, main);
+
+    .table {
+        border-color: mix($text, $bg, 20%);
+        //background-color: $bg;
+        td,
+        th {
+            color: $text !important;
+        }
+
+        thead th {
+            background-color: mix($text, $bg, 10%);
+        }
+
+        tbody > tr:hover td {
+            background-color: mix($text, $bg, 5%);
+        }
+
+        tbody > tr.table-selected > td {
+            $c: mix($text, $primary, 15%);
+            $c: mix($bg, $c, 90%);
+            background-color: $c;
+        }
+    }
+}
+
+.theme-light {
+    @include table(map-get($theme, light));
+}
+
+.theme-dark {
+    @include table(map-get($theme, dark));
+}
