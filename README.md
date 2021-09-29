@@ -1,6 +1,6 @@
-# Basic UI Design
+# Basic Template
 
-Bootstrap components inspired from material ui.
+A real web application template.
 
 ## Guidelines
 
