@@ -57,13 +57,7 @@ export function TableDesignerEditGroup({ group, onChanged }) {
                     render={({ handleSubmit, submitting, invalid }) => (
                         <form onSubmit={handleSubmit} className="ltr">
                             <div>
-                                <FinalField
-                                    name="title"
-                                    label="Group Title:"
-                                    type="text"
-                                    autoComplete="off"
-                                    autoFocus
-                                />
+                                <FinalField name="title" label="Group Title:" type="text" autoComplete="off" autoFocus />
                             </div>
 
                             <div className="mt-4">
@@ -94,25 +88,12 @@ export function TableDesignerEditGroup({ group, onChanged }) {
                                             <br />
                                             Are you sure?
                                             <div className="pt-2 text-end">
-                                                <bs.Button
-                                                    variant="text"
-                                                    type="button"
-                                                    color="primary"
-                                                    onClick={hide}
-                                                    className="m-e-2"
-                                                >
+                                                <bs.Button variant="text" type="button" color="primary" onClick={hide} className="m-e-2">
                                                     Cancel
                                                 </bs.Button>
 
-                                                <bs.Button
-                                                    type="button"
-                                                    color="secondary"
-                                                    disabled={deleting}
-                                                    onClick={onDeleteClick}
-                                                >
-                                                    {deleting && (
-                                                        <div className="m-e-2 spinner-border spinner-border-sm"></div>
-                                                    )}
+                                                <bs.Button type="button" color="secondary" disabled={deleting} onClick={onDeleteClick}>
+                                                    {deleting && <div className="m-e-2 spinner-border spinner-border-sm"></div>}
                                                     <span>DELETE</span>
                                                 </bs.Button>
                                             </div>

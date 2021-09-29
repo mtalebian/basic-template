@@ -15,9 +15,13 @@ import SvgEdit from "../../../assets/icons/Edit";
 //
 export function TableDesignerApp() {
     const [groups, setGroups] = useState([]);
-    const [group, setGroup] = useState(null);
+    const [group, setGroup0] = useState(null);
     const [table, setTable] = useState(null);
     const [column, setColumn] = useState(null);
+
+    function setGroup(v) {
+        setGroup0(v);
+    }
 
     function goBack() {
         if (column) {
@@ -29,7 +33,6 @@ export function TableDesignerApp() {
     }
 
     const refresh = () => {
-        goBack();
         tableDesignerApi.getGroups().then((x) => setGroups(x));
     };
 

@@ -46,7 +46,7 @@ export function MainLayout({ component: Comp, ...props }) {
                         <h5 className="appbar-title">{settings.title}</h5>
 
                         {Comp.Appbar}
-                        <bs.Badge value={2} overlapCircle className="bg-warning text-dark d-none d-sm-block">
+                        <bs.Badge value={2} overlapCircle className="bg-warning text-dark d-none d-sm-flex">
                             <bs.Button variant="icon" color="default" className="d-none d-sm-block">
                                 <SvgNotificationsActive />
                             </bs.Button>

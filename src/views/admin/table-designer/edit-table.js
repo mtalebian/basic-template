@@ -2,16 +2,15 @@ import React, { useState } from "react";
 import { Form } from "react-final-form";
 
 import { FinalCheck, FinalField } from "../../../components/basic/final-form";
-import * as bs from "react-basic-design";
-import * as tables from "../../../data";
+import * as bd from "react-basic-design";
+import * as icons from "../../../assets/icons";
 import { BasicModal } from "../../../components/basic/basic-modal";
 
 import { messages } from "../../../components/messages";
 import classNames from "classnames";
 import { tableDesignerApi } from "../../../api/table-designer-api";
 import { notify } from "../../../components/basic/notify";
-import { tableMessages } from "../../../components/basic/table/table-messages";
-import { BasicTable } from "../../../components/basic/table/basic-table";
+import { Table } from "../../../components/table";
 
 //
 export function TableDesignerEditTable({ table, group, onChanged }) {
@@ -20,6 +19,7 @@ export function TableDesignerEditTable({ table, group, onChanged }) {
     const [deleting, setDeleting] = useState(false);
     const [showDeletingGroup, setShowDeletingGroup] = useState(false);
     const insertMode = !table.name;
+    const tableRef = React.useRef();
 
     const onSubmit = (values) => {
         setLoading(true);
@@ -52,6 +52,29 @@ export function TableDesignerEditTable({ table, group, onChanged }) {
             });
     };
 
+    const table_columns = React.useMemo(
+        () => [
+            { Header: "Id", accessor: "id" },
+            { Header: "Name", accessor: "name" },
+            { Header: "Expression", accessor: "expression" },
+            { Header: "Alias", accessor: "alias" },
+            { Header: "Title", accessor: "tile" },
+            { Header: "IsPK", accessor: "isPk" },
+            { Header: "IsRequired", accessor: "isRequired" },
+            { Header: "DefaultValue", accessor: "defaultValue" },
+            { Header: "ToggleOnClick", accessor: "toggleOnClick" },
+            { Header: "Editor", accessor: "editor" },
+            { Header: "ValidValues", accessor: "validValues" },
+            { Header: "CellStyle", accessor: "cellStyle" },
+            { Header: "CellClassName", accessor: "cellClassName" },
+            { Header: "HiddenInTable", accessor: "hiddenInTable" },
+            { Header: "HiddenInEditor", accessor: "hiddenInEditor" },
+            { Header: "Category", accessor: "category" },
+            { Header: "Dir", accessor: "dir" },
+        ],
+        []
+    );
+
     return (
         <div className="container">
             <div className="mt-4" style={{ maxWidth: 500 }}>
@@ -72,12 +95,12 @@ export function TableDesignerEditTable({ table, group, onChanged }) {
                                 <div className="col-md-3"></div>
                                 <div className="col-md-9">
                                     <div>
-                                        <bs.Button color="primary" type="submit" disabled={loading || deleting || invalid}>
+                                        <bd.Button color="primary" type="submit" disabled={loading || deleting || invalid}>
                                             {loading && <div className="m-e-2 spinner-border spinner-border-sm"></div>}
                                             <span>Save Table</span>
-                                        </bs.Button>
+                                        </bd.Button>
 
-                                        <bs.Button
+                                        <bd.Button
                                             className={classNames("mx-2", {
                                                 "d-none": !group.id,
                                             })}
@@ -88,7 +111,7 @@ export function TableDesignerEditTable({ table, group, onChanged }) {
                                         >
                                             {deleting && <div className="m-e-2 spinner-border spinner-border-sm"></div>}
                                             <span>DELETE</span>
-                                        </bs.Button>
+                                        </bd.Button>
                                     </div>
                                 </div>
                             </div>
@@ -102,14 +125,14 @@ export function TableDesignerEditTable({ table, group, onChanged }) {
                                         <br />
                                         Are you sure?
                                         <div className="pt-2 text-end">
-                                            <bs.Button variant="text" type="button" color="primary" onClick={hide} className="m-e-2">
+                                            <bd.Button variant="text" type="button" color="primary" onClick={hide} className="m-e-2">
                                                 Cancel
-                                            </bs.Button>
+                                            </bd.Button>
 
-                                            <bs.Button type="button" color="secondary" disabled={deleting} onClick={onDeleteClick}>
+                                            <bd.Button type="button" color="secondary" disabled={deleting} onClick={onDeleteClick}>
                                                 {deleting && <div className="m-e-2 spinner-border spinner-border-sm"></div>}
                                                 <span>DELETE</span>
-                                            </bs.Button>
+                                            </bd.Button>
                                         </div>
                                     </>
                                 )}
@@ -120,16 +143,57 @@ export function TableDesignerEditTable({ table, group, onChanged }) {
             </div>
 
             <div className={`overflow-auto nano-scroll ${insertMode ? "d-none" : ""}`}>
-                <BasicTable
-                    title="Columns"
-                    singularTitle="Columns"
-                    columns={tables.columns.getReactTableColumns()}
+                <bd.TableTitlebar
+                    title="My Table"
+                    tableRef={tableRef}
+                    fixed
+                    buttons={
+                        <>
+                            <bd.Button variant="icon" size="md">
+                                <icons.Add />
+                            </bd.Button>
+                            <bd.Button variant="icon" size="md">
+                                <icons.Delete />
+                            </bd.Button>
+                        </>
+                    }
+                />
+
+                <Table
+                    //className="w-100"
+                    columns={table_columns}
+                    //defaultColumn={defaultColumn}
                     data={columns}
-                    // onRefresh={onRefresh}
-                    // onInsert={onInsertApp}
-                    // onUpdate={onUpdateApp}
-                    // onDelete={onDeleteApp}
-                    messages={tableMessages}
+                    //updateData={updateMyData}
+                    //skipReset={skipResetRef.current}
+                    //enablePaging={enablePaging}
+                    //enableGrouping={enableGrouping}
+                    //enableSorting={enableSorting}
+                    //showTableInfo={showTableInfo}
+                    //showSummary={showSummary}
+                    //showColumnFilter={showColumnFilter}
+                    showColumns="true"
+                    //showFooter={showFooter}
+                    //showPageSize={true}
+                    //border=""
+                    editable="false"
+                    clickAction="toggle"
+                    //hideCheckbox={hideCheckbox}
+                    selectionMode="single"
+                    //messages={messages}
+                    tableRef={tableRef}
+                    //tableClassName="w-100"
+                    //
+                    title="Columns"
+                    expandableTitlebar={true}
+                    showRowsCount={true}
+                    titlebarSize="md"
+                    titlebarColor="secondary"
+                    //
+                    defaultPageSize={5}
+                    onStateChanged={(state) => {
+                        console.log(state);
+                    }}
                 />
             </div>
         </div>

@@ -157,7 +157,7 @@ export { default as ArrowBackIos } from "./ArrowBackIos";
 // export { default as ArrowCircleLeft } from './ArrowCircleLeft'
 // export { default as ArrowCircleRight } from './ArrowCircleRight'
 // export { default as ArrowCircleUp } from './ArrowCircleUp'
-// export { default as ArrowDownward } from './ArrowDownward'
+export { default as ArrowDownward } from "./ArrowDownward";
 export { default as ArrowDropDown } from "./ArrowDropDown";
 // export { default as ArrowDropDownCircle } from './ArrowDropDownCircle'
 export { default as ArrowDropUp } from "./ArrowDropUp";
@@ -166,7 +166,7 @@ export { default as ArrowForward } from "./ArrowForward";
 // export { default as ArrowLeft } from './ArrowLeft'
 // export { default as ArrowRight } from './ArrowRight'
 // export { default as ArrowRightAlt } from './ArrowRightAlt'
-// export { default as ArrowUpward } from './ArrowUpward'
+export { default as ArrowUpward } from "./ArrowUpward";
 // export { default as Article } from './Article'
 // export { default as ArtTrack } from './ArtTrack'
 // export { default as AspectRatio } from './AspectRatio'
@@ -359,7 +359,7 @@ export { default as ArrowForward } from "./ArrowForward";
 // export { default as CheckCircle } from './CheckCircle'
 // export { default as CheckCircleOutline } from './CheckCircleOutline'
 export { default as ChevronLeft } from "./ChevronLeft";
-// export { default as ChevronRight } from './ChevronRight'
+export { default as ChevronRight } from "./ChevronRight";
 // export { default as ChildCare } from './ChildCare'
 // export { default as ChildFriendly } from './ChildFriendly'
 // export { default as ChromeReaderMode } from './ChromeReaderMode'
@@ -677,7 +677,7 @@ export { default as Edit } from "./Edit";
 // export { default as Fingerprint } from './Fingerprint'
 // export { default as Fireplace } from './Fireplace'
 // export { default as FireExtinguisher } from './FireExtinguisher'
-// export { default as FirstPage } from './FirstPage'
+export { default as FirstPage } from "./FirstPage";
 // export { default as Fitbit } from './Fitbit'
 // export { default as FitnessCenter } from './FitnessCenter'
 // export { default as FitScreen } from './FitScreen'
@@ -749,7 +749,7 @@ export { default as Folder } from "./Folder";
 // export { default as FrontHand } from './FrontHand'
 // export { default as Fullscreen } from './Fullscreen'
 // export { default as FullscreenExit } from './FullscreenExit'
-// export { default as Functions } from './Functions'
+export { default as Functions } from "./Functions";
 // export { default as Gamepad } from './Gamepad'
 // export { default as Games } from './Games'
 // export { default as Garage } from './Garage'
@@ -921,7 +921,7 @@ export { default as InsertDriveFile } from "./InsertDriveFile";
 // export { default as LaptopChromebook } from './LaptopChromebook'
 // export { default as LaptopMac } from './LaptopMac'
 // export { default as LaptopWindows } from './LaptopWindows'
-// export { default as LastPage } from './LastPage'
+export { default as LastPage } from "./LastPage";
 // export { default as Launch } from './Launch'
 // export { default as Layers } from './Layers'
 // export { default as LayersClear } from './LayersClear'
@@ -1466,7 +1466,7 @@ export { default as Search } from "./Search";
 // export { default as SentimentSatisfiedAlt } from './SentimentSatisfiedAlt'
 // export { default as SentimentVeryDissatisfied } from './SentimentVeryDissatisfied'
 // export { default as SentimentVerySatisfied } from './SentimentVerySatisfied'
-// export { default as Settings } from './Settings'
+export { default as Settings } from "./Settings";
 // export { default as SettingsAccessibility } from './SettingsAccessibility'
 // export { default as SettingsApplications } from './SettingsApplications'
 // export { default as SettingsBackupRestore } from './SettingsBackupRestore'

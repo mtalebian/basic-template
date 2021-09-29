@@ -95,7 +95,7 @@ function MenuItem({ menu, onSelect, selectedMenu, activeItem }) {
                         onSelect(null, menu);
                         return false;
                     }}
-                    className={classNames("border bg-shade-1 hover-shade-5 text-primary-text", {
+                    className={classNames("border bg-default hover-shade-5 text-primary-text", {
                         "mi-selected": selectedMenu && selectedMenu.id === menu.id,
                         "mi-active": activeItem && activeItem.id === menu.id,
                     })}

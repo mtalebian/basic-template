@@ -70,7 +70,7 @@ export function BasicTable({ columns, data, title, enablePaging, filtrable, sele
     };
 
     return (
-        <div class="basic-table-container">
+        <div className="basic-table-container">
             <div className="">
                 <select value={pageSize} onChange={(e) => setPageSize(Number(e.target.value))}>
                     {[10, 25, 50].map((pageSize) => (

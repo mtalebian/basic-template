@@ -79,7 +79,7 @@ export default function Landing() {
 
             <footer className="page-footer">
                 <section className="container">
-                    <ul class="links">
+                    <ul className="links">
                         <li>
                             <a href="/">Home</a>
                         </li>
