@@ -6,7 +6,7 @@ A real web application template.
 
 #### react-basic-design
 
-    - put bootstrap & react-basic-design styles in file: ./src/index.scss
+    - put bootstrap & react-basic-design scss styles in file: ./src/index.scss
 
 ### Fonts
 
