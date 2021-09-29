@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { apiConfig } from "../../api/config";
 import { FinalField } from "../../components/basic/final-form";
 //import "./index.scss";
 
@@ -36,7 +37,7 @@ export const Captcha = ({ counter }) => {
                     <img
                         className="cur-pointer border rounded"
                         alt="Captcha"
-                        src={`https://localhost:44356/captcha?${uid}_${counter}`}
+                        src={`${apiConfig.baseUrl}/captcha?${uid}_${counter}`}
                         onClick={refreshCaptcha}
                     />
                 </div>

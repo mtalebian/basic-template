@@ -5,3 +5,8 @@ Add-Migration V1 -Context AccountDbContext
 
 Update-Database -Context AccountDbContext
 Update-Database -Context FormDbContext
+
+
+dotnet tool install
+dotnet ef database update --context AccountDbContext
+dotnet ef database update --context FormDbContext

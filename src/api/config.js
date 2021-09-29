@@ -1,6 +1,8 @@
+const port = "5001"; //44356
+
 export const apiConfig = {
-    baseUrl: "https://localhost:44356",
-    accountUrl: "https://localhost:44356/account",
-    menuUrl: "https://localhost:44356/menu",
-    tableDesignerUrl: "https://localhost:44356/TableDesigner",
+    baseUrl: "https://localhost:" + port,
+    accountUrl: "https://localhost:" + port + "/account",
+    menuUrl: "https://localhost:" + port + "/menu",
+    tableDesignerUrl: "https://localhost:" + port + "/TableDesigner",
 };

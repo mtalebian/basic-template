@@ -62,6 +62,7 @@ export function BasicTable({ columns, data, title, enablePaging, filtrable, sele
     };
 
     const getRecordsInfoText = () => {
+        return null;
         //Showing _START_ to _END_ of _TOTAL_ entries
         //Showing _START_ to _END_ of _TOTAL_ entries (filtered from _MAX_ total entries)
         if (state.filters.length === 0) return `Show {1} to {2} from {3}`;
