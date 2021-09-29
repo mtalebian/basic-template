@@ -62,11 +62,11 @@ export function TableTitlebar({ tableRef, title, color, fixed, expanded, buttons
     );
 }
 
-function GlobalFilter({ filter, setFilter, ...props }) {
+function GlobalFilter({ filter, setFilter, ...props }: any) {
     return <input type="text" value={filter || ""} onChange={(e) => setFilter(e.target.value)} {...props} />;
 }
 
-function SettingsDialog({ show, setShow, tableRef }) {
+function SettingsDialog({ show, setShow, tableRef }: any) {
     return (
         <Modal show={show} fullscreen="md-down" onHide={() => setShow(false)}>
             <div className="shadow-10">

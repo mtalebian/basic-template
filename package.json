@@ -61,6 +61,7 @@
     "devDependencies": {
         "@types/react": "^17.0.24",
         "@types/react-dom": "^17.0.9",
+        "@types/react-table": "^7.7.5",
         "mkcert": "^1.4.0",
         "sass": "^1.32.13",
         "sass-loader": "^11.1.0",

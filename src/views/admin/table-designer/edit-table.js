@@ -57,7 +57,7 @@ export function TableDesignerEditTable({ table, group, onChanged }) {
             { Header: "Id", accessor: "id" },
             { Header: "Name", accessor: "name" },
             { Header: "Expression", accessor: "expression" },
-            { Header: "Alias", accessor: "alias" },
+            // { Header: "Alias", accessor: "alias" },
             { Header: "Title", accessor: "tile" },
             { Header: "IsPK", accessor: "isPk" },
             { Header: "IsRequired", accessor: "isRequired" },
@@ -76,7 +76,7 @@ export function TableDesignerEditTable({ table, group, onChanged }) {
     );
 
     return (
-        <div className="container">
+        <div className="container" style={{ marginBottom: 70 }}>
             <div className="mt-4" style={{ maxWidth: 500 }}>
                 <Form
                     initialValues={table.data}
@@ -94,27 +94,32 @@ export function TableDesignerEditTable({ table, group, onChanged }) {
                             <div className="row">
                                 <div className="col-md-3"></div>
                                 <div className="col-md-9">
-                                    <div>
-                                        <bd.Button color="primary" type="submit" disabled={loading || deleting || invalid}>
-                                            {loading && <div className="m-e-2 spinner-border spinner-border-sm"></div>}
-                                            <span>Save Table</span>
-                                        </bd.Button>
-
-                                        <bd.Button
-                                            className={classNames("mx-2", {
-                                                "d-none": !group.id,
-                                            })}
-                                            type="button"
-                                            variant="outline"
-                                            disabled={loading || deleting || table.columns.length > 0}
-                                            onClick={() => setShowDeletingGroup(true)}
-                                        >
-                                            {deleting && <div className="m-e-2 spinner-border spinner-border-sm"></div>}
-                                            <span>DELETE</span>
-                                        </bd.Button>
-                                    </div>
+                                    <div></div>
                                 </div>
                             </div>
+
+                            <bd.AppBar className="bg-default" position="bottom">
+                                <bd.Toolbar>
+                                    <div className="flex-grow-1"></div>
+                                    <bd.Button color="primary" type="submit" disabled={loading || deleting || invalid}>
+                                        {loading && <div className="m-e-2 spinner-border spinner-border-sm"></div>}
+                                        <span>Save Table</span>
+                                    </bd.Button>
+
+                                    <bd.Button
+                                        className={classNames("mx-2", {
+                                            "d-none": !group.id,
+                                        })}
+                                        type="button"
+                                        variant="outline"
+                                        disabled={loading || deleting || table.columns.length > 0}
+                                        onClick={() => setShowDeletingGroup(true)}
+                                    >
+                                        {deleting && <div className="m-e-2 spinner-border spinner-border-sm"></div>}
+                                        <span>DELETE</span>
+                                    </bd.Button>
+                                </bd.Toolbar>
+                            </bd.AppBar>
 
                             <BasicModal
                                 show={showDeletingGroup}
@@ -142,60 +147,58 @@ export function TableDesignerEditTable({ table, group, onChanged }) {
                 />
             </div>
 
-            <div className={`overflow-auto nano-scroll ${insertMode ? "d-none" : ""}`}>
-                <bd.TableTitlebar
-                    title="My Table"
-                    tableRef={tableRef}
-                    fixed
-                    buttons={
-                        <>
-                            <bd.Button variant="icon" size="md">
-                                <icons.Add />
-                            </bd.Button>
-                            <bd.Button variant="icon" size="md">
-                                <icons.Delete />
-                            </bd.Button>
-                        </>
-                    }
-                />
+            <bd.TableTitlebar
+                title="My Table"
+                tableRef={tableRef}
+                fixed
+                buttons={
+                    <>
+                        <bd.Button variant="icon" size="md">
+                            <icons.Add />
+                        </bd.Button>
+                        <bd.Button variant="icon" size="md">
+                            <icons.Delete />
+                        </bd.Button>
+                    </>
+                }
+            />
 
-                <Table
-                    //className="w-100"
-                    columns={table_columns}
-                    //defaultColumn={defaultColumn}
-                    data={columns}
-                    //updateData={updateMyData}
-                    //skipReset={skipResetRef.current}
-                    //enablePaging={enablePaging}
-                    //enableGrouping={enableGrouping}
-                    //enableSorting={enableSorting}
-                    //showTableInfo={showTableInfo}
-                    //showSummary={showSummary}
-                    //showColumnFilter={showColumnFilter}
-                    showColumns="true"
-                    //showFooter={showFooter}
-                    //showPageSize={true}
-                    //border=""
-                    editable="false"
-                    clickAction="toggle"
-                    //hideCheckbox={hideCheckbox}
-                    selectionMode="single"
-                    //messages={messages}
-                    tableRef={tableRef}
-                    //tableClassName="w-100"
-                    //
-                    title="Columns"
-                    expandableTitlebar={true}
-                    showRowsCount={true}
-                    titlebarSize="md"
-                    titlebarColor="secondary"
-                    //
-                    defaultPageSize={5}
-                    onStateChanged={(state) => {
-                        console.log(state);
-                    }}
-                />
-            </div>
+            <Table
+                //className="w-100"
+                columns={table_columns}
+                //defaultColumn={defaultColumn}
+                data={columns}
+                //updateData={updateMyData}
+                //skipReset={skipResetRef.current}
+                //enablePaging={enablePaging}
+                //enableGrouping={enableGrouping}
+                //enableSorting={enableSorting}
+                //showTableInfo={showTableInfo}
+                //showSummary={showSummary}
+                //showColumnFilter={showColumnFilter}
+                //hideColumns={}
+                //showFooter={showFooter}
+                //showPageSize={true}
+                //border=""
+                editable={true}
+                //clickAction="toggle"
+                //hideCheckbox={hideCheckbox}
+                //selectionMode="single"
+                //messages={messages}
+                tableRef={tableRef}
+                //tableClassName="w-100"
+                //
+                title="Columns"
+                expandableTitlebar={true}
+                showRowsCount={true}
+                titlebarSize="md"
+                titlebarColor="secondary"
+                //
+                defaultPageSize={5}
+                onStateChanged={(state) => {
+                    console.log(state);
+                }}
+            />
         </div>
     );
 }

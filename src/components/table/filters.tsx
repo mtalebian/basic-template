@@ -147,4 +147,4 @@ export function filterGreaterThan(rows: any, id: any, filterValue: any) {
 // when given the new filter value and returns true, the filter
 // will be automatically removed. Normally this is just an undefined
 // check, but here, we want to remove the filter if it's not a number
-filterGreaterThan.autoRemove = (val) => typeof val !== "number";
+filterGreaterThan.autoRemove = (val: any) => typeof val !== "number";

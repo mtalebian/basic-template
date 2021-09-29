@@ -14,7 +14,7 @@ import SvgEdit from "../../../assets/icons/Edit";
 
 //
 export function TableDesignerApp() {
-    const [groups, setGroups] = useState([]);
+    const [groups, setGroups] = useState(null);
     const [group, setGroup0] = useState(null);
     const [table, setTable] = useState(null);
     const [column, setColumn] = useState(null);
@@ -31,10 +31,6 @@ export function TableDesignerApp() {
         if (group) setGroup(null);
         if (table) setTable(null);
     }
-
-    const refresh = () => {
-        tableDesignerApi.getGroups().then((x) => setGroups(x));
-    };
 
     function onEditGroupClick(g) {
         setGroup(g);
@@ -72,21 +68,15 @@ export function TableDesignerApp() {
         return false;
     }
 
-    useEffect(
-        () =>
-            accountManager.status.onConnected(function () {
-                refresh();
-            }).remove
-    );
+    useEffect(() => {
+        return accountManager.status.onConnected(function () {
+            if (!groups) tableDesignerApi.getGroups().then((x) => setGroups(x));
+        }).remove;
+    }, []);
 
     return (
         <>
             <TableDesignerHeader group={group} table={table} column={column} onGoBack={goBack} onAddGroupClicked={onAddGroupClicked} />
-
-            {/* <Groups />
-        
-        <EditTable />
-             */}
 
             <div
                 className={classNames("container", {
@@ -94,36 +84,37 @@ export function TableDesignerApp() {
                 })}
             >
                 <ul className="tiles">
-                    {groups
-                        .sort((a, b) => (a.title === b.title ? 0 : a.title > b.title ? 1 : -1))
-                        .map((g) => (
-                            <li key={g.id}>
-                                <h5>
-                                    {g.title}
-                                    <bs.Button variant="text" size="sm" className="mx-2" color="secondary" onClick={() => onEditGroupClick(g)}>
-                                        <SvgEdit />
-                                        Edit Group
-                                    </bs.Button>
-                                    <bs.Button variant="text" size="sm" color="secondary" onClick={() => onAddFormClick(g)}>
-                                        <SvgInsertDriveFile />
-                                        New table
-                                    </bs.Button>
-                                </h5>
-                                <ul>
-                                    {g.items.map((t) => (
-                                        <li key={t}>
-                                            <a
-                                                href="#/"
-                                                className="bg-shade-1 hover-shade-3 text-primary-text border"
-                                                onClick={() => onEditTableClick(g, t)}
-                                            >
-                                                {t.title}
-                                            </a>
-                                        </li>
-                                    ))}
-                                </ul>
-                            </li>
-                        ))}
+                    {groups &&
+                        groups
+                            .sort((a, b) => (a.title === b.title ? 0 : a.title > b.title ? 1 : -1))
+                            .map((g) => (
+                                <li key={g.id}>
+                                    <h5>
+                                        {g.title}
+                                        <bs.Button variant="text" size="sm" className="mx-2" color="secondary" onClick={() => onEditGroupClick(g)}>
+                                            <SvgEdit />
+                                            Edit Group
+                                        </bs.Button>
+                                        <bs.Button variant="text" size="sm" color="secondary" onClick={() => onAddFormClick(g)}>
+                                            <SvgInsertDriveFile />
+                                            New table
+                                        </bs.Button>
+                                    </h5>
+                                    <ul>
+                                        {g.items.map((t) => (
+                                            <li key={t}>
+                                                <a
+                                                    href="#/"
+                                                    className="bg-shade-1 hover-shade-3 text-primary-text border"
+                                                    onClick={() => onEditTableClick(g, t)}
+                                                >
+                                                    {t.title}
+                                                </a>
+                                            </li>
+                                        ))}
+                                    </ul>
+                                </li>
+                            ))}
                 </ul>
             </div>
 

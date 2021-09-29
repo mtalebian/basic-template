@@ -1,21 +1,20 @@
 /*
-column._breakPoint :   "sm" | "md" | "lg" | "xl"
-column._popinCss :  sample: "col-12 col-md-6" 
-column._headerProps :   {}  |  (column) => {}
-column._cellProps   :   {}  |  (row, cell) => {}
-column._ignoreToggleOnClick :   boolean
-column._summary:                   {}  |  (rows, col) => {}
+column._breakPoint          :  "sm" | "md" | "lg" | "xl"
+column._popinCss            :  sample: "col-12 col-md-6" 
+column._headerProps         :  {}  |  (column) => {}
+column._cellProps           :  {}  |  (row, cell) => {}
+column._ignoreToggleOnClick :  boolean
+column._summary             : {}  |  (rows, col) => {}
 
 
 */
-import React, { MutableRefObject, useEffect, useState } from "react";
+import React, { MutableRefObject, useState } from "react";
 import classNames from "classnames";
 import * as bd from "react-basic-design";
 import defaultMessages, { TableMessages } from "./messages";
 import { useTable, useGlobalFilter, usePagination, useSortBy, useFilters, useGroupBy, useExpanded, useRowSelect } from "react-table";
 import * as icons from "../../assets/icons";
-import { Modal, TabContainer, TabContent, TabPane } from "react-bootstrap";
-
+/*
 interface ToggleProps {
     className?: string;
     tableClassName?: string;
@@ -28,7 +27,7 @@ interface ToggleProps {
     maxDisplayRow?: number;
     skipReset?: boolean;
     showColumnFilter?: boolean;
-    showColumns?: boolean;
+    hideColumns?: boolean;
     showTableInfo?: boolean;
     showPageSize?: boolean;
     showSummary?: boolean;
@@ -51,7 +50,7 @@ interface ToggleProps {
     updateData: (rowIndex: number, columnId: number, value: any) => void;
     [x: string]: any;
 }
-
+*/
 //
 // Be sure to pass our updateMyData and the skipReset option
 export function Table({
@@ -66,7 +65,7 @@ export function Table({
     maxDisplayRow,
     skipReset,
     showColumnFilter,
-    showColumns,
+    hideColumns,
     showTableInfo,
     showPageSize,
     showSummary,
@@ -82,13 +81,13 @@ export function Table({
     defaultPageSize,
 
     updateData,
-}: ToggleProps) {
+}) {
     messages = { ...defaultMessages, ...messages };
     if (!maxDisplayRow || maxDisplayRow < 1) maxDisplayRow = 100;
     const filterTypes = React.useMemo(
         () => ({
-            text: (rows: any, id: any, filterValue: any) => {
-                return rows.filter((row: any) => {
+            text: (rows, id, filterValue) => {
+                return rows.filter((row) => {
                     const rowValue = row.values[id];
                     return rowValue !== undefined ? String(rowValue).toLowerCase().startsWith(String(filterValue).toLowerCase()) : true;
                 });
@@ -129,8 +128,8 @@ export function Table({
         usePagination,
         useRowSelect,
 
-        (hooks: any) => {
-            hooks.visibleColumns.push((columns: any) => {
+        (hooks) => {
+            hooks.visibleColumns.push((columns) => {
                 return [
                     {
                         id: "_multi_select_",
@@ -302,31 +301,31 @@ export function Table({
         }
     };
 
-    function renderCheckboxHeader(column: any, idx: number) {
+    function renderCheckboxHeader(column, idx) {
         if (hideCheckbox) return null;
         return (idx == 0 && selectionMode === "multiple") || (idx == 1 && selectionMode === "single") ? (
             <th {...getHeaderProps(column, idx)}>{column.render("Header")}</th>
         ) : null;
     }
 
-    function renderCheckboxCell(row, cell, idx: number) {
+    function renderCheckboxCell(row, cell, idx) {
         if (hideCheckbox) return null;
         return (idx == 0 && selectionMode === "multiple") || (idx == 1 && selectionMode === "single") ? (
             <td {...getCellProps(row, cell)}>{cell.render("Cell")}</td>
         ) : null;
     }
 
-    function renderCheckboxPlaceholder(column: any, idx: number) {
+    function renderCheckboxPlaceholder(column, idx) {
         if (hideCheckbox) return null;
         return (idx == 0 && selectionMode === "multiple") || (idx == 1 && selectionMode === "single") ? <th {...column.getFooterProps()}></th> : null;
     }
 
-    function checkboxPlaceholder(idx: number) {
+    function checkboxPlaceholder(idx) {
         if (hideCheckbox) return null;
         return (idx == 0 && selectionMode === "multiple") || (idx == 1 && selectionMode === "single");
     }
 
-    function getSortByToggleProps(column: any) {
+    function getSortByToggleProps(column) {
         return enableSorting ? column.getSortByToggleProps() : {};
     }
 
@@ -342,7 +341,7 @@ export function Table({
                 })}
             >
                 <table {...getTableProps()} className={tableClassName}>
-                    {showColumns && (
+                    {!hideColumns && (
                         <thead>
                             {headerGroups.map((headerGroup) => (
                                 <tr {...headerGroup.getHeaderGroupProps()}>
@@ -437,7 +436,7 @@ export function Table({
                                             return <td {...getCellProps(row, cell)}></td>;
                                         })}
                                         <td colSpan={100} {...getCellProps(row, row.cells[0])}>
-                                            <div className="bd-table-popin row pb-1">
+                                            <div className="bd-table-popin row">
                                                 {row.cells.map(
                                                     (cell, cellIndex) =>
                                                         cell.column._breakPoint && (

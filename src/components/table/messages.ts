@@ -9,8 +9,9 @@ export type TableMessages = {
     lastPage?: string;
 };
 
-export default {
+const messages: TableMessages = {
     showing: "showing {from} to {to} of {total}",
+    // eslint-disable-next-line no-template-curly-in-string
     showingFiltered: "showing {from} to {to} of {total} (filtered from ${all} rows)",
     page: "Page {page} of {total}",
     gotoPage: "Go to page",
@@ -19,3 +20,5 @@ export default {
     nextPage: "Next page",
     lastPage: "Last page",
 };
+
+export default messages;
