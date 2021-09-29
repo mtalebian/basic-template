@@ -89,9 +89,6 @@ export const LoginForm = ({ inline, ...props }) => {
                             </div>
                         )}
                     </div>
-                    <hr />
-                    {/* <MenuIcon /> */}
-                    <icons.ZoomIn />
                 </form>
             )}
         />

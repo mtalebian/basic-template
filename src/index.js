@@ -1,5 +1,3 @@
-import "react-basic-design/dist/bootstrap.scss";
-//import "react-basic-design/dist/index.scss";
 import "./index.scss";
 
 import "react-toastify/dist/ReactToastify.css";
