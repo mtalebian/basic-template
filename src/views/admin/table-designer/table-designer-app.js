@@ -9,8 +9,8 @@ import { TableDesignerEditGroup } from "./edit-group";
 import { TableDesignerEditTable } from "./edit-table";
 import { TableDesignerHeader } from "./header";
 import { notify } from "../../../components/basic/notify";
-import SvgInsertDriveFile from "../../../assets/icons/InsertDriveFile";
-import SvgEdit from "../../../assets/icons/Edit";
+import { Tile, Tiles } from "../../../components/tilemenu/tiles";
+import * as icons from "../../../assets/icons";
 
 //
 export function TableDesignerApp() {
@@ -83,39 +83,39 @@ export function TableDesignerApp() {
                     "d-none": group || table,
                 })}
             >
-                <ul className="tiles">
+                <Tiles>
                     {groups &&
                         groups
                             .sort((a, b) => (a.title === b.title ? 0 : a.title > b.title ? 1 : -1))
                             .map((g) => (
-                                <li key={g.id}>
-                                    <h5>
-                                        {g.title}
-                                        <bs.Button variant="text" size="sm" className="mx-2" color="secondary" onClick={() => onEditGroupClick(g)}>
-                                            <SvgEdit />
-                                            Edit Group
-                                        </bs.Button>
-                                        <bs.Button variant="text" size="sm" color="secondary" onClick={() => onAddFormClick(g)}>
-                                            <SvgInsertDriveFile />
-                                            New table
-                                        </bs.Button>
-                                    </h5>
-                                    <ul>
-                                        {g.items.map((t) => (
-                                            <li key={t}>
-                                                <a
-                                                    href="#/"
-                                                    className="bg-shade-1 hover-shade-3 text-primary-text border"
-                                                    onClick={() => onEditTableClick(g, t)}
-                                                >
-                                                    {t.title}
-                                                </a>
-                                            </li>
-                                        ))}
-                                    </ul>
-                                </li>
+                                <Tile
+                                    key={g.id}
+                                    title={
+                                        <>
+                                            <span className="size-md"> {g.title}</span>
+                                            <bs.Button
+                                                variant="text"
+                                                size="sm"
+                                                className="mx-2"
+                                                color="secondary"
+                                                onClick={() => onEditGroupClick(g)}
+                                            >
+                                                <icons.Edit />
+                                                Edit Group
+                                            </bs.Button>
+                                            <bs.Button variant="text" size="sm" color="secondary" onClick={() => onAddFormClick(g)}>
+                                                <icons.Add />
+                                                New table
+                                            </bs.Button>
+                                        </>
+                                    }
+                                >
+                                    {g.items.map((t) => (
+                                        <Tile key={t} title={t.title} onClick={() => onEditTableClick(g, t)} />
+                                    ))}
+                                </Tile>
                             ))}
-                </ul>
+                </Tiles>
             </div>
 
             {group && !table && !column && (

@@ -17,17 +17,15 @@ export function TableDesignerHeader({ group, table, column, onGoBack, onAddGroup
         ) : (
             "New Table"
         );
-    } else if (group) {
-        title = group.id ? `Edit Group '${group.title}'` : "New Group";
     }
 
     return (
-        <bs.AppBar shadow={0} className="border-bottom">
+        <bs.AppBar shadow={0} className="border-bottom bg-shade-5">
             <div className="container">
                 <bs.Toolbar>
                     {editMode && (
                         <bs.Button variant="icon" onClick={onGoBack} size="md">
-                            <icons.ArrowBackIos />
+                            <icons.ArrowBackIos className="rtl-rotate-180" />
                         </bs.Button>
                     )}
                     <h5 className="appbar-title">{title}</h5>

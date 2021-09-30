@@ -82,7 +82,7 @@ export function TableDesignerEditTable({ table, group, onChanged }) {
                     initialValues={table.data}
                     onSubmit={onSubmit}
                     render={({ handleSubmit, submitting, invalid }) => (
-                        <form onSubmit={handleSubmit} className="ltr" spellCheck="false">
+                        <form onSubmit={handleSubmit} spellCheck="false">
                             <FinalField name="name" label="Name:" type="text" autoComplete="off" autoFocus labelSize="3" />
 
                             <FinalField name="title" label="Title:" type="text" autoComplete="off" labelSize="3" />

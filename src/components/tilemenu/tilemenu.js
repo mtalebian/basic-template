@@ -2,7 +2,6 @@ import classNames from "classnames";
 import React from "react";
 import * as bs from "react-basic-design";
 
-import "./index.scss";
 import * as icons from "../../assets/icons";
 
 export function TileMenu({ folders, menus, parent, onSelect, selectedFolder, selectedMenu, activeItem, light, dark, ...props }) {
@@ -95,7 +94,7 @@ function MenuItem({ menu, onSelect, selectedMenu, activeItem }) {
                         onSelect(null, menu);
                         return false;
                     }}
-                    className={classNames("border bg-default hover-shade-5 text-primary-text", {
+                    className={classNames("", {
                         "mi-selected": selectedMenu && selectedMenu.id === menu.id,
                         "mi-active": activeItem && activeItem.id === menu.id,
                     })}
