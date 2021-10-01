@@ -17,7 +17,7 @@ export function TableDesignerHeader({ group, table, column, onGoBack, onAddGroup
         ) : (
             "New Table"
         );
-    }
+    } else return null;
 
     return (
         <bs.AppBar shadow={0} className="border-bottom bg-shade-5">

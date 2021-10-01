@@ -9,7 +9,7 @@ import { ThemeContext } from "../../../app/theme-context";
 import { menuApi } from "../../../api/menu-api";
 import { notify } from "../../../components/basic/notify";
 
-export function SysMenuApp() {
+export function LunchpadApp() {
     const [menuFolders, setMenuFolders] = useState([]);
     const [menus, setMenus] = useState([]);
     const [user] = useState({});
@@ -72,10 +72,13 @@ export function SysMenuApp() {
     );
 }
 
-SysMenuApp.Appbar = (
-    <>
-        <bs.Button variant="icon" color="inherit">
-            <icons.Search />
-        </bs.Button>
-    </>
-);
+LunchpadApp.Appbar = {
+    title: "Ikco Lunchpad",
+    buttons: (
+        <>
+            <bs.Button variant="icon" color="default">
+                <icons.Search />
+            </bs.Button>
+        </>
+    ),
+};

@@ -1,9 +1,9 @@
 import React from "react";
-import accountManager from "../../app/account-manager";
+import accountManager from "../../../app/account-manager";
 import * as bs from "react-basic-design";
-import settings from "../../app/settings";
+import settings from "../../../app/settings";
 
-export default function Landing() {
+export default function StartupApp() {
     function GotoSysMenu() {
         window.location = accountManager.isLoggedin() ? "/home" : "/login";
     }
@@ -40,7 +40,7 @@ export default function Landing() {
                         className="banner py-5 px-30"
                         style={{
                             maxWidth: 1000,
-                            minHeight: 450,
+                            minHeight: 500,
                             fontSize: "1.15rem",
                         }}
                     >

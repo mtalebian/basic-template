@@ -31,6 +31,8 @@ export function MainLayout({ component: Comp, ...props }) {
         </bd.Menu>
     );
 
+    let title = Comp?.Appbar?.title ?? settings.title;
+
     return (
         <div className="d-flex flex-column h-100">
             <bd.AppBar color="inherit" shadow={0} className="border-bottom bg-shade-5">
@@ -43,9 +45,9 @@ export function MainLayout({ component: Comp, ...props }) {
                         <div>
                             <img src="/images/logo/header-logo.png" alt="logo" height={31} />
                         </div>
-                        <h5 className="appbar-title">{settings.title}</h5>
+                        <h5 className="appbar-title">{title}</h5>
 
-                        {Comp.Appbar}
+                        {Comp?.Appbar?.buttons}
                         <bd.Badge value={2} overlapCircle className="bg-warning text-dark d-none d-sm-flex">
                             <bd.Button variant="icon" color="default" className="d-none d-sm-block">
                                 <icons.NotificationsActive />

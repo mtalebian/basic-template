@@ -30,10 +30,10 @@ import { MenuApp } from "./views/admin/menu/menu-app";
 import { LoginForm } from "./views/account/login-form";
 import NotFound from "./views/shared/not-found";
 
-import { Dashboard } from "./views/home/dashboard/index.js";
-import { Inbox } from "./views/home/inbox";
-import { SysMenuApp } from "./views/home/sysmenu/sysmenu-app";
-import Landing from "./views/home/landing";
+import { DashboardApp } from "./views/home/dashboard/dashboard-app.js";
+import { InboxApp } from "./views/home/inbox/inbox-app";
+import { LunchpadApp } from "./views/home/lunchpad/lunchpad-app";
+import StartupApp from "./views/home/startup/startup-app";
 import { MainLayout } from "./views/shared/main-layout";
 import { TablesApp } from "./views/admin/tables/tables-app";
 import { FormDesignerApp } from "./views/admin/form-designer/form-designer-app";
@@ -76,7 +76,7 @@ export function App() {
     return (
         <ThemeProvider>
             <Switch>
-                <Route exact path="/" render={() => <Landing />} />
+                <Route exact path="/" render={() => <StartupApp />} />
 
                 <Route exact path="/login">
                     <main className="content h-100 middle text-secondary-text">
@@ -92,11 +92,11 @@ export function App() {
 
                 <AzRoute exact path="/admin/tables" render={() => <MainLayout component={TablesApp} />} />
 
-                <AzRoute exact path="/home" render={() => <MainLayout component={SysMenuApp} />} />
+                <AzRoute exact path="/home" render={() => <MainLayout component={LunchpadApp} />} />
 
-                <AzRoute exact path="/dashboard" render={() => <MainLayout component={Dashboard} />} />
+                <AzRoute exact path="/dashboard" render={() => <MainLayout component={DashboardApp} />} />
 
-                <AzRoute exact path="/inbox" render={() => <MainLayout component={Inbox} />} />
+                <AzRoute exact path="/inbox" render={() => <MainLayout component={InboxApp} />} />
 
                 <Route exact path="/test/table" render={() => <TestTableApp />} />
 

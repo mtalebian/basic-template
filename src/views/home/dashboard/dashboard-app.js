@@ -5,7 +5,7 @@ import procurement from "../../../assets/bg/procurement.png";
 import { messages } from "../../../components/messages";
 import accountManager from "../../../app/account-manager";
 
-export function Dashboard() {
+export function DashboardApp() {
     const [, setUser] = useState({});
 
     useEffect(() => accountManager.bind(setUser).remove, []);

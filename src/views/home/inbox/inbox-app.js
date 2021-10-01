@@ -3,7 +3,7 @@ import * as bs from "react-basic-design";
 
 import accountManager from "../../../app/account-manager";
 
-export function Inbox() {
+export function InboxApp() {
     const [, setUser] = useState({});
 
     useEffect(() => accountManager.bind(setUser).remove, []);

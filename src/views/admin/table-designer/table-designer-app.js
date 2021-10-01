@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 
-import * as bs from "react-basic-design";
+import * as bd from "react-basic-design";
 import accountManager from "../../../app/account-manager";
 
 import classNames from "classnames";
@@ -83,6 +83,15 @@ export function TableDesignerApp() {
                     "d-none": group || table,
                 })}
             >
+                <bd.Toolbar className="border-bottom mb-3">
+                    <span>Maintain base tables</span>
+                    <span className="flex-grow-1"></span>
+                    <bd.Button color="primary" size="sm" onClick={onAddGroupClicked}>
+                        <icons.Folder />
+                        Add new group
+                    </bd.Button>
+                </bd.Toolbar>
+
                 <Tiles>
                     {groups &&
                         groups
@@ -93,7 +102,7 @@ export function TableDesignerApp() {
                                     title={
                                         <>
                                             <span className="size-md"> {g.title}</span>
-                                            <bs.Button
+                                            <bd.Button
                                                 variant="text"
                                                 size="sm"
                                                 className="mx-2"
@@ -102,11 +111,11 @@ export function TableDesignerApp() {
                                             >
                                                 <icons.Edit />
                                                 Edit Group
-                                            </bs.Button>
-                                            <bs.Button variant="text" size="sm" color="secondary" onClick={() => onAddFormClick(g)}>
+                                            </bd.Button>
+                                            <bd.Button variant="text" size="sm" color="secondary" onClick={() => onAddFormClick(g)}>
                                                 <icons.Add />
                                                 New table
-                                            </bs.Button>
+                                            </bd.Button>
                                         </>
                                     }
                                 >
@@ -173,3 +182,8 @@ export function TableDesignerApp() {
         </>
     );
 }
+
+TableDesignerApp.Appbar = {
+    title: "Table Designer",
+    buttons: null,
+};
