@@ -3,7 +3,6 @@ import { Route } from "react-router";
 import { api } from "../api/api";
 
 import * as icons from "../assets/icons";
-import * as bs from "react-basic-design";
 import { messages } from "../components/messages";
 import { LoginForm } from "../views/account/login-form";
 import { accountManager } from "./account-manager";

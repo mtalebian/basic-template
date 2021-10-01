@@ -73,7 +73,7 @@ export function LunchpadApp() {
 }
 
 LunchpadApp.Appbar = {
-    title: "Ikco Lunchpad",
+    title: "",
     buttons: (
         <>
             <bs.Button variant="icon" color="default">

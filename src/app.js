@@ -34,11 +34,13 @@ import { DashboardApp } from "./views/home/dashboard/dashboard-app.js";
 import { InboxApp } from "./views/home/inbox/inbox-app";
 import { LunchpadApp } from "./views/home/lunchpad/lunchpad-app";
 import StartupApp from "./views/home/startup/startup-app";
-import { MainLayout } from "./views/shared/main-layout";
+import { MainLayout } from "./views/shared/main-layout2";
+
 import { TablesApp } from "./views/admin/tables/tables-app";
 import { FormDesignerApp } from "./views/admin/form-designer/form-designer-app";
 import { TableDesignerApp } from "./views/admin/table-designer/table-designer-app";
 import { TestTableApp } from "./views/test/test-table";
+import { UserSettingsApp } from "./views/account/user-settings-app";
 
 /*
 function Layout({ layout, header, content, sidebar, footer, ...props }) {
@@ -83,6 +85,8 @@ export function App() {
                         <LoginForm />
                     </main>
                 </Route>
+
+                <AzRoute exact path="/user/settings" render={() => <MainLayout component={UserSettingsApp} />} />
 
                 <AzRoute exact path="/admin/menu" render={() => <MainLayout component={MenuApp} />} />
 

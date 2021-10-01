@@ -23,3 +23,10 @@ A real web application template.
 
     - assign bootstrap font variable ($font-family-sans-serif) in style file (./src/index.scss)
         $font-family-sans-serif: iranyekan, tahoma, "Segoe UI", Roboto, Arial;
+
+### localization
+
+    npm install react-i18next i18next
+    npm install i18next-browser-languagedetector
+    npm install i18next-http-backend
+    npm install js-cookie

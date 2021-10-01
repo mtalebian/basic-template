@@ -1,8 +1,7 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import * as bd from "react-basic-design";
 import accountManager from "../../app/account-manager";
 import settings from "../../app/settings";
-import { ThemeContext } from "../../app/theme-context";
 import * as icons from "../../assets/icons";
 
 export function MainLayout({ component: Comp, ...props }) {
@@ -16,17 +15,11 @@ export function MainLayout({ component: Comp, ...props }) {
         return false;
     }
 
-    const toggleDarkMode = () => bd.helper.setTheme(!bd.helper.isDarkMode() ? "mui-dark" : "mui-light");
-    const toggleRTL = () => bd.helper.setRTL(!bd.helper.getRTL());
-
     const menuUser = (
         <bd.Menu className="mt-n4 shadow-5">
             <bd.MenuItem>User Profige</bd.MenuItem>
             <div className="dropdown-divider"></div>
-            <bd.MenuItem onClick={toggleDarkMode}>Toggle Dark Mode</bd.MenuItem>
-            <bd.MenuItem onClick={toggleRTL}>Toggle RTL Mode</bd.MenuItem>
-            <div className="dropdown-divider"></div>
-            <bd.MenuItem>Settings</bd.MenuItem>
+            <bd.MenuItem href="/user/settings">Settings</bd.MenuItem>
             <bd.MenuItem onClick={logout}>Logout</bd.MenuItem>
         </bd.Menu>
     );
@@ -38,13 +31,13 @@ export function MainLayout({ component: Comp, ...props }) {
             <bd.AppBar color="inherit" shadow={0} className="border-bottom bg-shade-5">
                 <div className="container">
                     <bd.Toolbar>
-                        <bd.Button variant="icon" color="default" href="/home">
+                        {/* <bd.Button variant="icon" color="default" href="/home">
                             <icons.Home style={{ fontSize: "1.65rem" }} />
-                        </bd.Button>
+                        </bd.Button> */}
 
-                        <div>
-                            <img src="/images/logo/header-logo.png" alt="logo" height={31} />
-                        </div>
+                        <a href="/home">
+                            <img src="/images/logo/header-logo-en.png" alt="logo" height={31} />
+                        </a>
                         <h5 className="appbar-title">{title}</h5>
 
                         {Comp?.Appbar?.buttons}
