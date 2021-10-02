@@ -83,7 +83,7 @@ export function TableDesignerApp() {
                     "d-none": group || table,
                 })}
             >
-                <bd.Toolbar className="border-bottom mb-3">
+                <bd.Toolbar className="border-bottom mb-2">
                     <span>Maintain base tables</span>
                     <span className="flex-grow-1"></span>
                     <bd.Button color="primary" size="sm" onClick={onAddGroupClicked}>
@@ -129,6 +129,7 @@ export function TableDesignerApp() {
 
             {group && !table && !column && (
                 <TableDesignerEditGroup
+                    onGoBack={goBack}
                     group={group}
                     onChanged={(g) => {
                         if (!g) {
@@ -155,6 +156,7 @@ export function TableDesignerApp() {
 
             {group && table && !column && (
                 <TableDesignerEditTable
+                    onGoBack={goBack}
                     group={group}
                     table={table}
                     onChanged={(tb) => {

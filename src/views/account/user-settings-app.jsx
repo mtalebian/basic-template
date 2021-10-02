@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
+import i18next from "i18next";
 import * as bd from "react-basic-design";
 
+const defaultLanguageCode = "fa";
 const languages = [
     {
         code: "fa",
@@ -25,49 +27,53 @@ function getCookie(name) {
 export const UserSettingsApp = () => {
     const { t } = useTranslation();
     const [darkMode, setDarkMode] = useState(bd.helper.isDarkMode());
-    const currentLanguageCode = getCookie("i18next") || "en";
+    const currentLanguageCode = getCookie("i18next") || defaultLanguageCode;
     const currentLanguage = languages.find((l) => l.code === currentLanguageCode);
 
     const changeDarkMode = (value) => {
-        bd.helper.setTheme(value ? "mui-dark" : "mui-light");
+        bd.helper.setTheme(value ? "bd-dark" : "bd-light");
         setDarkMode(value);
     };
-    //const toggleDarkMode = () => bd.helper.setTheme(!bd.helper.isDarkMode() ? "mui-dark" : "mui-light");
+
+    const changeLanguage = (lang) => {
+        i18next.changeLanguage(lang.code);
+    };
+
+    //const toggleDarkMode = () => bd.helper.setTheme(!bd.helper.isDarkMode() ? "bd-dark" : "bd-light");
     //const toggleRTL = () => bd.helper.setRTL(!bd.helper.getRTL());
 
     useEffect(() => {
-        document.body.dir = currentLanguage.dir || "ltr";
-        document.title = t("app_title");
+        bd.helper.setRTL(currentLanguage.dir === "rtl");
+        document.title = t("app.title");
     }, [currentLanguage, t]);
 
     return (
         <div className="m-auto" style={{ maxWidth: 600 }}>
-            <bd.Panel
-                fixed
-                title="Dark Mode"
-                size="md"
-                className="border-bottom"
-                buttons={<bd.Switch color="primary" className="edge-end" model={darkMode} setModel={changeDarkMode} />}
-            ></bd.Panel>
-            <bd.Panel
-                variant="button"
-                caretPosition="middle"
-                title="Language"
-                size="md"
-                className="border-bottom"
-                buttons={<span className="">{currentLanguage.name}</span>}
-            >
-                <div className="m-s-5">
+            <bd.List>
+                <bd.ListItem
+                    variant="text"
+                    primary={t("dark_mode")}
+                    className="border-bottom"
+                    controls={<bd.Switch color="primary" className="edge-end" model={darkMode} setModel={changeDarkMode} />}
+                />
+                <bd.ListItem
+                    primary={
+                        <>
+                            {t("language")}: <b>{currentLanguage.name}</b>
+                        </>
+                    }
+                    className="border-bottom"
+                >
                     {languages.map((x) => (
-                        <bd.Panel fixed variant="menu" title={x.name} size="md" />
+                        <bd.ListItem primary={x.name} radio checked={currentLanguage === x} onClick={(e) => changeLanguage(x)} />
                     ))}
-                </div>
-            </bd.Panel>
+                </bd.ListItem>
+            </bd.List>
         </div>
     );
 };
 
 UserSettingsApp.Appbar = {
-    title: "Settings",
+    title: "settings",
     buttons: null,
 };

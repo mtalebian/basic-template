@@ -9,13 +9,14 @@ $tile-height: 100px;
     list-style: none;
 
     // ROOT
-    & > li.mi-folder > .mi-item > div {
-        margin-top: 25px;
-        font-size: 0.8rem;
+
+    & > li.mi-folder + .mi-folder {
+        margin-top: 15px;
     }
 
     .mi-folder > div {
         padding: 10px 0;
+
         span {
             margin: 5px;
         }
@@ -93,12 +94,12 @@ $tile-height: 100px;
 }
 
 /*******************/
-.theme-mui.theme-light {
+.theme-bd.theme-light {
     $palette: map-get($theme, light);
     @include tilemenuTheme($palette);
 }
 
-.theme-mui.theme-dark {
+.theme-bd.theme-dark {
     $palette: map-get($theme, dark);
     @include tilemenuTheme($palette);
 }

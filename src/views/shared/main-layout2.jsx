@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import * as bd from "react-basic-design";
 import accountManager from "../../app/account-manager";
 import settings from "../../app/settings";
 import * as icons from "../../assets/icons";
 
 export function MainLayout({ component: Comp, ...props }) {
+    const { t } = useTranslation();
     const [, setUser] = useState({});
 
     useEffect(() => accountManager.bind(setUser).remove, []);
@@ -24,7 +26,7 @@ export function MainLayout({ component: Comp, ...props }) {
         </bd.Menu>
     );
 
-    let title = Comp?.Appbar?.title ?? settings.title;
+    let title = t(Comp?.Appbar?.title ?? settings.title);
 
     return (
         <div className="d-flex flex-column h-100">
@@ -36,7 +38,7 @@ export function MainLayout({ component: Comp, ...props }) {
                         </bd.Button> */}
 
                         <a href="/home">
-                            <img src="/images/logo/header-logo-en.png" alt="logo" height={31} />
+                            <img src={t("header-logo")} alt="logo" height={31} />
                         </a>
                         <h5 className="appbar-title">{title}</h5>
 

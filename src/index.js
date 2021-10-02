@@ -9,9 +9,10 @@ import { ToastContainer } from "react-toastify";
 import reportWebVitals from "./reportWebVitals";
 import { App } from "./app";
 import i18n from "i18next";
-import { initReactI18next, useTranslation } from "react-i18next";
+import { initReactI18next } from "react-i18next";
 import LanguageDetector from "i18next-browser-languagedetector";
 import HttpApi from "i18next-http-backend";
+import { apiConfig } from "./api/config";
 
 i18n.use(HttpApi)
     .use(LanguageDetector)
@@ -26,7 +27,8 @@ i18n.use(HttpApi)
             caches: ["localStorage", "cookie"],
         },
         backend: {
-            loadPath: "/locales/{{lng}}.json",
+            //loadPath: "/locales/{{lng}}.json",
+            loadPath: apiConfig.baseUrl + "/locales/{{lng}}.json",
         },
         react: { useSuspense: false },
     });

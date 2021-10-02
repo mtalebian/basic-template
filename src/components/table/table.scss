@@ -212,12 +212,12 @@
 }
 
 /*******************/
-.theme-mui.theme-light {
+.theme-bd.theme-light {
     $palette: map-get($theme, light);
     @include tableTheme($palette);
 }
 
-.theme-mui.theme-dark {
+.theme-bd.theme-dark {
     $palette: map-get($theme, dark);
     @include tableTheme($palette);
 }

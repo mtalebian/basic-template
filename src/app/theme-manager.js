@@ -10,8 +10,7 @@ export const themeManager = {
     },
 
     isDark: (theme) => theme && theme.indexOf("dark") >= 0,
-    isDarkSidebar: (theme) =>
-        themeManager.isDark(theme) || (theme && theme.indexOf("default") >= 0),
+    isDarkSidebar: (theme) => themeManager.isDark(theme) || (theme && theme.indexOf("default") >= 0),
 
     css: (value) => {
         var lst = [];
@@ -29,7 +28,7 @@ export const themeManager = {
         if (!value) return list;
         list.push("theme-" + value);
         if (value.startsWith("bs-")) list.push("theme-bs");
-        if (value.startsWith("mui-")) list.push("theme-mui");
+        if (value.startsWith("bd-")) list.push("theme-bd");
         if (value.endsWith("-default")) list.push("theme-light");
         if (value.endsWith("-light")) list.push("theme-light");
         if (value.endsWith("-dark")) list.push("theme-dark");
@@ -37,5 +36,5 @@ export const themeManager = {
     },
 };
 var t = themeManager.get();
-if (!t) t = "mui-light";
+if (!t) t = "bd-light";
 themeManager.css(t);

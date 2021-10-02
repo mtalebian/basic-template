@@ -8,6 +8,7 @@ namespace Forms.Core
         IColumnRepository Columns { get; }
         ITableRepository Tables { get; }
         IGroupRepository Groups { get; }
+        ITextRepository Texts{ get; }
 
         void ExecuteSql(string sql, Dictionary<string, object> parameters);
     }

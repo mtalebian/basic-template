@@ -220,8 +220,8 @@ export function MenuDesigner({ applications, currApp, setApp, menus, menuFolders
                         selectedFolder={selectedFolder}
                         selectedMenu={selectedMenu}
                         activeItem={activeItem}
-                        light={theme === "mui-light"}
-                        dark={theme !== "mui-light"}
+                        light={theme === "bd-light"}
+                        dark={theme !== "bd-light"}
                     />
                 </div>
             </div>

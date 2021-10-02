@@ -24,8 +24,8 @@ export const Header = ({ onToggle, onCollapse, ...props }) => {
     }
 
     function toggleDarkMode() {
-        if (theme && theme.indexOf("dark") >= 0) setTheme("mui-light");
-        else setTheme("mui-dark");
+        if (theme && theme.indexOf("dark") >= 0) setTheme("bd-light");
+        else setTheme("bd-dark");
     }
 
     const menuUser = (

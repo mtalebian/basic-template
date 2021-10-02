@@ -93,6 +93,22 @@ namespace Forms.Data
                     HiddenInEditor = false,
                     HiddenInTable = false,
                 });
+            
+            
+            //
+            // Text
+            //
+            var Text= new ConfigHelper<Text>(modelBuilder, _FormsConfig.TextTableName);
+            Text.HasKey(x => new { x.LanguageCode, x.Name});
+            Text.Varchar20(x => x.LanguageCode, true);
+            Text.Varchar100(x => x.Name, true);
+            Text.HasMaxLength(x => x.Value, 1000, true);
+
+            Column.Entity()
+                .HasOne(x => x.Table)
+                .WithMany(x => x.Columns)
+                .HasForeignKey(x => new { x.ProjectId, x.TableName });
+
         }
     }
 }

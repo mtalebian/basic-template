@@ -1,3 +1,12 @@
 {
-    "welcome": "Welcome"
+    "app.title": "IKCO Purchsing",
+
+    "header-logo": "/images/logo/header-logo-en.png",
+    "welcome": "Welcome",
+    "dark_mode": "Dark Mode",
+    "language": "Language",
+    "settings": "User Settings",
+
+    "edit-group": "Edit Group",
+    "group-titles": "Group Titles"
 }

@@ -18,7 +18,7 @@ export function LunchpadApp() {
     const [selectedMenu, setSelectedMenu] = useState(null);
     const [theme] = useContext(ThemeContext);
     //const is_dark = true;
-    const is_dark = theme !== "mui-light";
+    const is_dark = theme !== "bd-light";
 
     //useEffect(() => accountManager.bind(setUser).remove, []);
 

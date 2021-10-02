@@ -1,3 +1,17 @@
 {
-    "welcome": "خوش آمدید"
+    "app.title": "سيستم خريد ايران خودرو",
+    "header-logo": "/images/logo/header-logo.png",
+    "welcome": "خوش آمدید",
+    "dark_mode": "حالت تاريك",
+    "language": "زبان",
+
+    "settings": "تنظيمات سيستم",
+
+    "delete": "خذف",
+    "save-group": "ثبت تغييرات",
+    "group-title": "عنوان گروه",
+    "edit-group": "ويرايش گروه",
+    "group-titles": "ويرايش گروه",
+    "your-going-to-delete-the-group": "شما در حال حذف گروه مي باشيد",
+    "are-you-sure": "آيا مطمئن هستيد؟"
 }

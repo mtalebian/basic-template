@@ -13,6 +13,7 @@ namespace Forms.Data
         public IColumnRepository Columns { get; }
         public ITableRepository Tables { get; }
         public IGroupRepository Groups { get; }
+        public ITextRepository Texts { get; }
 
 
         public FormUnitOfWork(FormDbContext context) : base(context)
@@ -21,6 +22,7 @@ namespace Forms.Data
             Columns = new ColumnRepository(context);
             Groups = new GroupRepository(context);
             Tables = new TableRepository(context);
+            Texts = new TextRepository(context);
         }
 
         public void ExecuteSql(string sql, Dictionary<string, object> parameters)
