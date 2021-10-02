@@ -91,6 +91,8 @@ export function TableDesignerEditTable({ table, group, onChanged }) {
                             <FinalCheck inline name="sortable" label="Sortable" labelSize="3" />
                             <FinalCheck inline name="filterable" label="Filterable" labelSize="3" />
 
+                            <bd.Toggle label="sortable" />
+
                             <div className="row">
                                 <div className="col-md-3"></div>
                                 <div className="col-md-9">
