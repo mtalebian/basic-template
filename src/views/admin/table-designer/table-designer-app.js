@@ -15,13 +15,9 @@ import * as icons from "../../../assets/icons";
 //
 export function TableDesignerApp() {
     const [groups, setGroups] = useState(null);
-    const [group, setGroup0] = useState(null);
+    const [group, setGroup] = useState(null);
     const [table, setTable] = useState(null);
     const [column, setColumn] = useState(null);
-
-    function setGroup(v) {
-        setGroup0(v);
-    }
 
     function goBack() {
         if (column) {
@@ -72,7 +68,7 @@ export function TableDesignerApp() {
         return accountManager.status.onConnected(function () {
             if (!groups) tableDesignerApi.getGroups().then((x) => setGroups(x));
         }).remove;
-    }, []);
+    });
 
     return (
         <>

@@ -1,5 +1,5 @@
-import React, { MutableRefObject, ReactNode, useEffect, useState } from "react";
-import { InputGroup, Modal, TabContainer, TabContent, TabPane, Button } from "react-bootstrap";
+import React, { MutableRefObject, ReactNode, useState } from "react";
+import { InputGroup, Modal, TabContainer, TabContent, TabPane } from "react-bootstrap";
 import * as icons from "../../assets/icons";
 import * as bd from "react-basic-design";
 
@@ -62,7 +62,7 @@ export function TableTitlebar({ tableRef, title, color, fixed, expanded, buttons
     );
 }
 
-function GlobalFilter({ filter, setFilter, ...props }: any) {
+export function GlobalFilter({ filter, setFilter, ...props }: any) {
     return <input type="text" value={filter || ""} onChange={(e) => setFilter(e.target.value)} {...props} />;
 }
 

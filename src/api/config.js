@@ -1,6 +1,7 @@
 const port = "5001"; //44356
 
 export const apiConfig = {
+    localeUrl: "",
     baseUrl: "https://localhost:" + port,
     accountUrl: "https://localhost:" + port + "/account",
     menuUrl: "https://localhost:" + port + "/menu",

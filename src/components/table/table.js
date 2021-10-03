@@ -210,14 +210,14 @@ export function Table({
     });
 
     editable = editable && groupBy.length === 0;
-    const enable_responsive = headerGroups.length == 1 && columns.some((x) => !!x._breakPoint);
-    const css_popin_row = columns.some((x) => x._breakPoint == "xl")
+    const enable_responsive = headerGroups.length === 1 && columns.some((x) => !!x._breakPoint);
+    const css_popin_row = columns.some((x) => x._breakPoint === "xl")
         ? "popin-row-lg"
-        : columns.some((x) => x._breakPoint == "lg")
+        : columns.some((x) => x._breakPoint === "lg")
         ? "popin-row-md"
-        : columns.some((x) => x._breakPoint == "md")
+        : columns.some((x) => x._breakPoint === "md")
         ? "popin-row-sm"
-        : columns.some((x) => x._breakPoint == "sm")
+        : columns.some((x) => x._breakPoint === "sm")
         ? "popin-row-xs"
         : "";
 
@@ -303,26 +303,28 @@ export function Table({
 
     function renderCheckboxHeader(column, idx) {
         if (hideCheckbox) return null;
-        return (idx == 0 && selectionMode === "multiple") || (idx == 1 && selectionMode === "single") ? (
+        return (idx === 0 && selectionMode === "multiple") || (idx === 1 && selectionMode === "single") ? (
             <th {...getHeaderProps(column, idx)}>{column.render("Header")}</th>
         ) : null;
     }
 
     function renderCheckboxCell(row, cell, idx) {
         if (hideCheckbox) return null;
-        return (idx == 0 && selectionMode === "multiple") || (idx == 1 && selectionMode === "single") ? (
+        return (idx === 0 && selectionMode === "multiple") || (idx === 1 && selectionMode === "single") ? (
             <td {...getCellProps(row, cell)}>{cell.render("Cell")}</td>
         ) : null;
     }
 
     function renderCheckboxPlaceholder(column, idx) {
         if (hideCheckbox) return null;
-        return (idx == 0 && selectionMode === "multiple") || (idx == 1 && selectionMode === "single") ? <th {...column.getFooterProps()}></th> : null;
+        return (idx === 0 && selectionMode === "multiple") || (idx === 1 && selectionMode === "single") ? (
+            <th {...column.getFooterProps()}></th>
+        ) : null;
     }
 
     function checkboxPlaceholder(idx) {
         if (hideCheckbox) return null;
-        return (idx == 0 && selectionMode === "multiple") || (idx == 1 && selectionMode === "single");
+        return (idx === 0 && selectionMode === "multiple") || (idx === 1 && selectionMode === "single");
     }
 
     function getSortByToggleProps(column) {
@@ -335,7 +337,7 @@ export function Table({
             <div className="bd-titlebar"></div>
             <div
                 className={classNames("bd-table", {
-                    "bd-table-bordered": !border || border == "full",
+                    "bd-table-bordered": !border || border === "full",
                     "bd-table-border-row": border === "row" || border === "table-row",
                     "bd-table-border-table-row": border === "table-row",
                 })}

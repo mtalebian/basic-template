@@ -1,6 +1,5 @@
 import classNames from "classnames";
 import React from "react";
-import * as bs from "react-basic-design";
 
 import * as icons from "../../assets/icons";
 

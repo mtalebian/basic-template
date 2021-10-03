@@ -6,10 +6,13 @@ import accountManager from "../../app/account-manager";
 //import { messages } from "../../components/messages";
 import * as bs from "react-basic-design";
 import { ThemeContext } from "../../app/theme-context";
+import { useTranslation } from "react-i18next";
 
 export const Header = ({ onToggle, onCollapse, ...props }) => {
+    const { t } = useTranslation();
     const [, setUser] = useState({});
     const [theme, setTheme] = useContext(ThemeContext);
+
     const onToggleClick = () => {
         onToggle();
         //onCollapse();
@@ -30,7 +33,7 @@ export const Header = ({ onToggle, onCollapse, ...props }) => {
 
     const menuUser = (
         <bs.Menu className="mt-n4 shadow-5">
-            <bs.MenuItem>User Profige</bs.MenuItem>
+            <bs.MenuItem>{t("User Profile")}</bs.MenuItem>
             <div className="dropdown-divider"></div>
             <bs.MenuItem>Settings</bs.MenuItem>
             <bs.MenuItem onClick={logout}>Logout</bs.MenuItem>

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import i18next from "i18next";
 import * as bd from "react-basic-design";
+import settings from "../../app/settings";
 
 const defaultLanguageCode = "fa";
 const languages = [
@@ -18,16 +19,10 @@ const languages = [
     },
 ];
 
-function getCookie(name) {
-    const value = `; ${document.cookie}`;
-    const parts = value.split(`; ${name}=`);
-    if (parts.length === 2) return parts.pop().split(";").shift();
-}
-
 export const UserSettingsApp = () => {
     const { t } = useTranslation();
     const [darkMode, setDarkMode] = useState(bd.helper.isDarkMode());
-    const currentLanguageCode = getCookie("i18next") || defaultLanguageCode;
+    const currentLanguageCode = settings.getLanguageCode() || defaultLanguageCode;
     const currentLanguage = languages.find((l) => l.code === currentLanguageCode);
 
     const changeDarkMode = (value) => {
@@ -65,7 +60,7 @@ export const UserSettingsApp = () => {
                     className="border-bottom"
                 >
                     {languages.map((x) => (
-                        <bd.ListItem primary={x.name} radio checked={currentLanguage === x} onClick={(e) => changeLanguage(x)} />
+                        <bd.ListItem key={x.code} primary={x.name} radio checked={currentLanguage === x} onClick={(e) => changeLanguage(x)} />
                     ))}
                 </bd.ListItem>
             </bd.List>

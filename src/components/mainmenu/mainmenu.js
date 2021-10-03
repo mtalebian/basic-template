@@ -1,7 +1,6 @@
 import classNames from "classnames";
 import React from "react";
 import { SlideDown } from "react-slidedown";
-import * as bs from "react-basic-design";
 
 import "./index.scss";
 import * as icons from "../../assets/icons";

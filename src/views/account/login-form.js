@@ -3,7 +3,6 @@ import { Form } from "react-final-form";
 import { useHistory } from "react-router-dom";
 
 import * as bs from "react-basic-design";
-import * as icons from "../../assets/icons";
 import { Captcha } from "./captcha";
 import accountManager from "../../app/account-manager";
 import { messages } from "../../components/messages";

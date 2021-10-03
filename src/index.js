@@ -13,6 +13,7 @@ import { initReactI18next } from "react-i18next";
 import LanguageDetector from "i18next-browser-languagedetector";
 import HttpApi from "i18next-http-backend";
 import { apiConfig } from "./api/config";
+import settings from "./app/settings";
 
 i18n.use(HttpApi)
     .use(LanguageDetector)
@@ -21,6 +22,7 @@ i18n.use(HttpApi)
         supportedLngs: ["en", "fa"],
         fallbackLng: "en",
         debug: false,
+        saveMissing: settings.debugMode,
 
         detection: {
             order: ["cookie", "path", "querystring", "localStorage", "sessionStorage", "navigator", "htmlTag", "subdomain"],
@@ -28,10 +30,20 @@ i18n.use(HttpApi)
         },
         backend: {
             //loadPath: "/locales/{{lng}}.json",
-            loadPath: apiConfig.baseUrl + "/locales/{{lng}}.json",
+            loadPath: apiConfig.localeUrl + "/locales/{{lng}}.json",
         },
-        react: { useSuspense: false },
+        // react: { useSuspense: false },
     });
+
+i18n.on("missingKey", function (lngs, namespace, key, res) {
+    const currentLanguageCode = settings.getLanguageCode();
+    var lang_missings = settings.missingTranslations[currentLanguageCode];
+    if (!lang_missings) {
+        lang_missings = {};
+        settings.missingTranslations[currentLanguageCode] = lang_missings;
+    }
+    lang_missings[key] = res;
+});
 
 const loadingMarkup = (
     <div className="py-5 text-center">

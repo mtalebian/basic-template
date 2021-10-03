@@ -19,10 +19,11 @@ export function MainLayout({ component: Comp, ...props }) {
 
     const menuUser = (
         <bd.Menu className="mt-n4 shadow-5">
-            <bd.MenuItem>User Profige</bd.MenuItem>
+            <bd.MenuItem>{t("User Profile")}</bd.MenuItem>
+            <bd.MenuItem onClick={settings.logMissings}>{t("Missing Translations")}</bd.MenuItem>
             <div className="dropdown-divider"></div>
-            <bd.MenuItem href="/user/settings">Settings</bd.MenuItem>
-            <bd.MenuItem onClick={logout}>Logout</bd.MenuItem>
+            <bd.MenuItem href="/user/settings">{t("Settings")}</bd.MenuItem>
+            <bd.MenuItem onClick={logout}>{t("Logout")}</bd.MenuItem>
         </bd.Menu>
     );
 
@@ -40,6 +41,7 @@ export function MainLayout({ component: Comp, ...props }) {
                         <a href="/home">
                             <img src={t("header-logo")} alt="logo" height={31} />
                         </a>
+
                         <h5 className="appbar-title">{title}</h5>
 
                         {Comp?.Appbar?.buttons}

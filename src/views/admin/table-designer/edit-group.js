@@ -1,8 +1,6 @@
 import React, { useState } from "react";
-import { Form } from "react-final-form";
 import { useTranslation } from "react-i18next";
 
-import { FinalField } from "../../../components/basic/final-form";
 import * as bd from "react-basic-design";
 import { BasicModal } from "../../../components/basic/basic-modal";
 
@@ -12,6 +10,8 @@ import { tableDesignerApi } from "../../../api/table-designer-api";
 import { notify } from "../../../components/basic/notify";
 import * as icons from "../../../assets/icons";
 import { useFormik } from "formik";
+import { BasicInput } from "../../../components/basic-form/basic-field";
+import * as yup from "yup";
 
 //
 export function TableDesignerEditGroup({ group, onChanged, onGoBack }) {
@@ -19,7 +19,7 @@ export function TableDesignerEditGroup({ group, onChanged, onGoBack }) {
     const [loading, setLoading] = useState(false);
     const [deleting, setDeleting] = useState(false);
     const [showDeletingGroup, setShowDeletingGroup] = useState(false);
-
+    /*
     const onSubmit = (values) => {
         setLoading(true);
         var insertMode = !group.id;
@@ -36,7 +36,7 @@ export function TableDesignerEditGroup({ group, onChanged, onGoBack }) {
                 notify.error(ex);
             });
     };
-
+*/
     const onDeleteClick = () => {
         setDeleting(true);
         tableDesignerApi
@@ -57,6 +57,9 @@ export function TableDesignerEditGroup({ group, onChanged, onGoBack }) {
         onSubmit: (values) => {
             alert(JSON.stringify(values, null, 2));
         },
+        validationSchema: yup.object({
+            title: yup.string().max(5, "Must be 15 characters or less").required("Required"),
+        }),
     });
 
     return (
@@ -66,6 +69,7 @@ export function TableDesignerEditGroup({ group, onChanged, onGoBack }) {
                     <bd.Button variant="icon" onClick={onGoBack} size="md" edge="start" className="m-e-2">
                         <icons.ArrowBackIos className="rtl-rotate-180" />
                     </bd.Button>
+
                     <h5>
                         {t("edit-group")}: <b className="text-primary-text">{group.title}</b>
                     </h5>
@@ -96,8 +100,7 @@ export function TableDesignerEditGroup({ group, onChanged, onGoBack }) {
                 <form onSubmit={formik.handleSubmit}>
                     <div style={{ maxWidth: 400 }}>
                         {/* <FinalField name="title" label={t("group-title")} type="text" autoComplete="off" autoFocus /> */}
-                        <label htmlFor="email">Email Address</label>
-                        <input id="email" name="email" type="email" onChange={formik.handleChange} value={formik.values.email} />
+                        <BasicInput formik={formik} name="title" label={t("group-title")} autoComplete="off" autoFocus />
                     </div>
                 </form>
             </div>

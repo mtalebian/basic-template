@@ -2,8 +2,7 @@ import React, { useState, useContext } from "react";
 import { Form } from "react-final-form";
 //import { Dropdown } from "react-bootstrap";
 
-import * as bs from "react-basic-design";
-import MainMenu, { menuHelper } from "../../../components/mainmenu/mainmenu";
+import * as bd from "react-basic-design";
 import * as tables from "../../../data";
 import { messages } from "../../../components/messages";
 import { ThemeContext } from "../../../app/theme-context";
@@ -11,6 +10,7 @@ import { BasicModal } from "../../../components/basic/basic-modal";
 import { GenerateEditControls } from "../../../components/basic/table/generate-edit-controls";
 import { notify } from "../../../components/basic/notify";
 import * as icons from "../../../assets/icons";
+import MainMenu, { menuHelper } from "../../../components/mainmenu/mainmenu";
 
 export function MenuDesigner({ applications, currApp, setApp, menus, menuFolders, onAdd, onUpdate, onDelete }) {
     const [theme] = useContext(ThemeContext);
@@ -128,7 +128,7 @@ export function MenuDesigner({ applications, currApp, setApp, menus, menuFolders
 
                                 {activeItem && (
                                     <>
-                                        <bs.Button
+                                        <bd.Button
                                             variant="text"
                                             size="sm"
                                             onClick={() => openEditForm(false, activeItem, activeItemTable)}
@@ -136,14 +136,14 @@ export function MenuDesigner({ applications, currApp, setApp, menus, menuFolders
                                         >
                                             <icons.Edit />
                                             {messages.Edit}
-                                        </bs.Button>
+                                        </bd.Button>
                                         {
-                                            <bs.Button variant="text" size="sm" onClick={onDeleteClick}>
+                                            <bd.Button variant="text" size="sm" onClick={onDeleteClick}>
                                                 <icons.Delete />
                                                 {messages.Delete}
-                                            </bs.Button>
+                                            </bd.Button>
                                         }
-                                        <bs.Button
+                                        <bd.Button
                                             variant="text"
                                             size="sm"
                                             color="secondary"
@@ -151,7 +151,7 @@ export function MenuDesigner({ applications, currApp, setApp, menus, menuFolders
                                             title={messages.Cancel}
                                         >
                                             <icons.Close height={16} fill="#555" />
-                                        </bs.Button>
+                                        </bd.Button>
                                     </>
                                 )}
                             </div>
