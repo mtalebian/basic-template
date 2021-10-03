@@ -9,7 +9,7 @@ import classNames from "classnames";
 import { tableDesignerApi } from "../../../api/table-designer-api";
 import { notify } from "../../../components/basic/notify";
 import * as icons from "../../../assets/icons";
-import { useFormik } from "formik";
+import { Form, Formik } from "formik";
 import { BasicInput } from "../../../components/basic-form/basic-field";
 import * as yup from "yup";
 
@@ -52,15 +52,9 @@ export function TableDesignerEditGroup({ group, onChanged, onGoBack }) {
             });
     };
 
-    const formik = useFormik({
-        initialValues: group,
-        onSubmit: (values) => {
-            alert(JSON.stringify(values, null, 2));
-        },
-        validationSchema: yup.object({
-            title: yup.string().max(5, "Must be 15 characters or less").required("Required"),
-        }),
-    });
+    const onSubmitHandler = (values) => {
+        alert(JSON.stringify(values, null, 2));
+    };
 
     return (
         <>
@@ -97,12 +91,20 @@ export function TableDesignerEditGroup({ group, onChanged, onGoBack }) {
             </div>
 
             <div className="container">
-                <form onSubmit={formik.handleSubmit}>
-                    <div style={{ maxWidth: 400 }}>
-                        {/* <FinalField name="title" label={t("group-title")} type="text" autoComplete="off" autoFocus /> */}
-                        <BasicInput formik={formik} name="title" label={t("group-title")} autoComplete="off" autoFocus />
-                    </div>
-                </form>
+                <Formik
+                    initialValues={{ title: group.title }}
+                    validationSchema={yup.object({
+                        title: yup.string().max(5, "Must be 15 characters or less").required("Required"),
+                    })}
+                    onSubmit={onSubmitHandler}
+                >
+                    <Form>
+                        <div style={{ maxWidth: 400 }}>
+                            {/* <FinalField name="title" label={t("group-title")} type="text" autoComplete="off" autoFocus /> */}
+                            <BasicInput name="title" label={t("group-title")} autoComplete="off" autoFocus />
+                        </div>
+                    </Form>
+                </Formik>
             </div>
 
             <BasicModal
