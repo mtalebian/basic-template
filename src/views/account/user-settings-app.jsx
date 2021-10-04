@@ -34,9 +34,6 @@ export const UserSettingsApp = () => {
         i18next.changeLanguage(lang.code);
     };
 
-    //const toggleDarkMode = () => bd.helper.setTheme(!bd.helper.isDarkMode() ? "bd-dark" : "bd-light");
-    //const toggleRTL = () => bd.helper.setRTL(!bd.helper.getRTL());
-
     useEffect(() => {
         bd.helper.setRTL(currentLanguage.dir === "rtl");
         document.title = t("app.title");

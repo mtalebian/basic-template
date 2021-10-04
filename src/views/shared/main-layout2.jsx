@@ -17,10 +17,13 @@ export function MainLayout({ component: Comp, ...props }) {
         return false;
     }
 
+    const toggleDarkMode = () => bd.helper.setTheme(!bd.helper.isDarkMode() ? "bd-dark" : "bd-light");
+    const toggleRTL = () => bd.helper.setRTL(!bd.helper.getRTL());
+
     const menuUser = (
         <bd.Menu className="mt-n4 shadow-5">
             <bd.MenuItem>{t("User Profile")}</bd.MenuItem>
-            <bd.MenuItem onClick={settings.logMissings}>{t("Missing Translations")}</bd.MenuItem>
+            {settings.debugMode && <bd.MenuItem onClick={settings.logMissings}>{t("Missing Translations")}</bd.MenuItem>}
             <div className="dropdown-divider"></div>
             <bd.MenuItem href="/user/settings">{t("Settings")}</bd.MenuItem>
             <bd.MenuItem onClick={logout}>{t("Logout")}</bd.MenuItem>
@@ -45,15 +48,20 @@ export function MainLayout({ component: Comp, ...props }) {
                         <h5 className="appbar-title">{title}</h5>
 
                         {Comp?.Appbar?.buttons}
+
+                        <bd.Button variant="text" color="default" onClick={toggleRTL} className="d-none d-md-block">
+                            RTL
+                        </bd.Button>
+
+                        <bd.Button variant="icon" color="default" onClick={toggleDarkMode} className="d-none d-md-block">
+                            <icons.DarkMode />
+                        </bd.Button>
+
                         <bd.Badge value={2} overlapCircle className="bg-warning text-dark d-none d-sm-flex">
                             <bd.Button variant="icon" color="default" className="d-none d-sm-block">
                                 <icons.NotificationsActive />
                             </bd.Button>
                         </bd.Badge>
-
-                        {/* <bd.Button variant="icon" color="default" onClick={toggleDarkMode} className="d-none d-md-block">
-                            <icons.DarkMode />
-                        </bd.Button> */}
 
                         <bd.Button variant="icon" color="default" menu={menuUser} edge="end" className="d-none d-sm-block">
                             <icons.AccountCircle />

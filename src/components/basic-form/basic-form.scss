@@ -1,0 +1,43 @@
+.bd-input {
+    margin-bottom: 1rem;
+
+    .bd-error {
+        margin-top: 0.25rem;
+    }
+}
+/*******************/
+@mixin errorTheme($palette) {
+    $text: map-get($palette, text);
+    $bg: map-get($palette, bg);
+
+    $primary-palette: map-get($palette, primary);
+    $primary: map-get($primary-palette, main);
+
+    $error-palette: map-get($palette, error);
+    $error: map-get($error-palette, main);
+
+    .bd-input {
+        label {
+            color: mix($bg, $text, 15%);
+        }
+    }
+
+    .bd-error {
+        color: $error;
+    }
+
+    .bd-border-error {
+        border-color: $error !important;
+    }
+}
+
+/*******************/
+.theme-bd.theme-light {
+    $palette: map-get($theme, light);
+    @include errorTheme($palette);
+}
+
+.theme-bd.theme-dark {
+    $palette: map-get($theme, dark);
+    @include errorTheme($palette);
+}

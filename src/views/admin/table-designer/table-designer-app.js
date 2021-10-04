@@ -11,9 +11,11 @@ import { TableDesignerHeader } from "./header";
 import { notify } from "../../../components/basic/notify";
 import { Tile, Tiles } from "../../../components/tilemenu/tiles";
 import * as icons from "../../../assets/icons";
+import { useTranslation } from "react-i18next";
 
 //
 export function TableDesignerApp() {
+    const { t } = useTranslation();
     const [groups, setGroups] = useState(null);
     const [group, setGroup] = useState(null);
     const [table, setTable] = useState(null);
@@ -60,8 +62,7 @@ export function TableDesignerApp() {
     }
 
     function onAddGroupClicked() {
-        setGroup({});
-        return false;
+        setGroup({ title: "" });
     }
 
     useEffect(() => {
@@ -72,55 +73,52 @@ export function TableDesignerApp() {
 
     return (
         <>
-            <TableDesignerHeader group={group} table={table} column={column} onGoBack={goBack} onAddGroupClicked={onAddGroupClicked} />
+            {/* <TableDesignerHeader group={group} table={table} column={column} onGoBack={goBack} onAddGroupClicked={onAddGroupClicked} /> */}
 
-            <div
-                className={classNames("container", {
-                    "d-none": group || table,
-                })}
-            >
-                <bd.Toolbar className="border-bottom mb-2">
-                    <span>Maintain base tables</span>
-                    <span className="flex-grow-1"></span>
-                    <bd.Button color="primary" size="sm" onClick={onAddGroupClicked}>
-                        <icons.Folder />
-                        Add new group
-                    </bd.Button>
-                </bd.Toolbar>
-
-                <Tiles>
-                    {groups &&
-                        groups
-                            .sort((a, b) => (a.title === b.title ? 0 : a.title > b.title ? 1 : -1))
-                            .map((g) => (
-                                <Tile
-                                    key={g.id}
-                                    title={
-                                        <>
-                                            <span className="size-md"> {g.title}</span>
-                                            <bd.Button
-                                                variant="text"
-                                                size="sm"
-                                                className="mx-2"
-                                                color="secondary"
-                                                onClick={() => onEditGroupClick(g)}
-                                            >
-                                                <icons.Edit />
-                                                Edit Group
-                                            </bd.Button>
-                                            <bd.Button variant="text" size="sm" color="secondary" onClick={() => onAddFormClick(g)}>
-                                                <icons.Add />
-                                                New table
-                                            </bd.Button>
-                                        </>
-                                    }
-                                >
-                                    {g.items.map((t) => (
-                                        <Tile key={t} title={t.title} onClick={() => onEditTableClick(g, t)} />
-                                    ))}
-                                </Tile>
-                            ))}
-                </Tiles>
+            <div className={classNames({ "d-none": group || table })}>
+                <div className="border-bottom bg-gray-5 mb-3">
+                    <bd.Toolbar className="container">
+                        <bd.Button color="primary" size="sm" onClick={onAddGroupClicked}>
+                            <icons.Folder />
+                            {t("add-new-group")}
+                        </bd.Button>
+                    </bd.Toolbar>
+                </div>
+                <div className="container">
+                    <Tiles>
+                        {groups &&
+                            groups
+                                .sort((a, b) => (a.title === b.title ? 0 : a.title > b.title ? 1 : -1))
+                                .map((g) => (
+                                    <Tile
+                                        key={g.id}
+                                        title={
+                                            <>
+                                                <span className="size-md"> {g.title}</span>
+                                                <bd.Button
+                                                    variant="text"
+                                                    size="sm"
+                                                    className="mx-2"
+                                                    color="secondary"
+                                                    onClick={() => onEditGroupClick(g)}
+                                                >
+                                                    <icons.Edit />
+                                                    Edit Group
+                                                </bd.Button>
+                                                <bd.Button variant="text" size="sm" color="secondary" onClick={() => onAddFormClick(g)}>
+                                                    <icons.Add />
+                                                    New table
+                                                </bd.Button>
+                                            </>
+                                        }
+                                    >
+                                        {g.items.map((t) => (
+                                            <Tile key={t.name} title={t.title} onClick={() => onEditTableClick(g, t)} />
+                                        ))}
+                                    </Tile>
+                                ))}
+                    </Tiles>
+                </div>
             </div>
 
             {group && !table && !column && (

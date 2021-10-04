@@ -8,5 +8,8 @@
     "settings": "User Settings",
 
     "edit-group": "Edit Group",
-    "group-titles": "Group Titles"
+    "group-titles": "Group Titles",
+    "table-designer-table-name": "Table Name",
+    "table-designer-table-title": "Title",
+    "table-designer-singular": "Singular Title"
 }

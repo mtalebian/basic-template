@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import * as bd from "react-basic-design";
@@ -19,8 +19,16 @@ export function TableDesignerEditGroup({ group, onChanged, onGoBack }) {
     const [loading, setLoading] = useState(false);
     const [deleting, setDeleting] = useState(false);
     const [showDeletingGroup, setShowDeletingGroup] = useState(false);
-    /*
-    const onSubmit = (values) => {
+    const formRef = useRef();
+
+    const onSaveClick = (e) => {
+        if (!formRef.current) return false;
+        if (!formRef.current.isValid) {
+            alert(t("form-is-invalid"));
+            return false;
+        }
+        var values = formRef.current.values;
+
         setLoading(true);
         var insertMode = !group.id;
         tableDesignerApi
@@ -36,7 +44,7 @@ export function TableDesignerEditGroup({ group, onChanged, onGoBack }) {
                 notify.error(ex);
             });
     };
-*/
+
     const onDeleteClick = () => {
         setDeleting(true);
         tableDesignerApi
@@ -50,10 +58,6 @@ export function TableDesignerEditGroup({ group, onChanged, onGoBack }) {
                 setLoading(false);
                 notify.error(ex);
             });
-    };
-
-    const onSubmitHandler = (values) => {
-        alert(JSON.stringify(values, null, 2));
     };
 
     return (
@@ -70,7 +74,7 @@ export function TableDesignerEditGroup({ group, onChanged, onGoBack }) {
 
                     <div className="flex-grow-1" />
 
-                    <bd.Button color="primary" type="submit" disabled={loading || deleting}>
+                    <bd.Button color="primary" type="submit" disabled={loading || deleting} onClick={onSaveClick}>
                         {loading && <div className="m-e-2 spinner-border spinner-border-sm"></div>}
                         <span>{t("save-group")}</span>
                     </bd.Button>
@@ -92,17 +96,13 @@ export function TableDesignerEditGroup({ group, onChanged, onGoBack }) {
 
             <div className="container">
                 <Formik
-                    initialValues={{ title: group.title }}
-                    validationSchema={yup.object({
-                        title: yup.string().max(5, "Must be 15 characters or less").required("Required"),
-                    })}
-                    onSubmit={onSubmitHandler}
+                    initialValues={group}
+                    validationSchema={yup.object({ title: yup.string().min(3, t("msg-too-short")).max(100, t("msg-too-long")).required("Required") })}
+                    onSubmit={onSaveClick}
+                    innerRef={formRef}
                 >
-                    <Form>
-                        <div style={{ maxWidth: 400 }}>
-                            {/* <FinalField name="title" label={t("group-title")} type="text" autoComplete="off" autoFocus /> */}
-                            <BasicInput name="title" label={t("group-title")} autoComplete="off" autoFocus />
-                        </div>
+                    <Form style={{ maxWidth: 400 }}>
+                        <BasicInput name="title" label={t("group-title")} labelSize="4" autoComplete="off" autoFocus />
                     </Form>
                 </Formik>
             </div>
