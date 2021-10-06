@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Accounts.Migrations.Migrations
 {
     [DbContext(typeof(AccountDbContext))]
-    [Migration("20211006085235_V2")]
+    [Migration("20211006112145_V2")]
     partial class V2
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -474,6 +474,9 @@ namespace Accounts.Migrations.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
+                    b.Property<bool>("WindowsAuthenticate")
+                        .HasColumnType("bit");
+
                     b.HasKey("Id");
 
                     b.ToTable("Users", "tmp");
@@ -483,8 +486,8 @@ namespace Accounts.Migrations.Migrations
                         {
                             Id = 1L,
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "a3a9c726-0987-4964-8469-c5e95d28d87a",
-                            CreatedAt = new DateTime(2021, 10, 6, 12, 22, 34, 995, DateTimeKind.Local).AddTicks(1112),
+                            ConcurrencyStamp = "0bee1803-4352-44ab-8dbb-7d674fa39af8",
+                            CreatedAt = new DateTime(2021, 10, 6, 14, 51, 44, 771, DateTimeKind.Local).AddTicks(7325),
                             EmailConfirmed = false,
                             FirstName = "",
                             IsDeleted = false,
@@ -495,8 +498,9 @@ namespace Accounts.Migrations.Migrations
                             NationalCode = "0123456789",
                             PasswordHash = "PABPyu6/prVEQ4QbBrmcATJsjw/1yoli07rNI6EJ764=",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "7cf421dd-aef8-4408-8f52-55ff59981e0f",
-                            UserName = "admin"
+                            SecurityStamp = "92f8407f-f2c7-496b-978a-f4a31f9fcfc9",
+                            UserName = "admin",
+                            WindowsAuthenticate = false
                         });
                 });
 

@@ -7,28 +7,27 @@ namespace Accounts.Migrations.Migrations
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.AddColumn<string>(
-                name: "NationalCode",
+            migrationBuilder.AddColumn<bool>(
+                name: "WindowsAuthenticate",
                 schema: "tmp",
                 table: "Users",
-                type: "nvarchar(15)",
-                maxLength: 15,
+                type: "bit",
                 nullable: false,
-                defaultValue: "");
+                defaultValue: false);
 
             migrationBuilder.UpdateData(
                 schema: "tmp",
                 table: "Users",
                 keyColumn: "Id",
                 keyValue: 1L,
-                columns: new[] { "ConcurrencyStamp", "CreatedAt", "NationalCode", "SecurityStamp" },
-                values: new object[] { "a3a9c726-0987-4964-8469-c5e95d28d87a", new DateTime(2021, 10, 6, 12, 22, 34, 995, DateTimeKind.Local).AddTicks(1112), "0123456789", "7cf421dd-aef8-4408-8f52-55ff59981e0f" });
+                columns: new[] { "ConcurrencyStamp", "CreatedAt", "SecurityStamp" },
+                values: new object[] { "0bee1803-4352-44ab-8dbb-7d674fa39af8", new DateTime(2021, 10, 6, 14, 51, 44, 771, DateTimeKind.Local).AddTicks(7325), "92f8407f-f2c7-496b-978a-f4a31f9fcfc9" });
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropColumn(
-                name: "NationalCode",
+                name: "WindowsAuthenticate",
                 schema: "tmp",
                 table: "Users");
 
@@ -38,7 +37,7 @@ namespace Accounts.Migrations.Migrations
                 keyColumn: "Id",
                 keyValue: 1L,
                 columns: new[] { "ConcurrencyStamp", "CreatedAt", "SecurityStamp" },
-                values: new object[] { "5c96b6c3-283c-4b8b-9bb2-c7adf25dac47", new DateTime(2021, 8, 26, 1, 6, 19, 266, DateTimeKind.Local).AddTicks(2795), "2f4ff4da-073e-4154-94b9-80c565ff02c4" });
+                values: new object[] { "a3a9c726-0987-4964-8469-c5e95d28d87a", new DateTime(2021, 10, 6, 12, 22, 34, 995, DateTimeKind.Local).AddTicks(1112), "7cf421dd-aef8-4408-8f52-55ff59981e0f" });
         }
     }
 }

@@ -25,6 +25,8 @@ namespace Accounts.Core
         public DateTime? LockoutEndDate { get; set; }
         public bool LockoutEnabled { get; set; }
 
+        public bool WindowsAuthenticate { get; set; }
+
         public string ConcurrencyStamp { get; set; }
         public string SecurityStamp { get; set; }
         public bool IsDeleted { get; set; }

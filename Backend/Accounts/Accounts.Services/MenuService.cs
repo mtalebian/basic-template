@@ -46,8 +46,6 @@ namespace Accounts.Services
             db.SaveChanges();
         }
 
-
-
         public IList<MenuFolder> GetMenuFolders(string projectId)
         {
             return db.MenuFolders.Where(x => x.ProjectId == projectId);

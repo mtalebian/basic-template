@@ -255,6 +255,7 @@ namespace Accounts.Data
             User.IsRequired(x => x.PhoneNumberConfirmed);
             User.IsRequired(x => x.AccessFailedCount);
             User.IsRequired(x => x.LockoutEnabled);
+            User.IsRequired(x => x.WindowsAuthenticate);
             User.IsRequired(x => x.IsDeleted);
             User.IsRequired(x => x.IsDisabled);
             User.DefaultGetDate(x => x.LastUpdate);
