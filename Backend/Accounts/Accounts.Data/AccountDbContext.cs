@@ -266,6 +266,7 @@ namespace Accounts.Data
                 UserName = "admin",
                 FirstName = "",
                 LastName = "Administrator",
+                NationalCode="0123456789",
                 PasswordHash = Common.Cryptography.Helper.HashPassword("123"),
             };
             User.Entity().HasData(admin);
