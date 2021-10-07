@@ -1,9 +1,11 @@
 const port = "5001"; //44356
+const host="https://localhost:" + port;
 
 export const apiConfig = {
     localeUrl: "",
-    baseUrl: "https://localhost:" + port,
-    accountUrl: "https://localhost:" + port + "/account",
-    menuUrl: "https://localhost:" + port + "/menu",
-    tableDesignerUrl: "https://localhost:" + port + "/TableDesigner",
+    baseUrl: host,
+    accountUrl: host + "/account",
+    menuUrl: host + "/menu",
+    tableDesignerUrl: host + "/TableDesigner",
+    userManegmentUrl: host + "/userManagment"
 };
