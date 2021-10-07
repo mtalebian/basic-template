@@ -3,10 +3,11 @@ using System.Threading.Tasks;
 
 namespace Accounts.Core
 {
-    public interface IUserManagementService<TUser> where TUser : User
+    public interface IUserManagementService
     {
         IList<User> GetUsers();
         User GetUser(string nationalCode);
+        User GetUserByUserName(string userName);
         void Insert(User user);
         User Update(User user);
         void DeleteUser(string nationalCode);

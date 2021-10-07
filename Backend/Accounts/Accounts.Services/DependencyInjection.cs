@@ -20,5 +20,10 @@ namespace Microsoft.Extensions.DependencyInjection
             services.AddScoped<IAuthenticationService<TUser>, FormAuthenticationService<TUser>>();
         }
 
+        public static void AddUserManagmentService(this IServiceCollection services)
+        {
+            services.AddScoped<IUserManagementService, UserManagementService>();
+        }
+
     }
 }

@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Accounts.Services
 {
-    internal class UserManagementService<TUser> : IUserManagementService<TUser> where TUser : User
+    internal class UserManagementService : IUserManagementService
     {
         private protected IAccountUnitOfWork<User> db { get; }
         private readonly AccountsConfig _AccountsConfig;
@@ -25,6 +25,10 @@ namespace Accounts.Services
         public User GetUser(string nationalCode)
         {
             return db.Users.FirstOrDefault(x => x.NationalCode == nationalCode);
+        }
+        public User GetUserByUserName(string userName)
+        {
+            return db.Users.FirstOrDefault(x => x.UserName == userName);
         }
         public void Insert(User user)
         {
@@ -52,5 +56,7 @@ namespace Accounts.Services
             user.PasswordHash = newPassword;
             Update(user);
         }
+
+       
     }
 }
