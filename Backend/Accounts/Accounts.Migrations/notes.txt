@@ -8,5 +8,7 @@ Update-Database -Context FormDbContext
 
 
 dotnet tool install
+dotnet ef --startup-project G:\basic-template\Backend\Backend.Api/ migrations add V2 --context AccountDbContext
+
 dotnet ef database update --context AccountDbContext
 dotnet ef database update --context FormDbContext

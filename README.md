@@ -1,7 +1,8 @@
 # Basic Template
-
 A real web application template.
+=======
 
+>>>>>>> d2b87095eecf4ea91235851f4be9c579dd101c50
 ## Guidelines
 
 #### react-basic-design

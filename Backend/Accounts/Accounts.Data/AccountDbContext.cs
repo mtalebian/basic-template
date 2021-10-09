@@ -247,6 +247,7 @@ namespace Accounts.Data
             User.DefineUserName(x => x.UserName);
             User.Varchar50(x => x.FirstName);
             User.Varchar50(x => x.LastName);
+            User.HasMaxLength(x => x.NationalCode, 15, true);
             User.Varchar100(x => x.PasswordHash, false);
             User.DefineUrl(x => x.Email, false);
             User.IsRequired(x => x.EmailConfirmed);
@@ -254,6 +255,7 @@ namespace Accounts.Data
             User.IsRequired(x => x.PhoneNumberConfirmed);
             User.IsRequired(x => x.AccessFailedCount);
             User.IsRequired(x => x.LockoutEnabled);
+            User.IsRequired(x => x.WindowsAuthenticate);
             User.IsRequired(x => x.IsDeleted);
             User.IsRequired(x => x.IsDisabled);
             User.DefaultGetDate(x => x.LastUpdate);
@@ -265,6 +267,7 @@ namespace Accounts.Data
                 UserName = "admin",
                 FirstName = "",
                 LastName = "Administrator",
+                NationalCode="0123456789",
                 PasswordHash = Common.Cryptography.Helper.HashPassword("123"),
             };
             User.Entity().HasData(admin);

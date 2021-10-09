@@ -6,10 +6,12 @@ namespace Accounts.Core
     public class User
     {
         public long Id { get; set; }
-        
+
         public string UserName { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
+
+        public string NationalCode { get; set; }
         public string PasswordHash { get; set; }
 
         public string Email { get; set; }
@@ -22,6 +24,8 @@ namespace Accounts.Core
         public DateTime? LastAccessFailedDate { get; set; }
         public DateTime? LockoutEndDate { get; set; }
         public bool LockoutEnabled { get; set; }
+
+        public bool WindowsAuthenticate { get; set; }
 
         public string ConcurrencyStamp { get; set; }
         public string SecurityStamp { get; set; }
