@@ -247,7 +247,7 @@ namespace Accounts.Data
             User.DefineUserName(x => x.UserName);
             User.Varchar50(x => x.FirstName);
             User.Varchar50(x => x.LastName);
-            User.HasMaxLength(x => x.NationalCode, 15, true);
+            User.HasMaxLength(x => x.NationalCode, 15, false);
             User.Varchar100(x => x.PasswordHash, false);
             User.DefineUrl(x => x.Email, false);
             User.IsRequired(x => x.EmailConfirmed);
