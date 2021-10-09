@@ -2,12 +2,13 @@ import React, { useState, createContext, useEffect, useContext } from "react";
 import { accountApi } from "../api/account-api";
 import { api } from "../api/api";
 
-const accountStatuses = {
+export const accountStatuses = {
     Connecting: "connecting",
     ConnectionFailed: "connection-failed",
     Connected: "connected",
     LoggedIn: "logged-in",
     LoggedOut: "logged-out",
+    Forbidden: "forbidden",
 };
 
 export const AccountContext = createContext();
@@ -54,6 +55,7 @@ export const AccountProvider = (props) => {
         isLoggedOut: () => account.getStatus() === accountStatuses.LoggedOut,
 
         setAsLoggedOut: () => account.setStatus(accountStatuses.LoggedOut),
+        setAsForbidden: () => account.setStatus(accountStatuses.Forbidden),
 
         init: () => {
             account.setStatus(accountStatuses.Connecting);
@@ -93,6 +95,8 @@ export const AccountProvider = (props) => {
 
     useEffect(() => {
         if (!!account.getStatus()) return;
+        api.onUnauthorized(() => account.setAsLoggedOut());
+        api.onForbidden(() => account.setAsForbidden());
         account.init();
     });
 

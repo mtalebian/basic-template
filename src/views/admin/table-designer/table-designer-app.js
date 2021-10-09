@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 
 import * as bd from "react-basic-design";
-import accountManager from "../../../app/account-manager";
+//import accountManager from "../../../app/account-manager";
 
 import classNames from "classnames";
 import { tableDesignerApi } from "../../../api/table-designer-api";
@@ -11,11 +11,12 @@ import { notify } from "../../../components/basic/notify";
 import { Tile, Tiles } from "../../../components/tilemenu/tiles";
 import * as icons from "../../../assets/icons";
 import { useTranslation } from "react-i18next";
-import { MsgBox } from "./msgbox";
+import { useAccount } from "../../../app/account-context";
+import { msgbox } from "../../../components/msgbox/msgbox";
 
-let TableDesignerApp_counter = 0;
 //
 export function TableDesignerApp() {
+    const account = useAccount();
     const { t } = useTranslation();
     const [groups, setGroups] = useState(null);
     const [group, setGroup] = useState(null);
@@ -69,28 +70,21 @@ export function TableDesignerApp() {
     }
 
     useEffect(() => {
-        return accountManager.status.onConnected(function () {
-            if (!groups) tableDesignerApi.getGroups().then((x) => setGroups(x));
-        }).remove;
+        if (!groups && account.isConnected()) tableDesignerApi.getGroups().then((x) => setGroups(x));
+        // return accountManager.status.onConnected(function () {
+        //     if (!groups) tableDesignerApi.getGroups().then((x) => setGroups(x));
+        // }).remove;
     });
-
-    const msgbox = useRef();
 
     return (
         <>
-            <MsgBox ref={msgbox} />
-            <button
-                onClick={() =>
-                    msgbox.current.show("title", "body", (close) => (
-                        <bd.Button variant="secondary" onClick={close}>
-                            Close
-                        </bd.Button>
-                    ))
-                }
+            <bd.Button
+                onClick={() => {
+                    msgbox("Dialog header", "Dialog body text", "خروج");
+                }}
             >
-                CALL
-            </button>
-
+                TEST
+            </bd.Button>
             <div className={classNames({ "d-none": group || table })}>
                 <div className="border-bottom bg-gray-5 mb-3">
                     <bd.Toolbar className="container">

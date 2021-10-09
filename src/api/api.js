@@ -2,12 +2,8 @@ import axios from "axios";
 import { messages } from "../components/messages";
 import settings from "../app/settings";
 import { apiConfig } from "./config";
-import { BasicEvent } from "../components/basic/event/basic-event";
 
 const withCredentials = true;
-
-const onUnauthorizedEvent = new BasicEvent();
-const onForbiddenEvent = new BasicEvent();
 
 const genericeResponseHandler = (response) => {
     var data = response.data;
@@ -63,22 +59,43 @@ function callAxios(method, url, data) {
         .catch(translateError);
 }
 
+let onUnauthorizeHandler = null;
+let onForbiddenHandler = null;
+
+function dispatchUnauthorized(ex) {
+    //onUnauthorizedEvent.dispatch(ex);
+    if (onUnauthorizeHandler) onUnauthorizeHandler(ex);
+}
+
+function dispatchForbidden(ex) {
+    //onUnauthorizedEvent.dispatch(ex);
+    if (onForbiddenHandler) onForbiddenHandler(ex);
+}
+
+//
+//
+//
 export const api = {
     token: null,
     expiry: 0,
 
-    onUnauthorized: (fn, ownerName) => onUnauthorizedEvent.add(fn, ownerName + ".onUnauthorized"),
-    onForbidden: (fn, ownerName) => onForbiddenEvent.add(fn, ownerName + ".onForbidden"),
+    onUnauthorized: (fn, ownerName) => {
+        onUnauthorizeHandler = fn;
+    },
+
+    onForbidden: (fn, ownerName) => {
+        onForbiddenHandler = fn;
+    },
 
     call: (method, url, data) =>
         new Promise((resolve, reject) => {
             const handle_reject = (ex) => {
                 if (ex.name === "401") {
-                    onUnauthorizedEvent.dispatch(ex);
+                    dispatchUnauthorized(ex);
                     ex.handled = true;
                 }
                 if (ex.name === "403") {
-                    onForbiddenEvent.dispatch(ex);
+                    dispatchForbidden(ex);
                     ex.handled = true;
                 }
                 reject(ex);
@@ -107,11 +124,11 @@ export const api = {
     directCall: (method, url, data) =>
         callAxios(method, url, data).catch((ex) => {
             if (ex.name === "401") {
-                onUnauthorizedEvent.dispatch(ex);
+                dispatchUnauthorized(ex);
                 ex.handled = true;
             }
             if (ex.name === "403") {
-                onForbiddenEvent.dispatch(ex);
+                dispatchForbidden(ex);
                 ex.handled = true;
             }
             throw ex;
