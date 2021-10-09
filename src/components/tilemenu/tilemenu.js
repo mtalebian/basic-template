@@ -3,7 +3,7 @@ import React from "react";
 
 import * as icons from "../../assets/icons";
 
-export function TileMenu({ folders, menus, parent, onSelect, selectedFolder, selectedMenu, activeItem, light, dark, ...props }) {
+export function TileMenu({ folders, menus, parent, onSelect, selectedFolder, selectedMenu, activeItem, ...props }) {
     const parentId = !parent ? null : parent.id;
 
     if (!folders) folders = [];
@@ -12,10 +12,7 @@ export function TileMenu({ folders, menus, parent, onSelect, selectedFolder, sel
 
     var cn = null;
     if (!parentId) {
-        cn = classNames("tilemenu", {
-            "tilemenu-light": light,
-            "tilemenu-dark": dark,
-        });
+        cn = classNames("tilemenu");
     }
 
     return (

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 
 import * as bd from "react-basic-design";
 import accountManager from "../../../app/account-manager";
@@ -7,12 +7,13 @@ import classNames from "classnames";
 import { tableDesignerApi } from "../../../api/table-designer-api";
 import { TableDesignerEditGroup } from "./edit-group";
 import { TableDesignerEditTable } from "./edit-table";
-import { TableDesignerHeader } from "./header";
 import { notify } from "../../../components/basic/notify";
 import { Tile, Tiles } from "../../../components/tilemenu/tiles";
 import * as icons from "../../../assets/icons";
 import { useTranslation } from "react-i18next";
+import { MsgBox } from "./msgbox";
 
+let TableDesignerApp_counter = 0;
 //
 export function TableDesignerApp() {
     const { t } = useTranslation();
@@ -20,6 +21,8 @@ export function TableDesignerApp() {
     const [group, setGroup] = useState(null);
     const [table, setTable] = useState(null);
     const [column, setColumn] = useState(null);
+
+    //console.log("TableDesignerApp", ++TableDesignerApp_counter);
 
     function goBack() {
         if (column) {
@@ -71,9 +74,22 @@ export function TableDesignerApp() {
         }).remove;
     });
 
+    const msgbox = useRef();
+
     return (
         <>
-            {/* <TableDesignerHeader group={group} table={table} column={column} onGoBack={goBack} onAddGroupClicked={onAddGroupClicked} /> */}
+            <MsgBox ref={msgbox} />
+            <button
+                onClick={() =>
+                    msgbox.current.show("title", "body", (close) => (
+                        <bd.Button variant="secondary" onClick={close}>
+                            Close
+                        </bd.Button>
+                    ))
+                }
+            >
+                CALL
+            </button>
 
             <div className={classNames({ "d-none": group || table })}>
                 <div className="border-bottom bg-gray-5 mb-3">

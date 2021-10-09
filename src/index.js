@@ -14,6 +14,7 @@ import LanguageDetector from "i18next-browser-languagedetector";
 import HttpApi from "i18next-http-backend";
 import { apiConfig } from "./api/config";
 import settings from "./app/settings";
+import { AccountProvider } from "./app/account-context";
 
 i18n.use(HttpApi)
     .use(LanguageDetector)
@@ -55,7 +56,9 @@ ReactDOM.render(
     <Suspense fallback={loadingMarkup}>
         <React.StrictMode>
             <BrowserRouter>
-                <App />
+                <AccountProvider>
+                    <App />
+                </AccountProvider>
             </BrowserRouter>
         </React.StrictMode>
         <ToastContainer

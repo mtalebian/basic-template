@@ -1,12 +1,9 @@
 import React, { useState, useEffect } from "react";
 import * as bs from "react-basic-design";
 
-//import * as tables from "../../../data";
 import accountManager from "../../../app/account-manager";
-//import { DataTable } from "../../../components/basic/table/data-table";
 
 import "./index.scss";
-//import { messages } from "../../../components/messages";
 import classNames from "classnames";
 import { tableDesignerApi } from "../../../api/table-designer-api";
 import SvgArrowBackIos from "../../../assets/icons/ArrowBackIos";

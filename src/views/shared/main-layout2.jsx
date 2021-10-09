@@ -1,13 +1,15 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import * as bd from "react-basic-design";
 import accountManager from "../../app/account-manager";
 import settings from "../../app/settings";
 import * as icons from "../../assets/icons";
+import { AccountContext } from "../../app/account-context";
 
 export function MainLayout({ component: Comp, ...props }) {
     const { t } = useTranslation();
     const [, setUser] = useState({});
+    const account = useContext(AccountContext);
 
     useEffect(() => accountManager.bind(setUser).remove, []);
 
@@ -49,14 +51,17 @@ export function MainLayout({ component: Comp, ...props }) {
 
                         {Comp?.Appbar?.buttons}
 
-                        <bd.Button variant="text" color="default" onClick={toggleRTL} className="d-none d-md-block">
-                            RTL
-                        </bd.Button>
+                        {settings.debugMode && (
+                            <>
+                                <bd.Button variant="text" color="default" onClick={toggleRTL} className="d-none d-md-block">
+                                    RTL
+                                </bd.Button>
 
-                        <bd.Button variant="icon" color="default" onClick={toggleDarkMode} className="d-none d-md-block">
-                            <icons.DarkMode />
-                        </bd.Button>
-
+                                <bd.Button variant="icon" color="default" onClick={toggleDarkMode} className="d-none d-md-block">
+                                    <icons.DarkMode />
+                                </bd.Button>
+                            </>
+                        )}
                         <bd.Badge value={2} overlapCircle className="bg-warning text-dark d-none d-sm-flex">
                             <bd.Button variant="icon" color="default" className="d-none d-sm-block">
                                 <icons.NotificationsActive />

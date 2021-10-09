@@ -3,12 +3,8 @@ import { useTranslation } from "react-i18next";
 import { Formik } from "formik";
 import * as yup from "yup";
 
-import { Form } from "react-final-form";
-
-import { FinalCheck, FinalField } from "../../../components/basic/final-form";
 import * as bd from "react-basic-design";
 import * as icons from "../../../assets/icons";
-import { BasicModal } from "../../../components/basic/basic-modal";
 
 import { messages } from "../../../components/messages";
 import classNames from "classnames";
@@ -120,7 +116,9 @@ export function TableDesignerEditTable({ table, group, onChanged, onGoBack }) {
                 <div className="mt-4" style={{ maxWidth: 500 }}>
                     <Formik
                         initialValues={table.data || { name: "", title: "", singularTitle: "" }}
-                        //validationSchema={yup.object({ title: yup.string().min(3, t("msg-too-short")).max(100, t("msg-too-long")).required("Required") })}
+                        validationSchema={yup.object({
+                            title: yup.string().min(3, t("msg-too-short")).max(100, t("msg-too-long")).required("Required"),
+                        })}
                         onSubmit={onSaveClick}
                         innerRef={formRef}
                     >
