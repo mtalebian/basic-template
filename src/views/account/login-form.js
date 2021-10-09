@@ -4,16 +4,17 @@ import { useHistory } from "react-router-dom";
 
 import * as bs from "react-basic-design";
 import { Captcha } from "./captcha";
-import accountManager from "../../app/account-manager";
 import { messages } from "../../components/messages";
 import settings from "../../app/settings";
 import { FinalField } from "../../components/basic/final-form";
 import { notify } from "../../components/basic/notify";
+import { useAccount } from "../../app/account-context";
 
 export const LoginForm = ({ inline, ...props }) => {
     const [captchaCounter, setCaptchaCounter] = useState(0);
     const [loading, setLoading] = useState(false);
     const history = useHistory();
+    const account = useAccount();
 
     const onSubmit = (values) => {
         if (!values.userName || values.userName.trim().length < 3) {
@@ -28,8 +29,9 @@ export const LoginForm = ({ inline, ...props }) => {
             notify.error(messages.InvalidCaptcha);
             return;
         }
+        //----
         setLoading(true);
-        accountManager
+        account
             .login(values)
             .then((result) => {
                 setCaptchaCounter(captchaCounter + 1);

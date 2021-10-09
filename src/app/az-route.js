@@ -1,16 +1,15 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Route } from "react-router";
 import { api } from "../api/api";
 
 import * as icons from "../assets/icons";
 import { messages } from "../components/messages";
 import { LoginForm } from "../views/account/login-form";
-import { accountManager } from "./account-manager";
 import { notify } from "../components/basic/notify";
-import { AccountContext } from "./account-context";
+import { useAccount } from "./account-context";
 
 export const AzRoute = ({ component: Component, login: Login, render, ...rest }) => {
-    const account = useContext(AccountContext);
+    const account = useAccount();
 
     const [loginHere, setLoginHere] = useState(false);
 
@@ -23,7 +22,7 @@ export const AzRoute = ({ component: Component, login: Login, render, ...rest })
     );
 
     function reconnect() {
-        accountManager.init().catch((ex) => !ex.handled && notify.error(ex));
+        account.init().catch((ex) => !ex.handled && notify.error(ex));
     }
 
     const gotoLoginHere = () => setLoginHere(true);
@@ -91,6 +90,8 @@ export const AzRoute = ({ component: Component, login: Login, render, ...rest })
         }
         return <></>;
     }
+
+    console.log(`render ac-route ${account.getStatus()}`);
 
     return (
         <Route

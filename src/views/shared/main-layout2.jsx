@@ -1,20 +1,20 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import * as bd from "react-basic-design";
 import accountManager from "../../app/account-manager";
 import settings from "../../app/settings";
 import * as icons from "../../assets/icons";
-import { AccountContext } from "../../app/account-context";
+import { useAccount } from "../../app/account-context";
 
 export function MainLayout({ component: Comp, ...props }) {
     const { t } = useTranslation();
     const [, setUser] = useState({});
-    const account = useContext(AccountContext);
+    const account = useAccount();
 
     useEffect(() => accountManager.bind(setUser).remove, []);
 
     function logout() {
-        accountManager.logout();
+        account.logout();
         window.location = "/login";
         return false;
     }

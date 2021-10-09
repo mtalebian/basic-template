@@ -1,4 +1,4 @@
-import React, { useState, createContext, useEffect } from "react";
+import React, { useState, createContext, useEffect, useContext } from "react";
 import { accountApi } from "../api/account-api";
 import { api } from "../api/api";
 
@@ -12,37 +12,51 @@ const accountStatuses = {
 
 export const AccountContext = createContext();
 
+export const useAccount = () => useContext(AccountContext);
+
 export const AccountProvider = (props) => {
     const initialData = { status: "", name: "" };
     const [data, setData] = useState(initialData);
 
-    window.addEventListener("storage", function (event) {
-        if (event.key === "sync-logout") logout();
+    useEffect(() => {
+        const onLogoutEvent = (event) => {
+            if (event.key === "sync-logout") logout(false);
+        };
+
+        window.addEventListener("storage", onLogoutEvent);
+        return () => window.removeEventListener("storage", onLogoutEvent);
     });
 
     function logout(sync) {
-        if (!data.token) return;
-        if (sync) localStorage.setItem("sync-logout", Date.now());
-        var res = accountApi.logout();
-        setData(initialData);
-        return res;
+        if (!api.token) return;
+        if (sync) {
+            accountApi.logout();
+            api.token = null;
+            localStorage.setItem("sync-logout", Date.now());
+        }
+        api.token = null;
+        account.setStatus(accountStatuses.LoggedOut);
     }
 
-    const controller = {
+    const account = {
         getToken: () => api.token,
+
         getStatus: () => data.status,
+        setStatus: (value) => setData({ ...data, status: value }),
+
         getName: () => data.name,
+        setName: (value) => setData({ ...data, name: value }),
 
-        isConnecting: () => data.status === accountStatuses.Connecting,
-        isConnectionFailed: () => data.status === accountStatuses.ConnectionFailed,
-        isConnected: () => data.status === accountStatuses.Connected || data.status === accountStatuses.LoggedIn,
-        isLoggedIn: () => data.status === accountStatuses.LoggedIn,
-        isLoggedOut: () => data.status === accountStatuses.LoggedOut,
+        isConnecting: () => account.getStatus() === accountStatuses.Connecting,
+        isConnectionFailed: () => account.getStatus() === accountStatuses.ConnectionFailed,
+        isConnected: () => account.getStatus() === accountStatuses.Connected || account.getStatus() === accountStatuses.LoggedIn,
+        isLoggedIn: () => account.getStatus() === accountStatuses.LoggedIn,
+        isLoggedOut: () => account.getStatus() === accountStatuses.LoggedOut,
 
-        setAsLoggedOut: () => setData({ ...data, status: accountStatuses.LoggedOut }),
+        setAsLoggedOut: () => account.setStatus(accountStatuses.LoggedOut),
 
         init: () => {
-            setData({ ...data, status: accountStatuses.Connecting });
+            account.setStatus(accountStatuses.Connecting);
             return accountApi
                 .userInfo()
                 .then((result) => {
@@ -56,8 +70,8 @@ export const AccountProvider = (props) => {
                     return x;
                 })
                 .catch((ex) => {
-                    if (ex.name === "401") setData({ ...data, status: accountStatuses.LoggedOut });
-                    else setData({ ...data, status: accountStatuses.ConnectionFailed });
+                    if (ex.name === "401") account.setStatus(accountStatuses.LoggedOut);
+                    else account.setStatus(accountStatuses.ConnectionFailed);
                     throw ex;
                 });
         },
@@ -78,9 +92,9 @@ export const AccountProvider = (props) => {
     };
 
     useEffect(() => {
-        if (!!data.status) return;
-        controller.init();
+        if (!!account.getStatus()) return;
+        account.init();
     });
 
-    return <AccountContext.Provider value={controller}>{props.children}</AccountContext.Provider>;
+    return <AccountContext.Provider value={account}>{props.children}</AccountContext.Provider>;
 };
