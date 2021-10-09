@@ -1,9 +1,7 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useRef } from "react";
 import { Switch, Route } from "react-router-dom";
 
 import { ThemeProvider } from "./app/theme-context";
-import accountManager from "./app/account-manager";
-import { notify } from "./components/basic/notify";
 
 /*
 import BasicLayout from "./components/layout/basic-layout";
@@ -39,42 +37,9 @@ import { MainLayout } from "./views/shared/main-layout2";
 import { TablesApp } from "./views/admin/tables/tables-app";
 import { FormDesignerApp } from "./views/admin/form-designer/form-designer-app";
 import { TableDesignerApp } from "./views/admin/table-designer/table-designer-app";
-import { TestTableApp } from "./views/test/test-table";
 import { UserSettingsApp } from "./views/account/user-settings-app";
 
-/*
-function Layout({ layout, header, content, sidebar, footer, ...props }) {
-    return (
-        <BasicLayout
-            layout={!layout ? "hmf" : layout}
-            breakPoint={breakPoint}
-            header={!header ? Header : header}
-            content={content}
-            sidebar={!sidebar ? Sidebar : sidebar}
-            footer={footer}
-            rtl={settings.rtl}
-            {...props}
-        />
-    );
-}
-*/
 export function App() {
-    const [loginStatus, setLoginStatus] = useState(false);
-
-    useEffect(() => {
-        accountManager
-            .init()
-            .then((x) => {
-                notify.info(x);
-                return x;
-            })
-            .catch((ex) => {
-                if (ex.name !== "401") notify.error(ex);
-            });
-    }, []);
-
-    useEffect(() => accountManager.status.onChange((x) => setLoginStatus(x)).remove, [loginStatus]);
-
     return (
         <ThemeProvider>
             <Switch>
@@ -102,8 +67,6 @@ export function App() {
 
                 <AzRoute exact path="/inbox" render={() => <MainLayout component={InboxApp} />} />
 
-                <Route exact path="/test/table" render={() => <TestTableApp />} />
-
                 <AzRoute render={() => <MainLayout component={NotFound} />} />
             </Switch>
         </ThemeProvider>
@@ -111,8 +74,6 @@ export function App() {
 }
 
 /*
-
-
                 <Route exact path="/admin/role" render={() => <Layout content={RoleForm} />} />
 
                 <AzRoute exact path="/manage/users" render={() => <Layout content={ManageUsersForm} />} />
@@ -125,7 +86,4 @@ export function App() {
                 <Route exact path="/account/register"><Layout layout="hmf" className="account account-light" header={AccountHeader} content={RegisterForm} footer={AccountFooter} light /></Route>
                 <Route exact path="/account/register2"><Layout layout="hmf" className="account account-dark" header={AccountHeader} content={RegisterForm} footer={AccountFooter} dark /></Route>
                 <Route exact path="/account/register3"><Layout layout="hmf" className="account account-dark with-background-image" header={AccountHeader} content={RegisterForm} footer={AccountFooter} dark /></Route>
-
-
-
  */

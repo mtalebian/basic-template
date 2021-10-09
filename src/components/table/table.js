@@ -8,10 +8,10 @@ column._summary             : {}  |  (rows, col) => {}
 
 
 */
-import React, { MutableRefObject, useState } from "react";
+import React from "react";
 import classNames from "classnames";
 import * as bd from "react-basic-design";
-import defaultMessages, { TableMessages } from "./messages";
+import defaultMessages from "./messages";
 import { useTable, useGlobalFilter, usePagination, useSortBy, useFilters, useGroupBy, useExpanded, useRowSelect } from "react-table";
 import * as icons from "../../assets/icons";
 /*
@@ -189,25 +189,20 @@ export function Table({
         gotoPage,
         nextPage,
         previousPage,
-        setPageSize,
-        setGlobalFilter,
+        //setPageSize,
+        //setGlobalFilter,
         state,
         toggleAllRowsSelected,
         toggleRowSelected,
     } = tableApi;
 
-    const { globalFilter, pageIndex, pageSize, sortBy, groupBy, expanded, filters, selectedRowIds } = state;
-    const [showSettings, setShowSettings] = useState(false);
-    const [titlebarIsExplanded, setTitlebarIsExplanded] = useState(false);
+    //const { globalFilter, pageIndex, pageSize, sortBy, groupBy, expanded, filters, selectedRowIds } = state;
+    const { pageIndex, pageSize, groupBy } = state;
 
     if (tableRef) tableRef.current = tableApi;
 
     let list = enablePaging ? page : rows;
     if (list.length > maxDisplayRow) list = list.slice(0, maxDisplayRow);
-
-    const cn = classNames(className, {
-        "bd-table-selectable": clickAction === "select" || clickAction === "toggle",
-    });
 
     editable = editable && groupBy.length === 0;
     const enable_responsive = headerGroups.length === 1 && columns.some((x) => !!x._breakPoint);
@@ -297,6 +292,9 @@ export function Table({
             case "toggle":
                 if (selectionMode === "single") toggleAllRowsSelected(false);
                 if (!is_selected || selectionMode === "multiple") row.toggleRowSelected();
+                break;
+
+            default:
                 break;
         }
     };

@@ -24,7 +24,7 @@ export function TableDesignerEditGroup({ group, onChanged, onGoBack }) {
     const onSaveClick = (e) => {
         if (!formRef.current) return false;
         if (!formRef.current.isValid) {
-            alert(t("form-is-invalid"));
+            console.log(formRef.current);
             return false;
         }
         var values = formRef.current.values;
@@ -74,7 +74,7 @@ export function TableDesignerEditGroup({ group, onChanged, onGoBack }) {
 
                     <div className="flex-grow-1" />
 
-                    <bd.Button color="primary" type="submit" disabled={loading || deleting} onClick={onSaveClick}>
+                    <bd.Button color="primary" type="submit" disabled={loading || deleting} onClick={() => formRef.current.submitForm()}>
                         {loading && <div className="m-e-2 spinner-border spinner-border-sm"></div>}
                         <span>{t("save-group")}</span>
                     </bd.Button>

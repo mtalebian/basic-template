@@ -5,43 +5,31 @@ import { api } from "../api/api";
 import * as icons from "../assets/icons";
 import { messages } from "../components/messages";
 import { LoginForm } from "../views/account/login-form";
-import { accountManager } from "./account-manager";
 import { notify } from "../components/basic/notify";
-import { helper } from "../components/basic/helper";
+import { useAccount } from "./account-context";
 
 export const AzRoute = ({ component: Component, login: Login, render, ...rest }) => {
-    const [, setState] = useState(false);
-    const [loginHere, setLoginHere] = useState(false);
-    var status = accountManager.status;
+    const account = useAccount();
 
-    useEffect(
-        () =>
-            accountManager.status.onChange((x) => {
-                setLoginHere(false);
-                helper.removeClassNames(document.body, status.all());
-                setState(x);
-                document.body.classList.add(status.get());
-            }).remove,
-        [status]
-    );
+    const [loginHere, setLoginHere] = useState(false);
 
     useEffect(
         () =>
             api.onUnauthorized((x) => {
-                accountManager.status.setAsLoggedOut();
+                account.setAsLoggedOut();
             }).remove,
         []
     );
 
     function reconnect() {
-        accountManager.init().catch((ex) => !ex.handled && notify.error(ex));
+        account.init().catch((ex) => !ex.handled && notify.error(ex));
     }
 
     const gotoLoginHere = () => setLoginHere(true);
     const returnFromLoginHere = () => setLoginHere(false);
 
     function renderConnecting() {
-        if (accountManager.status.isConnecting()) {
+        if (account.isConnecting()) {
             return (
                 <div className="middle h-100">
                     <div className="m-e-2 spinner-grow text-info spinner-grow-sm animation-delay--0s"></div>
@@ -49,7 +37,7 @@ export const AzRoute = ({ component: Component, login: Login, render, ...rest })
                     <div className="m-e-2 spinner-grow text-info spinner-grow-sm animation-delay--2s"></div>
                 </div>
             );
-        } else if (accountManager.status.isConnectionFailed()) {
+        } else if (account.isConnectionFailed()) {
             return (
                 <div className="middle h-100">
                     <div className="text-center">
@@ -61,7 +49,7 @@ export const AzRoute = ({ component: Component, login: Login, render, ...rest })
                     </div>
                 </div>
             );
-        } else if (accountManager.status.isLoggedOut()) {
+        } else if (account.isLoggedOut()) {
             if (loginHere) {
                 return (
                     <main className="content middle h-100">
@@ -103,7 +91,8 @@ export const AzRoute = ({ component: Component, login: Login, render, ...rest })
         return <></>;
     }
 
-    var is_connected = accountManager.status.isConnected();
+    console.log(`render ac-route ${account.getStatus()}`);
+
     return (
         <Route
             {...rest}
@@ -111,11 +100,11 @@ export const AzRoute = ({ component: Component, login: Login, render, ...rest })
                 return (
                     <>
                         {/*{state}*/}
-                        <div className="h-100" style={{ display: is_connected ? "block" : "none" }}>
+                        <div className="h-100" style={{ display: account.isConnected() ? "block" : "none" }}>
                             {!!render && render(props)}
                             {!!Component && <Component {...props} />}
                         </div>
-                        {!is_connected && renderConnecting()}
+                        {!account.isConnected() && renderConnecting()}
                     </>
                 );
             }}

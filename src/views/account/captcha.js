@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { apiConfig } from "../../api/config";
 import { FinalField } from "../../components/basic/final-form";
-//import "./index.scss";
 
 export const Captcha = ({ counter }) => {
     const captcha = React.createRef();

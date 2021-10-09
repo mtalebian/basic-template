@@ -5,36 +5,30 @@ import * as bs from "react-basic-design";
 import * as icons from "../../../assets/icons";
 import accountManager from "../../../app/account-manager";
 import { menuHelper, TileMenu } from "../../../components/tilemenu";
-import { ThemeContext } from "../../../app/theme-context";
 import { menuApi } from "../../../api/menu-api";
 import { notify } from "../../../components/basic/notify";
+import { AccountContext } from "../../../app/account-context";
 
 export function LunchpadApp() {
+    const account = useContext(AccountContext);
     const [menuFolders, setMenuFolders] = useState([]);
     const [menus, setMenus] = useState([]);
     const [user] = useState({});
     const [activeItem, setActiveItem] = useState(null);
     const [selectedFolder, setSelectedFolder] = useState(null);
     const [selectedMenu, setSelectedMenu] = useState(null);
-    const [theme] = useContext(ThemeContext);
-    //const is_dark = true;
-    const is_dark = theme !== "bd-light";
 
-    //useEffect(() => accountManager.bind(setUser).remove, []);
-
-    useEffect(
-        () =>
-            accountManager.status.onConnected(function () {
-                menuApi
-                    .myMenu()
-                    .then((x) => {
-                        setMenuFolders(x.menuFolders);
-                        setMenus(x.menus);
-                    })
-                    .catch((ex) => notify(ex));
-            }).remove,
-        []
-    );
+    useEffect(() => {
+        if (account.isConnected()) {
+            menuApi
+                .myMenu()
+                .then((x) => {
+                    setMenuFolders(x.menuFolders);
+                    setMenus(x.menus);
+                })
+                .catch((ex) => notify(ex));
+        }
+    }, [account]);
 
     const onSelectMenu = (folder, menu) => {
         if (
@@ -65,8 +59,6 @@ export function LunchpadApp() {
                 selectedFolder={selectedFolder}
                 selectedMenu={selectedMenu}
                 activeItem={activeItem}
-                light={!is_dark}
-                dark={is_dark}
             />
         </div>
     );
