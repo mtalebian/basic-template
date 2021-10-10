@@ -19,16 +19,16 @@ export function Tile({ title, icon, className, selected, onClick, children, ...p
 
     return (
         <li className={cn}>
-            <div className="mi-item">
+            <div className={classNames("mi-item", { "mi-selected": selected })}>
                 {!is_folder && (
-                    <a href="#/" onClick={onClick} className={classNames("", { "mi-selected": selected })}>
+                    <a href="#/" onClick={onClick}>
                         {icon}
                         {title}
                     </a>
                 )}
 
                 {is_folder && (
-                    <div>
+                    <div onClick={onClick}>
                         {icon}
                         {title}
                     </div>

@@ -59,6 +59,7 @@ $tile-height: 100px;
 
     $primary-palette: map-get($palette, primary);
     $primary: map-get($primary-palette, main);
+    $primary-text: map-get($primary-palette, text);
 
     $secondary-palette: map-get($palette, secondary);
     $secondary: map-get($secondary-palette, main);
@@ -88,6 +89,15 @@ $tile-height: 100px;
                         background-color: $hover;
                     }
                 }
+            }
+        }
+
+        .mi-selected {
+            div,
+            a {
+                padding: 8px 10px;
+                background-color: $primary !important;
+                color: $primary-text !important;
             }
         }
     }

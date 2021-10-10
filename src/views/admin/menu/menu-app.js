@@ -1,28 +1,31 @@
 import React, { useEffect, useState } from "react";
-import * as bs from "react-basic-design";
+import * as bd from "react-basic-design";
 import { Tab, Tabs } from "react-bootstrap";
 
-import InsertDriveFile from "../../../assets/icons/InsertDriveFile";
-import Folder from "../../../assets/icons/Folder";
-import ArrowBackIos from "../../../assets/icons/ArrowBackIos";
+import * as icons from "../../../assets/icons";
 import { menuApi } from "../../../api/menu-api";
 import { MenuDesigner } from "./menu-designer";
 import * as tables from "../../../data";
 import { DataTable } from "../../../components/basic/table/data-table";
 import { myTableMessages } from "../../../components/my-table-messages";
 import { useAccount } from "../../../app/account-context";
+import { Tile, Tiles } from "../../../components/tilemenu/tiles";
+import { useTranslation } from "react-i18next";
+import { msgbox } from "react-basic-design";
 
 export function MenuApp() {
+    const { t } = useTranslation();
     const [projects, setProjects] = useState([]);
     const [app, setApp] = useState(null);
     const [menuFolders, setMenuFolders] = useState([]);
     const [menus, setMenus] = useState([]);
     const [initialized, setInitialized] = useState(false);
     const account = useAccount();
+    const [selectedFolder, setSelectedFolder] = useState(null);
+    const [selectedMenu, setSelectedMenu] = useState(null);
 
     const onRefresh = (app) =>
         menuApi.load(!app ? "not-assigned-app" : app.id).then((x) => {
-            setInitialized(true);
             setProjects(x.projects);
             setMenuFolders(x.menuFolders);
             setMenus(x.menus);
@@ -73,15 +76,16 @@ export function MenuApp() {
             : menuApi.deleteFolder(app.id, entity.id).then((x) => setMenuFolders(menuFolders.filter((x) => x.id !== entity.id)));
 
     const menuProjects = (
-        <bs.Menu>
+        <bd.Menu>
             {projects.map((x) => (
-                <bs.MenuItem onClick={(e) => setApp(x)}>{x.title}</bs.MenuItem>
+                <bd.MenuItem onClick={(e) => changeApp(x)}>{x.title}</bd.MenuItem>
             ))}
-        </bs.Menu>
+        </bd.Menu>
     );
 
     useEffect(() => {
         if (!initialized && account.isConnected()) {
+            setInitialized(true);
             onRefresh(app);
         }
     });
@@ -95,38 +99,98 @@ export function MenuApp() {
 
     return (
         <>
-            {app && (
-                <bs.AppBar color position="sticky" style={{ zIndex: 10 }} shadow={0} className="shadow-0 border-bottom">
-                    <div className="container">
-                        <bs.Toolbar>
-                            <bs.Button variant="icon" size="md" onClick={() => setApp(null)}>
-                                <ArrowBackIos />
-                            </bs.Button>
-                            <h5 className="m-s-2 appbar-title">
-                                Menu Designer :<span className="m-s-3 text-secondary">{app.title}</span>
-                            </h5>
-
-                            <bs.Button variant="icon">
-                                <Folder />
-                            </bs.Button>
-
-                            <bs.Button variant="icon">
-                                <InsertDriveFile />
-                            </bs.Button>
-                        </bs.Toolbar>
-                    </div>
-                </bs.AppBar>
-            )}
-
             {!app && (
-                <div className="text-center py-4 border-bottom bg-default">
-                    <h5>Menu Designer:</h5>
-                    <bs.Button variant="" color="primary" menu={menuProjects} className="m-auto">
-                        Select a project ...
-                    </bs.Button>
+                <div className="border-bottom">
+                    <bd.Toolbar className="container">
+                        <bd.Button variant="" color="primary" menu={menuProjects} className="m-auto">
+                            Select a project ...
+                        </bd.Button>
+                    </bd.Toolbar>
                 </div>
             )}
 
+            {app && (
+                <bd.AppBar color position="sticky" style={{ zIndex: 10 }} shadow={0} className="shadow-0 border-bottom">
+                    <div className="container">
+                        <bd.Toolbar>
+                            <bd.Button variant="icon" size="md" onClick={() => setApp(null)}>
+                                <icons.ArrowBackIos className="rtl-rotate-180" />
+                            </bd.Button>
+                            <h5 className="appbar-title">
+                                <span className="text-secondary">{app.title}</span>
+                            </h5>
+
+                            <bd.Button variant="text">
+                                <icons.Edit />
+                                {t("edit")}
+                            </bd.Button>
+
+                            <bd.Button
+                                variant="text"
+                                onClick={() =>
+                                    msgbox(t("deleting"), t("are-you-sure"), (hide) => (
+                                        <>
+                                            <bd.Button color="primary" variant="text" className="m-e-3" onClick={hide}>
+                                                {t("cancel")}
+                                            </bd.Button>
+                                            <bd.Button color="primary" variant="text">
+                                                {t("delete")}
+                                            </bd.Button>
+                                        </>
+                                    ))
+                                }
+                            >
+                                <icons.Delete />
+                                {t("delete")}
+                            </bd.Button>
+
+                            <div className="divider"></div>
+                            <bd.Button variant="text">
+                                <icons.Folder />
+                                {t("new-folder")}
+                            </bd.Button>
+
+                            <bd.Button variant="text">
+                                <icons.InsertDriveFile />
+                                {t("new-menu")}
+                            </bd.Button>
+                        </bd.Toolbar>
+                    </div>
+                </bd.AppBar>
+            )}
+
+            {app && menuFolders && (
+                <div className="container">
+                    <Tiles className="">
+                        {menuFolders
+                            .filter((x) => !x.parentId)
+                            .map((f) => (
+                                <Tile
+                                    title={f.title}
+                                    selected={selectedFolder === f}
+                                    onClick={() => {
+                                        setSelectedFolder(f);
+                                        setSelectedMenu(null);
+                                    }}
+                                >
+                                    {menus
+                                        .filter((x) => x.parentId === f.id)
+                                        .map((m) => (
+                                            <Tile
+                                                title={m.title}
+                                                selected={selectedMenu === m}
+                                                onClick={() => {
+                                                    setSelectedFolder(null);
+                                                    setSelectedMenu(m);
+                                                }}
+                                            />
+                                        ))}
+                                </Tile>
+                            ))}
+                    </Tiles>
+                </div>
+            )}
+            {/* 
             <div className="container-fluid py-3">
                 <Tabs defaultActiveKey="menus">
                     <Tab eventKey="menus" title="Define Menu">
@@ -164,7 +228,12 @@ export function MenuApp() {
                         </div>
                     </Tab>
                 </Tabs>
-            </div>
+            </div> */}
         </>
     );
 }
+
+MenuApp.Appbar = {
+    title: "maintain-menu",
+    buttons: null,
+};
