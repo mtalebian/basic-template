@@ -25,7 +25,7 @@
         "namor": "^2.0.3",
         "prism-react-renderer": "^1.2.1",
         "react": "^17.0.2",
-        "react-basic-design": "0.0.30",
+        "react-basic-design": "0.0.31",
         "react-bootstrap": "^2.0.0-beta.4",
         "react-dom": "^17.0.2",
         "react-final-form": "^6.5.3",

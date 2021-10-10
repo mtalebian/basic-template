@@ -12,7 +12,7 @@ export function Tiles({ className, children, ...props }) {
 
 export function Tile({ title, icon, className, selected, onClick, children, ...props }) {
     const is_folder = !!children;
-    var cn = classNames("", className, { "mi-folder": is_folder, "mi-menu": !is_folder });
+    var cn = classNames({ "mi-folder": is_folder, "mi-menu": !is_folder });
 
     if (icon) icon = <i className="size-md">{icon}</i>;
     if (title) title = <span className="mi-text">{title}</span>;
@@ -21,14 +21,14 @@ export function Tile({ title, icon, className, selected, onClick, children, ...p
         <li className={cn}>
             <div className={classNames("mi-item", { "mi-selected": selected })}>
                 {!is_folder && (
-                    <a href="#/" onClick={onClick}>
+                    <a href="#/" onClick={onClick} className={className}>
                         {icon}
                         {title}
                     </a>
                 )}
 
                 {is_folder && (
-                    <div onClick={onClick}>
+                    <div onClick={onClick} className={className}>
                         {icon}
                         {title}
                     </div>

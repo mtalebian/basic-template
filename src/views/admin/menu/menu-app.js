@@ -1,13 +1,8 @@
 import React, { useEffect, useState } from "react";
 import * as bd from "react-basic-design";
-import { Tab, Tabs } from "react-bootstrap";
 
 import * as icons from "../../../assets/icons";
 import { menuApi } from "../../../api/menu-api";
-import { MenuDesigner } from "./menu-designer";
-import * as tables from "../../../data";
-import { DataTable } from "../../../components/basic/table/data-table";
-import { myTableMessages } from "../../../components/my-table-messages";
 import { useAccount } from "../../../app/account-context";
 import { Tile, Tiles } from "../../../components/tilemenu/tiles";
 import { useTranslation } from "react-i18next";
@@ -30,6 +25,7 @@ export function MenuApp() {
             setMenuFolders(x.menuFolders);
             setMenus(x.menus);
         });
+
     const onInsertApp = (entity) =>
         menuApi.insertApp(entity).then((x) => {
             setProjects(x);
@@ -120,40 +116,31 @@ export function MenuApp() {
                                 <span className="text-secondary">{app.title}</span>
                             </h5>
 
-                            <bd.Button variant="text">
-                                <icons.Edit />
-                                {t("edit")}
-                            </bd.Button>
-
-                            <bd.Button
-                                variant="text"
-                                onClick={() =>
-                                    msgbox(t("deleting"), t("are-you-sure"), (hide) => (
-                                        <>
-                                            <bd.Button color="primary" variant="text" className="m-e-3" onClick={hide}>
-                                                {t("cancel")}
-                                            </bd.Button>
-                                            <bd.Button color="primary" variant="text">
-                                                {t("delete")}
-                                            </bd.Button>
-                                        </>
-                                    ))
-                                }
-                            >
-                                <icons.Delete />
-                                {t("delete")}
-                            </bd.Button>
-
-                            <div className="divider"></div>
-                            <bd.Button variant="text">
-                                <icons.Folder />
-                                {t("new-folder")}
-                            </bd.Button>
-
-                            <bd.Button variant="text">
-                                <icons.InsertDriveFile />
-                                {t("new-menu")}
-                            </bd.Button>
+                            {(selectedFolder || selectedMenu) && (
+                                <>
+                                    <bd.Button variant="icon">
+                                        <icons.Edit />
+                                    </bd.Button>
+                                    <bd.Button
+                                        variant="icon"
+                                        edge="end"
+                                        onClick={() =>
+                                            msgbox(null, t("the-record-will-be-deleted"), (hide) => (
+                                                <>
+                                                    <bd.Button color="primary" variant="text" className="m-e-3" onClick={hide}>
+                                                        {t("cancel")}
+                                                    </bd.Button>
+                                                    <bd.Button color="primary" variant="text">
+                                                        {t("delete")}
+                                                    </bd.Button>
+                                                </>
+                                            ))
+                                        }
+                                    >
+                                        <icons.Delete />
+                                    </bd.Button>
+                                </>
+                            )}
                         </bd.Toolbar>
                     </div>
                 </bd.AppBar>
@@ -169,7 +156,7 @@ export function MenuApp() {
                                     title={f.title}
                                     selected={selectedFolder === f}
                                     onClick={() => {
-                                        setSelectedFolder(f);
+                                        setSelectedFolder(f === selectedFolder ? null : f);
                                         setSelectedMenu(null);
                                     }}
                                 >
@@ -181,15 +168,26 @@ export function MenuApp() {
                                                 selected={selectedMenu === m}
                                                 onClick={() => {
                                                     setSelectedFolder(null);
-                                                    setSelectedMenu(m);
+                                                    setSelectedMenu(m === selectedMenu ? null : m);
                                                 }}
                                             />
                                         ))}
+                                    <Tile
+                                        icon={<icons.Add />}
+                                        title="New Menu"
+                                        className="btn btn-secondary text-secondary bg-transparent  border border-secondary"
+                                        onClick={() => alert("ss")}
+                                    ></Tile>
                                 </Tile>
                             ))}
+
+                        <Tile icon={<icons.Add />} title="New Folder" className="btn btn-outline-secondary" onClick={() => alert("ss")}>
+                            <span></span>
+                        </Tile>
                     </Tiles>
                 </div>
             )}
+
             {/* 
             <div className="container-fluid py-3">
                 <Tabs defaultActiveKey="menus">
