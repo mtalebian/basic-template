@@ -12,7 +12,6 @@ import { Tile, Tiles } from "../../../components/tilemenu/tiles";
 import * as icons from "../../../assets/icons";
 import { useTranslation } from "react-i18next";
 import { useAccount } from "../../../app/account-context";
-import { msgbox } from "../../../components/msgbox/msgbox";
 
 //
 export function TableDesignerApp() {
@@ -78,13 +77,6 @@ export function TableDesignerApp() {
 
     return (
         <>
-            <bd.Button
-                onClick={() => {
-                    msgbox("Dialog header", "Dialog body text", "خروج");
-                }}
-            >
-                TEST
-            </bd.Button>
             <div className={classNames({ "d-none": group || table })}>
                 <div className="border-bottom bg-gray-5 mb-3">
                     <bd.Toolbar className="container">

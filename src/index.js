@@ -5,6 +5,7 @@ import "react-toastify/dist/ReactToastify.css";
 import React, { Suspense } from "react";
 import ReactDOM from "react-dom";
 import { BrowserRouter } from "react-router-dom";
+import * as bd from "react-basic-design";
 import { ToastContainer } from "react-toastify";
 import reportWebVitals from "./reportWebVitals";
 import { App } from "./app";
@@ -15,7 +16,6 @@ import HttpApi from "i18next-http-backend";
 import { apiConfig } from "./api/config";
 import settings from "./app/settings";
 import { AccountProvider } from "./app/account-context";
-import { MsgBox } from "./components/msgbox/msgbox";
 
 i18n.use(HttpApi)
     .use(LanguageDetector)
@@ -62,7 +62,7 @@ ReactDOM.render(
                 </AccountProvider>
             </BrowserRouter>
         </React.StrictMode>
-        <MsgBox />
+        <bd.MsgBoxContainer />
         <ToastContainer
             rtl={false}
             limit={3}

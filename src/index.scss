@@ -37,27 +37,6 @@ body,
     font-family: inherit !important;
 }
 
-.modal-header {
-    border-bottom: none;
-}
-
-.theme-dark {
-    $palette: map-get($theme, dark);
-    $text: map-get($palette, text);
-    $bg: map-get($palette, bg);
-
-    .modal {
-        .modal-backdrop {
-            opacity: 0.65;
-        }
-        .modal-content {
-            color: $text;
-            background-color: mix($text, $bg, 12%);
-            border: 1px solid mix($text, $bg, 25%);
-        }
-    }
-}
-
 /*
     Sidebar
 */

@@ -11,7 +11,6 @@ import * as icons from "../../../assets/icons";
 import { Form, Formik } from "formik";
 import { BasicInput } from "../../../components/basic-form/basic-field";
 import * as yup from "yup";
-import { msgbox } from "../../../components/msgbox/msgbox";
 
 //
 export function TableDesignerEditGroup({ group, onChanged, onGoBack }) {
@@ -61,7 +60,7 @@ export function TableDesignerEditGroup({ group, onChanged, onGoBack }) {
     };
 
     const deleteClickHandler = () => {
-        msgbox(t("delete-group"), t("you-are-going-to-delete-group"), (hide) => (
+        bd.msgbox(t("delete-group"), t("you-are-going-to-delete-group"), (hide) => (
             <>
                 <bd.Button variant="text" color="primary" onClick={hide} className="m-e-2">
                     {t("cancel")}
