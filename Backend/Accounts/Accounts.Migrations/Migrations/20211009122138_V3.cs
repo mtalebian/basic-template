@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Accounts.Migrations.Migrations
 {
-    public partial class V1 : Migration
+    public partial class V3 : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -100,6 +100,7 @@ namespace Accounts.Migrations.Migrations
                     UserName = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     FirstName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     LastName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    NationalCode = table.Column<string>(type: "nvarchar(15)", maxLength: 15, nullable: true),
                     PasswordHash = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
                     Email = table.Column<string>(type: "nvarchar(250)", maxLength: 250, nullable: true),
                     EmailConfirmed = table.Column<bool>(type: "bit", nullable: false),
@@ -109,6 +110,7 @@ namespace Accounts.Migrations.Migrations
                     LastAccessFailedDate = table.Column<DateTime>(type: "datetime2", nullable: true),
                     LockoutEndDate = table.Column<DateTime>(type: "datetime2", nullable: true),
                     LockoutEnabled = table.Column<bool>(type: "bit", nullable: false),
+                    WindowsAuthenticate = table.Column<bool>(type: "bit", nullable: false),
                     ConcurrencyStamp = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     SecurityStamp = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     IsDeleted = table.Column<bool>(type: "bit", nullable: false),
@@ -422,8 +424,8 @@ namespace Accounts.Migrations.Migrations
             migrationBuilder.InsertData(
                 schema: "tmp",
                 table: "Users",
-                columns: new[] { "Id", "AccessFailedCount", "ConcurrencyStamp", "CreatedAt", "Email", "EmailConfirmed", "FirstName", "IsDeleted", "IsDisabled", "LastAccessFailedDate", "LastName", "LockoutEnabled", "LockoutEndDate", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "UserName" },
-                values: new object[] { 1L, 0, "5c96b6c3-283c-4b8b-9bb2-c7adf25dac47", new DateTime(2021, 8, 26, 1, 6, 19, 266, DateTimeKind.Local).AddTicks(2795), null, false, "", false, false, null, "Administrator", false, null, "PABPyu6/prVEQ4QbBrmcATJsjw/1yoli07rNI6EJ764=", null, false, "2f4ff4da-073e-4154-94b9-80c565ff02c4", "admin" });
+                columns: new[] { "Id", "AccessFailedCount", "ConcurrencyStamp", "CreatedAt", "Email", "EmailConfirmed", "FirstName", "IsDeleted", "IsDisabled", "LastAccessFailedDate", "LastName", "LockoutEnabled", "LockoutEndDate", "NationalCode", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "UserName", "WindowsAuthenticate" },
+                values: new object[] { 1L, 0, "62124383-be76-4dcb-a445-458277aaf6f3", new DateTime(2021, 10, 9, 15, 51, 37, 664, DateTimeKind.Local).AddTicks(4243), null, false, "", false, false, null, "Administrator", false, null, null, "PABPyu6/prVEQ4QbBrmcATJsjw/1yoli07rNI6EJ764=", null, false, "6a25a697-9972-4936-83a2-071bf74dd24c", "admin", false });
 
             migrationBuilder.InsertData(
                 schema: "tmp",

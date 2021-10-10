@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Accounts.Migrations.Migrations
 {
     [DbContext(typeof(AccountDbContext))]
-    [Migration("20211006112145_V2")]
-    partial class V2
+    [Migration("20211009122138_V3")]
+    partial class V3
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -451,7 +451,6 @@ namespace Accounts.Migrations.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("NationalCode")
-                        .IsRequired()
                         .HasMaxLength(15)
                         .HasColumnType("nvarchar(15)");
 
@@ -486,8 +485,8 @@ namespace Accounts.Migrations.Migrations
                         {
                             Id = 1L,
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "0bee1803-4352-44ab-8dbb-7d674fa39af8",
-                            CreatedAt = new DateTime(2021, 10, 6, 14, 51, 44, 771, DateTimeKind.Local).AddTicks(7325),
+                            ConcurrencyStamp = "62124383-be76-4dcb-a445-458277aaf6f3",
+                            CreatedAt = new DateTime(2021, 10, 9, 15, 51, 37, 664, DateTimeKind.Local).AddTicks(4243),
                             EmailConfirmed = false,
                             FirstName = "",
                             IsDeleted = false,
@@ -495,10 +494,9 @@ namespace Accounts.Migrations.Migrations
                             LastName = "Administrator",
                             LastUpdate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             LockoutEnabled = false,
-                            NationalCode = "0123456789",
                             PasswordHash = "PABPyu6/prVEQ4QbBrmcATJsjw/1yoli07rNI6EJ764=",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "92f8407f-f2c7-496b-978a-f4a31f9fcfc9",
+                            SecurityStamp = "6a25a697-9972-4936-83a2-071bf74dd24c",
                             UserName = "admin",
                             WindowsAuthenticate = false
                         });
