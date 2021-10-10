@@ -2,7 +2,6 @@ import React, { useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import * as bd from "react-basic-design";
-import { BasicModal } from "../../../components/basic/basic-modal";
 
 import { messages } from "../../../components/messages";
 import classNames from "classnames";
@@ -12,13 +11,13 @@ import * as icons from "../../../assets/icons";
 import { Form, Formik } from "formik";
 import { BasicInput } from "../../../components/basic-form/basic-field";
 import * as yup from "yup";
+import { msgbox } from "../../../components/msgbox/msgbox";
 
 //
 export function TableDesignerEditGroup({ group, onChanged, onGoBack }) {
     const { t } = useTranslation();
     const [loading, setLoading] = useState(false);
     const [deleting, setDeleting] = useState(false);
-    const [showDeletingGroup, setShowDeletingGroup] = useState(false);
     const formRef = useRef();
 
     const onSaveClick = (e) => {
@@ -45,12 +44,13 @@ export function TableDesignerEditGroup({ group, onChanged, onGoBack }) {
             });
     };
 
-    const onDeleteClick = () => {
+    const onDeleteClick = (hide) => {
         setDeleting(true);
         tableDesignerApi
             .deleteGroup(group.id)
             .then((x) => {
                 setLoading(false);
+                hide();
                 notify.info(messages.RowIsDeleted);
                 onChanged(null);
             })
@@ -58,6 +58,21 @@ export function TableDesignerEditGroup({ group, onChanged, onGoBack }) {
                 setLoading(false);
                 notify.error(ex);
             });
+    };
+
+    const deleteClickHandler = () => {
+        msgbox(t("delete-group"), t("you-are-going-to-delete-group"), (hide) => (
+            <>
+                <bd.Button variant="text" color="primary" onClick={hide} className="m-e-2">
+                    {t("cancel")}
+                </bd.Button>
+
+                <bd.Button variant="text" color="primary" disabled={deleting} onClick={() => onDeleteClick(hide)}>
+                    {deleting && <div className="m-e-2 spinner-border spinner-border-sm"></div>}
+                    {t("delete")}
+                </bd.Button>
+            </>
+        ));
     };
 
     return (
@@ -86,7 +101,7 @@ export function TableDesignerEditGroup({ group, onChanged, onGoBack }) {
                         type="button"
                         variant="outline"
                         disabled={loading || deleting || (group.items && group.items.length)}
-                        onClick={() => setShowDeletingGroup(true)}
+                        onClick={deleteClickHandler}
                     >
                         {deleting && <div className="m-e-2 spinner-border spinner-border-sm"></div>}
                         <span>{t("delete")}</span>
@@ -106,28 +121,6 @@ export function TableDesignerEditGroup({ group, onChanged, onGoBack }) {
                     </Form>
                 </Formik>
             </div>
-
-            <BasicModal
-                show={showDeletingGroup}
-                setShow={setShowDeletingGroup}
-                renderBody={({ hide }) => (
-                    <>
-                        {t("your-going-to-delete-the-group")}
-                        <br />
-                        {t("are-you-sure")}
-                        <div className="pt-2 text-end">
-                            <bd.Button variant="text" type="button" color="primary" onClick={hide} className="m-e-2">
-                                {t("cancel")}
-                            </bd.Button>
-
-                            <bd.Button type="button" color="secondary" disabled={deleting} onClick={onDeleteClick}>
-                                {deleting && <div className="m-e-2 spinner-border spinner-border-sm"></div>}
-                                {t("delete")}
-                            </bd.Button>
-                        </div>
-                    </>
-                )}
-            />
         </>
     );
 }

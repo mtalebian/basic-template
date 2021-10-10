@@ -2,7 +2,7 @@ import classNames from "classnames";
 import { Field, useField } from "formik";
 import React from "react";
 
-export const BasicInput = ({ id, label, labelSize, type, className, children, ...props }) => {
+export const BasicInput = ({ id, label, labelSize, type, className, children, style, ...props }) => {
     const [field, meta] = useField({ ...props, type });
     const break_point = typeof labelSize !== "string" ? "md" : labelSize.startsWith("lg") ? "lg" : labelSize.startsWith("xl") ? "xl" : "md";
     labelSize = typeof labelSize !== "string" || labelSize.indexOf("-") === -1 ? labelSize * 1 : labelSize.split("-")[1] * 1;
@@ -19,7 +19,7 @@ export const BasicInput = ({ id, label, labelSize, type, className, children, ..
 
     let field_comp = (
         <>
-            <Field id={id} type={type} className={cnControl} {...field} />
+            <Field id={id} type={type} className={cnControl} {...field} style={style} />
             {children}
             {meta.touched && meta.error ? <div className={cnErorr}>{meta.error}</div> : null}
         </>

@@ -8,18 +8,21 @@ import ArrowBackIos from "../../../assets/icons/ArrowBackIos";
 import { menuApi } from "../../../api/menu-api";
 import { MenuDesigner } from "./menu-designer";
 import * as tables from "../../../data";
-import accountManager from "../../../app/account-manager";
 import { DataTable } from "../../../components/basic/table/data-table";
 import { myTableMessages } from "../../../components/my-table-messages";
+import { useAccount } from "../../../app/account-context";
 
 export function MenuApp() {
     const [projects, setProjects] = useState([]);
     const [app, setApp] = useState(null);
     const [menuFolders, setMenuFolders] = useState([]);
     const [menus, setMenus] = useState([]);
+    const [initialized, setInitialized] = useState(false);
+    const account = useAccount();
 
     const onRefresh = (app) =>
         menuApi.load(!app ? "not-assigned-app" : app.id).then((x) => {
+            setInitialized(true);
             setProjects(x.projects);
             setMenuFolders(x.menuFolders);
             setMenus(x.menus);
@@ -77,13 +80,11 @@ export function MenuApp() {
         </bs.Menu>
     );
 
-    useEffect(
-        () =>
-            accountManager.status.onConnected(function () {
-                onRefresh(app);
-            }).remove,
-        [app]
-    );
+    useEffect(() => {
+        if (!initialized && account.isConnected()) {
+            onRefresh(app);
+        }
+    });
 
     function changeApp(newApp) {
         setApp(newApp);
