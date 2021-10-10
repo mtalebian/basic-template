@@ -2,7 +2,6 @@ import React, { useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import * as bd from "react-basic-design";
-import { BasicModal } from "../../../components/basic/basic-modal";
 
 import { messages } from "../../../components/messages";
 import classNames from "classnames";

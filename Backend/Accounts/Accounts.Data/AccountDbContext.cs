@@ -128,7 +128,10 @@ namespace Accounts.Data
                 .HasForeignKey(x => new { x.ProjectId, x.ParentId });
 
             MenuFolder.Entity()
-                .HasData(new MenuFolder { ProjectId = "project1", Id = "config", Title = "Project Configuration" });
+                .HasData(
+                    new MenuFolder { ProjectId = "project1", Id = "config", Title = "Project Configuration" },
+                    new MenuFolder { ProjectId = "project1", Id = "admin", Title = "Project Administartion" }
+                    );
 
             //
             // Menu
@@ -165,7 +168,8 @@ namespace Accounts.Data
                 .HasData(
                     new Menu { ProjectId = "project1", Id = "config-admin-tables", ParentId = "config", Title = "Maintain base tables", Url = "/admin/tables" },
                     new Menu { ProjectId = "project1", Id = "config-menu", ParentId = "config", Title = "Maintain project menu", Url = "/admin/menu" },
-                    new Menu { ProjectId = "project1", Id = "config-table-designer", ParentId = "config", Title = "Table designer", Url = "/admin/table-designer" }
+                    new Menu { ProjectId = "project1", Id = "config-table-designer", ParentId = "config", Title = "Table designer", Url = "/admin/table-designer" },
+                    new Menu { ProjectId = "project1", Id = "users", ParentId = "admin", Title = "Manage Users", Url = "/admin/users" }
                 );
 
             //

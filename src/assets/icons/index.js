@@ -1217,11 +1217,11 @@ export { default as NotificationsActive } from "./NotificationsActive";
 // export { default as PermMedia } from './PermMedia'
 // export { default as PermPhoneMsg } from './PermPhoneMsg'
 // export { default as PermScanWifi } from './PermScanWifi'
-// export { default as Person } from './Person'
+export { default as Person } from "./Person";
 // export { default as PersonalInjury } from './PersonalInjury'
 // export { default as PersonalVideo } from './PersonalVideo'
 // export { default as PersonAdd } from './PersonAdd'
-// export { default as PersonAddAlt } from './PersonAddAlt'
+export { default as PersonAddAlt } from "./PersonAddAlt";
 // export { default as PersonAddAlt1 } from './PersonAddAlt1'
 // export { default as PersonAddDisabled } from './PersonAddDisabled'
 // export { default as PersonOff } from './PersonOff'
