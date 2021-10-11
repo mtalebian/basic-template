@@ -6,7 +6,8 @@ import { menuApi } from "../../../api/menu-api";
 import { useAccount } from "../../../app/account-context";
 import { Tile, Tiles } from "../../../components/tilemenu/tiles";
 import { useTranslation } from "react-i18next";
-import { msgbox } from "react-basic-design";
+import { EditFolder } from "./edit-folder";
+import { EditMenu } from "./edit-menu";
 
 export function MenuApp() {
     const { t } = useTranslation();
@@ -18,6 +19,7 @@ export function MenuApp() {
     const account = useAccount();
     const [selectedFolder, setSelectedFolder] = useState(null);
     const [selectedMenu, setSelectedMenu] = useState(null);
+    const [editMode, setEditMode] = useState(false);
 
     const onRefresh = (app) =>
         menuApi.load(!app ? "not-assigned-app" : app.id).then((x) => {
@@ -26,6 +28,7 @@ export function MenuApp() {
             setMenus(x.menus);
         });
 
+    /*
     const onInsertApp = (entity) =>
         menuApi.insertApp(entity).then((x) => {
             setProjects(x);
@@ -41,7 +44,6 @@ export function MenuApp() {
             setProjects(x);
             return x;
         });
-
     const onAdd = (entity, tb) =>
         tb.is("menus")
             ? menuApi.insertMenu(app.id, entity).then((x) => {
@@ -65,16 +67,14 @@ export function MenuApp() {
                   setMenuFolders([x, ...menuFolders.filter((x) => x.id !== entity.id)]);
                   return x;
               });
-
-    const onDelete = (entity, tb) =>
-        tb.is("menus")
-            ? menuApi.deleteMenu(app.id, entity.id).then((x) => setMenus(menus.filter((x) => x.id !== entity.id)))
-            : menuApi.deleteFolder(app.id, entity.id).then((x) => setMenuFolders(menuFolders.filter((x) => x.id !== entity.id)));
+*/
 
     const menuProjects = (
         <bd.Menu>
             {projects.map((x) => (
-                <bd.MenuItem onClick={(e) => changeApp(x)}>{x.title}</bd.MenuItem>
+                <bd.MenuItem key={x.id} onClick={(e) => changeApp(x)}>
+                    {x.title}
+                </bd.MenuItem>
             ))}
         </bd.Menu>
     );
@@ -84,7 +84,7 @@ export function MenuApp() {
             setInitialized(true);
             onRefresh(app);
         }
-    });
+    }, [account, app, initialized]);
 
     function changeApp(newApp) {
         setApp(newApp);
@@ -105,39 +105,20 @@ export function MenuApp() {
                 </div>
             )}
 
-            {app && (
+            {app && !editMode && (
                 <bd.AppBar color position="sticky" style={{ zIndex: 10 }} shadow={0} className="shadow-0 border-bottom">
                     <div className="container">
                         <bd.Toolbar>
                             <bd.Button variant="icon" size="md" onClick={() => setApp(null)}>
                                 <icons.ArrowBackIos className="rtl-rotate-180" />
                             </bd.Button>
-                            <h5 className="appbar-title">
-                                <span className="text-secondary">{app.title}</span>
-                            </h5>
+                            <h5 className="appbar-title">{app.title}</h5>
 
-                            {(selectedFolder || selectedMenu) && (
+                            {(selectedFolder?.id || selectedMenu?.id) && (
                                 <>
-                                    <bd.Button variant="icon">
-                                        <icons.Edit />
-                                    </bd.Button>
-                                    <bd.Button
-                                        variant="icon"
-                                        edge="end"
-                                        onClick={() =>
-                                            msgbox(null, t("the-record-will-be-deleted"), (hide) => (
-                                                <>
-                                                    <bd.Button color="primary" variant="text" className="m-e-3" onClick={hide}>
-                                                        {t("cancel")}
-                                                    </bd.Button>
-                                                    <bd.Button color="primary" variant="text">
-                                                        {t("delete")}
-                                                    </bd.Button>
-                                                </>
-                                            ))
-                                        }
-                                    >
-                                        <icons.Delete />
+                                    <bd.Button variant="text" onClick={() => setEditMode(true)} edge="end">
+                                        <icons.Edit className="size-lg" />
+                                        {t("edit")}
                                     </bd.Button>
                                 </>
                             )}
@@ -146,13 +127,14 @@ export function MenuApp() {
                 </bd.AppBar>
             )}
 
-            {app && menuFolders && (
-                <div className="container">
+            {app && !editMode && menuFolders && (
+                <div className="container pt-4">
                     <Tiles className="">
                         {menuFolders
                             .filter((x) => !x.parentId)
                             .map((f) => (
                                 <Tile
+                                    key={f.id}
                                     title={f.title}
                                     selected={selectedFolder === f}
                                     onClick={() => {
@@ -164,6 +146,7 @@ export function MenuApp() {
                                         .filter((x) => x.parentId === f.id)
                                         .map((m) => (
                                             <Tile
+                                                key={m.id}
                                                 title={m.title}
                                                 selected={selectedMenu === m}
                                                 onClick={() => {
@@ -176,16 +159,70 @@ export function MenuApp() {
                                         icon={<icons.Add />}
                                         title="New Menu"
                                         className="btn btn-secondary text-secondary bg-transparent  border border-secondary"
-                                        onClick={() => alert("ss")}
+                                        onClick={() => {
+                                            setEditMode(true);
+                                            setSelectedFolder(null);
+                                            setSelectedMenu({ id: "", title: "" });
+                                        }}
                                     ></Tile>
                                 </Tile>
                             ))}
 
-                        <Tile icon={<icons.Add />} title="New Folder" className="btn btn-outline-secondary" onClick={() => alert("ss")}>
+                        <Tile
+                            icon={<icons.Add />}
+                            title="New Folder"
+                            className="btn btn-outline-secondary"
+                            onClick={() => {
+                                setEditMode(true);
+                                setSelectedFolder({ id: "", title: "" });
+                                setSelectedMenu(null);
+                            }}
+                        >
                             <span></span>
                         </Tile>
                     </Tiles>
                 </div>
+            )}
+
+            {app && editMode && selectedFolder && (
+                <EditFolder
+                    projectId={app.id}
+                    folder={selectedFolder}
+                    onGoBack={(item) => {
+                        setEditMode(false);
+                        if (!!item && !selectedFolder.id) {
+                            setMenuFolders([...menuFolders, item]);
+                            setSelectedFolder(item);
+                        } else if (!!item && !!selectedFolder.id) {
+                            const list = [...menuFolders];
+                            const i = list.findIndex((x) => x.id === item.id);
+                            list[i] = item;
+                            setMenuFolders(list);
+                            setSelectedFolder(item);
+                        } else if (item === null) {
+                            const list = menuFolders.filter((x) => x.id !== selectedFolder.id);
+                            setMenuFolders(list);
+                        }
+                    }}
+                />
+            )}
+            {app && editMode && selectedMenu && (
+                <EditMenu
+                    projectId={app.id}
+                    menu={selectedMenu}
+                    onGoBack={(item) => {
+                        setEditMode(false);
+                        if (!!item) {
+                            const list = menus;
+                            const i = list.findIndex((x) => x.id === item.id);
+                            list[i] = item;
+                            setMenus(list);
+                        } else if (item === null) {
+                            const list = menus.filter((x) => x.id !== selectedMenu.id);
+                            setMenus(list);
+                        }
+                    }}
+                />
             )}
 
             {/* 

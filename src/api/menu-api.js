@@ -3,17 +3,13 @@ import { api } from "./api";
 import { apiConfig } from "./config";
 
 export const menuApi = {
-    myMenu: () =>
-        api.call("post", apiConfig.menuUrl + "/my-menu/" + settings.projectId),
+    myMenu: () => api.call("post", apiConfig.menuUrl + "/my-menu/" + settings.projectId),
 
-    load: (projectId) =>
-        api.call("post", apiConfig.menuUrl + "/load/" + projectId),
+    load: (projectId) => api.call("post", apiConfig.menuUrl + "/load/" + projectId),
 
-    insertApp: (data) =>
-        api.call("post", apiConfig.menuUrl + "/insert-app", data),
+    insertApp: (data) => api.call("post", apiConfig.menuUrl + "/insert-app", data),
 
-    updateApp: (data) =>
-        api.call("post", apiConfig.menuUrl + "/update-app", data),
+    updateApp: (data) => api.call("post", apiConfig.menuUrl + "/update-app", data),
 
     deleteApp: (list) =>
         api.call(
@@ -22,37 +18,17 @@ export const menuApi = {
             list.map((x) => x.id)
         ),
 
-    insertMenu: (projectId, data) =>
-        api.call("post", apiConfig.menuUrl + `/insert-menu/${projectId}`, data),
+    saveMenu: (projectId, data, insertMode) => {
+        var action = insertMode ? "insert" : "update";
+        return api.call("post", `${apiConfig.menuUrl}/${action}-menu/${projectId}`, data);
+    },
 
-    updateMenu: (projectId, data) =>
-        api.call("post", apiConfig.menuUrl + `/update-menu/${projectId}`, data),
+    deleteMenu: (projectId, id) => api.call("post", apiConfig.menuUrl + `/delete-menu/${projectId}/${id}`, null),
 
-    deleteMenu: (projectId, id) =>
-        api.call(
-            "post",
-            apiConfig.menuUrl + `/delete-menu/${projectId}/${id}`,
-            null
-        ),
+    saveFolder: (projectId, data, insertMode) => {
+        var action = insertMode ? "insert" : "update";
+        return api.call("post", `${apiConfig.menuUrl}/${action}-folder/${projectId}`, data);
+    },
 
-    insertFolder: (projectId, data) =>
-        api.call(
-            "post",
-            apiConfig.menuUrl + `/insert-folder/${projectId}`,
-            data
-        ),
-
-    updateFolder: (projectId, data) =>
-        api.call(
-            "post",
-            apiConfig.menuUrl + `/update-folder/${projectId}`,
-            data
-        ),
-
-    deleteFolder: (projectId, id) =>
-        api.call(
-            "post",
-            apiConfig.menuUrl + `/delete-folder/${projectId}/${id}`,
-            null
-        ),
+    deleteFolder: (projectId, id) => api.call("post", apiConfig.menuUrl + `/delete-folder/${projectId}/${id}`, null),
 };

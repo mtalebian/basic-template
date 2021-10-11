@@ -1,9 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
 import * as bs from "react-basic-design";
 
-//import { messages } from "../../../components/messages";
 import * as icons from "../../../assets/icons";
-import accountManager from "../../../app/account-manager";
 import { menuHelper, TileMenu } from "../../../components/tilemenu";
 import { menuApi } from "../../../api/menu-api";
 import { notify } from "../../../components/basic/notify";

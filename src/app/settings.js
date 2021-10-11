@@ -5,7 +5,7 @@ function getCookie(name) {
 }
 
 export const settings = {
-    debugMode: true,
+    debugMode: !true,
     projectId: "project1",
     title: "Project 1",
     supportTel: "+(98)9124147738",

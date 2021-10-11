@@ -17,6 +17,7 @@ import { apiConfig } from "./api/config";
 import settings from "./app/settings";
 import { AccountProvider } from "./app/account-context";
 
+//-----------
 i18n.use(HttpApi)
     .use(LanguageDetector)
     .use(initReactI18next)
@@ -47,11 +48,16 @@ i18n.on("missingKey", function (lngs, namespace, key, res) {
     lang_missings[key] = res;
 });
 
+//-----------
 const loadingMarkup = (
     <div className="py-5 text-center">
         <h3>Loading..</h3>
     </div>
 );
+
+//-----------
+var t = bd.helper.getTheme();
+bd.helper.setTheme(!t ? "bd-light" : t);
 
 ReactDOM.render(
     <Suspense fallback={loadingMarkup}>

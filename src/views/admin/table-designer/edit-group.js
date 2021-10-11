@@ -116,7 +116,7 @@ export function TableDesignerEditGroup({ group, onChanged, onGoBack }) {
                     innerRef={formRef}
                 >
                     <Form style={{ maxWidth: 400 }}>
-                        <BasicInput name="title" label={t("group-title")} labelSize="4" autoComplete="off" autoFocus />
+                        <BasicInput name="title" label={t("group-title")} labelSize="4" autoFocus />
                     </Form>
                 </Formik>
             </div>
