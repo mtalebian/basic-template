@@ -20,14 +20,18 @@ namespace Accounts.Controllers
         [Required(ErrorMessage = "Enter the NationalCode value")]
         public string NationalCode { get; set; }
 
-        [Required(ErrorMessage = "Enter the Email value")]
+
         [DataType(DataType.EmailAddress,ErrorMessage = "Invalid email")]
         public string Email { get; set; }
 
+        
         public string Password { get; set; }
 
         [Compare("Password",ErrorMessage ="تكرار گذرواژه صحيح نيست")]
         public string RepeatePassword { get; set; }
+
+        [RegularExpression(@"^09[0|1|2|3][0-9]{8}$", ErrorMessage = "Invalid Phone Number")]
+        public string PhoneNumber { get; set; }
 
         public bool WindowsAuthenticate { get; set; }
     }

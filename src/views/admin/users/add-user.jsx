@@ -12,7 +12,7 @@ export const AddUser = ({ onGoBack, ...props }) => {
     const { t } = useTranslation();
     const [busy, setBusy] = useState(false);
     const formRef = useRef();
-    const [authType, setAuthType] = useState("windows");
+    const [windowsAuth, setAuthType] = useState("true");
 
     const onSaveClick = (e) => {
         if (!formRef.current) return false;
@@ -53,18 +53,21 @@ export const AddUser = ({ onGoBack, ...props }) => {
             <div className="container pt-3">
                 <Formik
                     initialValues={{
-                        userName: "",
-                        nationalCode: "",
-                        password: "",
                         firstName: "",
                         lastName: "",
-                        windowsAuthenticate: false,
-                        description: "",
+                        userName: "",
+                        nationalCode: "",
+                        email:"",
+                        password: "",
+                        repeatePassword:"",
+                        phoneNumber:"",
+                        windowsAuthenticate: true,
                     }}
                     validationSchema={yup.object({
-                        userName: yup.string().required("Required"),
-                        firstName: yup.string().required("Required"),
-                        lastName: yup.string().required("Required"),
+                        firstName: yup.string().required("required"),
+                        lastName: yup.string().required("required"),
+                        userName: yup.string().required("required"),
+                        nationalCode:yup.string().required("required"),
                     })}
                     onSubmit={onSaveClick}
                     innerRef={formRef}
@@ -72,14 +75,18 @@ export const AddUser = ({ onGoBack, ...props }) => {
                     <Form>
                         <div className="row">
                             <div className="col-md-6 col-xl-4">
-                                <BasicInput name="userName" label={t("user-name")} labelSize="4" autoComplete="off" autoFocus />
+                               
+                                <BasicInput name="firstName" label={t("first-name")} labelSize="4" autoComplete="off" autoFocus />
                                 <BasicInput
-                                    name="nationalCode"
-                                    label={t("national-code")}
+                                    name="lastName"
+                                    label={t("last-name")}
                                     labelSize="4"
                                     autoComplete="off"
-                                    style={{ maxWidth: 150 }}
+                                    // style={{ maxWidth: 150 }}
                                 />
+                                <BasicInput name="userName" label={t("user-name")} labelSize="4" autoComplete="off" />
+                                <BasicInput name="email" label={t("email")} labelSize="4" autoComplete="off" />
+                                <BasicInput name="phoneNumber" label={t("phone-number")} labelSize="4" autoComplete="off" />
                                 <div className="row mb-2">
                                     <label class="form-label text-start text-md-end col-form-label col-12 col-md-4">{t("auth-type")}</label>
                                     <div className="col-md-8 m-s-n2">
@@ -88,34 +95,36 @@ export const AddUser = ({ onGoBack, ...props }) => {
                                             dense
                                             radio
                                             size="sm"
-                                            name="auth-type"
-                                            value="windows"
+                                            name="windowsAuthenticate"
+                                            value="true"
                                             label={t("windows")}
                                             labelClassName="m-e-2"
-                                            model={authType}
+                                            model={windowsAuth}
                                             setModel={setAuthType}
                                         />
                                         <bd.Toggle
                                             color="primary"
                                             dense
+                                            checked
                                             radio
                                             size="sm"
-                                            name="auth-type"
-                                            value="form"
+                                            name="windowsAuthenticate"
+                                            value="false"
                                             label={t("form")}
-                                            model={authType}
+                                            model={windowsAuth}
                                             setModel={setAuthType}
                                         />
                                     </div>
                                 </div>
-                                <BasicInput name="password" label={t("password")} labelSize="4" autoComplete="off" />
+                                {windowsAuth}
                             </div>
                             <div className="col-md-6 col-xl-4">
-                                <BasicInput name="firstName" label={t("first-name")} labelSize="4" autoComplete="off" />
-                                <BasicInput name="lastName" label={t("last-name")} labelSize="4" autoComplete="off" />
-                            </div>
-                            <div className="col-md-6 col-xl-4">
-                                <BasicInput name="description" label={t("description")} labelSize="4" autoComplete="off" />
+                            {windowsAuth=="false" &&(
+                                <>
+                                 <BasicInput name="password" type="password" label={t("password")} labelSize="4" autoComplete="off" />
+                                 <BasicInput name="repeatePassword" type="password" label={t("repeate-password")} labelSize="4" autoComplete="off" />
+                                </>
+                            )}
                             </div>
                         </div>
                     </Form>

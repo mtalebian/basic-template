@@ -24,7 +24,7 @@ namespace Accounts.Controllers
         public const string InvalidInfo = "اطلاعات ارسالي نامعتبر است";
         public const string InvalidNationalCode = "كدملي به صورت صحيح وارد نشده است";
         public const string NotFoundInformation = "اطلاعاتي يافت نشد";
-
+        public const string PasswordIsRequired = "مقدار گذرواژه را وارد كنيد";
         #endregion
 
     }

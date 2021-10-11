@@ -26,7 +26,7 @@ namespace Accounts.Controllers
 
 
         [EnableCors("react")]
-        [HttpGet("Users")]
+        [HttpGet("users")]
         public Response<List<UserDTO>> GetUsers()
         {
             var result =new List<UserDTO>();
@@ -38,7 +38,7 @@ namespace Accounts.Controllers
 
 
         [EnableCors("react")]
-        [HttpGet("User-info")]
+        [HttpGet("user-info")]
         public Response<UserUpdateDTO> GetUserByNationalCode(string nationalCode)
         {
             if (string.IsNullOrEmpty(nationalCode))
@@ -66,6 +66,10 @@ namespace Accounts.Controllers
             var _user = userService.GetUser(model.NationalCode);
             if (_user is not null || userService.GetUserByUserName(model.UserName) is not null){
                 return new Response<UserInsertDTO>(Messages.DuplicateUser);
+            }
+            if (!model.WindowsAuthenticate && string.IsNullOrEmpty(model.Password) || string.IsNullOrEmpty(model.RepeatePassword))
+            {
+                return new Response<UserInsertDTO>(Messages.PasswordIsRequired);
             }
             _user = model.MapTo<User>();
             if (!model.WindowsAuthenticate){
