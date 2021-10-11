@@ -1,8 +1,10 @@
 ﻿using Accounts.Core;
 using Common;
+using Common.Validation;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
@@ -13,23 +15,41 @@ namespace Accounts.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    [Authorize(AuthenticationSchemes = "Bearer")]
     public class UserManagmentController : ControllerBase
     {
-        private readonly IUserManagementService userManagment;
+        private readonly IUserManagementService userService;
 
         public UserManagmentController(IUserManagementService userManagment)
         {
-            this.userManagment = userManagment;
+            this.userService = userManagment;
         }
 
 
-        [HttpGet("UserInfo")]
+        [EnableCors("react")]
+        [HttpGet("Users")]
+        public Response<List<UserDTO>> GetUsers()
+        {
+            var result =new List<UserDTO>();
+            var _users = userService.GetUsers();
+            if(_users.Count!=0)
+               result = _users.MapTo<UserDTO>().ToList();
+            return new Response<List<UserDTO>>(result);
+        }
+
+
+        [EnableCors("react")]
+        [HttpGet("User-info")]
         public Response<UserUpdateDTO> GetUserByNationalCode(string nationalCode)
         {
+            if (string.IsNullOrEmpty(nationalCode))
+                return new Response<UserUpdateDTO>(Messages.InvalidInfo);
+            if (!ValidationHelper.IsValidNationalCode(nationalCode))
+                return new Response<UserUpdateDTO>(Messages.InvalidNationalCode);
             UserUpdateDTO result = new UserUpdateDTO();
-            var _user = userManagment.GetUser(nationalCode);
-            if (_user is not null) result = _user.MapTo<UserUpdateDTO>();
+            var _user = userService.GetUser(nationalCode);
+            if (_user is null)
+                return new Response<UserUpdateDTO>(Messages.NotFoundInformation);
+            result = _user.MapTo<UserUpdateDTO>();
             return new Response<UserUpdateDTO>(result);
         }
 
@@ -37,21 +57,21 @@ namespace Accounts.Controllers
         [HttpPost("insert-user")]
         public Response<UserInsertDTO> InsertUser([FromBody] UserInsertDTO model)
         {
-            if (!Common.Validation.ValidationHelper.IsValidNationalCode(model.NationalCode))
-            {
+            if (!ModelState.IsValid){
+                return new Response<UserInsertDTO>(string.Join(",", ModelState.GetModelStateErrors()));
+            }
+            if (!ValidationHelper.IsValidNationalCode(model.NationalCode)){
                 return new Response<UserInsertDTO>(Messages.InvalidNationalCode);
             }
-            var _user = userManagment.GetUser(model.NationalCode);
-            if (_user is not null || userManagment.GetUserByUserName(model.UserName) is not null)
-            {
+            var _user = userService.GetUser(model.NationalCode);
+            if (_user is not null || userService.GetUserByUserName(model.UserName) is not null){
                 return new Response<UserInsertDTO>(Messages.DuplicateUser);
             }
             _user = model.MapTo<User>();
-            if (!model.WindowsAuthenticate)
-            {
+            if (!model.WindowsAuthenticate){
                 _user.PasswordHash = Common.Cryptography.Helper.HashPassword(model.Password);
             }
-            userManagment.Insert(_user);
+            userService.Insert(_user);
             var result = _user.MapTo<UserInsertDTO>();
             return new Response<UserInsertDTO>(result);
         }
@@ -60,24 +80,27 @@ namespace Accounts.Controllers
         [HttpPut("update-user")]
         public Response<UserUpdateDTO> UpdateUser([FromBody] UserUpdateDTO model)
         {
-            var _user = userManagment.GetUserByUserName(model.UserName);
-            if (_user is null)
+            if (!ModelState.IsValid)
             {
+                return new Response<UserUpdateDTO>(string.Join(",",ModelState.GetModelStateErrors()));
+            }
+            var _user = userService.GetUserByUserName(model.UserName);
+            if (_user is null) {
                 return new Response<UserUpdateDTO>(Messages.InvalidInfo);
             }
-            if (!Common.Validation.ValidationHelper.IsValidNationalCode(model.NationalCode))
+            if (!ValidationHelper.IsValidNationalCode(model.NationalCode))
             {
                 return new Response<UserUpdateDTO>(Messages.InvalidNationalCode);
             }
-            _user = userManagment.GetUser(model.NationalCode);
+            _user = userService.GetUser(model.NationalCode);
             if (_user is not null && _user.UserName != model.UserName)
             {
                 return new Response<UserUpdateDTO>(Messages.DuplicateNationalCode);
             }
             model.MapTo(_user);
             _user.LastUpdate = DateTime.Now;
-            userManagment.Update(_user);
-            var result = userManagment.GetUser(model.NationalCode).MapTo<UserUpdateDTO>();
+            userService.Update(_user);
+            var result = userService.GetUser(model.NationalCode).MapTo<UserUpdateDTO>();
             return new Response<UserUpdateDTO>(result);
 
         }
@@ -86,14 +109,13 @@ namespace Accounts.Controllers
         [HttpDelete("delete-user")]
         public Response Delete(string nationalCode)
         {
-            if (string.IsNullOrEmpty(nationalCode) || !Common.Validation.ValidationHelper.IsValidNationalCode(nationalCode))
-            {
+            if (string.IsNullOrEmpty(nationalCode) || !ValidationHelper.IsValidNationalCode(nationalCode)){
                 return new Response(Messages.InvalidInfo);
             }
-            var user = userManagment.GetUser(nationalCode);
+            var user = userService.GetUser(nationalCode);
             if (user is null) return new Response(Messages.InvalidInfo);
 
-            userManagment.DeleteUser(nationalCode);
+            userService.DeleteUser(nationalCode);
             return new Response();
         }
 
