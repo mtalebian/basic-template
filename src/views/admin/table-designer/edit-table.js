@@ -11,7 +11,7 @@ import classNames from "classnames";
 import { tableDesignerApi } from "../../../api/table-designer-api";
 import { notify } from "../../../components/basic/notify";
 import { Table, TableTitlebar } from "../../../components/table";
-import { BasicInput } from "../../../components/basic-form/basic-field";
+import { BasicInput } from "../../../components/basic-form/basic-input";
 
 //
 export function TableDesignerEditTable({ table, group, onChanged, onGoBack }) {

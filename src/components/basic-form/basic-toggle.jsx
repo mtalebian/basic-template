@@ -1,9 +1,10 @@
 import classNames from "classnames";
-import { Field, useField } from "formik";
+import * as bd from "react-basic-design";
+import { useField } from "formik";
 import React from "react";
 
-export const BasicInput = ({ id, label, labelSize, type, className, children, style, readOnly, autoComplete, ...props }) => {
-    const [field, meta] = useField({ ...props, type });
+export const BasicToggle = ({ id, label, labelSize, radio, size, className, children, style, color, readOnly, ...props }) => {
+    const [field, meta] = useField({ ...props });
     const break_point = typeof labelSize !== "string" ? "md" : labelSize.startsWith("lg") ? "lg" : labelSize.startsWith("xl") ? "xl" : "md";
     labelSize = typeof labelSize !== "string" || labelSize.indexOf("-") === -1 ? labelSize * 1 : labelSize.split("-")[1] * 1;
 
@@ -11,21 +12,25 @@ export const BasicInput = ({ id, label, labelSize, type, className, children, st
     var cnLabel = classNames("form-label", {
         [`text-start text-${break_point}-end col-form-label col-12 col-${break_point}-${labelSize}`]: labelSize,
     });
-    var cnControl = classNames("form-control", className, {
-        "bd-border-error": meta.error,
-        "bg-transparent": readOnly,
-    });
-    var cnErorr = "bd-error";
 
-    if (!type) type = "text";
-    if (!autoComplete) autoComplete = "off";
     if (label && id === undefined) id = props.name;
 
     let field_comp = (
         <>
-            <Field id={id} type={type} className={cnControl} {...field} style={style} readOnly={readOnly} autoComplete={autoComplete} />
+            <bd.Toggle
+                id={id}
+                name={field.name}
+                value={field.value}
+                onChange={field.onChange}
+                onBlur={field.onBlur}
+                radio={radio}
+                size={size ?? "sm"}
+                edge="start"
+                color={color ?? "primary"}
+                {...props}
+            />
             {children}
-            {meta.touched && meta.error ? <div className={cnErorr}>{meta.error}</div> : null}
+            {meta.touched && meta.error ? <div className="bd-error">{meta.error}</div> : null}
         </>
     );
 

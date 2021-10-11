@@ -9,7 +9,7 @@ import { tableDesignerApi } from "../../../api/table-designer-api";
 import { notify } from "../../../components/basic/notify";
 import * as icons from "../../../assets/icons";
 import { Form, Formik } from "formik";
-import { BasicInput } from "../../../components/basic-form/basic-field";
+import { BasicInput } from "../../../components/basic-form/basic-input";
 import * as yup from "yup";
 
 //

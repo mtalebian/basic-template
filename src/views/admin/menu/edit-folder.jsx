@@ -7,7 +7,7 @@ import { menuApi } from "../../../api/menu-api";
 import { Form, Formik } from "formik";
 import { notify } from "../../../components/basic/notify";
 import { useTranslation } from "react-i18next";
-import { BasicInput } from "../../../components/basic-form/basic-field";
+import { BasicInput } from "../../../components/basic-form/basic-input";
 import classNames from "classnames";
 
 export const EditFolder = ({ projectId, folder, onGoBack }) => {
@@ -86,7 +86,7 @@ export const EditFolder = ({ projectId, folder, onGoBack }) => {
                         })}
                         type="button"
                         variant="outline"
-                        disabled={loading || deleting || (folder.items && folder.items.length)}
+                        disabled={loading || deleting}
                         onClick={deleteClickHandler}
                     >
                         {deleting && <div className="m-e-2 spinner-border spinner-border-sm"></div>}

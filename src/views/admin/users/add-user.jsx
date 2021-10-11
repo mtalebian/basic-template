@@ -5,7 +5,7 @@ import * as icons from "../../../assets/icons";
 import * as yup from "yup";
 import { notify } from "../../../components/basic/notify";
 import { Form, Formik } from "formik";
-import { BasicInput } from "../../../components/basic-form/basic-field";
+import { BasicInput } from "../../../components/basic-form/basic-input";
 import { userManagmentApi } from "../../../api/user-managment-api";
 
 export const AddUser = ({ onGoBack, ...props }) => {
