@@ -36,7 +36,6 @@ export const UsersApp = ({ ...props }) => {
         userManagmentApi
             .getUsers()
             .then((x) => {       
-                console.log(x);
                 setUsers(x);
             })
             .catch((ex) => {

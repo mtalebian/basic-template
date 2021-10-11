@@ -85,6 +85,7 @@ export const AddUser = ({ onGoBack, ...props }) => {
                                     // style={{ maxWidth: 150 }}
                                 />
                                 <BasicInput name="userName" label={t("user-name")} labelSize="4" autoComplete="off" />
+                                <BasicInput name="nationalCode" label={t("national-code")} labelSize="4" autoComplete="off" />
                                 <BasicInput name="email" label={t("email")} labelSize="4" autoComplete="off" />
                                 <BasicInput name="phoneNumber" label={t("phone-number")} labelSize="4" autoComplete="off" />
                                 <div className="row mb-2">

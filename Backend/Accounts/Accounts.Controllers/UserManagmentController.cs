@@ -67,7 +67,8 @@ namespace Accounts.Controllers
             if (_user is not null || userService.GetUserByUserName(model.UserName) is not null){
                 return new Response<UserInsertDTO>(Messages.DuplicateUser);
             }
-            if (!model.WindowsAuthenticate && string.IsNullOrEmpty(model.Password) || string.IsNullOrEmpty(model.RepeatePassword))
+            var t = model.WindowsAuthenticate;
+            if (!model.WindowsAuthenticate && (string.IsNullOrEmpty(model.Password) || string.IsNullOrEmpty(model.RepeatePassword)))
             {
                 return new Response<UserInsertDTO>(Messages.PasswordIsRequired);
             }

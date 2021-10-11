@@ -5,23 +5,23 @@ namespace Accounts.Controllers
 {
     public class UserInsertDTO
     {
-        [Required(ErrorMessage = "Enter the FirstName value")]
-        [MinLength(3,ErrorMessage = "The length FirstName is at least 3 characters")]
+        [Required(ErrorMessage = "نام را وارد كنيد")]
+        [MinLength(3,ErrorMessage = "حداقل طول نام 3 كاراكتر مي باشد")]
         public string FirstName { get; set; }
 
-        [Required(ErrorMessage = "Enter the LastName value")]
-        [MinLength(3, ErrorMessage = "The length LastName is at least 3 characters")]
+        [Required(ErrorMessage = "نام خانوادگي را وارد كنيد")]
+        [MinLength(3, ErrorMessage = "حداقل طول نام خانوادگي 3 كاراكتر مي باشد")]
         public string LastName { get; set; }
 
-        [Required(ErrorMessage = "Enter the UserName value")]
-        [MinLength(5, ErrorMessage = "The length UserName is at least 5 characters")]
+        [Required(ErrorMessage = "نام كاربري را وارد كنيد")]
+        [MinLength(5, ErrorMessage = "حداقل طول نام كاربري 5 كاراكتر مي باشد")]
         public string UserName { get; set; }
 
-        [Required(ErrorMessage = "Enter the NationalCode value")]
+        [Required(ErrorMessage = "كدملي را وارد كنيد")]
         public string NationalCode { get; set; }
 
 
-        [DataType(DataType.EmailAddress,ErrorMessage = "Invalid email")]
+        [DataType(DataType.EmailAddress,ErrorMessage = "ايميل نامعتبر است")]
         public string Email { get; set; }
 
         
@@ -30,7 +30,7 @@ namespace Accounts.Controllers
         [Compare("Password",ErrorMessage ="تكرار گذرواژه صحيح نيست")]
         public string RepeatePassword { get; set; }
 
-        [RegularExpression(@"^09[0|1|2|3][0-9]{8}$", ErrorMessage = "Invalid Phone Number")]
+        [RegularExpression(@"^09[0|1|2|3][0-9]{8}$", ErrorMessage = "شماره تلفن نامعتبر است")]
         public string PhoneNumber { get; set; }
 
         public bool WindowsAuthenticate { get; set; }
