@@ -113,15 +113,6 @@ export function MenuApp() {
                                 <icons.ArrowBackIos className="rtl-rotate-180" />
                             </bd.Button>
                             <h5 className="appbar-title">{app.title}</h5>
-
-                            {(selectedFolder?.id || selectedMenu?.id) && (
-                                <>
-                                    <bd.Button variant="text" onClick={() => setEditMode(true)} edge="end">
-                                        <icons.Edit className="size-lg" />
-                                        {t("edit")}
-                                    </bd.Button>
-                                </>
-                            )}
                         </bd.Toolbar>
                     </div>
                 </bd.AppBar>
@@ -138,8 +129,9 @@ export function MenuApp() {
                                     title={f.title}
                                     selected={selectedFolder === f}
                                     onClick={() => {
-                                        setSelectedFolder(f === selectedFolder ? null : f);
+                                        setSelectedFolder(f);
                                         setSelectedMenu(null);
+                                        setEditMode(true);
                                     }}
                                 >
                                     {menus
@@ -151,7 +143,8 @@ export function MenuApp() {
                                                 selected={selectedMenu === m}
                                                 onClick={() => {
                                                     setSelectedFolder(null);
-                                                    setSelectedMenu(m === selectedMenu ? null : m);
+                                                    setSelectedMenu(m);
+                                                    setEditMode(true);
                                                 }}
                                             />
                                         ))}
@@ -162,7 +155,7 @@ export function MenuApp() {
                                         onClick={() => {
                                             setEditMode(true);
                                             setSelectedFolder(null);
-                                            setSelectedMenu({ id: "", title: "" });
+                                            setSelectedMenu({ id: "", parentId: f.id, title: "" });
                                         }}
                                     ></Tile>
                                 </Tile>
@@ -212,11 +205,15 @@ export function MenuApp() {
                     menu={selectedMenu}
                     onGoBack={(item) => {
                         setEditMode(false);
-                        if (!!item) {
-                            const list = menus;
+                        if (!!item && !selectedMenu.id) {
+                            setMenus([...menus, item]);
+                            setSelectedMenu(item);
+                        } else if (!!item && !!selectedMenu.id) {
+                            const list = [...menus];
                             const i = list.findIndex((x) => x.id === item.id);
                             list[i] = item;
                             setMenus(list);
+                            setSelectedMenu(item);
                         } else if (item === null) {
                             const list = menus.filter((x) => x.id !== selectedMenu.id);
                             setMenus(list);

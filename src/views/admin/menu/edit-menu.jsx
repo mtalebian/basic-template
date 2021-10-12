@@ -99,37 +99,25 @@ export const EditMenu = ({ projectId, menu, onGoBack }) => {
 
             <div className="container pt-4">
                 <Formik
-                    initialValues={{ ...menu, openInNewTab: "1" }}
+                    initialValues={{ ...menu, openInNewTab: true }}
                     validationSchema={yup.object({
                         id: yup.string().required("Required"),
+                        url: yup.string().required("Required"),
                         title: yup.string().required("Required"),
                     })}
                     onSubmit={onSaveClick}
                     innerRef={formRef}
                 >
-                    {({ values, ...props }) => {
-                        return (
-                            <Form style={{ maxWidth: 400 }}>
-                                <BasicInput name="id" label={t("id")} labelSize="4" autoFocus readOnly={!!menu.id} />
-                                <BasicInput name="title" label={t("title")} labelSize="4" />
-                                <BasicInput name="url" label={t("url")} labelSize="4" className="ltr" />
-                                <BasicInput name="applicationId" label={t("application-id")} labelSize="4" className="ltr" />
+                    <Form style={{ maxWidth: 400 }}>
+                        <BasicInput name="id" label={t("id")} labelSize="4" autoFocus readOnly={!!menu.id} />
+                        <BasicInput name="title" label={t("title")} labelSize="4" />
+                        <BasicInput name="url" label={t("url")} labelSize="4" className="ltr" />
+                        <BasicInput name="applicationId" label={t("application-id")} labelSize="4" className="ltr" />
 
-                                <BasicSwitch name="openInNewTab" label={t("open-in-new-tab")} labelSize="4" />
-                                {/* <BasicSwitch name="openInNewTab" label={t("disabled")} labelSize="4" readOnly />
-
-                                <BasicToggle name="openInNewTab" label={t("open-in-new-tab")} labelSize="4" />
-                                <BasicFormRow label="Open IN" labelSize="4">
-                                    <BasicToggle radio name="openInNewTab" value={true} label={t("new-tab")} />
-                                    <BasicToggle radio name="openInNewTab" value={false} label={t("current-tab")} />
-                                </BasicFormRow> */}
-                                <BasicInput name="sortOrder" label={t("sort-order")} labelSize="4" type="number" />
-                                <BasicInput name="createdAt" label={t("created-at")} labelSize="4" readOnly />
-                                <input type="submit" className="d-none" />
-                                <pre className="ltr">{JSON.stringify(values, null, 2)}</pre>
-                            </Form>
-                        );
-                    }}
+                        <BasicSwitch name="openInNewTab" label={t("open-in-new-tab")} labelSize="4" />
+                        <BasicInput name="sortOrder" label={t("sort-order")} labelSize="4" type="number" maxWidth={120} />
+                        <input type="submit" className="d-none" />
+                    </Form>
                 </Formik>
             </div>
         </>

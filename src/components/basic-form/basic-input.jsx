@@ -3,7 +3,7 @@ import * as bd from "react-basic-design";
 import { useField } from "formik";
 import React from "react";
 
-export const BasicInput = ({ id, label, labelSize, type, className, children, autoComplete, ...props }) => {
+export const BasicInput = ({ id, label, labelSize, type, className, children, autoComplete, maxWidth, ...props }) => {
     const [field, meta] = useField({ ...props, type });
 
     if (props.name === "title") console.log(props.name, " = ", field.value);
@@ -17,9 +17,14 @@ export const BasicInput = ({ id, label, labelSize, type, className, children, au
     if (!autoComplete) autoComplete = "off";
     if (label && id === undefined) id = props.name;
 
+    let style = props.style;
+    if (maxWidth > 0) {
+        style = { ...style, maxWidth };
+    }
+
     let field_comp = (
         <>
-            <input id={id} type={type} className={cnControl} {...field} autoComplete={autoComplete} {...props} />
+            <input id={id} type={type} className={cnControl} {...field} autoComplete={autoComplete} {...props} style={style} />
             {children}
             {meta.touched && meta.error ? <div className={cnErorr}>{meta.error}</div> : null}
         </>
