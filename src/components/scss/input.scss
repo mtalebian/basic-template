@@ -1,3 +1,4 @@
+/*
 @mixin input-focus-effect($palette, $light-theme) {
     $text: map-get($palette, text);
     $bg: map-get($palette, bg);
@@ -40,3 +41,4 @@
 .theme-dark {
     @include input-focus-effect(map-get($theme, dark), false);
 }
+*/

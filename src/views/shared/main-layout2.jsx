@@ -51,17 +51,14 @@ export function MainLayout({ component: Comp, ...props }) {
 
                         {Comp?.Appbar?.buttons}
 
-                        {settings.debugMode && (
-                            <>
-                                <bd.Button variant="text" color="default" onClick={toggleRTL} className="d-none d-md-block">
-                                    RTL
-                                </bd.Button>
+                        <bd.Button variant="text" color="default" onClick={toggleRTL} className="d-none d-md-block">
+                            RTL
+                        </bd.Button>
 
-                                <bd.Button variant="icon" color="default" onClick={toggleDarkMode} className="d-none d-md-block">
-                                    <icons.DarkMode />
-                                </bd.Button>
-                            </>
-                        )}
+                        <bd.Button variant="icon" color="default" onClick={toggleDarkMode} className="d-none d-md-block">
+                            <icons.DarkMode />
+                        </bd.Button>
+
                         <bd.Badge value={2} overlapCircle className="bg-warning text-dark d-none d-sm-flex">
                             <bd.Button variant="icon" color="default" className="d-none d-sm-block">
                                 <icons.NotificationsActive />

@@ -9,9 +9,8 @@ import { notify } from "../../../components/basic/notify";
 import { useTranslation } from "react-i18next";
 import { BasicInput } from "../../../components/basic-form/basic-input";
 import classNames from "classnames";
-import { BasicToggle } from "../../../components/basic-form/basic-toggle";
 import { BasicSwitch } from "../../../components/basic-form/basic-switch";
-import { BasicFormRow, BasicLabel } from "../../../components/basic-form/basic-form-row";
+import { Col, Nav, Row, Tab, Tabs } from "react-bootstrap";
 
 export const EditMenu = ({ projectId, menu, onGoBack }) => {
     const { t } = useTranslation();
@@ -70,7 +69,7 @@ export const EditMenu = ({ projectId, menu, onGoBack }) => {
 
     return (
         <>
-            <bd.AppBar color position="sticky" style={{ zIndex: 10 }} shadow={0} className="shadow-0 border-bottom">
+            <bd.AppBar position="sticky" style={{ zIndex: 10 }} shadow={0} className="shadow-0 border-bottom">
                 <bd.Toolbar className="container">
                     <bd.Button variant="icon" size="md" onClick={() => onGoBack()}>
                         <icons.ArrowBackIos className="rtl-rotate-180" />

@@ -1,10 +1,3 @@
-.bd-input {
-    margin-bottom: 1rem;
-
-    .bd-error {
-        margin-top: 0.25rem;
-    }
-}
 /*******************/
 @mixin errorTheme($palette) {
     $text: map-get($palette, text);
@@ -15,20 +8,6 @@
 
     $error-palette: map-get($palette, error);
     $error: map-get($error-palette, main);
-
-    .bd-input {
-        label {
-            color: mix($bg, $text, 15%);
-        }
-    }
-
-    .bd-error {
-        color: $error;
-    }
-
-    .bd-border-error {
-        border-color: $error !important;
-    }
 }
 
 /*******************/
