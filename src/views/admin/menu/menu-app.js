@@ -28,47 +28,6 @@ export function MenuApp() {
             setMenus(x.menus);
         });
 
-    /*
-    const onInsertApp = (entity) =>
-        menuApi.insertApp(entity).then((x) => {
-            setProjects(x);
-            return x;
-        });
-    const onUpdateApp = (entity) =>
-        menuApi.updateApp(entity).then((x) => {
-            setProjects(x);
-            return x;
-        });
-    const onDeleteApp = (selection) =>
-        menuApi.deleteApp(selection).then((x) => {
-            setProjects(x);
-            return x;
-        });
-    const onAdd = (entity, tb) =>
-        tb.is("menus")
-            ? menuApi.insertMenu(app.id, entity).then((x) => {
-                  menus.push(x);
-                  setMenus(menus);
-                  return x;
-              })
-            : menuApi.insertFolder(app.id, entity).then((x) => {
-                  menuFolders.push(x);
-                  setMenuFolders(menuFolders);
-                  return x;
-              });
-
-    const onUpdate = (entity, tb) =>
-        tb.is("menus")
-            ? menuApi.updateMenu(app.id, entity).then((x) => {
-                  setMenus([x, ...menus.filter((x) => x.id !== entity.id)]);
-                  return x;
-              })
-            : menuApi.updateFolder(app.id, entity).then((x) => {
-                  setMenuFolders([x, ...menuFolders.filter((x) => x.id !== entity.id)]);
-                  return x;
-              });
-*/
-
     const menuProjects = (
         <bd.Menu>
             {projects.map((x) => (
@@ -99,7 +58,7 @@ export function MenuApp() {
                 <div className="border-bottom">
                     <bd.Toolbar className="container">
                         <bd.Button variant="" color="primary" menu={menuProjects} className="m-auto">
-                            Select a project ...
+                            {t("select-a-project")} ...
                         </bd.Button>
                     </bd.Toolbar>
                 </div>
@@ -221,46 +180,6 @@ export function MenuApp() {
                     }}
                 />
             )}
-
-            {/* 
-            <div className="container-fluid py-3">
-                <Tabs defaultActiveKey="menus">
-                    <Tab eventKey="menus" title="Define Menu">
-                        <div className="card card-accent-secondary m-0">
-                            <div className="card-body">
-                                <MenuDesigner
-                                    applications={projects}
-                                    currApp={app}
-                                    setApp={changeApp}
-                                    menus={menus}
-                                    menuFolders={menuFolders}
-                                    onAdd={onAdd}
-                                    onUpdate={onUpdate}
-                                    onDelete={onDelete}
-                                />
-                            </div>
-                        </div>
-                    </Tab>
-
-                    <Tab eventKey="apps" title="Define Projects">
-                        <div className="card m-0">
-                            <div className="card-body" style={{ maxWidth: 700 }}>
-                                <DataTable
-                                    title="برنامه ها"
-                                    singularTitle="برنامه"
-                                    columns={tables.applications.getReactTableColumns()}
-                                    data={projects}
-                                    onRefresh={onRefresh}
-                                    onInsert={onInsertApp}
-                                    onUpdate={onUpdateApp}
-                                    onDelete={onDeleteApp}
-                                    messages={myTableMessages}
-                                />
-                            </div>
-                        </div>
-                    </Tab>
-                </Tabs>
-            </div> */}
         </>
     );
 }

@@ -6,8 +6,6 @@ import React from "react";
 export const BasicInput = ({ id, label, labelSize, type, className, children, autoComplete, maxWidth, ...props }) => {
     const [field, meta] = useField({ ...props, type });
 
-    if (props.name === "title") console.log(props.name, " = ", field.value);
-
     var cnControl = classNames("form-control", className, {
         "bd-border-error": meta.error,
     });

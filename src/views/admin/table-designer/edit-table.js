@@ -1,17 +1,29 @@
-import React, { useRef, useState } from "react";
+import React, { useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Formik } from "formik";
 import * as yup from "yup";
-
 import * as bd from "react-basic-design";
 import * as icons from "../../../assets/icons";
-
 import { messages } from "../../../components/messages";
 import classNames from "classnames";
 import { tableDesignerApi } from "../../../api/table-designer-api";
 import { notify } from "../../../components/basic/notify";
 import { Table, TableTitlebar } from "../../../components/table";
 import { BasicInput } from "../../../components/basic-form/basic-input";
+import { reactTable } from "../../../components/table/react-table-helper";
+import {
+    useTable,
+    useGlobalFilter,
+    usePagination,
+    useSortBy,
+    useFilters,
+    useGroupBy,
+    useExpanded,
+    useRowSelect,
+    useBlockLayout,
+    useResizeColumns,
+} from "react-table";
+import { RenderTable } from "../../../components/table/render-table";
 
 //
 export function TableDesignerEditTable({ table, group, onChanged, onGoBack }) {
@@ -78,6 +90,53 @@ export function TableDesignerEditTable({ table, group, onChanged, onGoBack }) {
         []
     );
 
+    console.log("aa-=---");
+
+    const defaultColumn = {};
+    const data = columns;
+    const updateData = () => {};
+    const defaultPageSize = 10;
+    const skipReset = true;
+
+    const tableApi = useTable(
+        {
+            initialState: { pageSize: defaultPageSize ?? 10 },
+            defaultColumn,
+            columns: useMemo(
+                () => [
+                    { Header: "ID", accessor: "id", width: 50 },
+                    { Header: "NAME", accessor: "name" },
+                    { Header: "TITLE", accessor: "title" },
+                    { Header: "IsPK", accessor: "isPK", width: 50 },
+                    { Header: "IsRequired", accessor: "isRequired" },
+                    { Header: "DefaultValue", accessor: "defaultValue" },
+                    { Header: "Editor", accessor: "editor" },
+                    { Header: "ValidValues", accessor: "validValues" },
+                ],
+                []
+            ),
+            data: useMemo(() => data, [data]),
+            filterTypes: useMemo(() => reactTable.filterTypes, []),
+            updateMyData: updateData,
+            autoResetPage: !skipReset,
+            autoResetFilters: !skipReset,
+            autoResetSortBy: !skipReset,
+            autoResetSelectedRows: !skipReset,
+            disableMultiSort: false,
+        },
+        useGlobalFilter,
+        useFilters,
+        useGroupBy,
+        useSortBy,
+        useExpanded,
+        usePagination,
+        useRowSelect,
+        useBlockLayout,
+        useResizeColumns
+        //(hooks) => reactTable.addSelectionColumns(hooks)
+    );
+
+    console.log("> Render");
     return (
         <>
             <div className="border-bottom bg-gray-5 mb-3">
@@ -123,81 +182,11 @@ export function TableDesignerEditTable({ table, group, onChanged, onGoBack }) {
                         innerRef={formRef}
                     >
                         <form>
-                            <BasicInput name="name" label={t("table-designer-table-name")} labelSize="4" autoComplete="off" autoFocus />
-                            <BasicInput name="title" label={t("table-designer-table-title")} labelSize="4" autoComplete="off" />
+                            {insertMode && <BasicInput name="name" label={t("table-designer-table-name")} labelSize="4" autoFocus />}
+                            <BasicInput name="title" label={t("table-designer-table-title")} labelSize="4" autoComplete="off" autoFocus />
                             <BasicInput name="singularTitle" label={t("table-designer-singular")} labelSize="4" autoComplete="off" />
-                            {/* <FinalCheck inline name="sortable" label="Sortable" labelSize="3" />
-                        <FinalCheck inline name="filterable" label="Filterable" labelSize="3" /> */}
                         </form>
                     </Formik>
-
-                    {/* <Form
-                        initialValues={table.data}
-                        onSubmit={onSubmit}
-                        render={({ handleSubmit, submitting, invalid }) => (
-                            <form onSubmit={handleSubmit} spellCheck="false">
-                                <FinalField name="name" label="Name:" type="text" autoComplete="off" autoFocus labelSize="3" />
-
-                                <FinalField name="title" label="Title:" type="text" autoComplete="off" labelSize="3" />
-
-                                <FinalField name="singularTitle" label="Singular Title:" type="text" autoComplete="off" labelSize="3" />
-                                <FinalCheck inline name="sortable" label="Sortable" labelSize="3" />
-                                <FinalCheck inline name="filterable" label="Filterable" labelSize="3" />
-
-                                <div className="row">
-                                    <div className="col-md-3"></div>
-                                    <div className="col-md-9">
-                                        <div></div>
-                                    </div>
-                                </div>
-
-                                <bd.AppBar className="bg-default" position="bottom">
-                                    <bd.Toolbar>
-                                        <div className="flex-grow-1"></div>
-                                        <bd.Button color="primary" type="submit" disabled={loading || deleting || invalid}>
-                                            {loading && <div className="m-e-2 spinner-border spinner-border-sm"></div>}
-                                            <span>Save Table</span>
-                                        </bd.Button>
-
-                                        <bd.Button
-                                            className={classNames("mx-2", {
-                                                "d-none": !group.id,
-                                            })}
-                                            type="button"
-                                            variant="outline"
-                                            disabled={loading || deleting || table.columns.length > 0}
-                                            onClick={() => setShowDeletingGroup(true)}
-                                        >
-                                            {deleting && <div className="m-e-2 spinner-border spinner-border-sm"></div>}
-                                            <span>DELETE</span>
-                                        </bd.Button>
-                                    </bd.Toolbar>
-                                </bd.AppBar>
-
-                                <BasicModal
-                                    show={showDeletingGroup}
-                                    setShow={setShowDeletingGroup}
-                                    renderBody={({ hide }) => (
-                                        <>
-                                            Your going to delete the table
-                                            <br />
-                                            Are you sure?
-                                            <div className="pt-2 text-end">
-                                                <bd.Button variant="text" type="button" color="primary" onClick={hide} className="m-e-2">
-                                                    Cancel
-                                                </bd.Button>
-
-                                                <bd.Button type="button" color="secondary" disabled={deleting} onClick={onDeleteClick}>
-                                                    {deleting && <div className="m-e-2 spinner-border spinner-border-sm"></div>}
-                                                    <span>DELETE</span>
-                                                </bd.Button>
-                                            </div>
-                                        </>
-                                    )}
-                                />
-                            </form>
-                        )}
-                    /> */}
                 </div>
 
                 <TableTitlebar
@@ -215,6 +204,12 @@ export function TableDesignerEditTable({ table, group, onChanged, onGoBack }) {
                         </>
                     }
                 />
+
+                <RenderTable tableApi={tableApi} resizable enableGrouping enableSorting multiSelect />
+
+                <br />
+                <br />
+                <br />
 
                 <Table
                     //className="w-100"

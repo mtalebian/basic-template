@@ -17,18 +17,7 @@ import { GenerateEditControls } from "./generate-edit-controls";
         _validValues: ["Tehran", "Karaj", "Isfahan", "Sari"],
 */
 
-export function DataTable({
-    title,
-    singularTitle,
-    columns,
-    data,
-    onRefresh,
-    onInsert,
-    onUpdate,
-    onDelete,
-    messages,
-    ...props
-}) {
+export function DataTable({ title, singularTitle, columns, data, onRefresh, onInsert, onUpdate, onDelete, messages, ...props }) {
     messages = { ...tableMessages, ...messages };
     columns = useMemo(() => columns, [columns]);
 
@@ -141,19 +130,9 @@ export function DataTable({
                         validate={myValidator.validate}
                         render={({ handleSubmit, form, submitting, pristine, invalid, values }) => (
                             <form onSubmit={handleSubmit} className="form register">
-                                <GenerateEditControls
-                                    columns={columns}
-                                    data={entity}
-                                    insertMode={insertMode}
-                                    size="sm"
-                                />
+                                <GenerateEditControls columns={columns} data={entity} insertMode={insertMode} size="sm" />
                                 <div className="text-end mt-4">
-                                    <Button
-                                        variant="link"
-                                        size="sm"
-                                        className="text-decoration-none"
-                                        onClick={handleClose}
-                                    >
+                                    <Button variant="link" size="sm" className="text-decoration-none" onClick={handleClose}>
                                         {format(messages.Cancel)}
                                     </Button>
                                     <Button variant="warning" size="sm" type="submit" disabled={busy || invalid}>

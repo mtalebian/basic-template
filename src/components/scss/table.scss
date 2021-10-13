@@ -1,3 +1,4 @@
+/*
 @mixin table($palette) {
     $text: map-get($palette, text);
     $bg: map-get($palette, bg);
@@ -39,3 +40,4 @@
 .theme-dark {
     @include table(map-get($theme, dark));
 }
+*/

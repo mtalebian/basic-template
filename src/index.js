@@ -1,3 +1,4 @@
+import "./bootstrap.scss";
 import "./index.scss";
 
 import "react-toastify/dist/ReactToastify.css";

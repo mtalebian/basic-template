@@ -1,4 +1,109 @@
 .bd-table {
+    border-spacing: 0;
+    overflow-y: hidden !important;
+
+    .selection-column {
+        padding: 0 !important;
+        width: 50px;
+        display: inline-flex;
+        justify-content: center;
+    }
+
+    .header-label {
+        padding: 0 0.5rem;
+        height: 32px !important;
+        display: flex;
+        align-items: center;
+    }
+
+    .header-filter {
+        padding: 0 0.25rem;
+        height: 36px !important;
+        display: flex;
+        align-items: center;
+    }
+
+    .bd-tr {
+        display: flex;
+    }
+
+    .bd-th,
+    .bd-td {
+        min-height: 32px;
+        display: inline-flex !important;
+        align-items: center;
+        overflow: hidden;
+        min-width: 30px;
+        flex: 0 0 auto;
+    }
+
+    .bd-td {
+        padding: 0 0.5rem;
+        height: 32px !important;
+    }
+
+    //
+    .grid-editor {
+        padding: 4px 8px;
+        width: 100%;
+        background-color: transparent !important;
+        //border: 0;
+        color: inherit;
+        margin: 2px 0;
+        padding-top: 0.25rem;
+        padding-bottom: 0.25rem;
+    }
+
+    .bd-resizer {
+        display: inline-block;
+
+        width: 6px;
+        position: absolute;
+        right: 0;
+        top: 0;
+        bottom: 0;
+        transform: translateX(50%);
+        z-index: 1;
+        touch-action: none;
+        user-select: none;
+
+        &:after {
+            content: "";
+            position: absolute;
+            top: 10px;
+            bottom: 10px;
+            left: 2px;
+            width: 1px;
+            background-color: currentColor;
+            opacity: 0.5;
+        }
+
+        &.isResizing:after {
+            opacity: 1;
+        }
+    }
+}
+
+.bd-table-border-row {
+    .bd-tfoot {
+        border-top: 1px solid #000;
+    }
+
+    .bd-tr .bd-th,
+    .bd-tr .bd-td {
+        border-bottom: 1px solid #000;
+        height: auto !important;
+    }
+
+    .bd-tr:last-child .bd-td {
+        border-bottom: 0;
+    }
+}
+
+/*
+************************
+*/
+.bd-table {
     overflow: auto;
     //border: 1px solid #555;
 
