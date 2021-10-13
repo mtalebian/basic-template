@@ -7,6 +7,7 @@ import { notify } from "../../../components/basic/notify";
 import { Form, Formik } from "formik";
 import { BasicInput } from "../../../components/basic-form/basic-field";
 import { userManagmentApi } from "../../../api/user-managment-api";
+import { TabContainer, TabContent, TabPane } from "react-bootstrap";
 
 export const AddUser = ({ onGoBack, ...props }) => {
     const { t } = useTranslation();
@@ -75,7 +76,22 @@ export const AddUser = ({ onGoBack, ...props }) => {
                     <Form>
                         <div className="row">
                             <div className="col-md-6 col-xl-4">
-                               
+       
+                            <TabContainer defaultActiveKey="a">
+                            <bd.AppBar color="default">
+                                    <bd.TabStrip>
+                                        <bd.TabStripItem eventKey="a">a</bd.TabStripItem>
+                                        <bd.TabStripItem eventKey="b">b</bd.TabStripItem>
+                                        <bd.TabStripItem eventKey="c">c</bd.TabStripItem>
+                                    </bd.TabStrip>
+                            </bd.AppBar>
+                                <TabContent>
+                                    <TabPane eventKey="a">a</TabPane>
+                                    <TabPane eventKey="b">b</TabPane>
+                                    <TabPane eventKey="c">c</TabPane>
+                                </TabContent>
+                          </TabContainer>
+
                                 <BasicInput name="firstName" label={t("first-name")} labelSize="4" autoComplete="off" autoFocus />
                                 <BasicInput
                                     name="lastName"
