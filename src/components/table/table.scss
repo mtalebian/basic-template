@@ -1,6 +1,10 @@
+//https://react-table.tanstack.com/docs/examples/full-width-resizable-table
+
 .bd-table {
     border-spacing: 0;
     overflow-y: hidden !important;
+    border-top: 1px solid #000;
+    border-bottom: 1px solid #000;
 
     .selection-column {
         padding: 0 !important;
@@ -25,11 +29,16 @@
 
     .bd-tr {
         display: flex;
+        min-height: 32px;
+    }
+
+    .bd-td {
+        padding: 0 0.5rem;
+        //height: 32px !important;
     }
 
     .bd-th,
     .bd-td {
-        min-height: 32px;
         display: inline-flex !important;
         align-items: center;
         overflow: hidden;
@@ -37,21 +46,18 @@
         flex: 0 0 auto;
     }
 
-    .bd-td {
-        padding: 0 0.5rem;
-        height: 32px !important;
-    }
-
     //
-    .grid-editor {
+    .bd-table-editor {
         padding: 4px 8px;
         width: 100%;
-        background-color: transparent !important;
+        //background-color: transparent !important;
         //border: 0;
         color: inherit;
         margin: 2px 0;
-        padding-top: 0.25rem;
-        padding-bottom: 0.25rem;
+        //padding-top: 0.25rem;
+        //padding-bottom: 0.25rem;
+        padding-top: 3px;
+        padding-bottom: 3px;
     }
 
     .bd-resizer {
@@ -67,6 +73,7 @@
         touch-action: none;
         user-select: none;
 
+        /*
         &:after {
             content: "";
             position: absolute;
@@ -80,12 +87,28 @@
 
         &.isResizing:after {
             opacity: 1;
-        }
+        }*/
     }
 }
 
 .bd-table-border-row {
+    .bd-thead {
+        border-bottom: 1px solid #000;
+    }
+
+    .bd-thead .bd-th {
+        margin-bottom: -1px;
+    }
+
     .bd-tfoot {
+        border-top: 1px solid #000;
+    }
+
+    .bd-tfoot .bd-tr {
+        margin-top: -1px;
+    }
+
+    .bd-tfoot .bd-th {
         border-top: 1px solid #000;
     }
 
@@ -95,54 +118,41 @@
         height: auto !important;
     }
 
-    .bd-tr:last-child .bd-td {
+    .bd-tr:last-child .bd-td,
+    .bd-tfoot .bd-tr:last-child .bd-th {
         border-bottom: 0;
     }
+
+    .bd-thead .bd-th {
+        @include borderEnd(1px solid #000);
+    }
+
+    .bd-th:last-child,
+    .bd-td:last-child {
+        @include borderEnd(1px solid #000);
+    }
+}
+
+.bd-table-bottom {
+    display: flex;
+    align-items: center;
+}
+
+.bd-table-info {
+    white-space: nowrap;
+}
+
+.bd-table-pagination {
+    display: inline-flex;
+    justify-content: flex-end;
+    align-items: center;
+    padding: 0.25rem 0.5rem;
+    white-space: nowrap;
 }
 
 /*
 ************************
 */
-.bd-table {
-    overflow: auto;
-    //border: 1px solid #555;
-
-    table {
-        border-spacing: 0;
-    }
-
-    .header-label {
-        padding: 0 0.5rem;
-        height: 32px !important;
-        display: flex;
-        align-items: center;
-    }
-
-    .header-filter {
-        padding: 0 0.25rem;
-        height: 36px !important;
-        display: flex;
-        align-items: center;
-    }
-
-    td {
-        padding: 0 0.5rem;
-        height: 32px !important;
-    }
-
-    //
-    .grid-editor {
-        padding: 4px 8px;
-        width: 100%;
-        background-color: transparent !important;
-        //border: 0;
-        color: inherit;
-        margin: 2px 0;
-        padding-top: 0.25rem;
-        padding-bottom: 0.25rem;
-    }
-}
-
 .bd-table-popin {
     margin: 0;
 
@@ -237,26 +247,6 @@
     cursor: default;
 }
 
-.bd-table-bottom {
-    display: flex;
-    align-items: center;
-}
-
-.bd-table-statusbar {
-}
-
-.bd-table-info {
-    white-space: nowrap;
-}
-
-.bd-table-pagination {
-    display: inline-flex;
-    justify-content: flex-end;
-    align-items: center;
-    padding: 0.25rem 0.5rem;
-    white-space: nowrap;
-}
-
 /*******************/
 @mixin tableTheme($palette) {
     $text: map-get($palette, text);
@@ -270,49 +260,52 @@
 
     $focus-border: mix($bg, $primary, 10%); //#86b7fe
 
-    $main-border: mix($text, $bg, 32%);
+    $main-border: mix($text, $bg, 25%);
     $border: mix($text, $bg, 15%);
 
-    $bg-header: rgba($text, 5%);
+    $bg-header: mix($text, $bg, 6%);
     $bg-row: mix($text, $bg, 2.5%);
     $hover: mix($primary, $bg, 10%);
     $hover: mix($text, $hover, 0%);
     $hover: rgba($primary, 0.08);
 
     .bd-table {
-        table {
-            border-color: $main-border;
+        border-color: $main-border;
 
-            & tr.selected td {
-                background-color: $hover;
-            }
-
-            & tr.selected:nth-child(even) td {
-                border-bottom: 1px solid $primary;
-            }
+        & .bd-tr.selected .bd-td {
+            background-color: $hover;
+            border-bottom: 1px solid $primary;
         }
 
-        thead,
-        tfoot {
-            border-color: $main-border;
-        }
-
-        td {
-            border-color: $border;
-        }
-
-        th {
+        .bd-thead,
+        .bd-tfoot {
             background-color: $bg-header;
             border-color: $main-border;
         }
 
-        tbody tr:hover {
+        .bd-th {
+            background-color: $bg-header;
+            border-color: $main-border;
+        }
+
+        .bd-thead .bd-th {
+            border-left-color: $border;
+            border-right-color: $border;
+        }
+
+        .bd-th:last-child,
+        .bd-td:last-child {
+            border-left-color: $main-border;
+            border-right-color: $main-border;
+        }
+
+        .bd-td {
+            border-color: $border;
+        }
+
+        .bd-tbody .bd-tr:hover {
             background-color: rgba($text, 4%);
         }
-    }
-
-    //
-    .bd-table-primary {
     }
 }
 

@@ -2,31 +2,136 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 import * as bd from "react-basic-design";
 import * as icons from "../../assets/icons";
+import classNames from "classnames";
 
 //
-export function RenderTable({ tableApi, resizable, showColumnFilter, enableGrouping, enableSorting, multiSelect, singleSelect }) {
+export function RenderTable({
+    tableApi,
+    dataLength,
+    resizable,
+    showColumnFilter,
+    enableGrouping,
+    enableSorting,
+    multiSelect,
+    singleSelect,
+    clickAction,
+    enablePaging,
+    maxDisplayRow,
+    editable,
+    showSummary,
+    showTableInfo,
+    showPageSize,
+}) {
     const { t } = useTranslation();
+    const { rows, page, state } = tableApi;
+    const enable_responsive = tableApi.headerGroups.length === 1 && tableApi.columns.some((x) => !!x._breakPoint);
 
+    let list = enablePaging ? tableApi.page : tableApi.rows;
+    if (list.length > maxDisplayRow) list = list.slice(0, maxDisplayRow);
+
+    const messages = {
+        showing: "showing-{from}-to-{to}-of-{total}",
+        // eslint-disable-next-line no-template-curly-in-string
+        showingFiltered: "showing-{from}-to-{to}-of-{total}-filtered-from-{all}-rows",
+        page: "page-{page}-of-{total}",
+        gotoPage: "go-to-page",
+        firstPage: "first-page",
+        prevPage: "previous-page",
+        nextPage: "next-page",
+        lastPage: "last-page",
+    };
+
+    function getTableInfo() {
+        var size = enablePaging ? page.length : rows.length;
+        var a = rows.length < 1 ? 0 : enablePaging ? state.pageIndex * state.pageSize + 1 : 1;
+        var b = rows.length < 1 ? 0 : a + size - 1;
+        var s = state.globalFilter || state.filters.length > 0 ? t(messages.showingFiltered) : t(messages.showing);
+        return s.replace("{from}", a.toString()).replace("{to}", b.toString()).replace("{total}", rows.length).replace("{all}", dataLength);
+    }
+
+    function getSummary(col) {
+        var sum = col._summary;
+        if (!sum || typeof sum !== "function") return sum;
+        return sum(rows, col);
+    }
     function getSortByToggleProps(column) {
         return enableSorting ? column.getSortByToggleProps() : {};
     }
+
+    function getHeaderProps(column) {
+        const props = column.getHeaderProps();
+        let userProps = column._headerProps;
+        if (!userProps) userProps = {};
+        else if (typeof userProps === "function") userProps = userProps(column);
+
+        const { className, ...remUserProps } = userProps ? userProps : { className: "" };
+        const cn = classNames(className, `bd-column-${column.id}`, {
+            [`d-none d-${column._breakPoint}-table-cell`]: enable_responsive && column._breakPoint,
+        });
+
+        return { ...props, className: cn, ...remUserProps };
+    }
+
+    function getCellProps(row, cell) {
+        if (!cell) cell = row.cells[0];
+        var props = cell.getCellProps();
+        var userProps = cell.column._cellProps;
+        if (userProps) {
+            if (typeof userProps === "function") userProps = userProps(row, cell);
+            props = { ...props, ...userProps };
+        }
+        //----
+        const { className, ...remUserProps } = props ? props : { className: "" };
+        const cn = classNames(className, {
+            [`d-none d-${cell.column._breakPoint}-table-cell`]: enable_responsive && cell.column._breakPoint,
+        });
+
+        return { ...props, ...remUserProps, className: cn, onClick: () => onTdClick(row, cell) };
+    }
+
+    const onTdClick = (row, cell) => {
+        if (cell.column._ignoreToggleOnClick) return;
+        if (!singleSelect && !multiSelect) return;
+
+        const is_selected = row.isSelected;
+        switch (clickAction) {
+            case "select":
+                if (is_selected && multiSelect) break;
+                if (singleSelect) tableApi.toggleAllRowsSelected(false);
+                row.toggleRowSelected();
+                break;
+
+            case "toggle":
+                if (singleSelect) tableApi.toggleAllRowsSelected(false);
+                if (!is_selected || multiSelect) row.toggleRowSelected();
+                break;
+
+            default:
+                break;
+        }
+    };
 
     console.log(">> RenderTable");
 
     return (
         <div className="bd-table-container">
             <div {...tableApi.getTableProps()} className="bd-table bd-table-border-row bd-table-border-table-row">
-                <div className="bd-head">
+                <div className="bd-thead">
                     {tableApi.headerGroups.map((headerGroup) => (
                         <div {...headerGroup.getHeaderGroupProps()} className="bd-tr">
                             {multiSelect && (
                                 <div className="bd-th selection-column">
-                                    <bd.Toggle size="sm" color="primary" labelClassName="m-0" {...tableApi.getToggleAllRowsSelectedProps()} />
+                                    <bd.Toggle
+                                        size="sm"
+                                        color="primary"
+                                        labelClassName="m-0"
+                                        {...tableApi.getToggleAllRowsSelectedProps()}
+                                    />
                                 </div>
                             )}
                             {singleSelect && <div className="bd-th selection-column"></div>}
                             {headerGroup.headers.map((column) => (
-                                <div {...column.getHeaderProps()} className="bd-th">
+                                <div {...getHeaderProps(column)} className="bd-th">
                                     <div className="header-label">
                                         <span {...getSortByToggleProps(column)} className="flex-grow-1">
                                             {column.render("Header")}
@@ -58,7 +163,10 @@ export function RenderTable({ tableApi, resizable, showColumnFilter, enableGroup
 
                                     {/* Use column.getResizerProps to hook up the events correctly */}
                                     {resizable && (
-                                        <div {...column.getResizerProps()} className={`bd-resizer ${column.isResizing ? "isResizing" : ""}`} />
+                                        <div
+                                            {...column.getResizerProps()}
+                                            className={`bd-resizer ${column.isResizing ? "isResizing" : ""}`}
+                                        />
                                     )}
                                 </div>
                             ))}
@@ -66,11 +174,11 @@ export function RenderTable({ tableApi, resizable, showColumnFilter, enableGroup
                     ))}
                 </div>
 
-                <div {...tableApi.getTableBodyProps()}>
-                    {tableApi.rows.map((row, i) => {
+                <div {...tableApi.getTableBodyProps()} className="bd-body">
+                    {list.map((row, rowIndex) => {
                         tableApi.prepareRow(row);
                         return (
-                            <div {...row.getRowProps()} className="bd-tr">
+                            <div {...row.getRowProps()} className={classNames("bd-tr", { selected: row.isSelected })}>
                                 {multiSelect && (
                                     <div className="bd-td selection-column">
                                         <bd.Toggle size="sm" color="primary" labelClassName="m-0" {...row.getToggleRowSelectedProps()} />
@@ -93,8 +201,28 @@ export function RenderTable({ tableApi, resizable, showColumnFilter, enableGroup
                                 )}
                                 {row.cells.map((cell) => {
                                     return (
-                                        <div {...cell.getCellProps()} className="bd-td">
-                                            {cell.render("Cell")}
+                                        <div {...getCellProps(row, cell)} className="bd-td">
+                                            {cell.isGrouped ? (
+                                                // If it's a grouped cell, add an expander and row count
+                                                <>
+                                                    <span {...row.getToggleRowExpandedProps()}>
+                                                        <icons.ChevronRight
+                                                            className={classNames("transition-transform text-primary", {
+                                                                "rotate-90": row.isExpanded,
+                                                                "rtl-rotate-180": !row.isExpanded,
+                                                            })}
+                                                        />
+                                                    </span>{" "}
+                                                    {cell.render("Cell", { editable: false })} ({row.subRows.length})
+                                                </>
+                                            ) : cell.isAggregated ? (
+                                                // If the cell is aggregated, use the Aggregated
+                                                // renderer for cell
+                                                cell.render("Aggregated")
+                                            ) : cell.isPlaceholder ? null : ( // For cells with repeated values, render null
+                                                // Otherwise, just render the regular cell
+                                                cell.render("Cell", { editable })
+                                            )}
                                         </div>
                                     );
                                 })}
@@ -102,7 +230,72 @@ export function RenderTable({ tableApi, resizable, showColumnFilter, enableGroup
                         );
                     })}
                 </div>
+
+                {showSummary && (
+                    <div className="bd-tfoot">
+                        <div {...tableApi.footerGroups[0].getFooterGroupProps()} className="bd-tr">
+                            {singleSelect && <div className="bd-th selection-column"></div>}
+                            {multiSelect && <div className="bd-th selection-column"></div>}
+                            {tableApi.footerGroups[0].headers.map((column, idx) => {
+                                return (
+                                    <div {...column.getFooterProps()} className="bd-th">
+                                        <div className="header-label">{getSummary(column)}</div>
+                                    </div>
+                                );
+                            })}
+                        </div>
+                    </div>
+                )}
             </div>
+
+            <div className="bd-table-bottom">
+                {showTableInfo && <div className="bd-table-info d-none d-md-block">{getTableInfo()}</div>}
+
+                {enablePaging && showPageSize && (
+                    <div className="bd-table-pagination flex-grow-1">
+                        <bd.Button
+                            variant="icon"
+                            size="sm"
+                            onClick={() => tableApi.gotoPage(0)}
+                            disabled={!tableApi.canPreviousPage}
+                            title={messages.firstPage}
+                        >
+                            <icons.FirstPage className="rtl-rotate-180" />
+                        </bd.Button>
+                        <bd.Button
+                            variant="icon"
+                            size="sm"
+                            onClick={() => tableApi.previousPage()}
+                            disabled={!tableApi.canPreviousPage}
+                            title={messages.prevPage}
+                        >
+                            <icons.ChevronLeft className="rtl-rotate-180" />
+                        </bd.Button>
+                        <span className="px-2">
+                            {messages.page.replace("{page}", state.pageIndex + 1).replace("{total}", tableApi.pageOptions.length)}
+                        </span>
+                        <bd.Button
+                            variant="icon"
+                            size="sm"
+                            onClick={() => tableApi.nextPage()}
+                            disabled={!tableApi.canNextPage}
+                            title={messages.nextPage}
+                        >
+                            <icons.ChevronRight className="rtl-rotate-180 size-md" />
+                        </bd.Button>
+                        <bd.Button
+                            variant="icon"
+                            size="sm"
+                            onClick={() => tableApi.gotoPage(tableApi.pageCount - 1)}
+                            disabled={!tableApi.canNextPage}
+                            title={messages.lastPage}
+                        >
+                            <icons.LastPage className="rtl-rotate-180" />
+                        </bd.Button>
+                    </div>
+                )}
+            </div>
+            <pre>{JSON.stringify(state, null, 2)}</pre>
         </div>
     );
 }

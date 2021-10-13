@@ -24,6 +24,7 @@ import {
     useResizeColumns,
 } from "react-table";
 import { RenderTable } from "../../../components/table/render-table";
+import { TextEditor } from "../../../components/table/editors";
 
 //
 export function TableDesignerEditTable({ table, group, onChanged, onGoBack }) {
@@ -92,16 +93,15 @@ export function TableDesignerEditTable({ table, group, onChanged, onGoBack }) {
 
     console.log("aa-=---");
 
-    const defaultColumn = {};
     const data = columns;
     const updateData = () => {};
-    const defaultPageSize = 10;
+    const defaultPageSize = 4;
     const skipReset = true;
 
     const tableApi = useTable(
         {
-            initialState: { pageSize: defaultPageSize ?? 10 },
-            defaultColumn,
+            initialState: { pageSize: defaultPageSize },
+            defaultColumn: { Cell: TextEditor },
             columns: useMemo(
                 () => [
                     { Header: "ID", accessor: "id", width: 50 },
@@ -205,7 +205,18 @@ export function TableDesignerEditTable({ table, group, onChanged, onGoBack }) {
                     }
                 />
 
-                <RenderTable tableApi={tableApi} resizable enableGrouping enableSorting multiSelect />
+                <RenderTable
+                    tableApi={tableApi}
+                    //resizable
+                    //enableGrouping
+                    enableSorting
+                    //multiSelect
+                    showSummary
+                    showTableInfo
+                    showPageSize
+                    enablePaging
+                    //editable
+                />
 
                 <br />
                 <br />
