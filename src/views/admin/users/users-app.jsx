@@ -22,7 +22,7 @@ export const UsersApp = ({ ...props }) => {
             { Header: t("first-name"), accessor: "firstName" },
             { Header: t("last-name"), accessor: "lastName" },
             { Header: t("windows"), accessor: "windowsAuthenticate" },
-            { Header: t("email"), accessor: "email" },
+            { Header: t("national-code"), accessor: "nationalCode" },
         ],
         []
     );
@@ -32,16 +32,16 @@ export const UsersApp = ({ ...props }) => {
     };
 
     useEffect(() => {
-        //if (!users && account.isConnected()) {
+        if (!users && account.isConnected()) {
         userManagmentApi
             .getUsers()
-            .then((x) => {
+            .then((x) => {       
                 setUsers(x);
             })
             .catch((ex) => {
                 notify.error(ex);
             });
-        //}
+        }
     });
 
     return (
@@ -62,7 +62,7 @@ export const UsersApp = ({ ...props }) => {
                         </bd.Toolbar>
                     </div>
                     <div className="container">
-                        National Code: <input />
+                        
                         <TableTitlebar title="Users" />
                         <Table
                             //className="w-100"

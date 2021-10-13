@@ -2,9 +2,9 @@ import { api } from "./api";
 import { apiConfig } from "./config";
 
 export const userManagmentApi = {
-    getUsers: (nationalCode) => api.call("post", `${apiConfig.userManegmentUrl}/get-users`),
+    getUsers: () => api.call("get", `${apiConfig.userManegmentUrl}/users`),
 
-    getUser: (nationalCode) => api.call("post", `${apiConfig.userManegmentUrl}/UserInfo?nationalCode=${nationalCode}`),
+    getUser: (nationalCode) => api.call("post", `${apiConfig.userManegmentUrl}/user-info?nationalCode=${nationalCode}`),
 
     insertUser: (user) => api.call("post", apiConfig.userManegmentUrl + "/insert-user", user),
 

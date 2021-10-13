@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using Microsoft.AspNetCore.Mvc.ModelBinding;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Runtime.InteropServices;
@@ -473,6 +474,12 @@ namespace System
                 });*/
         }
 
+
+        public static List<String> GetModelStateErrors(this ModelStateDictionary modelState)
+        {
+            return modelState.Values.SelectMany(v => v.Errors)
+                                    .Select(v => v.ErrorMessage + " " + v.Exception).ToList();
+        }
 
     }
 }

@@ -94,6 +94,9 @@ namespace Backend.Api
             {
                 "https://localhost:3001",
             };
+
+           
+
             services.AddCors(o => o.AddPolicy("react", builder =>
             {
                 builder.WithOrigins(cors_origins)
@@ -103,8 +106,12 @@ namespace Backend.Api
                     .AllowAnyHeader();
             }));
 
+            //--modelState
+            services.AddControllers().ConfigureApiBehaviorOptions(options =>
+            {
+                options.SuppressModelStateInvalidFilter = true;
+            });
 
-            
             //-- Accounts 
             var connectionString = Configuration["ConnectionString"];
             var formAuthentication = true;

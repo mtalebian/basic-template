@@ -17,10 +17,15 @@ namespace Accounts.Controllers
         public const string InsufficientPrivilege = "شما دسترسی لازم، برای کار با این وب سایت را ندارید";
         public const string InvalidProjectId = "نام پروژه نامعتبر است";
         public const string InvalidOperation = "عمليات نامعتبر است";
+        #region UserManagment
         public const string DuplicateUser = "اين كاربر قبلا ثبت شده است";
         public const string DuplicateNationalCode = "اين كدملي قبلا ثبت شده است";
         public const string InvalidRepeatePassword = "تكرار گذرواژه معتبر نيست";
         public const string InvalidInfo = "اطلاعات ارسالي نامعتبر است";
         public const string InvalidNationalCode = "كدملي به صورت صحيح وارد نشده است";
+        public const string NotFoundInformation = "اطلاعاتي يافت نشد";
+        public const string PasswordIsRequired = "مقدار گذرواژه را وارد كنيد";
+        #endregion
+
     }
 }
