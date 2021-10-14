@@ -222,7 +222,7 @@ export function TableDesignerEditTable({ table, group, onChanged, onGoBack }) {
                     //editable
                     clickAction="toggle"
                     className="border"
-                    style={{ height: 300, width: 500 }}
+                    style={{ height: 250 }}
                     hover
                     striped
                     hasWhitespace

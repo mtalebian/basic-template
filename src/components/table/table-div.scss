@@ -8,6 +8,7 @@
     overflow: auto !important;
     border-top: 1px solid #000;
     border-bottom: 1px solid #000;
+    flex-grow: 1;
     position: relative;
 
     .selection-column {
