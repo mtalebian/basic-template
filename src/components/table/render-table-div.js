@@ -5,7 +5,7 @@ import * as icons from "../../assets/icons";
 import classNames from "classnames";
 
 //
-export function RenderTable({
+export function RenderTableDiv({
     tableApi,
     dataLength,
     resizable,
@@ -14,6 +14,7 @@ export function RenderTable({
     enableSorting,
     multiSelect,
     singleSelect,
+    hideCheckbox,
     clickAction,
     enablePaging,
     maxDisplayRow,
@@ -21,10 +22,19 @@ export function RenderTable({
     showSummary,
     showTableInfo,
     showPageSize,
+    className,
+    style,
+    hover,
+    hasWorkarea,
 }) {
     const { t } = useTranslation();
     const { rows, page, state } = tableApi;
     const enable_responsive = tableApi.headerGroups.length === 1 && tableApi.columns.some((x) => !!x._breakPoint);
+    const cn = classNames("bd-table-div", className, {
+        "bd-table-hover": hover,
+        selectable: clickAction,
+        "has-workarea": hasWorkarea,
+    });
 
     let list = enablePaging ? tableApi.page : tableApi.rows;
     if (list.length > maxDisplayRow) list = list.slice(0, maxDisplayRow);
@@ -114,13 +124,13 @@ export function RenderTable({
     console.log(">> RenderTable");
 
     return (
-        <div className="bd-table-container">
-            <div {...tableApi.getTableProps()} className="bd-table bd-table-border-row bd-table-border-table-row">
-                <div className="bd-thead">
+        <div className="bd-table-div-container">
+            <div {...tableApi.getTableProps()} className={cn} style={{ ...style }}>
+                <div className="thead">
                     {tableApi.headerGroups.map((headerGroup) => (
-                        <div {...headerGroup.getHeaderGroupProps()} className="bd-tr">
-                            {multiSelect && (
-                                <div className="bd-th selection-column">
+                        <div {...headerGroup.getHeaderGroupProps()} className="tr">
+                            {!hideCheckbox && multiSelect && (
+                                <div className="th selection-column">
                                     <bd.Toggle
                                         size="sm"
                                         color="primary"
@@ -129,9 +139,9 @@ export function RenderTable({
                                     />
                                 </div>
                             )}
-                            {singleSelect && <div className="bd-th selection-column"></div>}
+                            {!hideCheckbox && singleSelect && <div className="th selection-column"></div>}
                             {headerGroup.headers.map((column) => (
-                                <div {...getHeaderProps(column)} className="bd-th">
+                                <div {...getHeaderProps(column)} className="th">
                                     <div className="header-label">
                                         <span {...getSortByToggleProps(column)} className="flex-grow-1">
                                             {column.render("Header")}
@@ -163,10 +173,7 @@ export function RenderTable({
 
                                     {/* Use column.getResizerProps to hook up the events correctly */}
                                     {resizable && (
-                                        <div
-                                            {...column.getResizerProps()}
-                                            className={`bd-resizer ${column.isResizing ? "isResizing" : ""}`}
-                                        />
+                                        <div {...column.getResizerProps()} className={`resizer ${column.isResizing ? "isResizing" : ""}`} />
                                     )}
                                 </div>
                             ))}
@@ -174,18 +181,19 @@ export function RenderTable({
                     ))}
                 </div>
 
-                <div {...tableApi.getTableBodyProps()} className="bd-body">
+                <div {...tableApi.getTableBodyProps()} className="tbody">
+                    {list.length === 0 && <div className="nothing-found">{t("nothing-found")}</div>}
                     {list.map((row, rowIndex) => {
                         tableApi.prepareRow(row);
                         return (
-                            <div {...row.getRowProps()} className={classNames("bd-tr", { selected: row.isSelected })}>
-                                {multiSelect && (
-                                    <div className="bd-td selection-column">
+                            <div {...row.getRowProps()} className={classNames("tr", { selected: row.isSelected })}>
+                                {!hideCheckbox && multiSelect && (
+                                    <div className="td selection-column">
                                         <bd.Toggle size="sm" color="primary" labelClassName="m-0" {...row.getToggleRowSelectedProps()} />
                                     </div>
                                 )}
-                                {singleSelect && (
-                                    <div className="bd-td selection-column">
+                                {!hideCheckbox && singleSelect && (
+                                    <div className="td selection-column">
                                         <bd.Toggle
                                             radio
                                             size="sm"
@@ -201,7 +209,7 @@ export function RenderTable({
                                 )}
                                 {row.cells.map((cell) => {
                                     return (
-                                        <div {...getCellProps(row, cell)} className="bd-td">
+                                        <div {...getCellProps(row, cell)} className="td">
                                             {cell.isGrouped ? (
                                                 // If it's a grouped cell, add an expander and row count
                                                 <>
@@ -232,13 +240,13 @@ export function RenderTable({
                 </div>
 
                 {showSummary && (
-                    <div className="bd-tfoot">
-                        <div {...tableApi.footerGroups[0].getFooterGroupProps()} className="bd-tr">
-                            {singleSelect && <div className="bd-th selection-column"></div>}
-                            {multiSelect && <div className="bd-th selection-column"></div>}
+                    <div className="tfoot">
+                        <div {...tableApi.footerGroups[0].getFooterGroupProps()} className="tr">
+                            {!hideCheckbox && multiSelect && <div className="th selection-column"></div>}
+                            {!hideCheckbox && singleSelect && <div className="th selection-column"></div>}
                             {tableApi.footerGroups[0].headers.map((column, idx) => {
                                 return (
-                                    <div {...column.getFooterProps()} className="bd-th">
+                                    <div {...column.getFooterProps()} className="th">
                                         <div className="header-label">{getSummary(column)}</div>
                                     </div>
                                 );
@@ -295,7 +303,6 @@ export function RenderTable({
                     </div>
                 )}
             </div>
-            <pre>{JSON.stringify(state, null, 2)}</pre>
         </div>
     );
 }

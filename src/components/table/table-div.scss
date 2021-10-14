@@ -1,8 +1,9 @@
-//https://react-table.tanstack.com/docs/examples/full-width-resizable-table
+.bd-table-div-container {
+}
 
-.bd-table {
+.bd-table-div {
     border-spacing: 0;
-    overflow-y: hidden !important;
+    overflow: auto !important;
     border-top: 1px solid #000;
     border-bottom: 1px solid #000;
 
@@ -11,6 +12,7 @@
         width: 50px;
         display: inline-flex;
         justify-content: center;
+
         @include borderEnd(1px solid #000);
     }
 
@@ -29,28 +31,31 @@
         align-items: center;
     }
 
-    .bd-tr {
+    .tr {
         display: flex;
         min-height: 32px;
     }
 
-    .bd-td {
+    .th {
+        user-select: none;
+    }
+
+    .td {
         padding: 0 0.5rem;
         //height: 32px !important;
     }
 
-    .bd-th,
-    .bd-td {
+    .th,
+    .td {
         display: inline-flex !important;
         align-items: center;
         overflow: hidden;
-        min-width: 30px;
         flex: 0 0 auto;
         white-space: nowrap;
     }
 
     //
-    .bd-table-editor {
+    .table-editor {
         padding: 4px 8px;
         width: 100%;
         //background-color: transparent !important;
@@ -63,7 +68,7 @@
         padding-bottom: 3px;
     }
 
-    .bd-resizer {
+    .resizer {
         display: inline-block;
 
         width: 6px;
@@ -75,22 +80,10 @@
         z-index: 1;
         touch-action: none;
         user-select: none;
+    }
 
-        /*
-        &:after {
-            content: "";
-            position: absolute;
-            top: 10px;
-            bottom: 10px;
-            left: 2px;
-            width: 1px;
-            background-color: currentColor;
-            opacity: 0.5;
-        }
-
-        &.isResizing:after {
-            opacity: 1;
-        }*/
+    &.selectable .td {
+        cursor: pointer;
     }
 
     .nothing-found {
@@ -98,47 +91,53 @@
         text-align: center;
         opacity: 0.6;
     }
-}
 
-.bd-table-border-row {
-    .bd-thead {
+    //
+    //
+    //
+    .thead {
+        position: sticky;
+        top: 0;
+        z-index: 1;
         border-bottom: 1px solid #000;
     }
 
-    .bd-thead .bd-th {
+    .thead .th {
         margin-bottom: -1px;
     }
 
-    .bd-tfoot {
+    .tfoot {
         border-top: 1px solid #000;
     }
 
-    .bd-tfoot .bd-tr {
+    .tfoot .tr {
         margin-top: -1px;
     }
 
-    .bd-tfoot .bd-th {
+    .tfoot .th {
         border-top: 1px solid #000;
     }
 
-    .bd-tr .bd-th,
-    .bd-tr .bd-td {
+    .tr .th,
+    .tr .td {
         border-bottom: 1px solid #000;
         height: auto !important;
     }
 
-    .bd-tr:last-child .bd-td,
-    .bd-tfoot .bd-tr:last-child .bd-th {
+    .tr:last-child .td,
+    .tfoot .tr:last-child .th {
         border-bottom: 0;
     }
 
-    .bd-thead .bd-th {
+    .thead .th {
         @include borderEnd(1px solid #000);
     }
 
-    .bd-th:last-child,
-    .bd-td:last-child {
-        @include borderEnd(1px solid #000);
+    &.has-workarea {
+        .th:last-child,
+        .td:last-child {
+            @include borderEnd(1px solid #000);
+        }
     }
 }
 
@@ -196,66 +195,6 @@
     }
 }
 
-//
-.bd-table-border-table-row > table {
-    border: 1px solid #000;
-}
-
-.bd-table-bordered > table {
-    border: 1px solid #000;
-
-    tfoot {
-        border-top: 1px solid #000;
-    }
-
-    th,
-    td {
-        @include borderEnd(1px solid #000);
-
-        &:last-child {
-            @include borderEnd(0);
-        }
-    }
-
-    tr th,
-    tr:nth-child(even) td {
-        border-bottom: 1px solid #000;
-        height: auto !important;
-    }
-
-    tr:last-child td {
-        border-bottom: 0;
-    }
-}
-
-//
-.bd-table-border-row > table {
-    border-top: 1px solid #000;
-    border-bottom: 1px solid #000;
-
-    tfoot {
-        border-top: 1px solid #000;
-    }
-
-    tr th,
-    tr:nth-child(even) td {
-        border-bottom: 1px solid #000;
-        height: auto !important;
-    }
-
-    tr {
-        &:last-child {
-            td {
-                border-bottom: 0;
-            }
-        }
-    }
-}
-
-.bd-table-selectable {
-    cursor: default;
-}
-
 /*******************/
 @mixin tableTheme($palette) {
     $text: map-get($palette, text);
@@ -274,50 +213,56 @@
 
     $bg-header: mix($text, $bg, 6%);
     $bg-row: mix($text, $bg, 2.5%);
-    $hover: mix($primary, $bg, 10%);
-    $hover: mix($text, $hover, 0%);
-    $hover: rgba($primary, 0.08);
+    $bg-selected: rgba($primary, 0.1);
 
-    .bd-table {
+    .bd-table-div {
         border-color: $main-border;
 
-        & .bd-tr.selected .bd-td {
-            background-color: $hover;
-            border-bottom: 1px solid $primary;
+        &.border {
+            border-color: $main-border !important;
         }
 
-        .bd-thead,
-        .bd-tfoot {
+        .thead,
+        .tfoot {
             background-color: $bg-header;
             border-color: $main-border;
         }
 
-        .bd-th {
+        .th {
             background-color: $bg-header;
             border-color: $main-border;
         }
 
-        .bd-th,
-        .bd-td {
+        .th,
+        .td {
             border-left-color: $main-border;
             border-right-color: $main-border;
         }
 
-        .bd-th:last-child,
-        .bd-td:last-child {
+        .th:last-child,
+        .td:last-child {
             border-left-color: $main-border;
             border-right-color: $main-border;
         }
 
-        .bd-td {
+        .td {
             border-color: $border;
         }
 
-        .bd-tbody .bd-tr:hover {
-            .bd-td,
-            .bd-th {
-                background-color: rgba($text, 4%);
-            }
+        &.has-workarea .td {
+            background-color: $bg;
+        }
+
+        .tbody .tr.selected .td {
+            background-color: $bg-selected !important;
+            border-bottom: 1px solid $primary;
+        }
+    }
+
+    .bd-table-hover {
+        .tbody .tr:hover.selected,
+        .tbody .tr:hover .td {
+            background-color: rgba($text, 5%);
         }
     }
 }

@@ -21,9 +21,10 @@ import {
     useExpanded,
     useRowSelect,
     useBlockLayout,
+    useFlexLayout,
     useResizeColumns,
 } from "react-table";
-import { RenderTable } from "../../../components/table/render-table";
+import { RenderTableDiv } from "../../../components/table/render-table-div";
 import { TextEditor } from "../../../components/table/editors";
 
 //
@@ -95,13 +96,13 @@ export function TableDesignerEditTable({ table, group, onChanged, onGoBack }) {
 
     const data = columns;
     const updateData = () => {};
-    const defaultPageSize = 4;
+    const defaultPageSize = 14;
     const skipReset = true;
 
     const tableApi = useTable(
         {
             initialState: { pageSize: defaultPageSize },
-            defaultColumn: { Cell: TextEditor },
+            defaultColumn: { Cell: TextEditor, minWidth: 30, maxWidth: 200 },
             columns: useMemo(
                 () => [
                     { Header: "ID", accessor: "id", width: 50 },
@@ -132,7 +133,8 @@ export function TableDesignerEditTable({ table, group, onChanged, onGoBack }) {
         usePagination,
         useRowSelect,
         useBlockLayout,
-        useResizeColumns
+        useFlexLayout
+        //useResizeColumns
         //(hooks) => reactTable.addSelectionColumns(hooks)
     );
 
@@ -205,17 +207,24 @@ export function TableDesignerEditTable({ table, group, onChanged, onGoBack }) {
                     }
                 />
 
-                <RenderTable
+                <RenderTableDiv
                     tableApi={tableApi}
                     //resizable
                     //enableGrouping
                     enableSorting
-                    //multiSelect
-                    showSummary
+                    multiSelect
+                    //singleSelect
+                    //hideCheckbox
+                    //showSummary
                     showTableInfo
                     showPageSize
                     enablePaging
                     //editable
+                    clickAction="toggle"
+                    className="border"
+                    //style={{ maxHeight: 230 }}
+                    hover
+                    hasWorkarea
                 />
 
                 <br />

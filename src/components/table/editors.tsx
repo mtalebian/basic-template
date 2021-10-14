@@ -11,7 +11,7 @@ export const TextEditor = ({ value: initialValue, row: { index }, column: { id }
     React.useEffect(() => setValue(initialValue), [initialValue]);
 
     if (!editable) return `${initialValue}`;
-    return <input className="form-control bd-table-editor" value={value} onChange={onChange} onBlur={onBlur} />;
+    return <input className="form-control table-editor" value={value} onChange={onChange} onBlur={onBlur} />;
 };
 
 //
@@ -29,7 +29,7 @@ export const SelectEditor = ({ value: initialValue, row: { index }, column, upda
     if (!editable || !column._validValues) return `${initialValue}`;
 
     return (
-        <select value={value} onChange={onChange} className="form-select bd-table-editor" onBlur={onBlur}>
+        <select value={value} onChange={onChange} className="form-select table-editor" onBlur={onBlur}>
             <option value=""></option>
             {column._validValues.map((x: any) => (
                 <option key={x.id} value={x.id}>
