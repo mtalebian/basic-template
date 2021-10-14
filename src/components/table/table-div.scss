@@ -1,4 +1,6 @@
 .bd-table-div-container {
+    display: flex;
+    flex-direction: column;
 }
 
 .bd-table-div {
@@ -6,6 +8,7 @@
     overflow: auto !important;
     border-top: 1px solid #000;
     border-bottom: 1px solid #000;
+    position: relative;
 
     .selection-column {
         padding: 0 !important;
@@ -58,8 +61,6 @@
     .table-editor {
         padding: 4px 8px;
         width: 100%;
-        //background-color: transparent !important;
-        //border: 0;
         color: inherit;
         margin: 2px 0;
         //padding-top: 0.25rem;
@@ -102,6 +103,11 @@
         border-bottom: 1px solid #000;
     }
 
+    &.sticky-footer .tfoot {
+        position: sticky;
+        bottom: 0;
+    }
+
     .thead .th {
         margin-bottom: -1px;
     }
@@ -126,14 +132,14 @@
 
     .tr:last-child .td,
     .tfoot .tr:last-child .th {
-        border-bottom: 0;
+        border-bottom-color: transparent !important;
     }
 
     .thead .th {
         @include borderEnd(1px solid #000);
     }
 
-    &.has-workarea {
+    &.has-whitespace {
         .th:last-child,
         .td:last-child {
             @include borderEnd(1px solid #000);
@@ -213,7 +219,7 @@
 
     $bg-header: mix($text, $bg, 6%);
     $bg-row: mix($text, $bg, 2.5%);
-    $bg-selected: rgba($primary, 0.1);
+    $bg-selected: mix($primary, $bg, 15%);
 
     .bd-table-div {
         border-color: $main-border;
@@ -249,20 +255,34 @@
             border-color: $border;
         }
 
-        &.has-workarea .td {
-            background-color: $bg;
+        &.has-whitespace {
+            .td {
+                background-color: $bg;
+            }
+            .tr:last-child .td,
+            .tfoot .tr:last-child .th {
+                border-bottom-color: $main-border !important;
+            }
         }
 
         .tbody .tr.selected .td {
             background-color: $bg-selected !important;
-            border-bottom: 1px solid $primary;
+            border-bottom: 1px solid $primary !important;
+        }
+    }
+
+    .bd-table-striped {
+        .tbody .tr:nth-child(even) .td {
+            background-color: rgba($text, 0%);
         }
     }
 
     .bd-table-hover {
-        .tbody .tr:hover.selected,
         .tbody .tr:hover .td {
             background-color: rgba($text, 5%);
+        }
+        .tbody .tr:hover.selected .td {
+            background-color: mix($text, $bg-selected, 5%) !important;
         }
     }
 }

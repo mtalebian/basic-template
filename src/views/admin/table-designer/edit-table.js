@@ -210,62 +210,23 @@ export function TableDesignerEditTable({ table, group, onChanged, onGoBack }) {
                 <RenderTableDiv
                     tableApi={tableApi}
                     //resizable
-                    //enableGrouping
+                    enableGrouping
                     enableSorting
                     multiSelect
                     //singleSelect
                     //hideCheckbox
-                    //showSummary
+                    hasSummary
                     showTableInfo
                     showPageSize
                     enablePaging
                     //editable
                     clickAction="toggle"
                     className="border"
-                    //style={{ maxHeight: 230 }}
+                    style={{ height: 300, width: 500 }}
                     hover
-                    hasWorkarea
-                />
-
-                <br />
-                <br />
-                <br />
-
-                <Table
-                    //className="w-100"
-                    columns={table_columns}
-                    //defaultColumn={defaultColumn}
-                    data={columns}
-                    //updateData={updateMyData}
-                    //skipReset={skipResetRef.current}
-                    //enablePaging={enablePaging}
-                    //enableGrouping={enableGrouping}
-                    //enableSorting={enableSorting}
-                    //showTableInfo={showTableInfo}
-                    //showSummary={showSummary}
-                    //showColumnFilter={showColumnFilter}
-                    //hideColumns={}
-                    //showFooter={showFooter}
-                    //showPageSize={true}
-                    //border=""
-                    editable={true}
-                    //clickAction="toggle"
-                    //hideCheckbox={hideCheckbox}
-                    //selectionMode="single"
-                    //messages={messages}
-                    tableRef={tableRef}
-                    //tableClassName="w-100"
-                    //
-                    title="Columns"
-                    expandableTitlebar={true}
-                    showRowsCount={true}
-                    titlebarSize="md"
-                    titlebarColor="secondary"
-                    //
-                    defaultPageSize={5}
-                    onStateChanged={(state) => {
-                        console.log(state);
-                    }}
+                    striped
+                    hasWhitespace
+                    stickyFooter
                 />
             </div>
         </>

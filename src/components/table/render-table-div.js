@@ -19,21 +19,25 @@ export function RenderTableDiv({
     enablePaging,
     maxDisplayRow,
     editable,
-    showSummary,
+    hasSummary,
     showTableInfo,
     showPageSize,
     className,
     style,
     hover,
-    hasWorkarea,
+    striped,
+    hasWhitespace,
+    stickyFooter,
 }) {
     const { t } = useTranslation();
     const { rows, page, state } = tableApi;
     const enable_responsive = tableApi.headerGroups.length === 1 && tableApi.columns.some((x) => !!x._breakPoint);
     const cn = classNames("bd-table-div", className, {
         "bd-table-hover": hover,
+        "bd-table-striped": striped,
         selectable: clickAction,
-        "has-workarea": hasWorkarea,
+        "has-whitespace": hasWhitespace,
+        "sticky-footer": stickyFooter,
     });
 
     let list = enablePaging ? tableApi.page : tableApi.rows;
@@ -100,9 +104,10 @@ export function RenderTableDiv({
     }
 
     const onTdClick = (row, cell) => {
+        if (row.isGrouped) return;
         if (cell.column._ignoreToggleOnClick) return;
         if (!singleSelect && !multiSelect) return;
-
+        //console.log(row);
         const is_selected = row.isSelected;
         switch (clickAction) {
             case "select":
@@ -124,8 +129,8 @@ export function RenderTableDiv({
     console.log(">> RenderTable");
 
     return (
-        <div className="bd-table-div-container">
-            <div {...tableApi.getTableProps()} className={cn} style={{ ...style }}>
+        <div className="bd-table-div-container" style={{ ...style }}>
+            <div {...tableApi.getTableProps()} className={cn}>
                 <div className="thead">
                     {tableApi.headerGroups.map((headerGroup) => (
                         <div {...headerGroup.getHeaderGroupProps()} className="tr">
@@ -239,7 +244,7 @@ export function RenderTableDiv({
                     })}
                 </div>
 
-                {showSummary && (
+                {hasSummary && (
                     <div className="tfoot">
                         <div {...tableApi.footerGroups[0].getFooterGroupProps()} className="tr">
                             {!hideCheckbox && multiSelect && <div className="th selection-column"></div>}
