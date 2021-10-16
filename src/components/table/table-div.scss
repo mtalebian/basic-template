@@ -4,6 +4,8 @@
 }
 
 .bd-table-div {
+    $row-height: 38px;
+
     border-spacing: 0;
     overflow: auto !important;
     border-top: 1px solid #000;
@@ -24,7 +26,7 @@
 
     .header-label {
         padding: 0 0.5rem;
-        height: 32px !important;
+        height: $row-height !important;
         display: flex;
         align-items: center;
         flex-grow: 1;
@@ -39,7 +41,7 @@
 
     .tr {
         display: flex;
-        min-height: 32px;
+        min-height: $row-height;
     }
 
     .th {

@@ -86,27 +86,27 @@ export function TableDesignerEditTable({ table, group, onChanged, onGoBack }) {
             columns: useMemo(
                 () => [
                     { Header: "ID", accessor: "id", readonly: true, width: 50 },
-                    { Header: "NAME", accessor: "name" },
+                    { Header: "NAME", accessor: "name", display: "text" },
                     {
                         Header: "TITLE",
                         accessor: "title",
                         readonly: (r, c) => r.values.isRequired,
                     },
-                    { Header: "IsPK", accessor: "isPK", width: 50 },
-                    { Header: "IsRequired", accessor: "isRequired" },
+                    { Header: "IsPK", accessor: "isPK", width: 50, display: "check" },
+                    { Header: "IsRequired", accessor: "isRequired", display: "switch" },
                     { Header: "DefaultValue", accessor: "defaultValue" },
-                    { Header: "Editor", accessor: "editor" },
-                    { Header: "ValidValues", accessor: "validValues" },
+                    { Header: "Display", accessor: "display" },
+                    { Header: "ValidValues", accessor: "validValues", display: "textarea0" },
 
-                    { Header: "Expression", accessor: "expression" },
+                    //{ Header: "Expression", accessor: "expression" },
                     // { Header: "Alias", accessor: "alias" },
-                    { Header: "ToggleOnClick", accessor: "toggleOnClick" },
-                    { Header: "CellStyle", accessor: "cellStyle" },
-                    { Header: "CellClassName", accessor: "cellClassName" },
-                    { Header: "HiddenInTable", accessor: "hiddenInTable" },
-                    { Header: "HiddenInEditor", accessor: "hiddenInEditor" },
-                    { Header: "Category", accessor: "category" },
-                    { Header: "Dir", accessor: "dir" },
+                    //{ Header: "ToggleOnClick", accessor: "toggleOnClick" },
+                    //{ Header: "CellStyle", accessor: "cellStyle" },
+                    //{ Header: "CellClassName", accessor: "cellClassName" },
+                    { Header: "HiddenInTable", accessor: "hiddenInTable", display: "check" },
+                    { Header: "HiddenInEditor", accessor: "hiddenInEditor", display: "check" },
+                    //{ Header: "Category", accessor: "category" },
+                    { Header: "Dir", accessor: "dir", display: "select", validValues: ",rtl,ltr", width: 70 },
                 ],
                 []
             ),
@@ -282,7 +282,7 @@ export function TableDesignerEditTable({ table, group, onChanged, onGoBack }) {
                         {/* <bd.ListDivider /> */}
                         {data.length === 0 && <div className="text-center text-secondary-text py-4">{t("nothing-found")}</div>}
                         {data.map((x) => (
-                            <bd.ListItem style={{ width: 300, maxHeight: 400 }} primary={x.name} />
+                            <bd.ListItem key={x.id} style={{ width: 300, maxHeight: 400 }} primary={x.name} />
                         ))}
                     </bd.List>
 

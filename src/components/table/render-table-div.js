@@ -1,11 +1,21 @@
 /*
-    columns
-            readonly: true
-            readonly: (row) => row.values.myField < 10
+  columns
+    readonly: true
+    readonly: (row) => row.values.myField < 10
+            
+    nullValue: 'NULL'
+            
+    Cell:
+        UrlEditor
+        ShamsiEditor
+        DateEditor
 
-            editor: 'text'
-            editor: 'check'
-            editor: 'switch'
+        getDisplayValue: (row) => string
+
+        display: '' | text | email | url | number | amount | 
+            textarea | check | switch | select | shamsi
+
+        validValues: '1:one, 2:two, 3:three'
 */
 import React from "react";
 import { useTranslation } from "react-i18next";

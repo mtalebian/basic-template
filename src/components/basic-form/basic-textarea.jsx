@@ -1,11 +1,11 @@
 import classNames from "classnames";
 import * as bd from "react-basic-design";
-import { Field, useField } from "formik";
+import { useField } from "formik";
 import React from "react";
 
 export const BasicTextArea = ({ id, label, labelSize, type, className, children, autoComplete, maxWidth, ...props }) => {
     const [field, meta] = useField({ ...props, type });
-
+    if (!field.value) field.value = "";
     var cnControl = classNames("form-control", className, {
         "bd-border-error": meta.error,
     });
