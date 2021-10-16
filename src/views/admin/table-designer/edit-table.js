@@ -5,10 +5,9 @@ import * as yup from "yup";
 import * as bd from "react-basic-design";
 import * as icons from "../../../assets/icons";
 import { messages } from "../../../components/messages";
-import classNames from "classnames";
 import { tableDesignerApi } from "../../../api/table-designer-api";
 import { notify } from "../../../components/basic/notify";
-import { Table, TableTitlebar } from "../../../components/table";
+import { TableTitlebar } from "../../../components/table";
 import { BasicInput } from "../../../components/basic-form/basic-input";
 import { reactTable } from "../../../components/table/react-table-helper";
 import {
@@ -20,12 +19,14 @@ import {
     useGroupBy,
     useExpanded,
     useRowSelect,
-    useBlockLayout,
+    //useBlockLayout,
     useFlexLayout,
-    useResizeColumns,
+    //useRowState,
+    //useResizeColumns,
 } from "react-table";
 import { RenderTableDiv } from "../../../components/table/render-table-div";
-import { TextEditor } from "../../../components/table/editors";
+import { DefaultEditor } from "../../../components/table/editors";
+import { BasicTextArea } from "../../../components/basic-form/basic-textarea";
 
 //
 export function TableDesignerEditTable({ table, group, onChanged, onGoBack }) {
@@ -69,32 +70,7 @@ export function TableDesignerEditTable({ table, group, onChanged, onGoBack }) {
             });
     };
 
-    const table_columns = React.useMemo(
-        () => [
-            { Header: "Id", accessor: "id" },
-            { Header: "Name", accessor: "name" },
-            { Header: "Expression", accessor: "expression" },
-            // { Header: "Alias", accessor: "alias" },
-            { Header: "Title", accessor: "tile" },
-            { Header: "IsPK", accessor: "isPk" },
-            { Header: "IsRequired", accessor: "isRequired" },
-            { Header: "DefaultValue", accessor: "defaultValue" },
-            { Header: "ToggleOnClick", accessor: "toggleOnClick" },
-            { Header: "Editor", accessor: "editor" },
-            { Header: "ValidValues", accessor: "validValues" },
-            { Header: "CellStyle", accessor: "cellStyle" },
-            { Header: "CellClassName", accessor: "cellClassName" },
-            { Header: "HiddenInTable", accessor: "hiddenInTable" },
-            { Header: "HiddenInEditor", accessor: "hiddenInEditor" },
-            { Header: "Category", accessor: "category" },
-            { Header: "Dir", accessor: "dir" },
-        ],
-        []
-    );
-
-    console.log("aa-=---");
-
-    const data = columns;
+    const [data, setData] = useState(columns);
     const updateData = () => {};
     const defaultPageSize = 14;
     const skipReset = true;
@@ -102,17 +78,35 @@ export function TableDesignerEditTable({ table, group, onChanged, onGoBack }) {
     const tableApi = useTable(
         {
             initialState: { pageSize: defaultPageSize },
-            defaultColumn: { Cell: TextEditor, minWidth: 30, maxWidth: 200 },
+            defaultColumn: {
+                Cell: DefaultEditor,
+                minWidth: 30,
+                maxWidth: 200,
+            },
             columns: useMemo(
                 () => [
-                    { Header: "ID", accessor: "id", width: 50 },
+                    { Header: "ID", accessor: "id", readonly: true, width: 50 },
                     { Header: "NAME", accessor: "name" },
-                    { Header: "TITLE", accessor: "title" },
+                    {
+                        Header: "TITLE",
+                        accessor: "title",
+                        readonly: (r, c) => r.values.isRequired,
+                    },
                     { Header: "IsPK", accessor: "isPK", width: 50 },
                     { Header: "IsRequired", accessor: "isRequired" },
                     { Header: "DefaultValue", accessor: "defaultValue" },
                     { Header: "Editor", accessor: "editor" },
                     { Header: "ValidValues", accessor: "validValues" },
+
+                    { Header: "Expression", accessor: "expression" },
+                    // { Header: "Alias", accessor: "alias" },
+                    { Header: "ToggleOnClick", accessor: "toggleOnClick" },
+                    { Header: "CellStyle", accessor: "cellStyle" },
+                    { Header: "CellClassName", accessor: "cellClassName" },
+                    { Header: "HiddenInTable", accessor: "hiddenInTable" },
+                    { Header: "HiddenInEditor", accessor: "hiddenInEditor" },
+                    { Header: "Category", accessor: "category" },
+                    { Header: "Dir", accessor: "dir" },
                 ],
                 []
             ),
@@ -132,45 +126,65 @@ export function TableDesignerEditTable({ table, group, onChanged, onGoBack }) {
         useExpanded,
         usePagination,
         useRowSelect,
-        useBlockLayout,
+        //useBlockLayout,
         useFlexLayout
         //useResizeColumns
         //(hooks) => reactTable.addSelectionColumns(hooks)
     );
 
+    const moreMenu = (
+        <bd.Menu>
+            <bd.MenuItem disabled={!group.id || loading || deleting || table.columns.length > 0} onClick={onDeleteClick}>
+                {deleting && <div className="m-e-2 spinner-border spinner-border-sm"></div>}
+                <span>{t("delete")}</span>
+            </bd.MenuItem>
+        </bd.Menu>
+    );
+
+    const newRow = () => ({ id: null });
+
     console.log("> Render");
     return (
         <>
             <div className="border-bottom bg-gray-5 mb-3">
-                <bd.Toolbar className="container">
-                    <bd.Button variant="icon" onClick={onGoBack} size="md" edge="start" className="m-e-2">
-                        <icons.ArrowBackIos className="rtl-rotate-180" />
-                    </bd.Button>
+                <div className="container">
+                    <bd.Toolbar>
+                        <bd.Button variant="icon" onClick={onGoBack} size="md" edge="start" className="m-e-2">
+                            <icons.ArrowBackIos className="rtl-rotate-180" />
+                        </bd.Button>
 
-                    <h5>
-                        {t("edit-table")}: <b className="text-primary-text">{table.name}</b>
-                    </h5>
+                        <h5>{t("edit-table")}</h5>
 
-                    <div className="flex-grow-1" />
+                        <div className="flex-grow-1" />
 
-                    <bd.Button color="primary" type="submit" disabled={loading || deleting} onClick={onSaveClick}>
-                        {loading && <div className="m-e-2 spinner-border spinner-border-sm"></div>}
-                        <span>{t("save-table")}</span>
-                    </bd.Button>
+                        <bd.Button color="primary" disabled={loading || deleting} onClick={onSaveClick}>
+                            {loading && <div className="m-e-2 spinner-border spinner-border-sm"></div>}
+                            <span>{t("save-table")}</span>
+                        </bd.Button>
 
-                    <bd.Button
-                        className={classNames("mx-2", {
-                            "d-none": !group.id,
-                        })}
-                        type="button"
-                        variant="outline"
-                        disabled={loading || deleting || table.columns.length > 0}
-                        onClick={onDeleteClick}
-                    >
-                        {deleting && <div className="m-e-2 spinner-border spinner-border-sm"></div>}
-                        <span>{t("delete")}</span>
-                    </bd.Button>
-                </bd.Toolbar>
+                        <bd.Button variant="icon" menu={moreMenu} edge="end" className="m-s-1">
+                            <icons.MoreVert />
+                        </bd.Button>
+                    </bd.Toolbar>
+
+                    <div className="d-flex">
+                        <div className="p-3 rounded-circle bg-shade-10 mx-4 mb-3">
+                            <icons.TableView className="size-xl" />
+                        </div>
+                        <div>
+                            <p className="my-2 text-primary-text">{table.name}</p>
+                            <p className="my-2 text-secondary-text">{table.title}</p>
+                        </div>
+                    </div>
+                    <bd.TabStrip indicatorColor="primary" textColor="primary" className="d-none">
+                        <bd.TabStripItem eventKey="t1" href="#info">
+                            Table Info{" "}
+                        </bd.TabStripItem>
+                        <bd.TabStripItem eventKey="t2" href="#columns">
+                            Columns
+                        </bd.TabStripItem>
+                    </bd.TabStrip>
+                </div>
             </div>
 
             <div className="container" style={{ marginBottom: 70 }}>
@@ -185,22 +199,40 @@ export function TableDesignerEditTable({ table, group, onChanged, onGoBack }) {
                     >
                         <form>
                             {insertMode && <BasicInput name="name" label={t("table-designer-table-name")} labelSize="4" autoFocus />}
-                            <BasicInput name="title" label={t("table-designer-table-title")} labelSize="4" autoComplete="off" autoFocus />
-                            <BasicInput name="singularTitle" label={t("table-designer-singular")} labelSize="4" autoComplete="off" />
+                            <BasicInput name="title" label={t("table-designer-table-title")} labelSize="4" />
+                            <BasicInput name="singularTitle" label={t("table-designer-singular")} labelSize="4" />
+                            <BasicTextArea name="description" label={t("description")} labelSize="4" />
                         </form>
                     </Formik>
                 </div>
 
                 <TableTitlebar
-                    title="My Table"
+                    title="Columns"
                     tableRef={tableRef}
                     fixed
                     buttons={
                         <>
-                            <bd.Button variant="icon" size="md">
+                            <bd.Button
+                                variant="icon"
+                                size="md"
+                                onClick={(e) => {
+                                    var r = newRow();
+                                    setData([...data, r]);
+                                    console.log(tableApi.state);
+                                    tableApi.state.selectedRowIds[data.length] = true;
+                                }}
+                            >
                                 <icons.Add />
                             </bd.Button>
-                            <bd.Button variant="icon" size="md">
+                            <bd.Button
+                                variant="icon"
+                                size="md"
+                                onClick={(e) => {
+                                    const updatedRows = data.filter((x, index) => !tableApi.state.selectedRowIds[index]);
+                                    setData(updatedRows);
+                                    tableApi.state.selectedRowIds = {};
+                                }}
+                            >
                                 <icons.Delete />
                             </bd.Button>
                         </>
@@ -210,24 +242,79 @@ export function TableDesignerEditTable({ table, group, onChanged, onGoBack }) {
                 <RenderTableDiv
                     tableApi={tableApi}
                     //resizable
-                    enableGrouping
-                    enableSorting
                     multiSelect
-                    //singleSelect
-                    //hideCheckbox
-                    hasSummary
-                    showTableInfo
-                    showPageSize
+                    singleSelect
+                    hideCheckbox
+                    //hasSummary
+                    //showTableInfo
+                    //showPageSize
+                    //enableGrouping
+                    enableSorting
                     enablePaging
-                    //editable
-                    clickAction="toggle"
-                    className="border"
-                    style={{ height: 250 }}
+                    editable
+                    clickAction="select"
+                    className="border nano-scroll"
+                    //style={{ minHeight: 400 }}
                     hover
-                    striped
-                    hasWhitespace
-                    stickyFooter
+                    //striped
+                    //hasWhitespace
+                    //stickyFooter
                 />
+                <br />
+                <br />
+                <br />
+                <br />
+
+                <div className="d-flex border bg-default">
+                    <bd.List
+                        dense
+                        variant="menu"
+                        className="rounded-0 border-end p-0 m-0 nano-scroll w-sm-100"
+                        style={{ width: 300, maxHeight: 300 }}
+                    >
+                        <bd.Toolbar size="md" className="border-bottom">
+                            <h5>{t("columns")}</h5>
+                            <div className="flex-grow-1"></div>
+                            <bd.Button variant="icon" size="md" edge="end">
+                                <icons.Add />
+                            </bd.Button>
+                        </bd.Toolbar>
+                        {/* <bd.ListDivider /> */}
+                        {data.length === 0 && <div className="text-center text-secondary-text py-4">{t("nothing-found")}</div>}
+                        {data.map((x) => (
+                            <bd.ListItem style={{ width: 300, maxHeight: 400 }} primary={x.name} />
+                        ))}
+                    </bd.List>
+
+                    <div className="flex-grow-1">
+                        <bd.Toolbar size="md" className="border-bottom">
+                            <h5>{t("edit-column")}</h5>
+                            <div className="flex-grow-1"></div>
+                            <bd.Button variant="icon" size="md" edge="end" color="secondary">
+                                <icons.Delete />
+                            </bd.Button>
+                        </bd.Toolbar>
+                        <div className="p-3">
+                            <Formik
+                                initialValues={table.data || { name: "", title: "", singularTitle: "" }}
+                                validationSchema={yup.object({
+                                    title: yup.string().min(3, t("msg-too-short")).max(100, t("msg-too-long")).required("Required"),
+                                })}
+                                onSubmit={onSaveClick}
+                                innerRef={formRef}
+                            >
+                                <form>
+                                    {insertMode && (
+                                        <BasicInput name="name" label={t("table-designer-table-name")} labelSize="4" autoFocus />
+                                    )}
+                                    <BasicInput name="title" label={t("table-designer-table-title")} labelSize="4" />
+                                    <BasicInput name="singularTitle" label={t("table-designer-singular")} labelSize="4" />
+                                    <BasicTextArea name="description" label={t("description")} labelSize="4" />
+                                </form>
+                            </Formik>
+                        </div>
+                    </div>
+                </div>
             </div>
         </>
     );

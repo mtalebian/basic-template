@@ -25,10 +25,9 @@ export function TableTitlebar({ tableRef, title, color, fixed, expanded, buttons
                 size="md"
                 fixed={fixed}
                 expanded={expanded}
-                buttons={
+                controls={
                     <>
                         {buttons}
-
                         <InputGroup className="mx-1" style={{ width: 200, height: "auto", minHeight: "auto" }}>
                             <input
                                 className="form-control py-1 "
@@ -48,7 +47,6 @@ export function TableTitlebar({ tableRef, title, color, fixed, expanded, buttons
                                 <icons.Search />
                             </bd.Button>
                         </InputGroup>
-
                         <bd.Button variant="icon" color={color} size="md" edge="end" onClick={() => setShowSettings(true)}>
                             <icons.Settings />
                         </bd.Button>

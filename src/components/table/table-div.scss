@@ -16,7 +16,9 @@
         width: 50px;
         display: inline-flex;
         justify-content: center;
+    }
 
+    &.bd-table-resizable .selection-column {
         @include borderEnd(1px solid #000);
     }
 
@@ -136,8 +138,10 @@
         border-bottom-color: transparent !important;
     }
 
-    .thead .th {
-        @include borderEnd(1px solid #000);
+    &.bd-table-resizable {
+        .thead .th {
+            @include borderEnd(1px solid #000);
+        }
     }
 
     &.has-whitespace {

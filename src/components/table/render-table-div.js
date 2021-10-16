@@ -1,3 +1,12 @@
+/*
+    columns
+            readonly: true
+            readonly: (row) => row.values.myField < 10
+
+            editor: 'text'
+            editor: 'check'
+            editor: 'switch'
+*/
 import React from "react";
 import { useTranslation } from "react-i18next";
 import * as bd from "react-basic-design";
@@ -34,6 +43,7 @@ export function RenderTableDiv({
     const enable_responsive = tableApi.headerGroups.length === 1 && tableApi.columns.some((x) => !!x._breakPoint);
     const cn = classNames("bd-table-div", className, {
         "bd-table-hover": hover,
+        "bd-table-resizable": resizable,
         "bd-table-striped": striped,
         selectable: clickAction,
         "has-whitespace": hasWhitespace,
@@ -45,7 +55,6 @@ export function RenderTableDiv({
 
     const messages = {
         showing: "showing-{from}-to-{to}-of-{total}",
-        // eslint-disable-next-line no-template-curly-in-string
         showingFiltered: "showing-{from}-to-{to}-of-{total}-filtered-from-{all}-rows",
         page: "page-{page}-of-{total}",
         gotoPage: "go-to-page",
@@ -87,6 +96,7 @@ export function RenderTableDiv({
     }
 
     function getCellProps(row, cell) {
+        //console.log(cell);
         if (!cell) cell = row.cells[0];
         var props = cell.getCellProps();
         var userProps = cell.column._cellProps;
@@ -124,6 +134,13 @@ export function RenderTableDiv({
             default:
                 break;
         }
+    };
+
+    const isReadonly = (row, cell) => {
+        var r = cell.column.readonly;
+        if (!r) return false;
+        if (typeof r === "function") return r(row, cell);
+        return r;
     };
 
     console.log(">> RenderTable");
@@ -234,7 +251,9 @@ export function RenderTableDiv({
                                                 cell.render("Aggregated")
                                             ) : cell.isPlaceholder ? null : ( // For cells with repeated values, render null
                                                 // Otherwise, just render the regular cell
-                                                cell.render("Cell", { editable })
+                                                cell.render("Cell", {
+                                                    editable: editable && !isReadonly(row, cell) && (!singleSelect || row.isSelected),
+                                                })
                                             )}
                                         </div>
                                     );
