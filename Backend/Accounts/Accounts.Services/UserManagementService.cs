@@ -26,10 +26,15 @@ namespace Accounts.Services
         {
             return db.Users.FirstOrDefault(x => x.NationalCode == nationalCode);
         }
+        public User GetUser(long UserId)
+        {
+            return db.Users.Get(UserId);
+        }
         public User GetUserByUserName(string userName)
         {
             return db.Users.FirstOrDefault(x => x.UserName == userName);
         }
+
         public void Insert(User user)
         {
             db.Users.Add(user);
@@ -45,7 +50,14 @@ namespace Accounts.Services
         public void DeleteUser(string nationalCode)
         {
             var user = GetUser(nationalCode);
-            if(user is null) throw new Exception("Record not found!");
+            if (user is null) throw new Exception("Record not found!");
+            db.Users.Remove(user);
+            db.SaveChanges();
+        }
+        public void DeleteUser(long userId)
+        {
+            var user = db.Users.Get(userId);
+            if (user is null) throw new Exception("Record not found!");
             db.Users.Remove(user);
             db.SaveChanges();
         }
@@ -57,6 +69,6 @@ namespace Accounts.Services
             Update(user);
         }
 
-       
+
     }
 }

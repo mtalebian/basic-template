@@ -112,15 +112,12 @@ namespace Accounts.Controllers
 
         [EnableCors("react")]
         [HttpDelete("delete-user")]
-        public Response Delete(string nationalCode)
+        public Response Delete(long userId)
         {
-            if (string.IsNullOrEmpty(nationalCode) || !ValidationHelper.IsValidNationalCode(nationalCode)){
-                return new Response(Messages.InvalidInfo);
-            }
-            var user = userService.GetUser(nationalCode);
+            var user = userService.GetUser(userId);
             if (user is null) return new Response(Messages.InvalidInfo);
 
-            userService.DeleteUser(nationalCode);
+            userService.DeleteUser(userId);
             return new Response();
         }
 
