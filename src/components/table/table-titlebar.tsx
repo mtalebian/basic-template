@@ -11,11 +11,13 @@ interface TableTitlebarProps {
     buttons?: ReactNode;
     fixed?: boolean;
     expanded?: boolean;
+    hideSettings?: boolean;
     children?: any;
     [x: string]: any;
 }
 
-export function TableTitlebar({ tableApi, title, color, fixed, expanded, buttons, children, ...props }: TableTitlebarProps) {
+export function TableTitlebar({ tableApi, title, color, fixed, expanded, buttons, hideSettings, children, ...props }: TableTitlebarProps) {
+    const { t } = useTranslation();
     const [showSettings, setShowSettings] = useState(false);
 
     return (
@@ -31,18 +33,22 @@ export function TableTitlebar({ tableApi, title, color, fixed, expanded, buttons
                         <input
                             className="form-control py-1 "
                             value={tableApi.state.globalFilter || ""}
-                            onChange={(e) => tableApi.setGlobalFilter(e.target.value)}
-                            placeholder="Search..."
+                            onChange={(e: any) => tableApi.setGlobalFilter(e.target.value)}
+                            style={{ width: 150 }}
+                            placeholder={t("search...")}
                         />
 
-                        <bd.Button variant="icon" color={color} size="md" edge="end" onClick={() => setShowSettings(true)}>
-                            <icons.Settings />
-                        </bd.Button>
+                        {!hideSettings && (
+                            <bd.Button variant="icon" color={color} size="md" edge="end" onClick={() => setShowSettings(true)}>
+                                <icons.Settings />
+                            </bd.Button>
+                        )}
                     </>
                 }
             >
                 {children}
             </bd.Panel>
+
             <SettingsDialog show={showSettings} setShow={setShowSettings} tableApi={tableApi} />
         </>
     );

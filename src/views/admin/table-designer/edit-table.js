@@ -116,7 +116,7 @@ export function TableDesignerEditTable({ table, group, onChanged, onGoBack }) {
                         display: "select",
                         validValues: ", text, email, url, number, amount, textarea, check, switch, select, shamsi",
                     },
-                    { Header: "ValidValues", accessor: "validValues", display: "textarea", nullValue: "خالي" },
+                    { Header: "ValidValues", accessor: "validValues", display: "textarea" },
 
                     //{ Header: "Expression", accessor: "expression" },
                     // { Header: "Alias", accessor: "alias" },
@@ -131,19 +131,7 @@ export function TableDesignerEditTable({ table, group, onChanged, onGoBack }) {
                         display: "select",
                         validValues: ",rtl,ltr",
                         width: 70,
-                        nullValue: "خالي",
                         disableGroupBy: false,
-                    },
-                    {
-                        Header: "",
-                        id: "my-buttons",
-                        Cell: ({ row }) => {
-                            return (
-                                <bd.Button size="sm" variant="" color="primary" className="w-75">
-                                    DELETE {row.values.name}
-                                </bd.Button>
-                            );
-                        },
                     },
                 ],
                 []
@@ -175,7 +163,7 @@ export function TableDesignerEditTable({ table, group, onChanged, onGoBack }) {
 
     const moreMenu = (
         <bd.Menu>
-            <bd.MenuItem disabled={!group.id || loading || deleting || table.columns.length > 0} onClick={onDeleteClick}>
+            <bd.MenuItem disabled={!table.id || loading || deleting || table.columns.length > 0} onClick={onDeleteClick}>
                 {deleting && <div className="m-e-2 spinner-border spinner-border-sm"></div>}
                 <span>{t("delete")}</span>
             </bd.MenuItem>
@@ -200,7 +188,7 @@ export function TableDesignerEditTable({ table, group, onChanged, onGoBack }) {
 
                         <bd.Button color="primary" disabled={loading || deleting} onClick={onSaveClick}>
                             {loading && <div className="m-e-2 spinner-border spinner-border-sm"></div>}
-                            <span>{t("save-table")}</span>
+                            <span>{t("save-changes")}</span>
                         </bd.Button>
 
                         <bd.Button variant="icon" menu={moreMenu} edge="end" className="m-s-1">
@@ -214,7 +202,9 @@ export function TableDesignerEditTable({ table, group, onChanged, onGoBack }) {
                         </div>
                         <div>
                             <p className="my-2 text-primary-text">{table.name}</p>
-                            <p className="my-2 text-secondary-text">{table.title}</p>
+                            <p className="m-0 text-secondary-text">
+                                {t("created-at")}: {!table.createAt ? "now" : table.createAt}
+                            </p>
                         </div>
                     </div>
                     <bd.TabStrip indicatorColor="primary" textColor="primary" className="d-none">
@@ -249,8 +239,9 @@ export function TableDesignerEditTable({ table, group, onChanged, onGoBack }) {
 
                 <TableTitlebar
                     tableApi={tableApi}
+                    hideSettings
                     title="Columns"
-                    //fixed
+                    fixed
                     buttons={
                         <>
                             <bd.Button
@@ -289,9 +280,9 @@ export function TableDesignerEditTable({ table, group, onChanged, onGoBack }) {
                     //hasSummary
                     showTableInfo
                     //showPageSize
+                    //enablePaging
                     //enableGrouping
                     enableSorting
-                    //enablePaging
                     editable
                     clickAction="select"
                     className="border0 nano-scroll"
