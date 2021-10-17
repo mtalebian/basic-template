@@ -62,6 +62,20 @@
         white-space: nowrap;
     }
 
+    .pre {
+        margin: 0;
+        padding: 5px 0;
+        white-space: pre;
+        max-height: 100px;
+        width: 100%;
+        overflow: auto;
+    }
+
+    textarea {
+        height: 60px;
+        font-size: 12px;
+    }
+
     //
     .table-editor {
         padding: 4px 8px;

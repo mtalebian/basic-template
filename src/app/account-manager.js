@@ -1,6 +1,6 @@
 import { accountApi } from "../api/account-api";
 import { api } from "../api/api";
-import { BasicSubject } from "../components/basic/event/basic-subject";
+import * as bd from "react-basic-design";
 
 const authStatusTypes = {
     Connecting: "connecting",
@@ -10,8 +10,8 @@ const authStatusTypes = {
     LoggedOut: "logged-out",
 };
 
-const accountSubject = new BasicSubject({ pristine: true, application: {}, menuFolders: [], menus: [] }, "acc");
-const statusSubject = new BasicSubject(authStatusTypes.Connecting, "connection");
+const accountSubject = new bd.Subject({ pristine: true, application: {}, menuFolders: [], menus: [] }, "acc");
+const statusSubject = new bd.Subject(authStatusTypes.Connecting, "connection");
 
 window.addEventListener("storage", function (event) {
     if (event.key === "sync-logout") accountManager.logout();

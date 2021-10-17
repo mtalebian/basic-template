@@ -62,8 +62,9 @@ export const reactTable = {
     filterTypes: () => ({
         text: (rows, id, filterValue) => {
             return rows.filter((row) => {
+                alert(1);
                 const rowValue = row.values[id];
-                return rowValue !== undefined ? String(rowValue).toLowerCase().startsWith(String(filterValue).toLowerCase()) : true;
+                return rowValue && String(rowValue).toLowerCase().startsWith(String(filterValue).toLowerCase());
             });
         },
     }),

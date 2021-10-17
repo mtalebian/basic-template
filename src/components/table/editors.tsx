@@ -9,9 +9,6 @@ interface FieldProps {
     onBlur?: (e: any) => void;
 }
 
-//
-//
-//
 export const DefaultEditor = ({ value: initialValue, row, column, updateMyData, editable, ...tableApi }: any) => {
     const [value, setValue] = React.useState(initialValue);
     const onChange = (e: any) => setValue(e.target.value);
@@ -28,26 +25,41 @@ export const DefaultEditor = ({ value: initialValue, row, column, updateMyData, 
                 var i = x.indexOf(":");
                 var code = i === -1 ? x : x.substr(0, i);
                 var title = i === -1 ? x : x.substr(0, i);
-                return { code, title };
+                return { code: code.trim(), title: title.trim() };
             });
         }
         return values;
     }
 
-    if (!editable) {
+    function getDisplayValue(value: any) {
+        return column.getDisplayValue ? column.getDisplayValue(value, row, column) : value;
+    }
+
+    function renderLabel() {
         if (value === undefined) return "";
         if (value === null) {
             return !column.nullValue ? "" : <i className="small text-secondary-text">{column.nullValue}</i>;
         }
         switch (column.display) {
+            case "textarea":
+                return <div className="pre nano-scroll">{`${getDisplayValue(value)}`}</div>;
+
             case "check":
                 return <bd.Toggle model={value ?? false} color="primary" size="sm" className="p-1 m-s-1" />;
 
             case "switch":
                 return <bd.Switch model={value ?? false} color="primary" size="sm" className="py-0" />;
         }
-        return `${value}`;
+        return `${getDisplayValue(value)}`;
     }
+
+    function isReadonly() {
+        const r = column.readOnly;
+        return typeof r === "function" ? r(row) : r;
+    }
+
+    //-----------
+    if (!editable || isReadonly()) return renderLabel();
 
     //-----------
     var field: FieldProps = { onChange, onBlur, value, autoComplete: "off" };
@@ -87,6 +99,7 @@ export const DefaultEditor = ({ value: initialValue, row, column, updateMyData, 
         case "select":
             return (
                 <select className="form-select table-editor" {...field}>
+                    ;
                     {getValidValues().map((x: any) => (
                         <option key={x.code} value={x.code}>
                             {x.title}
@@ -95,5 +108,6 @@ export const DefaultEditor = ({ value: initialValue, row, column, updateMyData, 
                 </select>
             );
     }
+
     return <input {...field} className="form-control table-editor" />;
 };

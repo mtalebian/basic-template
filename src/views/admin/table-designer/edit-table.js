@@ -35,7 +35,6 @@ export function TableDesignerEditTable({ table, group, onChanged, onGoBack }) {
     const [loading, setLoading] = useState(false);
     const [deleting, setDeleting] = useState(false);
     const insertMode = !table.name;
-    const tableRef = React.useRef();
     const formRef = useRef();
 
     const onSaveClick = () => {
@@ -71,9 +70,13 @@ export function TableDesignerEditTable({ table, group, onChanged, onGoBack }) {
     };
 
     const [data, setData] = useState(columns);
-    const updateData = () => {};
-    const defaultPageSize = 14;
+    const defaultPageSize = 10;
     const skipReset = true;
+
+    const updateData = (rowIndex, columnId, value) => {
+        //setSkipPageReset(true);
+        setData(data.map((row, index) => (index === rowIndex ? { ...data[rowIndex], [columnId]: value } : row)));
+    };
 
     const tableApi = useTable(
         {
@@ -81,11 +84,19 @@ export function TableDesignerEditTable({ table, group, onChanged, onGoBack }) {
             defaultColumn: {
                 Cell: DefaultEditor,
                 minWidth: 30,
-                maxWidth: 200,
+                disableGroupBy: true,
+                //maxWidth: 200,
             },
             columns: useMemo(
                 () => [
-                    { Header: "ID", accessor: "id", readonly: true, width: 50 },
+                    {
+                        Header: "ID",
+                        accessor: "id",
+                        readOnly: true,
+                        width: 50,
+
+                        getDisplayValue: (value) => (value === 1 ? "one" : value),
+                    },
                     { Header: "NAME", accessor: "name", display: "text" },
                     {
                         Header: "TITLE",
@@ -93,30 +104,58 @@ export function TableDesignerEditTable({ table, group, onChanged, onGoBack }) {
                         readonly: (r, c) => r.values.isRequired,
                     },
                     { Header: "IsPK", accessor: "isPK", width: 50, display: "check" },
-                    { Header: "IsRequired", accessor: "isRequired", display: "switch" },
-                    { Header: "DefaultValue", accessor: "defaultValue" },
-                    { Header: "Display", accessor: "display" },
-                    { Header: "ValidValues", accessor: "validValues", display: "textarea0" },
+                    { Header: "Required", accessor: "isRequired", display: "switch", width: 80 },
+                    { Header: "DefaultValue", accessor: "defaultValue", width: 100 },
+
+                    { Header: "!List", accessor: "hiddenInTable", display: "check", width: 50 },
+                    { Header: "!Editor", accessor: "hiddenInEditor", display: "check", width: 50 },
+                    {
+                        Header: "Display",
+                        accessor: "display",
+                        width: 100,
+                        display: "select",
+                        validValues: ", text, email, url, number, amount, textarea, check, switch, select, shamsi",
+                    },
+                    { Header: "ValidValues", accessor: "validValues", display: "textarea", nullValue: "خالي" },
 
                     //{ Header: "Expression", accessor: "expression" },
                     // { Header: "Alias", accessor: "alias" },
                     //{ Header: "ToggleOnClick", accessor: "toggleOnClick" },
                     //{ Header: "CellStyle", accessor: "cellStyle" },
                     //{ Header: "CellClassName", accessor: "cellClassName" },
-                    { Header: "HiddenInTable", accessor: "hiddenInTable", display: "check" },
-                    { Header: "HiddenInEditor", accessor: "hiddenInEditor", display: "check" },
                     //{ Header: "Category", accessor: "category" },
-                    { Header: "Dir", accessor: "dir", display: "select", validValues: ",rtl,ltr", width: 70 },
+
+                    {
+                        Header: "Dir",
+                        accessor: "dir",
+                        display: "select",
+                        validValues: ",rtl,ltr",
+                        width: 70,
+                        nullValue: "خالي",
+                        disableGroupBy: false,
+                    },
+                    {
+                        Header: "",
+                        id: "my-buttons",
+                        Cell: ({ row }) => {
+                            return (
+                                <bd.Button size="sm" variant="" color="primary" className="w-75">
+                                    DELETE {row.values.name}
+                                </bd.Button>
+                            );
+                        },
+                    },
                 ],
                 []
             ),
             data: useMemo(() => data, [data]),
-            filterTypes: useMemo(() => reactTable.filterTypes, []),
+            //filterTypes: useMemo(() => reactTable.filterTypes, []),
             updateMyData: updateData,
             autoResetPage: !skipReset,
             autoResetFilters: !skipReset,
             autoResetSortBy: !skipReset,
             autoResetSelectedRows: !skipReset,
+            autoResetGlobalFilter: !skipReset,
             disableMultiSort: false,
         },
         useGlobalFilter,
@@ -131,6 +170,8 @@ export function TableDesignerEditTable({ table, group, onChanged, onGoBack }) {
         //useResizeColumns
         //(hooks) => reactTable.addSelectionColumns(hooks)
     );
+
+    console.log(tableApi);
 
     const moreMenu = (
         <bd.Menu>
@@ -207,9 +248,9 @@ export function TableDesignerEditTable({ table, group, onChanged, onGoBack }) {
                 </div>
 
                 <TableTitlebar
+                    tableApi={tableApi}
                     title="Columns"
-                    tableRef={tableRef}
-                    fixed
+                    //fixed
                     buttons={
                         <>
                             <bd.Button
@@ -219,7 +260,7 @@ export function TableDesignerEditTable({ table, group, onChanged, onGoBack }) {
                                     var r = newRow();
                                     setData([...data, r]);
                                     console.log(tableApi.state);
-                                    tableApi.state.selectedRowIds[data.length] = true;
+                                    tableApi.state.selectedRowIds = { [data.length]: true };
                                 }}
                             >
                                 <icons.Add />
@@ -242,79 +283,24 @@ export function TableDesignerEditTable({ table, group, onChanged, onGoBack }) {
                 <RenderTableDiv
                     tableApi={tableApi}
                     //resizable
-                    multiSelect
+                    //multiSelect
                     singleSelect
                     hideCheckbox
                     //hasSummary
-                    //showTableInfo
+                    showTableInfo
                     //showPageSize
                     //enableGrouping
                     enableSorting
-                    enablePaging
+                    //enablePaging
                     editable
                     clickAction="select"
-                    className="border nano-scroll"
+                    className="border0 nano-scroll"
                     //style={{ minHeight: 400 }}
                     hover
                     //striped
                     //hasWhitespace
                     //stickyFooter
                 />
-                <br />
-                <br />
-                <br />
-                <br />
-
-                <div className="d-flex border bg-default">
-                    <bd.List
-                        dense
-                        variant="menu"
-                        className="rounded-0 border-end p-0 m-0 nano-scroll w-sm-100"
-                        style={{ width: 300, maxHeight: 300 }}
-                    >
-                        <bd.Toolbar size="md" className="border-bottom">
-                            <h5>{t("columns")}</h5>
-                            <div className="flex-grow-1"></div>
-                            <bd.Button variant="icon" size="md" edge="end">
-                                <icons.Add />
-                            </bd.Button>
-                        </bd.Toolbar>
-                        {/* <bd.ListDivider /> */}
-                        {data.length === 0 && <div className="text-center text-secondary-text py-4">{t("nothing-found")}</div>}
-                        {data.map((x) => (
-                            <bd.ListItem key={x.id} style={{ width: 300, maxHeight: 400 }} primary={x.name} />
-                        ))}
-                    </bd.List>
-
-                    <div className="flex-grow-1">
-                        <bd.Toolbar size="md" className="border-bottom">
-                            <h5>{t("edit-column")}</h5>
-                            <div className="flex-grow-1"></div>
-                            <bd.Button variant="icon" size="md" edge="end" color="secondary">
-                                <icons.Delete />
-                            </bd.Button>
-                        </bd.Toolbar>
-                        <div className="p-3">
-                            <Formik
-                                initialValues={table.data || { name: "", title: "", singularTitle: "" }}
-                                validationSchema={yup.object({
-                                    title: yup.string().min(3, t("msg-too-short")).max(100, t("msg-too-long")).required("Required"),
-                                })}
-                                onSubmit={onSaveClick}
-                                innerRef={formRef}
-                            >
-                                <form>
-                                    {insertMode && (
-                                        <BasicInput name="name" label={t("table-designer-table-name")} labelSize="4" autoFocus />
-                                    )}
-                                    <BasicInput name="title" label={t("table-designer-table-title")} labelSize="4" />
-                                    <BasicInput name="singularTitle" label={t("table-designer-singular")} labelSize="4" />
-                                    <BasicTextArea name="description" label={t("description")} labelSize="4" />
-                                </form>
-                            </Formik>
-                        </div>
-                    </div>
-                </div>
             </div>
         </>
     );

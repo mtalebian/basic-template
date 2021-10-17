@@ -1,21 +1,22 @@
 /*
   columns
-    readonly: true
-    readonly: (row) => row.values.myField < 10
+
+    readOnly: boolean
+    readOnly: (row) => row.values.myField < 10
             
     nullValue: 'NULL'
             
     Cell:
-        UrlEditor
-        ShamsiEditor
-        DateEditor
+        
+    getDisplayValue: (row) => string
 
-        getDisplayValue: (row) => string
+    display: '' | text | email | url | number | amount | textarea | check | switch | select | shamsi
 
-        display: '' | text | email | url | number | amount | 
-            textarea | check | switch | select | shamsi
+    validValues: 'A, B, C'
+    validValues: '1:one, 2:two, 3:three'
+    validValues: [ {code:'1', title:'one'}, {code:'2', title:'two'}, ...]
+    validValues: (row, column) => string | []
 
-        validValues: '1:one, 2:two, 3:three'
 */
 import React from "react";
 import { useTranslation } from "react-i18next";
@@ -27,7 +28,7 @@ import classNames from "classnames";
 export function RenderTableDiv({
     tableApi,
     dataLength,
-    resizable,
+    //resizable,
     showColumnFilter,
     enableGrouping,
     enableSorting,
@@ -53,7 +54,7 @@ export function RenderTableDiv({
     const enable_responsive = tableApi.headerGroups.length === 1 && tableApi.columns.some((x) => !!x._breakPoint);
     const cn = classNames("bd-table-div", className, {
         "bd-table-hover": hover,
-        "bd-table-resizable": resizable,
+        //"bd-table-resizable": resizable,
         "bd-table-striped": striped,
         selectable: clickAction,
         "has-whitespace": hasWhitespace,
@@ -146,13 +147,6 @@ export function RenderTableDiv({
         }
     };
 
-    const isReadonly = (row, cell) => {
-        var r = cell.column.readonly;
-        if (!r) return false;
-        if (typeof r === "function") return r(row, cell);
-        return r;
-    };
-
     console.log(">> RenderTable");
 
     return (
@@ -204,9 +198,9 @@ export function RenderTableDiv({
                                     {showColumnFilter && column.canFilter && <div className="header-filter">{column.render("Filter")}</div>}
 
                                     {/* Use column.getResizerProps to hook up the events correctly */}
-                                    {resizable && (
+                                    {/* {resizable && (
                                         <div {...column.getResizerProps()} className={`resizer ${column.isResizing ? "isResizing" : ""}`} />
-                                    )}
+                                    )} */}
                                 </div>
                             ))}
                         </div>
@@ -262,7 +256,7 @@ export function RenderTableDiv({
                                             ) : cell.isPlaceholder ? null : ( // For cells with repeated values, render null
                                                 // Otherwise, just render the regular cell
                                                 cell.render("Cell", {
-                                                    editable: editable && !isReadonly(row, cell) && (!singleSelect || row.isSelected),
+                                                    editable: editable && (!singleSelect || row.isSelected),
                                                 })
                                             )}
                                         </div>
