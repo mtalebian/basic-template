@@ -107,7 +107,6 @@ export function RenderTableDiv({
     }
 
     function getCellProps(row, cell) {
-        //console.log(cell);
         if (!cell) cell = row.cells[0];
         var props = cell.getCellProps();
         var userProps = cell.column._cellProps;
@@ -128,7 +127,6 @@ export function RenderTableDiv({
         if (row.isGrouped) return;
         if (cell.column._ignoreToggleOnClick) return;
         if (!singleSelect && !multiSelect) return;
-        //console.log(row);
         const is_selected = row.isSelected;
         switch (clickAction) {
             case "select":
@@ -146,8 +144,6 @@ export function RenderTableDiv({
                 break;
         }
     };
-
-    console.log(">> RenderTable");
 
     return (
         <div className="bd-table-div-container" style={{ ...style }}>

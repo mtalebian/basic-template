@@ -9,7 +9,6 @@ import { tableDesignerApi } from "../../../api/table-designer-api";
 import { notify } from "../../../components/basic/notify";
 import { TableTitlebar } from "../../../components/table";
 import { BasicInput } from "../../../components/basic-form/basic-input";
-import { reactTable } from "../../../components/table/react-table-helper";
 import {
     useTable,
     useGlobalFilter,
@@ -31,25 +30,26 @@ import { BasicTextArea } from "../../../components/basic-form/basic-textarea";
 //
 export function TableDesignerEditTable({ table, group, onChanged, onGoBack }) {
     const { t } = useTranslation();
-    const [columns] = useState(table.columns);
-    const [loading, setLoading] = useState(false);
+    const [data, setData] = useState(table.columns);
+    const [saving, setSaving] = useState(false);
     const [deleting, setDeleting] = useState(false);
     const insertMode = !table.name;
     const formRef = useRef();
 
     const onSaveClick = () => {
         var values = formRef.current.values;
-        setLoading(true);
+        setSaving(true);
+        var dto = { ...values, dataColumns: data };
         tableDesignerApi
-            .saveTable(group.id, values, insertMode)
+            .saveTable(group.id, dto, insertMode)
             .then((x) => {
-                setLoading(false);
+                setSaving(false);
                 notify.info(messages.ChangesAreSaved);
                 table.data = x;
                 onChanged(x);
             })
             .catch((ex) => {
-                setLoading(false);
+                setSaving(false);
                 notify.error(ex);
             });
     };
@@ -59,17 +59,16 @@ export function TableDesignerEditTable({ table, group, onChanged, onGoBack }) {
         tableDesignerApi
             .deleteTable(table.name)
             .then((x) => {
-                setLoading(false);
+                setSaving(false);
                 notify.info(messages.RowIsDeleted);
                 onChanged(null);
             })
             .catch((ex) => {
-                setLoading(false);
+                setSaving(false);
                 notify.error(ex);
             });
     };
 
-    const [data, setData] = useState(columns);
     const defaultPageSize = 10;
     const skipReset = true;
 
@@ -107,8 +106,8 @@ export function TableDesignerEditTable({ table, group, onChanged, onGoBack }) {
                     { Header: "Required", accessor: "isRequired", display: "switch", width: 80 },
                     { Header: "DefaultValue", accessor: "defaultValue", width: 100 },
 
-                    { Header: "!List", accessor: "hiddenInTable", display: "check", width: 50 },
-                    { Header: "!Editor", accessor: "hiddenInEditor", display: "check", width: 50 },
+                    { Header: "List", accessor: "showInList", display: "check", width: 50 },
+                    { Header: "Editor", accessor: "showInEditor", display: "check", width: 50 },
                     {
                         Header: "Display",
                         accessor: "display",
@@ -159,20 +158,17 @@ export function TableDesignerEditTable({ table, group, onChanged, onGoBack }) {
         //(hooks) => reactTable.addSelectionColumns(hooks)
     );
 
-    console.log(tableApi);
-
     const moreMenu = (
         <bd.Menu>
-            <bd.MenuItem disabled={!table.id || loading || deleting || table.columns.length > 0} onClick={onDeleteClick}>
+            <bd.MenuItem disabled={!table.id || saving || deleting || table.columns.length > 0} onClick={onDeleteClick}>
                 {deleting && <div className="m-e-2 spinner-border spinner-border-sm"></div>}
                 <span>{t("delete")}</span>
             </bd.MenuItem>
         </bd.Menu>
     );
 
-    const newRow = () => ({ id: null });
+    const newRow = () => ({ id: 0 });
 
-    console.log("> Render");
     return (
         <>
             <div className="border-bottom bg-gray-5 mb-3">
@@ -186,8 +182,8 @@ export function TableDesignerEditTable({ table, group, onChanged, onGoBack }) {
 
                         <div className="flex-grow-1" />
 
-                        <bd.Button color="primary" disabled={loading || deleting} onClick={onSaveClick}>
-                            {loading && <div className="m-e-2 spinner-border spinner-border-sm"></div>}
+                        <bd.Button color="primary" disabled={saving || deleting} onClick={onSaveClick}>
+                            {saving && <div className="m-e-2 spinner-border spinner-border-sm"></div>}
                             <span>{t("save-changes")}</span>
                         </bd.Button>
 
@@ -239,6 +235,7 @@ export function TableDesignerEditTable({ table, group, onChanged, onGoBack }) {
 
                 <TableTitlebar
                     tableApi={tableApi}
+                    hideSearch
                     hideSettings
                     title="Columns"
                     fixed
@@ -250,7 +247,6 @@ export function TableDesignerEditTable({ table, group, onChanged, onGoBack }) {
                                 onClick={(e) => {
                                     var r = newRow();
                                     setData([...data, r]);
-                                    console.log(tableApi.state);
                                     tableApi.state.selectedRowIds = { [data.length]: true };
                                 }}
                             >
@@ -259,6 +255,7 @@ export function TableDesignerEditTable({ table, group, onChanged, onGoBack }) {
                             <bd.Button
                                 variant="icon"
                                 size="md"
+                                disabled={!tableApi.selectedFlatRows.length}
                                 onClick={(e) => {
                                     const updatedRows = data.filter((x, index) => !tableApi.state.selectedRowIds[index]);
                                     setData(updatedRows);

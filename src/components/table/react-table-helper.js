@@ -38,7 +38,6 @@ const singleSelectColumn = () => {
                 labelClassName="m-0"
                 {...row.getToggleRowSelectedProps()}
                 onChange={() => {
-                    //console.log(props);
                     toggleAllRowsSelected(false);
                     toggleRowSelected(row.id);
                 }}

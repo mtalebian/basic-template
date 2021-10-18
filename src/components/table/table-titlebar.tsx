@@ -1,5 +1,5 @@
 import React, { ReactNode, useState } from "react";
-import { InputGroup, Modal, TabContainer, TabContent, TabPane } from "react-bootstrap";
+import { Modal, TabContainer, TabContent, TabPane } from "react-bootstrap";
 import * as icons from "../../assets/icons";
 import * as bd from "react-basic-design";
 import { useTranslation } from "react-i18next";
@@ -11,12 +11,24 @@ interface TableTitlebarProps {
     buttons?: ReactNode;
     fixed?: boolean;
     expanded?: boolean;
+    hideSearch?: boolean;
     hideSettings?: boolean;
     children?: any;
     [x: string]: any;
 }
 
-export function TableTitlebar({ tableApi, title, color, fixed, expanded, buttons, hideSettings, children, ...props }: TableTitlebarProps) {
+export function TableTitlebar({
+    tableApi,
+    title,
+    color,
+    fixed,
+    expanded,
+    buttons,
+    hideSearch,
+    hideSettings,
+    children,
+    ...props
+}: TableTitlebarProps) {
     const { t } = useTranslation();
     const [showSettings, setShowSettings] = useState(false);
 
@@ -30,13 +42,16 @@ export function TableTitlebar({ tableApi, title, color, fixed, expanded, buttons
                 controls={
                     <>
                         {buttons}
-                        <input
-                            className="form-control py-1 "
-                            value={tableApi.state.globalFilter || ""}
-                            onChange={(e: any) => tableApi.setGlobalFilter(e.target.value)}
-                            style={{ width: 150 }}
-                            placeholder={t("search...")}
-                        />
+
+                        {!hideSearch && (
+                            <input
+                                className="form-control py-1 "
+                                value={tableApi.state.globalFilter || ""}
+                                onChange={(e: any) => tableApi.setGlobalFilter(e.target.value)}
+                                style={{ width: 150 }}
+                                placeholder={t("search...")}
+                            />
+                        )}
 
                         {!hideSettings && (
                             <bd.Button variant="icon" color={color} size="md" edge="end" onClick={() => setShowSettings(true)}>

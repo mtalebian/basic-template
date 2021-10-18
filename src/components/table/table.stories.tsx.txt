@@ -59,7 +59,6 @@ const Template = () => {
         _summary: "count",
         _headerProps: (column) => ({ className: "bg-shade-30 text-danger", style: { minWidth: 150 } }),
         _cellProps: (row, cell) => {
-            //console.log(row);
             return { className: classNames("bg-shade-3 text-shade-1", { "text-danger": row.values.age < 15 }) };
         },
         _breakPoint: "xl",
@@ -221,7 +220,6 @@ const Template = () => {
                     variant="text"
                     size="sm"
                     onClick={() => {
-                        console.log(tableRef.current);
                     }}
                 >
                     Log(tbaleApi)
@@ -290,7 +288,6 @@ const Template = () => {
                 //
                 defaultPageSize={5}
                 onStateChanged={(state) => {
-                    console.log(state);
                 }}
             />
         </RootStory>

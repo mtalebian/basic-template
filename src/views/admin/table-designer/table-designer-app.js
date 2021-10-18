@@ -22,8 +22,6 @@ export function TableDesignerApp() {
     const [table, setTable] = useState(null);
     const [column, setColumn] = useState(null);
 
-    //console.log("TableDesignerApp", ++TableDesignerApp_counter);
-
     function goBack() {
         if (column) {
             setColumn(null);
@@ -69,11 +67,13 @@ export function TableDesignerApp() {
     }
 
     useEffect(() => {
-        if (!groups && account.isConnected()) tableDesignerApi.getGroups().then((x) => setGroups(x));
+        if (!groups && account.isConnected()) {
+            tableDesignerApi.getGroups().then((x) => setGroups(x));
+        }
         // return accountManager.status.onConnected(function () {
         //     if (!groups) tableDesignerApi.getGroups().then((x) => setGroups(x));
         // }).remove;
-    });
+    }, [groups, account]);
 
     return (
         <>

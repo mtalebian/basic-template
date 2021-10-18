@@ -96,9 +96,7 @@ export const UsersApp = ({ ...props }) => {
                             titlebarColor="secondary"
                             //
                             defaultPageSize={5}
-                            onStateChanged={(state) => {
-                                console.log(state);
-                            }}
+                            onStateChanged={(state) => {}}
                         />
                     </div>
                 </>
