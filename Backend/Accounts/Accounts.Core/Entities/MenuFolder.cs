@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace Accounts.Core
 {
@@ -11,9 +12,16 @@ namespace Accounts.Core
         public string Title { get; set; }
         public int SortOrder { get; set; }
 
+        [IgnoreMap]
         public virtual ICollection<Menu> Menus { get; set; }
+
+        [IgnoreMap]
         public virtual ICollection<MenuFolder> SubFolders { get; set; }
+
+        [IgnoreMap]
         public virtual MenuFolder Parent { get; set; }
+
+        [IgnoreMap]
         public virtual Project Project { get; set; }
     }
 }

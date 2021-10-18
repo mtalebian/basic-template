@@ -34,8 +34,13 @@ namespace Accounts.Core
         public DateTime LastUpdate { get; set; }
         public DateTime CreatedAt { get; set; }
 
+        [IgnoreMap]
         public virtual ICollection<UserSession> UserSessions { get; set; }
+
+        [IgnoreMap]
         public virtual ICollection<UserRole> UserRoles { get; set; }
+
+        [IgnoreMap]
         public virtual ICollection<UserCompositeRole> UserCompositeRoles { get; set; }
 
 
