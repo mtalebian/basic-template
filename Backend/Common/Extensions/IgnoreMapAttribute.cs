@@ -1,6 +1,6 @@
 ﻿namespace System
 {
-    [AttributeUsage(AttributeTargets.Property)]
+    [AttributeUsage(AttributeTargets.Class | AttributeTargets.Property)]
     public class IgnoreMapAttribute : Attribute
     {
     }
