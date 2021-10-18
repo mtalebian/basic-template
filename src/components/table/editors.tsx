@@ -15,7 +15,7 @@ export const DefaultEditor = ({ value: initialValue, row, column, updateMyData, 
     const onBlur = (e: any) => updateMyData(row.index, column.id, value);
     const updateValue = (newValue: boolean) => {
         setValue(newValue);
-        updateMyData(row.index, column.id, value);
+        updateMyData(row.index, column.id, newValue);
     };
 
     React.useEffect(() => setValue(initialValue), [initialValue]);
@@ -67,6 +67,7 @@ export const DefaultEditor = ({ value: initialValue, row, column, updateMyData, 
 
     //-----------
     var field: FieldProps = { onChange, onBlur, value, autoComplete: "off" };
+    if (!field.value) field.value = "";
 
     switch (column.display) {
         case null:
@@ -92,13 +93,13 @@ export const DefaultEditor = ({ value: initialValue, row, column, updateMyData, 
             break;
 
         case "check":
-            return <bd.Toggle model={value} setModel={updateValue} color="primary" size="sm" />;
+            return <bd.Toggle model={field.value} setModel={updateValue} color="primary" size="sm" />;
 
         case "textarea":
             return <textarea className="form-control table-editor" {...field}></textarea>;
 
         case "switch":
-            return <bd.Switch model={value} setModel={updateValue} color="primary" size="sm" className="py-0" />;
+            return <bd.Switch model={field.value} setModel={updateValue} color="primary" size="sm" className="py-0" />;
 
         case "select":
             return (
@@ -112,6 +113,5 @@ export const DefaultEditor = ({ value: initialValue, row, column, updateMyData, 
                 </select>
             );
     }
-
     return <input {...field} className="form-control table-editor" />;
 };

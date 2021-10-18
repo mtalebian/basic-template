@@ -14,7 +14,7 @@ namespace Forms.Migrations.Migrations
                 schema: "tmp",
                 columns: table => new
                 {
-                    ProjectId = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
+                    ProjectId = table.Column<string>(type: "varchar(20)", unicode: false, maxLength: 20, nullable: false),
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Title = table.Column<string>(type: "nvarchar(150)", maxLength: 150, nullable: false)
@@ -29,12 +29,12 @@ namespace Forms.Migrations.Migrations
                 schema: "tmp",
                 columns: table => new
                 {
-                    ProjectId = table.Column<string>(type: "nvarchar(20)", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    ProjectId = table.Column<string>(type: "varchar(20)", unicode: false, maxLength: 20, nullable: false),
+                    Name = table.Column<string>(type: "varchar(50)", unicode: false, maxLength: 50, nullable: false),
                     GroupId = table.Column<int>(type: "int", nullable: false),
                     Title = table.Column<string>(type: "nvarchar(150)", maxLength: 150, nullable: false),
                     SingularTitle = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Description = table.Column<string>(type: "nvarchar(2000)", maxLength: 2000, nullable: true),
                     Sortable = table.Column<bool>(type: "bit", nullable: false),
                     Filterable = table.Column<bool>(type: "bit", nullable: false),
                     SelectSql = table.Column<string>(type: "nvarchar(max)", nullable: true),
@@ -61,25 +61,22 @@ namespace Forms.Migrations.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    ProjectId = table.Column<string>(type: "nvarchar(20)", nullable: false),
-                    TableName = table.Column<string>(type: "nvarchar(50)", nullable: true),
+                    ProjectId = table.Column<string>(type: "varchar(20)", unicode: false, maxLength: 20, nullable: false),
+                    TableName = table.Column<string>(type: "varchar(50)", nullable: true),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Expression = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Alias = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
                     Title = table.Column<string>(type: "nvarchar(150)", maxLength: 150, nullable: false),
                     IsPK = table.Column<bool>(type: "bit", nullable: false),
                     IsRequired = table.Column<bool>(type: "bit", nullable: false),
-                    DefaultValue = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    ToggleOnClick = table.Column<bool>(type: "bit", nullable: false),
-                    Editor = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    DefaultValue = table.Column<string>(type: "nvarchar(2000)", maxLength: 2000, nullable: true),
+                    IsReadOnly = table.Column<bool>(type: "bit", nullable: false),
+                    ShowInList = table.Column<bool>(type: "bit", nullable: false, defaultValue: true),
+                    ShowInEditor = table.Column<bool>(type: "bit", nullable: false, defaultValue: true),
+                    Direction = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Display = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     ValidValues = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    CellStyle = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     CellClassName = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    HiddenInTable = table.Column<bool>(type: "bit", nullable: false),
-                    HiddenInEditor = table.Column<bool>(type: "bit", nullable: false),
                     Category = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Dir = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    ColumnOrder = table.Column<int>(type: "int", nullable: false, defaultValue: 0)
                 },
                 constraints: table =>
                 {
@@ -104,12 +101,6 @@ namespace Forms.Migrations.Migrations
                 table: "Tables",
                 columns: new[] { "Name", "ProjectId", "DeleteSql", "Description", "Filterable", "GroupId", "InsertSql", "SelectSql", "SingularTitle", "Sortable", "Title", "UpdateSql" },
                 values: new object[] { "tmp.Projects", "project1", null, null, true, 1, null, null, "Project", true, "Projects", null });
-
-            migrationBuilder.InsertData(
-                schema: "tmp",
-                table: "Columns",
-                columns: new[] { "Id", "ProjectId", "Alias", "Category", "CellClassName", "CellStyle", "DefaultValue", "Description", "Dir", "Editor", "Expression", "HiddenInEditor", "HiddenInTable", "IsPK", "IsRequired", "Name", "TableName", "Title", "ToggleOnClick", "ValidValues" },
-                values: new object[] { 1, "project1", null, null, null, null, null, null, null, null, null, false, false, true, true, "Id", "tmp.Projects", "Id", true, null });
 
             migrationBuilder.CreateIndex(
                 name: "IX_Columns_ProjectId_TableName",

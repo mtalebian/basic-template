@@ -78,8 +78,8 @@ namespace Forms.Data
             Column.IsRequired(x => x.IsPK);
             Column.IsRequired(x => x.IsRequired);
             Column.DefineDescription(x => x.DefaultValue);
-            Column.DefaultValue(x => x.ShowInList, true, true);
-            Column.DefaultValue(x => x.ShowInEditor, true, true);
+            Column.DefaultValue(x => x.ShowInList, 1, true);
+            Column.DefaultValue(x => x.ShowInEditor, 1, true);
             Column.DefaultValue(x => x.ColumnOrder, 0, true);
 
             Column.Entity()

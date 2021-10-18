@@ -1,7 +1,8 @@
 ﻿Add-Migration V1 -Context FormDbContext -StartupProject Backend.Api
 
+Update-Database -Context FormDbContext
+
+
 Add-Migration V1 -Context FormDbContext
 
-
 Update-Database -Context AccountDbContext
-Update-Database -Context FormDbContext

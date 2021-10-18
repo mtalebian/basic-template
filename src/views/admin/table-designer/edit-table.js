@@ -74,10 +74,9 @@ export function TableDesignerEditTable({ table, group, onChanged, onGoBack }) {
 
     const updateData = (rowIndex, columnId, value) => {
         //setSkipPageReset(true);
-        setData(data.map((row, index) => (index === rowIndex ? { ...data[rowIndex], [columnId]: value } : row)));
+        const new_row = { ...data[rowIndex], [columnId]: value };
+        setData(data.map((row, index) => (index === rowIndex ? new_row : row)));
     };
-
-    console.log(">>> render", data);
 
     const tableApi = useTable(
         {
