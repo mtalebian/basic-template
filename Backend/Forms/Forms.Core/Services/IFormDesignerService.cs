@@ -12,8 +12,8 @@ namespace Forms.Core
 
         IList<Table> GetTables(string projectId, int groupId);
         Table GetTable(string projectId, string tableName);
-        void Insert(Table Table);
-        void Update(ref Table Table);
+        void Insert(Table Table, IList<Column> columns);
+        void Update(ref Table item, IList<Column> columns);
         void DeleteTable(string projectId, string tableName);
 
         IList<Column> GetColumns(string projectId, string tableName);

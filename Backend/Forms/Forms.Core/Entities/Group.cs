@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace Forms.Core
 {
@@ -9,6 +10,7 @@ namespace Forms.Core
 
         public string Title { get; set; }
 
+        [IgnoreMap]
         public ICollection<Table> Tables { get; set; }
     }
 }

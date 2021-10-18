@@ -84,7 +84,13 @@ namespace Forms.Controllers
             var tb = table.MapTo<Table>();
             tb.ProjectId = projectId;
             tb.GroupId = groupId;
-            service.Insert(tb);
+            var columns = table.DataColumns.MapTo<Column>();
+            foreach (var c in columns)
+            {
+                c.ProjectId = projectId;
+                c.TableName = tb.Name;
+            }
+            service.Insert(tb, columns);
             return new Response<TableDTO>(tb.MapTo<TableDTO>());
         }
 
@@ -94,7 +100,15 @@ namespace Forms.Controllers
             var tb = table.MapTo<Table>();
             tb.ProjectId = projectId;
             tb.GroupId = groupId;
-            service.Update(ref tb);
+
+            var columns = table.DataColumns.MapTo<Column>();
+            foreach (var c in columns)
+            {
+                c.ProjectId = projectId;
+                c.TableName = tb.Name;
+            }
+
+            service.Update(ref tb, columns);
             return new Response<TableDTO>(tb.MapTo<TableDTO>());
         }
 
