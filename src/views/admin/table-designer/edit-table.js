@@ -77,6 +77,8 @@ export function TableDesignerEditTable({ table, group, onChanged, onGoBack }) {
         setData(data.map((row, index) => (index === rowIndex ? { ...data[rowIndex], [columnId]: value } : row)));
     };
 
+    console.log(">>> render", data);
+
     const tableApi = useTable(
         {
             initialState: { pageSize: defaultPageSize },
