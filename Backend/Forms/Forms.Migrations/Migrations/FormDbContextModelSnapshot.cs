@@ -51,6 +51,9 @@ namespace Forms.Migrations.Migrations
                     b.Property<string>("Display")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("Filter")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<bool>("IsNull")
                         .HasColumnType("bit");
 

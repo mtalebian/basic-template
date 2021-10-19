@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Forms.Migrations.Migrations
 {
     [DbContext(typeof(FormDbContext))]
-    [Migration("20211019183658_V1")]
+    [Migration("20211019204803_V1")]
     partial class V1
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -51,6 +51,9 @@ namespace Forms.Migrations.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Display")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Filter")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("IsNull")

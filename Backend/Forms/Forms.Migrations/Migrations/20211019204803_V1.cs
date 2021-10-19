@@ -86,6 +86,7 @@ namespace Forms.Migrations.Migrations
                     DataType = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     MaxLen = table.Column<int>(type: "int", nullable: true),
                     DefaultValue = table.Column<string>(type: "nvarchar(2000)", maxLength: 2000, nullable: true),
+                    Filter = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     IsReadOnly = table.Column<bool>(type: "bit", nullable: false),
                     ShowInList = table.Column<bool>(type: "bit", nullable: false, defaultValue: true),
                     ShowInEditor = table.Column<bool>(type: "bit", nullable: false, defaultValue: true),
