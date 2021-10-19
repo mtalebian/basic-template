@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace Accounts.Core
 {
@@ -9,8 +10,11 @@ namespace Accounts.Core
         public string Title { get; set; }
         public string ValidValues { get; set; }
         public string ValuesQuery { get; set; }
-    
+
+        [IgnoreMap]
         public virtual ICollection<AzObjectField> AzObjectFields { get; set; }
+        
+        [IgnoreMap]
         public virtual Project Project { get; set; }
     }
 }

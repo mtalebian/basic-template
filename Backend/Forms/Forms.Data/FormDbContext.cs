@@ -23,7 +23,7 @@ namespace Forms.Data
 
             var schema = ConfigHelper<object>.GetSchema(_FormsConfig.TableFormsTableName);
 
-            
+
             //
             // Group 
             //
@@ -41,6 +41,7 @@ namespace Forms.Data
             //
             var Table = new ConfigHelper<Table>(modelBuilder, _FormsConfig.TablesTableName);
             Table.HasKey(x => new { x.ProjectId, x.Name });
+            Table.DefineProjectId(x => x.ProjectId);
             Table.DefineName(x => x.Name);
             Table.IsRequired(x => x.GroupId);
             Table.DefineTitle(x => x.Title);
@@ -56,7 +57,7 @@ namespace Forms.Data
                 {
                     ProjectId = "project1",
                     Name = $"{schema}.Projects",
-                    GroupId=1,
+                    GroupId = 1,
                     Title = "Projects",
                     SingularTitle = "Project",
                     Sortable = true,
@@ -70,39 +71,35 @@ namespace Forms.Data
             var Column = new ConfigHelper<Column>(modelBuilder, _FormsConfig.ColumnsTableName);
             Column.HasKey(x => new { x.ProjectId, x.Id });
             Column.IsAutoIncrement(x => x.Id);
-            Column.Varchar50(x => x.Alias, false);
+            Column.DefineProjectId(x => x.ProjectId);
+            Column.DefineName(x => x.Title);
             Column.DefineTitle(x => x.Title);
-            Column.DefineDescription(x => x.Description);
+
+            Column.IsRequired(x => x.IsPK);
+            Column.IsRequired(x => x.IsNull);
+            Column.DefineDescription(x => x.DefaultValue);
+            Column.DefaultValue(x => x.ShowInList, 1, true);
+            Column.DefaultValue(x => x.ShowInEditor, 1, true);
+            Column.DefaultValue(x => x.OrdinalPosition, 0, true);
+            //Column.IsRequired(x => x.Category);
 
             Column.Entity()
                 .HasOne(x => x.Table)
                 .WithMany(x => x.Columns)
                 .HasForeignKey(x => new { x.ProjectId, x.TableName });
 
-            Column.Entity()
-                .HasData(new Column
-                {
-                    Id = 1,
-                    ProjectId = "project1",
-                    TableName = $"{schema}.Projects",
-                    Name = "Id",
-                    Title = "Id",
-                    IsPK = true,
-                    IsRequired = true,
-                    ToggleOnClick = true,
-                    HiddenInEditor = false,
-                    HiddenInTable = false,
-                });
-            
-            
+
+
+
+
             //
             // Text
             //
-            var Text= new ConfigHelper<Text>(modelBuilder, _FormsConfig.TextTableName);
-            Text.HasKey(x => new { x.LanguageCode, x.Name});
-            Text.Varchar20(x => x.LanguageCode, true);
-            Text.Varchar100(x => x.Name, true);
-            Text.HasMaxLength(x => x.Value, 1000, true);
+            var Text = new ConfigHelper<Text>(modelBuilder, _FormsConfig.TextTableName);
+            Text.HasKey(x => new { x.LanguageCode, x.Name });
+            Text.VarChar(x => x.LanguageCode, 20, true);
+            Text.VarChar(x => x.Name, 100, true);
+            Text.NVarChar(x => x.Value, 1000, true);
 
             Column.Entity()
                 .HasOne(x => x.Table)

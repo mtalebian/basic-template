@@ -355,7 +355,7 @@ export { default as ArrowUpward } from "./ArrowUpward";
 // export { default as ChecklistRtl } from './ChecklistRtl'
 // export { default as Checkroom } from './Checkroom'
 // export { default as CheckBox } from './CheckBox'
-// export { default as CheckBoxOutlineBlank } from './CheckBoxOutlineBlank'
+export { default as CheckBoxOutlineBlank } from "./CheckBoxOutlineBlank";
 // export { default as CheckCircle } from './CheckCircle'
 // export { default as CheckCircleOutline } from './CheckCircleOutline'
 export { default as ChevronLeft } from "./ChevronLeft";
@@ -515,7 +515,7 @@ export { default as Delete } from "./Delete";
 // export { default as DomainDisabled } from './DomainDisabled'
 // export { default as DomainVerification } from './DomainVerification'
 // export { default as Done } from './Done'
-// export { default as DoneAll } from './DoneAll'
+export { default as DoneAll } from "./DoneAll";
 // export { default as DoneOutline } from './DoneOutline'
 // export { default as DonutLarge } from './DonutLarge'
 // export { default as DonutSmall } from './DonutSmall'
@@ -1420,7 +1420,7 @@ export { default as PersonAddAlt } from "./PersonAddAlt";
 // export { default as Sailing } from './Sailing'
 // export { default as Sanitizer } from './Sanitizer'
 // export { default as Satellite } from './Satellite'
-// export { default as Save } from './Save'
+export { default as Save } from "./Save";
 // export { default as SavedSearch } from './SavedSearch'
 // export { default as SaveAlt } from './SaveAlt'
 // export { default as Savings } from './Savings'
@@ -1668,7 +1668,7 @@ export { default as Sync } from "./Sync";
 // export { default as TableChart } from './TableChart'
 // export { default as TableRestaurant } from './TableRestaurant'
 // export { default as TableRows } from './TableRows'
-// export { default as TableView } from './TableView'
+export { default as TableView } from "./TableView";
 // export { default as TabUnselected } from './TabUnselected'
 // export { default as Tag } from './Tag'
 // export { default as TagFaces } from './TagFaces'

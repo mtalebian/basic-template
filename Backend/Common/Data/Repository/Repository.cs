@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
@@ -120,6 +121,11 @@ namespace Common.Data
         {
             Entities.RemoveRange(entities);
         }
+
+        public virtual IList<TEntity> SqlQuery(string sql, params object[] parameters)
+        {
+            return Entities.FromSqlRaw(sql, parameters).ToList();
+        }
     }
 
 
@@ -137,7 +143,7 @@ namespace Common.Data
         public Repository(DbContext context) : base(context)
         {
         }
-        
+
         public virtual TEntity Get(TKey key)
         {
             return Entities.Find(key);

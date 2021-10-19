@@ -10,7 +10,6 @@ import { useTranslation } from "react-i18next";
 import { BasicInput } from "../../../components/basic-form/basic-input";
 import classNames from "classnames";
 import { BasicSwitch } from "../../../components/basic-form/basic-switch";
-import { Col, Nav, Row, Tab, Tabs } from "react-bootstrap";
 
 export const EditMenu = ({ projectId, menu, onGoBack }) => {
     const { t } = useTranslation();

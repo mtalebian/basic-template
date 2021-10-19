@@ -1,22 +1,36 @@
-import React, { MutableRefObject, ReactNode, useState } from "react";
-import { InputGroup, Modal, TabContainer, TabContent, TabPane } from "react-bootstrap";
+import React, { ReactNode, useState } from "react";
+import { Modal, TabContainer, TabContent, TabPane } from "react-bootstrap";
 import * as icons from "../../assets/icons";
 import * as bd from "react-basic-design";
+import { useTranslation } from "react-i18next";
 
 interface TableTitlebarProps {
-    tableRef?: MutableRefObject<any>;
+    tableApi?: any;
     title?: string;
     color?: "" | "primary" | "secondary";
     buttons?: ReactNode;
     fixed?: boolean;
     expanded?: boolean;
+    hideSearch?: boolean;
+    hideSettings?: boolean;
     children?: any;
     [x: string]: any;
 }
 
-export function TableTitlebar({ tableRef, title, color, fixed, expanded, buttons, children, ...props }: TableTitlebarProps) {
+export function TableTitlebar({
+    tableApi,
+    title,
+    color,
+    fixed,
+    expanded,
+    buttons,
+    hideSearch,
+    hideSettings,
+    children,
+    ...props
+}: TableTitlebarProps) {
+    const { t } = useTranslation();
     const [showSettings, setShowSettings] = useState(false);
-    const [globalFilter, setGlobalFilter] = useState("");
 
     return (
         <>
@@ -25,74 +39,127 @@ export function TableTitlebar({ tableRef, title, color, fixed, expanded, buttons
                 size="md"
                 fixed={fixed}
                 expanded={expanded}
-                buttons={
+                controls={
                     <>
                         {buttons}
 
-                        <InputGroup className="mx-1" style={{ width: 200, height: "auto", minHeight: "auto" }}>
+                        {!hideSearch && (
                             <input
                                 className="form-control py-1 "
-                                value={globalFilter || ""}
-                                onChange={(e) => setGlobalFilter(e.target.value)}
-                                placeholder="Search..."
+                                value={tableApi.state.globalFilter || ""}
+                                onChange={(e: any) => tableApi.setGlobalFilter(e.target.value)}
+                                style={{ width: 150 }}
+                                placeholder={t("search...")}
                             />
+                        )}
 
-                            <bd.Button
-                                variant="flat"
-                                size="md"
-                                color="default"
-                                onClick={(e) => {}}
-                                style={{ height: "auto" }}
-                                className="py-0 px-2 border"
-                            >
-                                <icons.Search />
+                        {!hideSettings && (
+                            <bd.Button variant="icon" color={color} size="md" edge="end" onClick={() => setShowSettings(true)}>
+                                <icons.Settings />
                             </bd.Button>
-                        </InputGroup>
-
-                        <bd.Button variant="icon" color={color} size="md" edge="end" onClick={() => setShowSettings(true)}>
-                            <icons.Settings />
-                        </bd.Button>
+                        )}
                     </>
                 }
             >
                 {children}
             </bd.Panel>
-            <SettingsDialog show={showSettings} setShow={setShowSettings} tableRef={tableRef} />
+
+            <SettingsDialog show={showSettings} setShow={setShowSettings} tableApi={tableApi} />
         </>
     );
 }
 
-export function GlobalFilter({ filter, setFilter, ...props }: any) {
-    return <input type="text" value={filter || ""} onChange={(e) => setFilter(e.target.value)} {...props} />;
-}
+function SettingsDialog({ show, setShow, tableApi }: any) {
+    const { t } = useTranslation();
+    const columns = tableApi.columns.filter((x: any) => !!x.accessor);
 
-function SettingsDialog({ show, setShow, tableRef }: any) {
     return (
         <Modal show={show} fullscreen="md-down" onHide={() => setShow(false)}>
             <div className="shadow-10">
                 <Modal.Header closeButton>
-                    <Modal.Title>View Settings</Modal.Title>
+                    <Modal.Title>{t("table-settings")}</Modal.Title>
                 </Modal.Header>
-                <Modal.Body className="p-0 shadow-3">
-                    <TabContainer defaultActiveKey="b">
-                        <bd.Card>
-                            <bd.AppBar color="default">
-                                <div>
-                                    <bd.TabStrip>
-                                        <bd.TabStripItem eventKey="columns">Columns</bd.TabStripItem>
-                                        <bd.TabStripItem eventKey="filters">Filters</bd.TabStripItem>
-                                        <bd.TabStripItem eventKey="groups">Groups</bd.TabStripItem>
-                                    </bd.TabStrip>
-                                </div>
-                            </bd.AppBar>
-                            <bd.CardBody>
-                                <TabContent>
-                                    <TabPane eventKey="columns">Columns</TabPane>
-                                    <TabPane eventKey="filters">Filters</TabPane>
-                                    <TabPane eventKey="groups">Groups</TabPane>
-                                </TabContent>
-                            </bd.CardBody>
-                        </bd.Card>
+                <Modal.Body className="p-0">
+                    <TabContainer defaultActiveKey="columns">
+                        <div className="border-bottom">
+                            <div>
+                                <bd.TabStrip>
+                                    <bd.TabStripItem eventKey="columns">Columns</bd.TabStripItem>
+                                    <bd.TabStripItem eventKey="groups">Groups</bd.TabStripItem>
+                                </bd.TabStrip>
+                            </div>
+                        </div>
+
+                        <div>
+                            <TabContent>
+                                <TabPane eventKey="columns" className="px-2">
+                                    <div className="text-center pt-2">
+                                        <bd.Button
+                                            variant="text"
+                                            color="primary"
+                                            onClick={() => columns.forEach((x: any) => x.toggleHidden(false))}
+                                        >
+                                            <icons.DoneAll />
+                                            {t("check-all")}
+                                        </bd.Button>
+                                        <bd.Button
+                                            variant="text"
+                                            color="primary"
+                                            onClick={() => columns.forEach((x: any) => x.toggleHidden(true))}
+                                        >
+                                            <icons.CheckBoxOutlineBlank />
+                                            {t("uncheck-all")}
+                                        </bd.Button>
+                                    </div>
+
+                                    <bd.List dense variant="menu" className="border-0 m-0">
+                                        {columns.map((x: any) => (
+                                            <bd.ListItem
+                                                key={x.id}
+                                                primary={x.Header}
+                                                controls={<bd.Toggle color="primary" model={x.isVisible} />}
+                                                onClick={() => x.toggleHidden()}
+                                            />
+                                        ))}
+                                    </bd.List>
+                                </TabPane>
+
+                                <TabPane eventKey="groups" className="px-2">
+                                    <div className="row gx-1">
+                                        <div className="col-6">
+                                            <bd.List dense variant="menu" className="border-0 m-0">
+                                                <bd.ListItem variant="text" primary={t("all-columns")} className="fw-bold" />
+                                                {columns.map((x: any) => (
+                                                    <bd.ListItem
+                                                        variant={x.canGroupBy && !x.isGrouped ? "menu" : "text"}
+                                                        key={x.id}
+                                                        icon={<icons.Functions />}
+                                                        primary={x.Header}
+                                                        style={!x.canGroupBy || x.isGrouped ? { opacity: 0.5 } : {}}
+                                                        onClick={() => (x.canGroupBy && !x.isGrouped ? tableApi.toggleGroupBy(x.id) : null)}
+                                                    />
+                                                ))}
+                                            </bd.List>
+                                        </div>
+                                        <div className="col-6">
+                                            <bd.List dense variant="menu" className="border-0 m-0">
+                                                <bd.ListItem variant="text" primary={t("selected-columns")} className="fw-bold" />
+                                                {columns
+                                                    .filter((x: any) => x.isGrouped)
+                                                    .map((x: any) => (
+                                                        <bd.ListItem
+                                                            key={x.id}
+                                                            icon={<icons.Delete />}
+                                                            primary={x.Header}
+                                                            onClick={() => tableApi.toggleGroupBy(x.id)}
+                                                        />
+                                                    ))}
+                                            </bd.List>
+                                        </div>
+                                    </div>
+                                </TabPane>
+                            </TabContent>
+                        </div>
                     </TabContainer>
                 </Modal.Body>
             </div>

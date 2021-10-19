@@ -2,18 +2,20 @@
     display: flex;
 }
 
-$font-family-sans-serif: iranyekan, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif,
-    "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+.dropdown-item.disabled {
+    opacity: 0.5;
+}
 
-@import "node_modules/react-basic-design/dist/bootstrap.scss";
 @import "node_modules/react-basic-design/dist/index.scss";
 
 @import "./components/basic-form/basic-form.scss";
-@import "./components/scss/input.scss";
-@import "./components/scss/table.scss";
-@import "./components/scss/utils.scss";
-@import "./components/basic/table/basic-table.scss";
+//@import "./components/scss/input.scss";
+//@import "./components/scss/table.scss";
+//@import "./components/basic/table/basic-table.scss";
+@import "./components/table/table.scss";
+@import "./components/table/table-div.scss";
 @import "./components/tilemenu/tilemenu.scss";
+@import "./components/scss/utils.scss";
 
 html,
 body,

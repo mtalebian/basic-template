@@ -15,8 +15,13 @@ namespace Accounts.Core
         public int SortOrder { get; set; }
         public DateTime CreatedAt { get; set; }
 
+        [IgnoreMap]
         public virtual MenuFolder Parent { get; set; }
+
+        [IgnoreMap]
         public virtual Application Application { get; set; }
+
+        [IgnoreMap]
         public virtual Project Project { get; set; }
     }
 }

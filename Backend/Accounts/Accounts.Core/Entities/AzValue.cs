@@ -1,4 +1,6 @@
-﻿namespace Accounts.Core
+﻿using System;
+
+namespace Accounts.Core
 {
     public class AzValue
     {
@@ -9,7 +11,10 @@
         public string FieldId { get; set; }
         public string Value { get; set; }
 
+        [IgnoreMap]
         public virtual Authorization Authorization { get; set; }
+
+        [IgnoreMap]
         public virtual AzObjectField AzObjectField { get; set; }
     }
 }

@@ -1,41 +1,56 @@
-import React, { useRef, useState } from "react";
+import React, { useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Formik } from "formik";
 import * as yup from "yup";
-
 import * as bd from "react-basic-design";
 import * as icons from "../../../assets/icons";
-
 import { messages } from "../../../components/messages";
-import classNames from "classnames";
 import { tableDesignerApi } from "../../../api/table-designer-api";
 import { notify } from "../../../components/basic/notify";
-import { Table, TableTitlebar } from "../../../components/table";
+import { TableTitlebar } from "../../../components/table";
 import { BasicInput } from "../../../components/basic-form/basic-input";
+import {
+    useTable,
+    useGlobalFilter,
+    usePagination,
+    useSortBy,
+    useFilters,
+    useGroupBy,
+    useExpanded,
+    useRowSelect,
+    //useBlockLayout,
+    useFlexLayout,
+    //useRowState,
+    //useResizeColumns,
+} from "react-table";
+import { RenderTableDiv } from "../../../components/table/render-table-div";
+import { DefaultEditor } from "../../../components/table/editors";
+import { BasicTextArea } from "../../../components/basic-form/basic-textarea";
+import { api } from "../../../api/api";
 
 //
 export function TableDesignerEditTable({ table, group, onChanged, onGoBack }) {
     const { t } = useTranslation();
-    const [columns] = useState(table.columns);
-    const [loading, setLoading] = useState(false);
+    const [data, setData] = useState(table.columns);
+    const [saving, setSaving] = useState(false);
     const [deleting, setDeleting] = useState(false);
     const insertMode = !table.name;
-    const tableRef = React.useRef();
     const formRef = useRef();
 
     const onSaveClick = () => {
         var values = formRef.current.values;
-        setLoading(true);
+        setSaving(true);
+        var dto = { ...values, dataColumns: data };
         tableDesignerApi
-            .saveTable(group.id, values, insertMode)
+            .saveTable(group.id, dto, insertMode)
             .then((x) => {
-                setLoading(false);
+                setSaving(false);
                 notify.info(messages.ChangesAreSaved);
                 table.data = x;
                 onChanged(x);
             })
             .catch((ex) => {
-                setLoading(false);
+                setSaving(false);
                 notify.error(ex);
             });
     };
@@ -45,71 +60,170 @@ export function TableDesignerEditTable({ table, group, onChanged, onGoBack }) {
         tableDesignerApi
             .deleteTable(table.name)
             .then((x) => {
-                setLoading(false);
+                setSaving(false);
                 notify.info(messages.RowIsDeleted);
                 onChanged(null);
             })
             .catch((ex) => {
-                setLoading(false);
+                setSaving(false);
                 notify.error(ex);
             });
     };
 
-    const table_columns = React.useMemo(
-        () => [
-            { Header: "Id", accessor: "id" },
-            { Header: "Name", accessor: "name" },
-            { Header: "Expression", accessor: "expression" },
-            // { Header: "Alias", accessor: "alias" },
-            { Header: "Title", accessor: "tile" },
-            { Header: "IsPK", accessor: "isPk" },
-            { Header: "IsRequired", accessor: "isRequired" },
-            { Header: "DefaultValue", accessor: "defaultValue" },
-            { Header: "ToggleOnClick", accessor: "toggleOnClick" },
-            { Header: "Editor", accessor: "editor" },
-            { Header: "ValidValues", accessor: "validValues" },
-            { Header: "CellStyle", accessor: "cellStyle" },
-            { Header: "CellClassName", accessor: "cellClassName" },
-            { Header: "HiddenInTable", accessor: "hiddenInTable" },
-            { Header: "HiddenInEditor", accessor: "hiddenInEditor" },
-            { Header: "Category", accessor: "category" },
-            { Header: "Dir", accessor: "dir" },
-        ],
-        []
+    const defaultPageSize = 10;
+    const skipReset = true;
+
+    const updateData = (rowIndex, columnId, value) => {
+        //setSkipPageReset(true);
+        const new_row = { ...data[rowIndex], [columnId]: value };
+        setData(data.map((row, index) => (index === rowIndex ? new_row : row)));
+    };
+
+    const tableApi = useTable(
+        {
+            initialState: { pageSize: defaultPageSize },
+            defaultColumn: {
+                Cell: DefaultEditor,
+                minWidth: 30,
+                disableGroupBy: true,
+                //maxWidth: 200,
+            },
+            columns: useMemo(
+                () => [
+                    {
+                        Header: "ID",
+                        accessor: "id",
+                        readOnly: true,
+                        width: 50,
+
+                        getDisplayValue: (value) => (value === 1 ? "one" : value),
+                    },
+                    { Header: "NAME", accessor: "name", display: "text" },
+                    {
+                        Header: "TITLE",
+                        accessor: "title",
+                        readonly: (r, c) => r.values.isRequired,
+                    },
+                    { Header: "IsPK", accessor: "isPK", width: 50, display: "check" },
+                    { Header: "Null", accessor: "isNull", display: "check", width: 80 },
+                    {
+                        Header: "Type",
+                        id: "type",
+                        readOnly: true,
+                        width: 100,
+                        Cell: ({ row }) => {
+                            var r = row.original;
+                            return !r.dataType ? "" : `${r.dataType}(${r.maxLen})`;
+                        },
+                    },
+                    { Header: "DefaultValue", accessor: "defaultValue", width: 100 },
+
+                    { Header: "List", accessor: "showInList", display: "check", width: 50 },
+                    { Header: "Editor", accessor: "showInEditor", display: "check", width: 50 },
+                    {
+                        Header: "Display",
+                        accessor: "display",
+                        width: 100,
+                        display: "select",
+                        validValues: ", text, email, url, number, amount, textarea, check, switch, select, shamsi",
+                    },
+                    { Header: "ValidValues", accessor: "validValues", display: "textarea" },
+
+                    //{ Header: "Expression", accessor: "expression" },
+                    // { Header: "Alias", accessor: "alias" },
+                    //{ Header: "ToggleOnClick", accessor: "toggleOnClick" },
+                    //{ Header: "CellStyle", accessor: "cellStyle" },
+                    //{ Header: "CellClassName", accessor: "cellClassName" },
+                    //{ Header: "Category", accessor: "category" },
+
+                    {
+                        Header: "Dir",
+                        accessor: "dir",
+                        display: "select",
+                        validValues: ",rtl,ltr",
+                        width: 70,
+                        disableGroupBy: false,
+                    },
+                ],
+                []
+            ),
+            data: useMemo(() => data, [data]),
+            //filterTypes: useMemo(() => reactTable.filterTypes, []),
+            updateMyData: updateData,
+            autoResetPage: !skipReset,
+            autoResetFilters: !skipReset,
+            autoResetSortBy: !skipReset,
+            autoResetSelectedRows: !skipReset,
+            autoResetGlobalFilter: !skipReset,
+            disableMultiSort: false,
+        },
+        useGlobalFilter,
+        useFilters,
+        useGroupBy,
+        useSortBy,
+        useExpanded,
+        usePagination,
+        useRowSelect,
+        //useBlockLayout,
+        useFlexLayout
+        //useResizeColumns
+        //(hooks) => reactTable.addSelectionColumns(hooks)
     );
+
+    const moreMenu = (
+        <bd.Menu>
+            <bd.MenuItem disabled={!table.id || saving || deleting || table.columns.length > 0} onClick={onDeleteClick}>
+                {deleting && <div className="m-e-2 spinner-border spinner-border-sm"></div>}
+                <span>{t("delete")}</span>
+            </bd.MenuItem>
+        </bd.Menu>
+    );
+
+    const newRow = () => ({ id: 0 });
 
     return (
         <>
             <div className="border-bottom bg-gray-5 mb-3">
-                <bd.Toolbar className="container">
-                    <bd.Button variant="icon" onClick={onGoBack} size="md" edge="start" className="m-e-2">
-                        <icons.ArrowBackIos className="rtl-rotate-180" />
-                    </bd.Button>
+                <div className="container">
+                    <bd.Toolbar>
+                        <bd.Button variant="icon" onClick={onGoBack} size="md" edge="start" className="m-e-2">
+                            <icons.ArrowBackIos className="rtl-rotate-180" />
+                        </bd.Button>
 
-                    <h5>
-                        {t("edit-table")}: <b className="text-primary-text">{table.name}</b>
-                    </h5>
+                        <h5>{t("edit-table")}</h5>
 
-                    <div className="flex-grow-1" />
+                        <div className="flex-grow-1" />
 
-                    <bd.Button color="primary" type="submit" disabled={loading || deleting} onClick={onSaveClick}>
-                        {loading && <div className="m-e-2 spinner-border spinner-border-sm"></div>}
-                        <span>{t("save-table")}</span>
-                    </bd.Button>
+                        <bd.Button color="primary" disabled={saving || deleting} onClick={onSaveClick}>
+                            {saving && <div className="m-e-2 spinner-border spinner-border-sm"></div>}
+                            <span>{t("save-changes")}</span>
+                        </bd.Button>
 
-                    <bd.Button
-                        className={classNames("mx-2", {
-                            "d-none": !group.id,
-                        })}
-                        type="button"
-                        variant="outline"
-                        disabled={loading || deleting || table.columns.length > 0}
-                        onClick={onDeleteClick}
-                    >
-                        {deleting && <div className="m-e-2 spinner-border spinner-border-sm"></div>}
-                        <span>{t("delete")}</span>
-                    </bd.Button>
-                </bd.Toolbar>
+                        <bd.Button variant="icon" menu={moreMenu} edge="end" className="m-s-1">
+                            <icons.MoreVert />
+                        </bd.Button>
+                    </bd.Toolbar>
+
+                    <div className="d-flex">
+                        <div className="p-3 rounded-circle bg-shade-10 mx-4 mb-3">
+                            <icons.TableView className="size-xl" />
+                        </div>
+                        <div>
+                            <p className="my-2 text-primary-text">{table.name}</p>
+                            <p className="m-0 text-secondary-text">
+                                {t("created-at")}: {!table.createAt ? "now" : table.createAt}
+                            </p>
+                        </div>
+                    </div>
+                    <bd.TabStrip indicatorColor="primary" textColor="primary" className="d-none">
+                        <bd.TabStripItem eventKey="t1" href="#info">
+                            Table Info{" "}
+                        </bd.TabStripItem>
+                        <bd.TabStripItem eventKey="t2" href="#columns">
+                            Columns
+                        </bd.TabStripItem>
+                    </bd.TabStrip>
+                </div>
             </div>
 
             <div className="container" style={{ marginBottom: 70 }}>
@@ -123,134 +237,98 @@ export function TableDesignerEditTable({ table, group, onChanged, onGoBack }) {
                         innerRef={formRef}
                     >
                         <form>
-                            <BasicInput name="name" label={t("table-designer-table-name")} labelSize="4" autoComplete="off" autoFocus />
-                            <BasicInput name="title" label={t("table-designer-table-title")} labelSize="4" autoComplete="off" />
-                            <BasicInput name="singularTitle" label={t("table-designer-singular")} labelSize="4" autoComplete="off" />
-                            {/* <FinalCheck inline name="sortable" label="Sortable" labelSize="3" />
-                        <FinalCheck inline name="filterable" label="Filterable" labelSize="3" /> */}
+                            {insertMode && <BasicInput name="name" label={t("table-designer-table-name")} labelSize="4" autoFocus />}
+                            <BasicInput name="title" label={t("table-designer-table-title")} labelSize="4" />
+                            <BasicInput name="singularTitle" label={t("table-designer-singular")} labelSize="4" />
+                            <BasicTextArea name="description" label={t("description")} labelSize="4" />
                         </form>
                     </Formik>
-
-                    {/* <Form
-                        initialValues={table.data}
-                        onSubmit={onSubmit}
-                        render={({ handleSubmit, submitting, invalid }) => (
-                            <form onSubmit={handleSubmit} spellCheck="false">
-                                <FinalField name="name" label="Name:" type="text" autoComplete="off" autoFocus labelSize="3" />
-
-                                <FinalField name="title" label="Title:" type="text" autoComplete="off" labelSize="3" />
-
-                                <FinalField name="singularTitle" label="Singular Title:" type="text" autoComplete="off" labelSize="3" />
-                                <FinalCheck inline name="sortable" label="Sortable" labelSize="3" />
-                                <FinalCheck inline name="filterable" label="Filterable" labelSize="3" />
-
-                                <div className="row">
-                                    <div className="col-md-3"></div>
-                                    <div className="col-md-9">
-                                        <div></div>
-                                    </div>
-                                </div>
-
-                                <bd.AppBar className="bg-default" position="bottom">
-                                    <bd.Toolbar>
-                                        <div className="flex-grow-1"></div>
-                                        <bd.Button color="primary" type="submit" disabled={loading || deleting || invalid}>
-                                            {loading && <div className="m-e-2 spinner-border spinner-border-sm"></div>}
-                                            <span>Save Table</span>
-                                        </bd.Button>
-
-                                        <bd.Button
-                                            className={classNames("mx-2", {
-                                                "d-none": !group.id,
-                                            })}
-                                            type="button"
-                                            variant="outline"
-                                            disabled={loading || deleting || table.columns.length > 0}
-                                            onClick={() => setShowDeletingGroup(true)}
-                                        >
-                                            {deleting && <div className="m-e-2 spinner-border spinner-border-sm"></div>}
-                                            <span>DELETE</span>
-                                        </bd.Button>
-                                    </bd.Toolbar>
-                                </bd.AppBar>
-
-                                <BasicModal
-                                    show={showDeletingGroup}
-                                    setShow={setShowDeletingGroup}
-                                    renderBody={({ hide }) => (
-                                        <>
-                                            Your going to delete the table
-                                            <br />
-                                            Are you sure?
-                                            <div className="pt-2 text-end">
-                                                <bd.Button variant="text" type="button" color="primary" onClick={hide} className="m-e-2">
-                                                    Cancel
-                                                </bd.Button>
-
-                                                <bd.Button type="button" color="secondary" disabled={deleting} onClick={onDeleteClick}>
-                                                    {deleting && <div className="m-e-2 spinner-border spinner-border-sm"></div>}
-                                                    <span>DELETE</span>
-                                                </bd.Button>
-                                            </div>
-                                        </>
-                                    )}
-                                />
-                            </form>
-                        )}
-                    /> */}
                 </div>
 
                 <TableTitlebar
-                    title="My Table"
-                    tableRef={tableRef}
+                    tableApi={tableApi}
+                    hideSearch
+                    hideSettings
+                    title="Columns"
                     fixed
                     buttons={
                         <>
-                            <bd.Button variant="icon" size="md">
+                            <bd.Button
+                                variant="icon"
+                                size="md"
+                                onClick={(e) => {
+                                    tableDesignerApi
+                                        .schemaColumn(table.name)
+                                        .then((schemaColumns) => {
+                                            let d = [...data];
+                                            schemaColumns.forEach((x) => {
+                                                const f = d.find((z) => z.name === x.name);
+                                                if (!f) d = [...d, x];
+                                                else {
+                                                    f.dataType = x.dataType;
+                                                    f.maxLen = x.maxLen;
+                                                    f.isPK = x.isPK;
+                                                    f.isNull = x.isNull;
+                                                    f.defaultValue = x.defaultValue;
+                                                    f.ordinalPosition = x.ordinalPosition;
+                                                }
+                                            });
+                                            setData(d);
+                                        })
+                                        .catch((ex) => notify.error(ex));
+                                }}
+                            >
+                                <icons.Sync />
+                            </bd.Button>
+
+                            <bd.Button
+                                variant="icon"
+                                size="md"
+                                onClick={(e) => {
+                                    var r = newRow();
+                                    setData([...data, r]);
+                                    tableApi.state.selectedRowIds = { [data.length]: true };
+                                }}
+                            >
                                 <icons.Add />
                             </bd.Button>
-                            <bd.Button variant="icon" size="md">
+
+                            <bd.Button
+                                variant="icon"
+                                size="md"
+                                disabled={!tableApi.selectedFlatRows.length}
+                                onClick={(e) => {
+                                    const updatedRows = data.filter((x, index) => !tableApi.state.selectedRowIds[index]);
+                                    setData(updatedRows);
+                                    tableApi.state.selectedRowIds = {};
+                                }}
+                            >
                                 <icons.Delete />
                             </bd.Button>
                         </>
                     }
                 />
 
-                <Table
-                    //className="w-100"
-                    columns={table_columns}
-                    //defaultColumn={defaultColumn}
-                    data={columns}
-                    //updateData={updateMyData}
-                    //skipReset={skipResetRef.current}
-                    //enablePaging={enablePaging}
-                    //enableGrouping={enableGrouping}
-                    //enableSorting={enableSorting}
-                    //showTableInfo={showTableInfo}
-                    //showSummary={showSummary}
-                    //showColumnFilter={showColumnFilter}
-                    //hideColumns={}
-                    //showFooter={showFooter}
-                    //showPageSize={true}
-                    //border=""
-                    editable={true}
-                    //clickAction="toggle"
-                    //hideCheckbox={hideCheckbox}
-                    //selectionMode="single"
-                    //messages={messages}
-                    tableRef={tableRef}
-                    //tableClassName="w-100"
-                    //
-                    title="Columns"
-                    expandableTitlebar={true}
-                    showRowsCount={true}
-                    titlebarSize="md"
-                    titlebarColor="secondary"
-                    //
-                    defaultPageSize={5}
-                    onStateChanged={(state) => {
-                        console.log(state);
-                    }}
+                <RenderTableDiv
+                    tableApi={tableApi}
+                    //resizable
+                    //multiSelect
+                    singleSelect
+                    hideCheckbox
+                    //hasSummary
+                    showTableInfo
+                    //showPageSize
+                    //enablePaging
+                    //enableGrouping
+                    enableSorting
+                    editable
+                    clickAction="select"
+                    className="border0 nano-scroll"
+                    //style={{ minHeight: 400 }}
+                    hover
+                    //striped
+                    //hasWhitespace
+                    //stickyFooter
                 />
             </div>
         </>

@@ -20,11 +20,6 @@ export function TableDesignerEditGroup({ group, onChanged, onGoBack }) {
     const formRef = useRef();
 
     const onSaveClick = (e) => {
-        if (!formRef.current) return false;
-        if (!formRef.current.isValid) {
-            console.log(formRef.current);
-            return false;
-        }
         var values = formRef.current.values;
 
         setLoading(true);
@@ -111,7 +106,9 @@ export function TableDesignerEditGroup({ group, onChanged, onGoBack }) {
             <div className="container">
                 <Formik
                     initialValues={group}
-                    validationSchema={yup.object({ title: yup.string().min(3, t("msg-too-short")).max(100, t("msg-too-long")).required("Required") })}
+                    validationSchema={yup.object({
+                        title: yup.string().min(3, t("msg-too-short")).max(100, t("msg-too-long")).required("Required"),
+                    })}
                     onSubmit={onSaveClick}
                     innerRef={formRef}
                 >

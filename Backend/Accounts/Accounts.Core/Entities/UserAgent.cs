@@ -18,6 +18,7 @@ namespace Accounts.Core
         public string Model { get; set; }
         public DateTime CreatedAt { get; set; }
 
+        [IgnoreMap]
         public virtual ICollection<UserSession> UserSessions { get; set; }
 
 

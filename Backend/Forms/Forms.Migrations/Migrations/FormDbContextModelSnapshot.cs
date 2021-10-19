@@ -21,16 +21,14 @@ namespace Forms.Migrations.Migrations
             modelBuilder.Entity("Forms.Core.Column", b =>
                 {
                     b.Property<string>("ProjectId")
-                        .HasColumnType("nvarchar(20)");
+                        .HasMaxLength(20)
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(20)");
 
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("Alias")
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("Category")
                         .HasColumnType("nvarchar(max)");
@@ -38,31 +36,26 @@ namespace Forms.Migrations.Migrations
                     b.Property<string>("CellClassName")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("CellStyle")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("ColumnOrder")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasDefaultValue(0);
 
                     b.Property<string>("DefaultValue")
+                        .HasMaxLength(2000)
+                        .IsUnicode(true)
+                        .HasColumnType("nvarchar(2000)");
+
+                    b.Property<string>("Direction")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Description")
+                    b.Property<string>("Display")
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Dir")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Editor")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Expression")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("HiddenInEditor")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("HiddenInTable")
-                        .HasColumnType("bit");
 
                     b.Property<bool>("IsPK")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsReadOnly")
                         .HasColumnType("bit");
 
                     b.Property<bool>("IsRequired")
@@ -71,16 +64,24 @@ namespace Forms.Migrations.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<bool>("ShowInEditor")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(true);
+
+                    b.Property<bool>("ShowInList")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(true);
+
                     b.Property<string>("TableName")
-                        .HasColumnType("nvarchar(50)");
+                        .HasColumnType("varchar(50)");
 
                     b.Property<string>("Title")
                         .IsRequired()
                         .HasMaxLength(150)
+                        .IsUnicode(true)
                         .HasColumnType("nvarchar(150)");
-
-                    b.Property<bool>("ToggleOnClick")
-                        .HasColumnType("bit");
 
                     b.Property<string>("ValidValues")
                         .HasColumnType("nvarchar(max)");
@@ -90,28 +91,14 @@ namespace Forms.Migrations.Migrations
                     b.HasIndex("ProjectId", "TableName");
 
                     b.ToTable("Columns", "tmp");
-
-                    b.HasData(
-                        new
-                        {
-                            ProjectId = "project1",
-                            Id = 1,
-                            HiddenInEditor = false,
-                            HiddenInTable = false,
-                            IsPK = true,
-                            IsRequired = true,
-                            Name = "Id",
-                            TableName = "tmp.Projects",
-                            Title = "Id",
-                            ToggleOnClick = true
-                        });
                 });
 
             modelBuilder.Entity("Forms.Core.Group", b =>
                 {
                     b.Property<string>("ProjectId")
                         .HasMaxLength(20)
-                        .HasColumnType("nvarchar(20)");
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(20)");
 
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -121,6 +108,7 @@ namespace Forms.Migrations.Migrations
                     b.Property<string>("Title")
                         .IsRequired()
                         .HasMaxLength(150)
+                        .IsUnicode(true)
                         .HasColumnType("nvarchar(150)");
 
                     b.HasKey("ProjectId", "Id");
@@ -139,17 +127,22 @@ namespace Forms.Migrations.Migrations
             modelBuilder.Entity("Forms.Core.Table", b =>
                 {
                     b.Property<string>("ProjectId")
-                        .HasColumnType("nvarchar(20)");
+                        .HasMaxLength(20)
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(20)");
 
                     b.Property<string>("Name")
                         .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(50)");
 
                     b.Property<string>("DeleteSql")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(2000)
+                        .IsUnicode(true)
+                        .HasColumnType("nvarchar(2000)");
 
                     b.Property<bool>("Filterable")
                         .HasColumnType("bit");
@@ -172,6 +165,7 @@ namespace Forms.Migrations.Migrations
                     b.Property<string>("Title")
                         .IsRequired()
                         .HasMaxLength(150)
+                        .IsUnicode(true)
                         .HasColumnType("nvarchar(150)");
 
                     b.Property<string>("UpdateSql")
@@ -194,6 +188,29 @@ namespace Forms.Migrations.Migrations
                             Sortable = true,
                             Title = "Projects"
                         });
+                });
+
+            modelBuilder.Entity("Forms.Core.Text", b =>
+                {
+                    b.Property<string>("LanguageCode")
+                        .HasMaxLength(20)
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(20)");
+
+                    b.Property<string>("Name")
+                        .HasMaxLength(100)
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(100)");
+
+                    b.Property<string>("Value")
+                        .IsRequired()
+                        .HasMaxLength(1000)
+                        .IsUnicode(true)
+                        .HasColumnType("nvarchar(1000)");
+
+                    b.HasKey("LanguageCode", "Name");
+
+                    b.ToTable(null, "dbo");
                 });
 
             modelBuilder.Entity("Forms.Core.Column", b =>

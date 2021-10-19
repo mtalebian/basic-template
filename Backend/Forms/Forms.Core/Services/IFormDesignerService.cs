@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Data;
 
 namespace Forms.Core
 {
@@ -12,10 +13,11 @@ namespace Forms.Core
 
         IList<Table> GetTables(string projectId, int groupId);
         Table GetTable(string projectId, string tableName);
-        void Insert(Table Table);
-        void Update(ref Table Table);
+        void Insert(Table Table, IList<Column> columns);
+        void Update(ref Table item, IList<Column> columns);
         void DeleteTable(string projectId, string tableName);
 
+        DataTable GetSchemaColumn(string tableName);
         IList<Column> GetColumns(string projectId, string tableName);
         void Insert(Column column);
         void Update(ref Column column);

@@ -3,7 +3,7 @@ import * as bd from "react-basic-design";
 import { useField } from "formik";
 import React from "react";
 
-export const BasicInput = ({ id, label, labelSize, type, className, children, autoComplete, maxWidth, ...props }) => {
+export const BasicTextArea = ({ id, label, labelSize, type, className, children, autoComplete, maxWidth, ...props }) => {
     const [field, meta] = useField({ ...props, type });
     if (!field.value) field.value = "";
     var cnControl = classNames("form-control", className, {
@@ -22,8 +22,8 @@ export const BasicInput = ({ id, label, labelSize, type, className, children, au
 
     let field_comp = (
         <>
-            <input id={id} type={type} className={cnControl} {...field} autoComplete={autoComplete} {...props} style={style} />
-            {children}
+            <textarea id={id} type={type} className={cnControl} {...field} autoComplete={autoComplete} {...props} style={style}></textarea>
+
             {meta.touched && meta.error ? <div className={cnErorr}>{meta.error}</div> : null}
         </>
     );

@@ -14,6 +14,7 @@ namespace Accounts.Core
         public string CreatedBy { get; set; }
         public DateTime CreatedAt { get; set; }
 
+        [IgnoreMap]
         public virtual ICollection<UserCompositeRole> UserCompositeRoles { get; set; }
     }
 }

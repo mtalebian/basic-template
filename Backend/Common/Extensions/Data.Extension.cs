@@ -500,24 +500,29 @@ namespace System
         {
             foreach (var srcProp in src.GetType().GetProperties())
             {
-                var value = srcProp.GetValue(src);
-                var pi = properties.Where(x => x.Name == srcProp.Name).FirstOrDefault();
-                try
+                var aProp = srcProp.GetCustomAttribute(typeof(IgnoreMapAttribute));
+                var aType = srcProp.PropertyType.GetCustomAttribute(typeof(IgnoreMapAttribute));
+                if (aProp == null && aType == null)
                 {
-                    if (pi?.SetMethod != null)
+                    var value = srcProp.GetValue(src);
+                    var pi = properties.Where(x => x.Name == srcProp.Name).FirstOrDefault();
+                    try
                     {
-                        if (srcProp.PropertyType != pi.PropertyType)
-                            throw new Exception($"Invalid type {srcProp.PropertyType.Name} => {pi.PropertyType.Name}");
-                        if (value == null)
-                            pi.SetValue(dest, null);
-                        else
-                            pi.SetValue(dest, value);
+                        if (pi?.SetMethod != null)
+                        {
+                            if (srcProp.PropertyType != pi.PropertyType)
+                                throw new Exception($"Invalid type {srcProp.PropertyType.Name} => {pi.PropertyType.Name}");
+                            if (value == null)
+                                pi.SetValue(dest, null);
+                            else
+                                pi.SetValue(dest, value);
+                        }
                     }
-                }
-                catch (Exception ex)
-                {
-                    var destPropName = pi == null ? "?" : pi.Name;
-                    throw new Exception($"Error in Mapping {src?.GetType().Name}.{srcProp?.Name} => {dest?.GetType().Name}.{destPropName}: {ex.Message}");
+                    catch (Exception ex)
+                    {
+                        var destPropName = pi == null ? "?" : pi.Name;
+                        throw new Exception($"Error in Mapping {src?.GetType().Name}.{srcProp?.Name} => {dest?.GetType().Name}.{destPropName}: {ex.Message}");
+                    }
                 }
             }
         }

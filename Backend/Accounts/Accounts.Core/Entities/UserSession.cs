@@ -19,7 +19,10 @@ namespace Accounts.Core
         public bool IsDeleted { get; set; }
         public DateTime CreatedAt { get; set; }
 
+        [IgnoreMap]
         public virtual UserAgent UserAgent { get; set; }
+
+        [IgnoreMap]
         public virtual User User { get; set; }
 
 

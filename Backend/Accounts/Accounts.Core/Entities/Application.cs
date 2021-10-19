@@ -9,7 +9,10 @@ namespace Accounts.Core
 
         public string Title { get; set; }
 
+        [IgnoreMap]
         public virtual ICollection<Menu> Menus { get; set; }
+
+        [IgnoreMap]
         public virtual ICollection<Role> Roles { get; set; }
     }
 }
