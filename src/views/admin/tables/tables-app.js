@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
 import * as bd from "react-basic-design";
-import * as icons from "../../../assets/icons";
+//import * as icons from "../../../assets/icons";
 import { useTranslation } from "react-i18next";
 import { useAccount } from "../../../app/account-context";
-import { tableDesignerApi } from "../../../api/table-designer-api";
 import { Tile, Tiles } from "../../../components/tilemenu/tiles";
+import { tablesApi } from "../../../api/tables-api";
 
 export function TablesApp() {
     const account = useAccount();
@@ -13,7 +13,7 @@ export function TablesApp() {
 
     useEffect(() => {
         if (!groups && account.isConnected()) {
-            tableDesignerApi.getGroups().then((x) => setGroups(x));
+            tablesApi.getGroups().then((x) => setGroups(x));
         }
     }, [groups, account]);
 

@@ -71,7 +71,7 @@ namespace Forms.Controllers
         {
             var table = service.GetTable(projectId, tableName);
             var result = table.MapTo<TableDTO>();
-            result.DataColumns = service.GetColumns(table.ProjectId, table.Name).MapTo<ColumnDTO>().ToArray();
+            result.DataColumns = service.GetColumns(table.ProjectId, table.Name).MapTo<ColumnDTO>();
             return new Response<TableDTO>(result);
         }
 
@@ -89,7 +89,7 @@ namespace Forms.Controllers
             }
             service.SaveTable(ref tb, columns);
             var result = tb.MapTo<TableDTO>();
-            result.DataColumns = service.GetColumns(tb.ProjectId, tb.Name).MapTo<ColumnDTO>().ToArray();
+            result.DataColumns = service.GetColumns(tb.ProjectId, tb.Name).MapTo<ColumnDTO>();
             return new Response<TableDTO>(result);
         }
 

@@ -24,8 +24,8 @@ namespace Forms.Controllers
         }
 
 
-        [HttpPost("menu")]
-        public Response<GroupInfoDTO[]> Menu([FromBody] GetGroupsRequestDTO req)
+        [HttpPost("get-groups")]
+        public Response<GroupInfoDTO[]> getGroups([FromBody] GetGroupsRequestDTO req)
         {
             var groups = service.GetAllGroups(req.ProjectId);
             var result = new List<GroupInfoDTO>();
@@ -38,13 +38,18 @@ namespace Forms.Controllers
             return new Response<GroupInfoDTO[]>(result.ToArray());
         }
 
-        [HttpPost("get-table")]
-        public Response<TableDTO> GetTable(string projectId, string name)
+        [HttpPost("browse-table")]
+        public Response<BrowseTableDTO> BrowseTable(string projectId, string name, Dictionary<string, object[]> filters)
         {
             var table = service.GetTable(projectId, name);
-            var result = table.MapTo<TableDTO>();
-            result.DataColumns = table.Columns.MapTo<ColumnDTO>().ToArray();
-            return new Response<TableDTO>(result);
+            var columns = service.GetColumns(table.ProjectId, table.Name);
+            var data = service.ExecuteSelect(table, columns, filters);
+
+            var result = new BrowseTableDTO();
+            result.Schema = table.MapTo<TableDTO>();
+            result.Schema.DataColumns = columns.MapTo<ColumnDTO>();
+            result.Data = data;
+            return new Response<BrowseTableDTO>(result);
         }
 
         [HttpPost("exec-table-action")]
@@ -61,7 +66,7 @@ namespace Forms.Controllers
                     break;
 
                 case "delete":
-                    service.ExecuteDelte(action.TableName, action.Values);
+                    service.ExecuteDelete(action.TableName, action.Values);
                     break;
 
                 default: return new Response("Invalid action!");

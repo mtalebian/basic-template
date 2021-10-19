@@ -328,12 +328,12 @@ namespace System
             return tb.Rows[0].AsString(fieldName);
         }
 
-        public static List<Dictionary<string, object>> ToJSON(this DataTable dt)
+        public static IList<Dictionary<string, object>> ToJSON(this DataTable dt)
         {
             return ToJSON(dt, null);
         }
 
-        public static List<Dictionary<string, object>> ToJSON(this DataTable dt, string fields)
+        public static IList<Dictionary<string, object>> ToJSON(this DataTable dt, string fields)
         {
             var table = new List<Dictionary<string, object>>();
             foreach (DataRow dr in dt.Rows)

@@ -27,9 +27,80 @@ namespace Forms.Services
             return db.Tables.FirstOrDefault(x => x.ProjectId == projectId && x.Name == name);
         }
 
-        public Dictionary<string, object> ExecuteSelect(string tableName, Dictionary<string, object> values)
+        public IList<Column> GetColumns(string projectId, string tableName)
         {
+            return db.Columns.Where(x => x.ProjectId == projectId && x.TableName == tableName);
+        }
+
+        public IList<Dictionary<string, string>> ExecuteSelect(Table table, IList<Column> columns, Dictionary<string, object[]> filters)
+        {
+            var fields = columns.Select(x => x.Name).ToArray();
+            var where = new List<string>();
+            var sql = $"select {string.Join(",", fields)} from ${table.Name}";
+            db.GetDataTable(sql);
+            foreach (var filter in filters.Where(x => x.Value != null && x.Value.Length > 1))
+            {
+                var c = columns.FirstOrDefault(x => x.Name == filter.Key);
+                if (c != null && !string.IsNullOrEmpty(c.Filter))
+                {
+                    var rop = filter.Value[0] as string;
+                    var values = filter.Value.Skip(1).ToArray();
+                    switch (rop)
+                    {
+                        case "=":
+                        case "<>":
+                            where.Add("(" + string.Join(" OR ", values.Select(x => ToDbCondition(c, rop, x))) + ")");
+                            break;
+
+                        case "<":
+                        case "<=":
+                        case ">":
+                        case ">=":
+                            where.Add(string.Join(" OR ", ToDbCondition(c, rop, values[0])));
+                            break;
+
+                        case "in":
+                            where.Add(string.Join(" OR ", ToDbCondition(c, ">=", values[0])));
+                            where.Add(string.Join(" OR ", ToDbCondition(c, "<=", values[1])));
+                            break;
+
+                        case "!in":
+                            where.Add(string.Join(" OR ", ToDbCondition(c, "<=", values[0])));
+                            where.Add(string.Join(" OR ", ToDbCondition(c, ">=", values[1])));
+                            break;
+
+                        default:
+                            break;
+                    }
+                    if (rop == "=")
+                    {
+                        var vals = values.Select(x => ToDbCondition(c, rop, x));
+                        where.Add(string.Join(" OR ", vals));
+                    }
+                    if (rop == "<>")
+                    {
+                        var vals = values.Select(x => $"{c.Name} != '{x.ToString().Replace("'", "''")}'");
+                        where.Add(string.Join(" or ", vals));
+                    }
+
+                }
+            }
             throw new NotImplementedException();
+        }
+
+        private string ToDbCondition(Column c, string rop, object v)
+        {
+            if (v == null)
+            {
+                if (rop == "=") return $"{c.Name} is null";
+                if (rop == "<>") return $"{c.Name} is not null";
+            }
+            var s = $"{v}";
+            if (c.DataType == "varchar" || c.DataType == "nvarchar")
+            {
+                s = s.Replace("'", "''");
+            }
+            return $"{c.Name} {rop} '{s}";
         }
 
         public void ExecuteInsert(string tableName, Dictionary<string, object> values)
@@ -80,7 +151,7 @@ namespace Forms.Services
             db.ExecuteSql(sql, parameters);
         }
 
-        public void ExecuteDelte(string tableName, Dictionary<string, object> values)
+        public void ExecuteDelete(string tableName, Dictionary<string, object> values)
         {
             var tb = db.Tables.FirstOrDefault(x => x.Name == tableName);
             if (tb == null) throw new Exception($"Table '{tableName}' not found!");

@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+﻿using System;
+using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Forms.Migrations.Migrations
 {
@@ -22,6 +23,21 @@ namespace Forms.Migrations.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Groups", x => new { x.ProjectId, x.Id });
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Texts",
+                schema: "tmp",
+                columns: table => new
+                {
+                    LanguageCode = table.Column<string>(type: "varchar(10)", unicode: false, maxLength: 10, nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    Value = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: true),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "getdate()")
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Texts", x => new { x.LanguageCode, x.Name });
                 });
 
             migrationBuilder.CreateTable(
@@ -66,7 +82,9 @@ namespace Forms.Migrations.Migrations
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Title = table.Column<string>(type: "nvarchar(150)", maxLength: 150, nullable: false),
                     IsPK = table.Column<bool>(type: "bit", nullable: false),
-                    IsRequired = table.Column<bool>(type: "bit", nullable: false),
+                    IsNull = table.Column<bool>(type: "bit", nullable: false),
+                    DataType = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    MaxLen = table.Column<int>(type: "int", nullable: true),
                     DefaultValue = table.Column<string>(type: "nvarchar(2000)", maxLength: 2000, nullable: true),
                     IsReadOnly = table.Column<bool>(type: "bit", nullable: false),
                     ShowInList = table.Column<bool>(type: "bit", nullable: false, defaultValue: true),
@@ -76,7 +94,7 @@ namespace Forms.Migrations.Migrations
                     ValidValues = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     CellClassName = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Category = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    ColumnOrder = table.Column<int>(type: "int", nullable: false, defaultValue: 0)
+                    OrdinalPosition = table.Column<int>(type: "int", nullable: false, defaultValue: 0)
                 },
                 constraints: table =>
                 {
@@ -119,6 +137,10 @@ namespace Forms.Migrations.Migrations
         {
             migrationBuilder.DropTable(
                 name: "Columns",
+                schema: "tmp");
+
+            migrationBuilder.DropTable(
+                name: "Texts",
                 schema: "tmp");
 
             migrationBuilder.DropTable(

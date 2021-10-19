@@ -6,10 +6,11 @@ namespace Forms.Core
     {
         IList<Group> GetAllGroups(string projectId);
         Table GetTable(string projectId, string name);
+        IList<Column> GetColumns(string projectId, string tableName);
 
-        Dictionary<string, object> ExecuteSelect(string tableName, Dictionary<string, object> values);
+        IList<Dictionary<string, string>> ExecuteSelect(Table table, IList<Column> columns, Dictionary<string, object[]> filters);
         void ExecuteInsert(string tableName, Dictionary<string, object> values);
-        void ExecuteDelte(string tableName, Dictionary<string, object> values);
+        void ExecuteDelete(string tableName, Dictionary<string, object> values);
         void ExecuteUpdate(string tableName, Dictionary<string, object> values); 
     }
 }

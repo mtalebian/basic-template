@@ -17,7 +17,7 @@ namespace Forms.Controllers
         public string UpdateSql { get; set; }
         public string DeleteSql { get; set; }
 
-        public ColumnDTO[] DataColumns { get; set; }
+        public IList<ColumnDTO> DataColumns { get; set; }
 
     }
 }
