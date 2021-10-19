@@ -10,8 +10,6 @@ namespace Common.Data
 {
     public interface IBaseRepository<TEntity> where TEntity : class
     {
-        DbSet<TEntity> Entities { get; }
-
         IList<TEntity> GetAll();
         Task<List<TEntity>> GetAllAsync();
 

@@ -8,6 +8,8 @@ import { useAccount } from "../../app/account-context";
 export function MainLayout({ component: Comp, ...props }) {
     const { t } = useTranslation();
     const account = useAccount();
+    const logo_url = settings.getLanguageCode() === "fa" ? "/images/logo/header-logo.png" : "/images/logo/header-logo-en.png";
+    //const logo_url = bd.helper.getRTL() ? "/images/logo/header-logo.png" : "/images/logo/header-logo-en.png";
 
     function logout() {
         account.logout();
@@ -40,7 +42,7 @@ export function MainLayout({ component: Comp, ...props }) {
                         </bd.Button> */}
 
                         <a href="/home">
-                            <img src={t("header-logo")} alt="logo" height={31} />
+                            <img src={logo_url} alt="logo" height={31} />
                         </a>
 
                         <h5 className="appbar-title">{title}</h5>

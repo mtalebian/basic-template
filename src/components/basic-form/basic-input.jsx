@@ -23,12 +23,13 @@ export const BasicInput = ({ id, label, labelSize, type, className, children, au
     let field_comp = (
         <>
             <input id={id} type={type} className={cnControl} {...field} autoComplete={autoComplete} {...props} style={style} />
-            {children}
             {meta.touched && meta.error ? <div className={cnErorr}>{meta.error}</div> : null}
         </>
     );
 
-    return (
+    return label === undefined ? (
+        field_comp
+    ) : (
         <bd.FormRow label={label} labelSize={labelSize} htmlFor={id} className={className}>
             {field_comp}
         </bd.FormRow>

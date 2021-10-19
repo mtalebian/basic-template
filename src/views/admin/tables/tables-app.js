@@ -1,22 +1,49 @@
-import React from "react";
-import * as bs from "react-basic-design";
+import React, { useEffect, useState } from "react";
+import * as bd from "react-basic-design";
+import * as icons from "../../../assets/icons";
+import { useTranslation } from "react-i18next";
+import { useAccount } from "../../../app/account-context";
+import { tableDesignerApi } from "../../../api/table-designer-api";
+import { Tile, Tiles } from "../../../components/tilemenu/tiles";
 
 export function TablesApp() {
+    const account = useAccount();
+    const { t } = useTranslation();
+    const [groups, setGroups] = useState(null);
+
+    useEffect(() => {
+        if (!groups && account.isConnected()) {
+            tableDesignerApi.getGroups().then((x) => setGroups(x));
+        }
+    }, [groups, account]);
+
     return (
         <>
-            <bs.AppBar shadow={0} className="shadow-0 border-bottom">
-                <div className="container">
-                    <bs.Toolbar>
-                        <h5 className="appbar-title">Maintain tables</h5>
-                    </bs.Toolbar>
-                </div>
-            </bs.AppBar>
+            <div className="border-bottom bg-gray-5 mb-3">
+                <bd.Toolbar className="container">
+                    <h5 className="text-secondary-text">{t("select-a-table...")}</h5>
+                </bd.Toolbar>
+            </div>
 
-            <div className="py-4">
-                <div className="container">
-                    <h5 className="text-secondary-text">Select a table ...</h5>
-                </div>
+            <div className="container">
+                <Tiles>
+                    {groups &&
+                        groups
+                            .sort((a, b) => (a.title === b.title ? 0 : a.title > b.title ? 1 : -1))
+                            .map((g) => (
+                                <Tile key={g.id} title={g.title}>
+                                    {g.items.map((t) => (
+                                        <Tile key={t.name} title={t.title} />
+                                    ))}
+                                </Tile>
+                            ))}
+                </Tiles>
             </div>
         </>
     );
 }
+
+TablesApp.Appbar = {
+    title: "basic-tables",
+    buttons: null,
+};

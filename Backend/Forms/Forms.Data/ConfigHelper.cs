@@ -123,5 +123,12 @@ namespace Forms.Data
                     .HasMaxLength(2000)
                     .IsUnicode(true);
         }
+
+        internal void DefineCreatedAt<TProperty>([NotNull] Expression<Func<T, TProperty>> propertyExpression, bool required = true)
+        {
+            Builder.Entity<T>().Property(propertyExpression)
+                .HasDefaultValueSql("getdate()")
+                .IsRequired(required);
+        }
     }
 }

@@ -10,7 +10,7 @@ namespace Microsoft.Extensions.DependencyInjection
         {
             services.AddScoped<IFormDesignerService, FormDesignerService>();
             services.AddScoped<IFormService, FormService>();
-            services.AddScoped<ILocaleService, LocaleService>();
+            services.AddScoped<ILocaleService, LocalesService>();
         }
 
     }

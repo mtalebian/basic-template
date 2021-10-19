@@ -3,10 +3,10 @@ import * as bd from "react-basic-design";
 import { useField } from "formik";
 import React from "react";
 
-export const BasicTextArea = ({ id, label, labelSize, type, className, children, autoComplete, maxWidth, ...props }) => {
+export const BasicTextArea = ({ id, label, labelSize, type, className, controlClassName, children, autoComplete, maxWidth, ...props }) => {
     const [field, meta] = useField({ ...props, type });
     if (!field.value) field.value = "";
-    var cnControl = classNames("form-control", className, {
+    var cnControl = classNames("form-control", controlClassName, {
         "bd-border-error": meta.error,
     });
     var cnErorr = "bd-error";
@@ -28,7 +28,9 @@ export const BasicTextArea = ({ id, label, labelSize, type, className, children,
         </>
     );
 
-    return (
+    return label === undefined ? (
+        field_comp
+    ) : (
         <bd.FormRow label={label} labelSize={labelSize} htmlFor={id} className={className}>
             {field_comp}
         </bd.FormRow>

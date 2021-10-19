@@ -19,11 +19,8 @@ export const tableDesignerApi = {
     getTable: (tableName) =>
         api.call("post", `${apiConfig.tableDesignerUrl}/get-table?projectId=${settings.projectId}&tableName=${tableName}`),
 
-    saveTable: (groupId, table, insertMode) => {
-        var tb = { ...table };
-        var actionName = insertMode ? "insert-table" : "update-table";
-        return api.call("post", `${apiConfig.tableDesignerUrl}/${actionName}?projectId=${settings.projectId}&groupId=${groupId}`, tb);
-    },
+    saveTable: (groupId, table) =>
+        api.call("post", `${apiConfig.tableDesignerUrl}/save-table?projectId=${settings.projectId}&groupId=${groupId}`, { ...table }),
 
     deleteTable: (tableName) => {
         return api.call("post", `${apiConfig.tableDesignerUrl}/delete-table?projectId=${settings.projectId}&tableName=${tableName}`);

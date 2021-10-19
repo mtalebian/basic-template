@@ -44,7 +44,7 @@ export const UserSettingsApp = () => {
             <bd.List>
                 <bd.ListItem
                     variant="text"
-                    primary={t("dark_mode")}
+                    primary={t("dark-mode")}
                     className="border-bottom"
                     controls={<bd.Switch color="primary" className="edge-end" model={darkMode} setModel={changeDarkMode} />}
                 />
@@ -57,7 +57,13 @@ export const UserSettingsApp = () => {
                     className="border-bottom"
                 >
                     {languages.map((x) => (
-                        <bd.ListItem key={x.code} primary={x.name} radio checked={currentLanguage === x} onClick={(e) => changeLanguage(x)} />
+                        <bd.ListItem
+                            key={x.code}
+                            primary={x.name}
+                            radio
+                            checked={currentLanguage === x}
+                            onClick={(e) => changeLanguage(x)}
+                        />
                     ))}
                 </bd.ListItem>
             </bd.List>

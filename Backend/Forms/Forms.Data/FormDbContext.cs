@@ -95,16 +95,12 @@ namespace Forms.Data
             //
             // Text
             //
-            var Text = new ConfigHelper<Text>(modelBuilder, _FormsConfig.TextTableName);
+            var Text = new ConfigHelper<Text>(modelBuilder, _FormsConfig.TextsTableName);
             Text.HasKey(x => new { x.LanguageCode, x.Name });
-            Text.VarChar(x => x.LanguageCode, 20, true);
-            Text.VarChar(x => x.Name, 100, true);
-            Text.NVarChar(x => x.Value, 1000, true);
-
-            Column.Entity()
-                .HasOne(x => x.Table)
-                .WithMany(x => x.Columns)
-                .HasForeignKey(x => new { x.ProjectId, x.TableName });
+            Text.VarChar(x => x.LanguageCode, 10, true);
+            Text.NVarChar(x => x.Name, 100, true);
+            Text.NVarChar(x => x.Value, 1000, false);
+            Text.DefineCreatedAt(x => x.CreatedAt, true);
 
         }
     }

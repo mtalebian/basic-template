@@ -83,29 +83,26 @@ namespace Forms.Services
             return db.GetDataTable(sql);
         }
 
-        public void Insert(Table item, IList<Column> columns)
-        {
-            db.Tables.Add(item);
-            foreach (var c in columns)
-            {
-                db.Columns.Add(c);
-            }
-            db.SaveChanges();
-        }
-
-        public void Update(ref Table item, IList<Column> dataColumns)
+        public void SaveTable(ref Table item, IList<Column> dataColumns)
         {
             var tb = item;
             tb = db.Tables.FirstOrDefault(x => x.ProjectId == tb.ProjectId && x.Name == tb.Name);
-            item.MapTo(tb);
-            db.Tables.Update(tb);
-
-            var columns = db.Columns.Where(x => x.ProjectId == tb.ProjectId && x.TableName == tb.Name);
-
-            foreach (var _col in columns)
+            if (tb == null)
             {
-                if (!dataColumns.Any(x => x.Id == _col.Id))
-                    db.Columns.Remove(_col);
+                db.Tables.Add(item);
+                tb = item;
+            }
+            else
+            {
+                item.MapTo(tb);
+                db.Tables.Update(tb);
+                //---
+                var columns = db.Columns.Where(x => x.ProjectId == tb.ProjectId && x.TableName == tb.Name);
+                foreach (var _col in columns)
+                {
+                    if (!dataColumns.Any(x => x.Id == _col.Id))
+                        db.Columns.Remove(_col);
+                }
             }
 
             for (int i = 0; i < dataColumns.Count; i++)

@@ -39,17 +39,14 @@ namespace Forms.Controllers
         }
 
         [HttpPost("get-table")]
-        public Response<GetTableResultDTO> GetTable(string projectId, string name)
+        public Response<TableDTO> GetTable(string projectId, string name)
         {
             var table = service.GetTable(projectId, name);
-            var result = new GetTableResultDTO
-            {
-                Table = table.MapTo<TableDTO>(),
-                Columns = table.Columns.MapTo<ColumnDTO>().ToArray()
-            };
-            return new Response<GetTableResultDTO>(result);
+            var result = table.MapTo<TableDTO>();
+            result.DataColumns = table.Columns.MapTo<ColumnDTO>().ToArray();
+            return new Response<TableDTO>(result);
         }
-        
+
         [HttpPost("exec-table-action")]
         public Response ExecTableAction([FromBody] TableActionDTO action)
         {

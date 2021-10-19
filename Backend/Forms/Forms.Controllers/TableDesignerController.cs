@@ -67,19 +67,16 @@ namespace Forms.Controllers
 
 
         [HttpPost("get-table")]
-        public Response<GetTableResultDTO> GetTable(string projectId, string tableName)
+        public Response<TableDTO> GetTable(string projectId, string tableName)
         {
             var table = service.GetTable(projectId, tableName);
-            var result = new GetTableResultDTO
-            {
-                Table = table.MapTo<TableDTO>(),
-                Columns = service.GetColumns(table.ProjectId, table.Name).MapTo<ColumnDTO>().ToArray()
-            };
-            return new Response<GetTableResultDTO>(result);
+            var result = table.MapTo<TableDTO>();
+            result.DataColumns = service.GetColumns(table.ProjectId, table.Name).MapTo<ColumnDTO>().ToArray();
+            return new Response<TableDTO>(result);
         }
 
-        [HttpPost("insert-table")]
-        public Response<TableDTO> InsertTable(string projectId, int groupId, [FromBody] TableDTO table)
+        [HttpPost("save-table")]
+        public Response<TableDTO> SaveTable(string projectId, int groupId, [FromBody] TableDTO table)
         {
             var tb = table.MapTo<Table>();
             tb.ProjectId = projectId;
@@ -90,26 +87,10 @@ namespace Forms.Controllers
                 c.ProjectId = projectId;
                 c.TableName = tb.Name;
             }
-            service.Insert(tb, columns);
-            return new Response<TableDTO>(tb.MapTo<TableDTO>());
-        }
-
-        [HttpPost("update-table")]
-        public Response<TableDTO> UpdateTable(string projectId, int groupId, [FromBody] TableDTO table)
-        {
-            var tb = table.MapTo<Table>();
-            tb.ProjectId = projectId;
-            tb.GroupId = groupId;
-
-            var columns = table.DataColumns.MapTo<Column>();
-            foreach (var c in columns)
-            {
-                c.ProjectId = projectId;
-                c.TableName = tb.Name;
-            }
-
-            service.Update(ref tb, columns);
-            return new Response<TableDTO>(tb.MapTo<TableDTO>());
+            service.SaveTable(ref tb, columns);
+            var result = tb.MapTo<TableDTO>();
+            result.DataColumns = service.GetColumns(tb.ProjectId, tb.Name).MapTo<ColumnDTO>().ToArray();
+            return new Response<TableDTO>(result);
         }
 
         [HttpPost("delete-table")]
@@ -131,6 +112,7 @@ namespace Forms.Controllers
                 var c = new ColumnDTO
                 {
                     Name = r.AsString("Name"),
+                    Title = r.AsString("Name"),
                     DataType = r.AsString("DataType"),
                     DefaultValue = r.AsString("DefaultValue"),
                     IsNull = r.AsString("IsNull") == "YES",

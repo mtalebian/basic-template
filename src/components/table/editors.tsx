@@ -103,7 +103,7 @@ export const DefaultEditor = ({ value: initialValue, row, column, updateMyData, 
 
         case "select":
             return (
-                <select className="form-select table-editor" {...field}>
+                <select className="form-select table-editor" {...field} onChange={(e: any) => updateValue(e.target.value)}>
                     ;
                     {getValidValues().map((x: any) => (
                         <option key={x.code} value={x.code}>

@@ -38,7 +38,7 @@ export function TableDesignerApp() {
 
     function onAddFormClick(g) {
         setGroup(g);
-        setTable({ columns: [] });
+        setTable({ data: { dataColumns: [] } });
         return false;
     }
 
@@ -51,8 +51,7 @@ export function TableDesignerApp() {
         tableDesignerApi
             .getTable(t.name)
             .then((x) => {
-                t.data = x.table;
-                t.columns = x.columns;
+                t.data = x;
                 setGroup(g);
                 setTable(t);
             })
@@ -154,10 +153,10 @@ export function TableDesignerApp() {
                 <TableDesignerEditTable
                     onGoBack={goBack}
                     group={group}
-                    table={table}
-                    onChanged={(tb) => {
+                    table={table.data}
+                    onChanged={(tb, tbName) => {
                         var g = groups.find((x) => x.id === group.id);
-                        var t = g.items.find((x) => x.name === table.name);
+                        var t = g.items.find((x) => x.name === (tb ? tb.name : tbName));
                         if (!tb) {
                             // removed
                             g.items = g.items.filter((x) => x !== t);
@@ -170,7 +169,10 @@ export function TableDesignerApp() {
                             });
                         } else {
                             // modifed
-                            g.title = tb.title;
+                            t.title = tb.title;
+                            console.log("A", t, tb);
+                            t.data = tb;
+                            console.log("B", t);
                         }
                         goBack();
                         setGroups(groups);

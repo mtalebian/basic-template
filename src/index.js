@@ -25,7 +25,7 @@ i18n.use(HttpApi)
     .init({
         supportedLngs: ["en", "fa"],
         fallbackLng: "en",
-        debug: false,
+        debug: true,
         saveMissing: settings.debugMode,
 
         detection: {
@@ -34,7 +34,10 @@ i18n.use(HttpApi)
         },
         backend: {
             //loadPath: "/locales/{{lng}}.json",
-            loadPath: apiConfig.localeUrl + "/locales/{{lng}}.json",
+            loadPath: apiConfig.localeUrl + "/locales/get-{{lng}}",
+            addPath: apiConfig.localeUrl + "/locales/add-{{lng}}",
+            crossDomain: true,
+            withCredentials: true,
         },
         // react: { useSuspense: false },
     });

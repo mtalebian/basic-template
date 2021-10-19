@@ -9,6 +9,6 @@
         public string GroupsTableName { get; set; }
         public string TablesTableName { get; set; }
         public string TableFormsTableName { get; set; }
-        public string TextTableName { get; set; }
+        public string TextsTableName { get; set; }
     }
 }
