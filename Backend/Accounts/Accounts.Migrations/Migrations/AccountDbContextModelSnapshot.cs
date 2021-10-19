@@ -279,6 +279,17 @@ namespace Accounts.Migrations.Migrations
                             SortOrder = 0,
                             Title = "Table designer",
                             Url = "/admin/table-designer"
+                        },
+                        new
+                        {
+                            ProjectId = "project1",
+                            Id = "users",
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            OpenInNewTab = false,
+                            ParentId = "admin",
+                            SortOrder = 0,
+                            Title = "Manage Users",
+                            Url = "/admin/users"
                         });
                 });
 
@@ -317,6 +328,13 @@ namespace Accounts.Migrations.Migrations
                             Id = "config",
                             SortOrder = 0,
                             Title = "Project Configuration"
+                        },
+                        new
+                        {
+                            ProjectId = "project1",
+                            Id = "admin",
+                            SortOrder = 0,
+                            Title = "Project Administartion"
                         });
                 });
 
@@ -483,8 +501,8 @@ namespace Accounts.Migrations.Migrations
                         {
                             Id = 1L,
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "62124383-be76-4dcb-a445-458277aaf6f3",
-                            CreatedAt = new DateTime(2021, 10, 9, 15, 51, 37, 664, DateTimeKind.Local).AddTicks(4243),
+                            ConcurrencyStamp = "da6f6423-b5b5-4206-9375-5c16f5030d7c",
+                            CreatedAt = new DateTime(2021, 10, 19, 13, 50, 5, 323, DateTimeKind.Local).AddTicks(9023),
                             EmailConfirmed = false,
                             FirstName = "",
                             IsDeleted = false,
@@ -494,7 +512,7 @@ namespace Accounts.Migrations.Migrations
                             LockoutEnabled = false,
                             PasswordHash = "PABPyu6/prVEQ4QbBrmcATJsjw/1yoli07rNI6EJ764=",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "6a25a697-9972-4936-83a2-071bf74dd24c",
+                            SecurityStamp = "0222d901-403d-4036-9915-813f3ffbf40e",
                             UserName = "admin",
                             WindowsAuthenticate = false
                         });

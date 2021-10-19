@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Accounts.Migrations.Migrations
 {
-    public partial class V3 : Migration
+    public partial class V1 : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -425,7 +425,7 @@ namespace Accounts.Migrations.Migrations
                 schema: "tmp",
                 table: "Users",
                 columns: new[] { "Id", "AccessFailedCount", "ConcurrencyStamp", "CreatedAt", "Email", "EmailConfirmed", "FirstName", "IsDeleted", "IsDisabled", "LastAccessFailedDate", "LastName", "LockoutEnabled", "LockoutEndDate", "NationalCode", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "UserName", "WindowsAuthenticate" },
-                values: new object[] { 1L, 0, "62124383-be76-4dcb-a445-458277aaf6f3", new DateTime(2021, 10, 9, 15, 51, 37, 664, DateTimeKind.Local).AddTicks(4243), null, false, "", false, false, null, "Administrator", false, null, null, "PABPyu6/prVEQ4QbBrmcATJsjw/1yoli07rNI6EJ764=", null, false, "6a25a697-9972-4936-83a2-071bf74dd24c", "admin", false });
+                values: new object[] { 1L, 0, "da6f6423-b5b5-4206-9375-5c16f5030d7c", new DateTime(2021, 10, 19, 13, 50, 5, 323, DateTimeKind.Local).AddTicks(9023), null, false, "", false, false, null, "Administrator", false, null, null, "PABPyu6/prVEQ4QbBrmcATJsjw/1yoli07rNI6EJ764=", null, false, "0222d901-403d-4036-9915-813f3ffbf40e", "admin", false });
 
             migrationBuilder.InsertData(
                 schema: "tmp",
@@ -435,21 +435,21 @@ namespace Accounts.Migrations.Migrations
 
             migrationBuilder.InsertData(
                 schema: "tmp",
-                table: "Menus",
-                columns: new[] { "Id", "ProjectId", "ApplicationId", "OpenInNewTab", "ParentId", "SortOrder", "Title", "Url" },
-                values: new object[] { "config-admin-tables", "project1", null, false, "config", 0, "Maintain base tables", "/admin/tables" });
+                table: "MenuFolders",
+                columns: new[] { "Id", "ProjectId", "ParentId", "SortOrder", "Title" },
+                values: new object[] { "admin", "project1", null, 0, "Project Administartion" });
 
             migrationBuilder.InsertData(
                 schema: "tmp",
                 table: "Menus",
                 columns: new[] { "Id", "ProjectId", "ApplicationId", "OpenInNewTab", "ParentId", "SortOrder", "Title", "Url" },
-                values: new object[] { "config-menu", "project1", null, false, "config", 0, "Maintain project menu", "/admin/menu" });
-
-            migrationBuilder.InsertData(
-                schema: "tmp",
-                table: "Menus",
-                columns: new[] { "Id", "ProjectId", "ApplicationId", "OpenInNewTab", "ParentId", "SortOrder", "Title", "Url" },
-                values: new object[] { "config-table-designer", "project1", null, false, "config", 0, "Table designer", "/admin/table-designer" });
+                values: new object[,]
+                {
+                    { "config-admin-tables", "project1", null, false, "config", 0, "Maintain base tables", "/admin/tables" },
+                    { "config-menu", "project1", null, false, "config", 0, "Maintain project menu", "/admin/menu" },
+                    { "config-table-designer", "project1", null, false, "config", 0, "Table designer", "/admin/table-designer" },
+                    { "users", "project1", null, false, "admin", 0, "Manage Users", "/admin/users" }
+                });
 
             migrationBuilder.CreateIndex(
                 name: "IX_AzFields_ProjectId",

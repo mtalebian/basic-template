@@ -66,7 +66,9 @@ namespace Forms.Migrations.Migrations
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Title = table.Column<string>(type: "nvarchar(150)", maxLength: 150, nullable: false),
                     IsPK = table.Column<bool>(type: "bit", nullable: false),
-                    IsRequired = table.Column<bool>(type: "bit", nullable: false),
+                    IsNull = table.Column<bool>(type: "bit", nullable: false),
+                    DataType = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    MaxLen = table.Column<int>(type: "int", nullable: true),
                     DefaultValue = table.Column<string>(type: "nvarchar(2000)", maxLength: 2000, nullable: true),
                     IsReadOnly = table.Column<bool>(type: "bit", nullable: false),
                     ShowInList = table.Column<bool>(type: "bit", nullable: false, defaultValue: true),
@@ -76,7 +78,7 @@ namespace Forms.Migrations.Migrations
                     ValidValues = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     CellClassName = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Category = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    ColumnOrder = table.Column<int>(type: "int", nullable: false, defaultValue: 0)
+                    OrdinalPosition = table.Column<int>(type: "int", nullable: false, defaultValue: 0)
                 },
                 constraints: table =>
                 {
