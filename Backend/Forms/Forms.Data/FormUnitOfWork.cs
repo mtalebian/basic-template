@@ -24,11 +24,5 @@ namespace Forms.Data
             Tables = new TableRepository(context);
             Texts = new TextRepository(context);
         }
-
-        public void ExecuteSql(string sql, Dictionary<string, object> parameters)
-        {
-            var SqlParameters = parameters.Select(x => new SqlParameter(x.Key, x.Value));
-            context.Database.ExecuteSqlRaw(sql, SqlParameters);
-        }
     }
 }

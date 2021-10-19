@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Data;
 
 namespace Forms.Core
 {
@@ -16,6 +17,7 @@ namespace Forms.Core
         void Update(ref Table item, IList<Column> columns);
         void DeleteTable(string projectId, string tableName);
 
+        DataTable GetSchemaColumn(string tableName);
         IList<Column> GetColumns(string projectId, string tableName);
         void Insert(Column column);
         void Update(ref Column column);

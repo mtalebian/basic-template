@@ -3,9 +3,9 @@ using Forms.Core;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 
 namespace Forms.Controllers
@@ -119,6 +119,33 @@ namespace Forms.Controllers
             return new Response();
         }
 
+
+
+        [HttpPost("schema-columns")]
+        public Response<IList<ColumnDTO>> GetSchemaColumns(string tableName)
+        {
+            var res = new List<ColumnDTO>();
+            var tb = service.GetSchemaColumn(tableName);
+            foreach (DataRow r in tb.Rows)
+            {
+                var c = new ColumnDTO
+                {
+                    Name = r.AsString("Name"),
+                    DataType = r.AsString("DataType"),
+                    DefaultValue = r.AsString("DefaultValue"),
+                    IsNull = r.AsString("IsNull") == "YES",
+                    IsPK = r.AsInt("IsPK") == 1,
+                    MaxLen = r.AsInt("MaxLen"),
+                    OrdinalPosition = r.AsInt("OrdinalPosition", 0),
+                };
+                if (c.DataType == "bit") c.Display = "check";
+                else if (c.DataType == "int" || c.DataType == "bigint") c.Display = "number";
+                else if (c.DataType == "varchar" || c.DataType == "nvarchar") c.Display = "text";
+                else if (c.DataType == "varbinary") c.IsReadOnly = true;
+                res.Add(c);
+            }
+            return new Response<IList<ColumnDTO>>(res);
+        }
 
 
         [HttpPost("insert-column")]

@@ -76,11 +76,12 @@ namespace Forms.Data
             Column.DefineTitle(x => x.Title);
 
             Column.IsRequired(x => x.IsPK);
-            Column.IsRequired(x => x.IsRequired);
+            Column.IsRequired(x => x.IsNull);
             Column.DefineDescription(x => x.DefaultValue);
             Column.DefaultValue(x => x.ShowInList, 1, true);
             Column.DefaultValue(x => x.ShowInEditor, 1, true);
-            Column.DefaultValue(x => x.ColumnOrder, 0, true);
+            Column.DefaultValue(x => x.OrdinalPosition, 0, true);
+            //Column.IsRequired(x => x.Category);
 
             Column.Entity()
                 .HasOne(x => x.Table)

@@ -16,7 +16,8 @@ export const tableDesignerApi = {
         return api.call("post", `${apiConfig.tableDesignerUrl}/delete-group?projectId=${settings.projectId}&groupId=${groupId}`);
     },
 
-    getTable: (tableName) => api.call("post", `${apiConfig.tableDesignerUrl}/get-table?projectId=${settings.projectId}&tableName=${tableName}`),
+    getTable: (tableName) =>
+        api.call("post", `${apiConfig.tableDesignerUrl}/get-table?projectId=${settings.projectId}&tableName=${tableName}`),
 
     saveTable: (groupId, table, insertMode) => {
         var tb = { ...table };
@@ -28,12 +29,16 @@ export const tableDesignerApi = {
         return api.call("post", `${apiConfig.tableDesignerUrl}/delete-table?projectId=${settings.projectId}&tableName=${tableName}`);
     },
 
-    saveColumn: (tableName, column, insertMode) => {
-        var actionName = insertMode ? "insert-column" : "update-column";
-        return api.call("post", `${apiConfig.tableDesignerUrl}/${actionName}?projectId=${settings.projectId}&tableName=${tableName}`, column);
+    schemaColumn: (tableName) => {
+        return api.call("post", `${apiConfig.tableDesignerUrl}/schema-columns?tableName=${tableName}`);
     },
 
-    deleteColumn: (columnId) => {
-        return api.call("post", `${apiConfig.tableDesignerUrl}/delete-column?id=${columnId}`);
-    },
+    // saveColumn: (tableName, column, insertMode) => {
+    //     var actionName = insertMode ? "insert-column" : "update-column";
+    //     return api.call("post", `${apiConfig.tableDesignerUrl}/${actionName}?projectId=${settings.projectId}&tableName=${tableName}`, column);
+    // },
+
+    // deleteColumn: (columnId) => {
+    //     return api.call("post", `${apiConfig.tableDesignerUrl}/delete-column?id=${columnId}`);
+    // },
 };

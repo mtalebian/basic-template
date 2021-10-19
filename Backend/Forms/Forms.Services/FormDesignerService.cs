@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 
 namespace Forms.Services
@@ -62,6 +63,26 @@ namespace Forms.Services
             return db.Tables.FirstOrDefault(x => x.ProjectId == projectId && x.Name == name);
         }
 
+        public DataTable GetSchemaColumn(string tableName)
+        {
+            var sql = "SELECT t.TABLE_SCHEMA+'.'+t.TABLE_NAME as TableName" +
+                ", c.COLUMN_NAME as Name" +
+                ", c.DATA_TYPE as DataType" +
+                ", c.IS_NULLABLE as IsNull" +
+                ", c.CHARACTER_MAXIMUM_LENGTH as MaxLen" +
+                ", c.COLUMN_DEFAULT as DefaultValue" +
+                ", c.ORDINAL_POSITION as OrdinalPosition\r\n" +
+                ", isnull((SELECT 1\r\n" +
+                "   FROM information_schema.table_constraints tc\r\n" +
+                "       INNER JOIN information_schema.key_column_usage kc ON kc.Constraint_Name = tc.Constraint_Name AND kc.Constraint_schema = tc.Constraint_schema\r\n" +
+                "   where CONSTRAINT_TYPE='PRIMARY KEY' and tc.TABLE_SCHEMA=t.TABLE_SCHEMA and tc.TABLE_NAME=t.TABLE_NAME and kc.COLUMN_NAME=c.COLUMN_NAME\r\n" +
+                "  ), 0) as IsPK\r\n" +
+                "FROM information_schema.TABLES t\r\n" +
+                "      inner join INFORMATION_SCHEMA.COLUMNS c on t.TABLE_SCHEMA=c.TABLE_SCHEMA and t.TABLE_NAME=c.TABLE_NAME\r\n" +
+                "where t.TABLE_SCHEMA+'.'+t.TABLE_NAME = '" + tableName.Replace("'", "") + "'";
+            return db.GetDataTable(sql);
+        }
+
         public void Insert(Table item, IList<Column> columns)
         {
             db.Tables.Add(item);
@@ -81,15 +102,12 @@ namespace Forms.Services
 
             var columns = db.Columns.Where(x => x.ProjectId == tb.ProjectId && x.TableName == tb.Name);
 
-            //foreach (var c in columns)
-            //{
-            //    if (!dataColumns.Any(x => x.Id == c.Id))
-            //        db.Columns.Remove(c);
-            //}
+            foreach (var _col in columns)
+            {
+                if (!dataColumns.Any(x => x.Id == _col.Id))
+                    db.Columns.Remove(_col);
+            }
 
-            //db.SaveChanges();
-
-            
             for (int i = 0; i < dataColumns.Count; i++)
             {
                 var dataColumn = dataColumns[i];

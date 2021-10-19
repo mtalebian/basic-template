@@ -39,6 +39,8 @@ namespace Common.Data
 
         void Remove(TEntity entity);
         void RemoveRange(IEnumerable<TEntity> entity);
+
+        IList<TEntity> SqlQuery(string sql, params object[] parameters);
     }
 
 

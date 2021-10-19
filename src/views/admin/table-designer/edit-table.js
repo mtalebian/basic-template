@@ -26,6 +26,7 @@ import {
 import { RenderTableDiv } from "../../../components/table/render-table-div";
 import { DefaultEditor } from "../../../components/table/editors";
 import { BasicTextArea } from "../../../components/basic-form/basic-textarea";
+import { api } from "../../../api/api";
 
 //
 export function TableDesignerEditTable({ table, group, onChanged, onGoBack }) {
@@ -104,7 +105,17 @@ export function TableDesignerEditTable({ table, group, onChanged, onGoBack }) {
                         readonly: (r, c) => r.values.isRequired,
                     },
                     { Header: "IsPK", accessor: "isPK", width: 50, display: "check" },
-                    { Header: "Required", accessor: "isRequired", display: "switch", width: 80 },
+                    { Header: "Null", accessor: "isNull", display: "check", width: 80 },
+                    {
+                        Header: "Type",
+                        id: "type",
+                        readOnly: true,
+                        width: 100,
+                        Cell: ({ row }) => {
+                            var r = row.original;
+                            return !r.dataType ? "" : `${r.dataType}(${r.maxLen})`;
+                        },
+                    },
                     { Header: "DefaultValue", accessor: "defaultValue", width: 100 },
 
                     { Header: "List", accessor: "showInList", display: "check", width: 50 },
@@ -246,6 +257,34 @@ export function TableDesignerEditTable({ table, group, onChanged, onGoBack }) {
                                 variant="icon"
                                 size="md"
                                 onClick={(e) => {
+                                    tableDesignerApi
+                                        .schemaColumn(table.name)
+                                        .then((schemaColumns) => {
+                                            let d = [...data];
+                                            schemaColumns.forEach((x) => {
+                                                const f = d.find((z) => z.name === x.name);
+                                                if (!f) d = [...d, x];
+                                                else {
+                                                    f.dataType = x.dataType;
+                                                    f.maxLen = x.maxLen;
+                                                    f.isPK = x.isPK;
+                                                    f.isNull = x.isNull;
+                                                    f.defaultValue = x.defaultValue;
+                                                    f.ordinalPosition = x.ordinalPosition;
+                                                }
+                                            });
+                                            setData(d);
+                                        })
+                                        .catch((ex) => notify.error(ex));
+                                }}
+                            >
+                                <icons.Sync />
+                            </bd.Button>
+
+                            <bd.Button
+                                variant="icon"
+                                size="md"
+                                onClick={(e) => {
                                     var r = newRow();
                                     setData([...data, r]);
                                     tableApi.state.selectedRowIds = { [data.length]: true };
@@ -253,6 +292,7 @@ export function TableDesignerEditTable({ table, group, onChanged, onGoBack }) {
                             >
                                 <icons.Add />
                             </bd.Button>
+
                             <bd.Button
                                 variant="icon"
                                 size="md"
