@@ -29,16 +29,16 @@ namespace Accounts.Controllers
         [HttpGet("users")]
         public Response<List<UserDTO>> GetUsers()
         {
-            var result =new List<UserDTO>();
+            var result = new List<UserDTO>();
             var _users = userService.GetUsers();
-            if(_users.Count!=0)
-               result = _users.MapTo<UserDTO>().ToList();
+            if (_users.Count != 0)
+                result = _users.MapTo<UserDTO>().ToList();
             return new Response<List<UserDTO>>(result);
         }
 
 
         [EnableCors("react")]
-        [HttpGet("user-info")]
+        [HttpGet("user-by-nationalCode")]
         public Response<UserUpdateDTO> GetUserByNationalCode(string nationalCode)
         {
             if (string.IsNullOrEmpty(nationalCode))
@@ -54,17 +54,35 @@ namespace Accounts.Controllers
         }
 
         [EnableCors("react")]
+        [HttpGet("user-info")]
+        public Response<UserUpdateDTO> GetUserById(long userId)
+        {
+            if (userId == default(long))
+                return new Response<UserUpdateDTO>(Messages.InvalidInfo);
+            UserUpdateDTO result = new UserUpdateDTO();
+            var _user = userService.GetUser(userId);
+            if (_user is null)
+                return new Response<UserUpdateDTO>(Messages.NotFoundInformation);
+            result = _user.MapTo<UserUpdateDTO>();
+            return new Response<UserUpdateDTO>(result);
+        }
+
+
+        [EnableCors("react")]
         [HttpPost("insert-user")]
         public Response<UserInsertDTO> InsertUser([FromBody] UserInsertDTO model)
         {
-            if (!ModelState.IsValid){
+            if (!ModelState.IsValid)
+            {
                 return new Response<UserInsertDTO>(string.Join(",", ModelState.GetModelStateErrors()));
             }
-            if (!ValidationHelper.IsValidNationalCode(model.NationalCode)){
+            if (!ValidationHelper.IsValidNationalCode(model.NationalCode))
+            {
                 return new Response<UserInsertDTO>(Messages.InvalidNationalCode);
             }
             var _user = userService.GetUser(model.NationalCode);
-            if (_user is not null || userService.GetUserByUserName(model.UserName) is not null){
+            if (_user is not null || userService.GetUserByUserName(model.UserName) is not null)
+            {
                 return new Response<UserInsertDTO>(Messages.DuplicateUser);
             }
             var t = model.WindowsAuthenticate;
@@ -73,7 +91,8 @@ namespace Accounts.Controllers
                 return new Response<UserInsertDTO>(Messages.PasswordIsRequired);
             }
             _user = model.MapTo<User>();
-            if (!model.WindowsAuthenticate){
+            if (!model.WindowsAuthenticate)
+            {
                 _user.PasswordHash = Common.Cryptography.Helper.HashPassword(model.Password);
             }
             userService.Insert(_user);
@@ -87,10 +106,11 @@ namespace Accounts.Controllers
         {
             if (!ModelState.IsValid)
             {
-                return new Response<UserUpdateDTO>(string.Join(",",ModelState.GetModelStateErrors()));
+                return new Response<UserUpdateDTO>(string.Join(",", ModelState.GetModelStateErrors()));
             }
             var _user = userService.GetUserByUserName(model.UserName);
-            if (_user is null) {
+            if (_user is null)
+            {
                 return new Response<UserUpdateDTO>(Messages.InvalidInfo);
             }
             if (!ValidationHelper.IsValidNationalCode(model.NationalCode))

@@ -4,7 +4,7 @@ import { apiConfig } from "./config";
 export const userManagmentApi = {
     getUsers: () => api.call("get", `${apiConfig.userManegmentUrl}/users`),
 
-    getUser: (nationalCode) => api.call("post", `${apiConfig.userManegmentUrl}/user-info?nationalCode=${nationalCode}`),
+    getUser: (userId) => api.call("get", `${apiConfig.userManegmentUrl}/user-info?userId=${userId}`),
 
     insertUser: (user) => api.call("post", apiConfig.userManegmentUrl + "/insert-user", user),
 

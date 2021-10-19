@@ -3,32 +3,43 @@ import { useTranslation } from "react-i18next";
 import * as bd from "react-basic-design";
 import * as icons from "../../../assets/icons";
 import { TableTitlebar } from "react-basic-design";
-import { AddUser } from "./add-user";
+import { EditUser } from "./edit-user";
 import { Table } from "../../../components/table";
 import { useAccount } from "../../../app/account-context";
 import { userManagmentApi } from "../../../api/user-managment-api";
 import { notify } from "../../../components/basic/notify";
+import { Row } from "react-bootstrap";
 
 export const UsersApp = ({ ...props }) => {
   const { t } = useTranslation();
-  const [insertMode, setInsertMode] = useState(false);
+  const [editMode, setEditMode] = useState(false);
   const account = useAccount();
   const [users, setUsers] = useState(null);
+  const [selectedUser, setSelectedUser] = useState(null);
   const tableRef = React.useRef();
   const columns = React.useMemo(
     () => [
+
       { Header: t("id"), accessor: "id" },
       { Header: t("user-name"), accessor: "userName" },
       { Header: t("first-name"), accessor: "firstName" },
       { Header: t("last-name"), accessor: "lastName" },
       { Header: t("windows"), accessor: "windowsAuthenticate" },
       { Header: t("national-code"), accessor: "nationalCode" },
+      { Header: t("operation"), accessor: (row)=>{return ( <bd.Button size="sm" color="primary" size onClick={() =>{
+        setSelectedUser(row.id);
+        setEditMode(true);
+        console.log(selectedUser);
+      }}>
+      <span>{t("edit")}</span>
+    </bd.Button>)} },
     ],
     []
   );
 
   const addUserOnClick = () => {
-    setInsertMode(true);
+    setSelectedUser(null);
+    setEditMode(true);
   };
 
   useEffect(() => {
@@ -46,8 +57,8 @@ export const UsersApp = ({ ...props }) => {
 
   return (
     <>
-      {!insertMode && !users && <div className="middle d-flex h-100">L O D I N G . . .</div>}
-      {!insertMode && users && (
+      {!editMode && !users && <div className="middle d-flex h-100">L O D I N G . . .</div>}
+      {!editMode && users && (
         <>
           <div className="border-bottom">
             <bd.Toolbar className="container">
@@ -102,8 +113,7 @@ export const UsersApp = ({ ...props }) => {
           </div>
         </>
       )}
-
-      {insertMode && <AddUser onGoBack={() => setInsertMode(false)} />}
+      {editMode && <EditUser userId={selectedUser} onGoBack={() => setEditMode(false)} />}
     </>
   );
 };
