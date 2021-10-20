@@ -5,6 +5,8 @@ namespace Accounts.Controllers
 {
     public class UserUpdateDTO
     {
+        [Required(ErrorMessage ="UserId Is Null")]
+        public long Id { get; set; }
 
         [Required(ErrorMessage = "Enter the FirstName value")]
         [MinLength(3, ErrorMessage = "The length FirstName is at least 3 characters")]
@@ -21,7 +23,7 @@ namespace Accounts.Controllers
         [Required(ErrorMessage = "Enter the NationalCode value")]
         public string NationalCode { get; set; }
 
-        [Required(ErrorMessage = "Enter the Email value")]
+
         [DataType(DataType.EmailAddress, ErrorMessage = "Invalid email")]
         public string Email { get; set; }
 

@@ -5,6 +5,7 @@ namespace Accounts.Controllers
 {
     public class UserInsertDTO
     {
+        public long Id { get; set; }
         [Required(ErrorMessage = "نام را وارد كنيد")]
         [MinLength(3,ErrorMessage = "حداقل طول نام 3 كاراكتر مي باشد")]
         public string FirstName { get; set; }

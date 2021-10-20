@@ -85,7 +85,6 @@ namespace Accounts.Controllers
             {
                 return new Response<UserInsertDTO>(Messages.DuplicateUser);
             }
-            var t = model.WindowsAuthenticate;
             if (!model.WindowsAuthenticate && (string.IsNullOrEmpty(model.Password) || string.IsNullOrEmpty(model.RepeatePassword)))
             {
                 return new Response<UserInsertDTO>(Messages.PasswordIsRequired);
@@ -108,7 +107,7 @@ namespace Accounts.Controllers
             {
                 return new Response<UserUpdateDTO>(string.Join(",", ModelState.GetModelStateErrors()));
             }
-            var _user = userService.GetUserByUserName(model.UserName);
+            var _user = userService.GetUser(model.Id);
             if (_user is null)
             {
                 return new Response<UserUpdateDTO>(Messages.InvalidInfo);
@@ -117,7 +116,6 @@ namespace Accounts.Controllers
             {
                 return new Response<UserUpdateDTO>(Messages.InvalidNationalCode);
             }
-            _user = userService.GetUser(model.NationalCode);
             if (_user is not null && _user.UserName != model.UserName)
             {
                 return new Response<UserUpdateDTO>(Messages.DuplicateNationalCode);
@@ -125,14 +123,13 @@ namespace Accounts.Controllers
             model.MapTo(_user);
             _user.LastUpdate = DateTime.Now;
             userService.Update(_user);
-            var result = userService.GetUser(model.NationalCode).MapTo<UserUpdateDTO>();
+            var result = userService.GetUser(model.Id).MapTo<UserUpdateDTO>();
             return new Response<UserUpdateDTO>(result);
-
         }
 
         [EnableCors("react")]
         [HttpDelete("delete-user")]
-        public Response Delete(long userId)
+        public Response DeleteUser(long userId)
         {
             var user = userService.GetUser(userId);
             if (user is null) return new Response(Messages.InvalidInfo);

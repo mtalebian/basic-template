@@ -8,12 +8,15 @@ import { Form, Formik } from "formik";
 import { BasicInput } from "../../../components/basic-form/basic-input";
 import { userManagmentApi } from "../../../api/user-managment-api";
 import { Tab } from "react-bootstrap";
+import classNames from "classnames";
+
 
 export const EditUser = ({ userId, onGoBack }) => {
   const { t } = useTranslation();
   const titlePage = !userId ? "New-Uesr" : "Edit-User";
   const [busy, setBusy] = useState(false);
   const [user, setUser] = useState(null);
+  const [deleting, setDeleting] = useState(false);
   const formRef = useRef();
   const [windowsAuth, setAuthType] = useState("true");
 
@@ -35,8 +38,9 @@ export const EditUser = ({ userId, onGoBack }) => {
     if (!formRef.current.isValid) return false;
     var values = formRef.current.values;
     setBusy(true);
+    var insertMode = !userId;
     userManagmentApi
-      .insertUser(values)
+      .saveUser(insertMode, values)
       .then((x) => {
         setBusy(false);
         notify.info(t("changes-are-saved"));
@@ -48,6 +52,35 @@ export const EditUser = ({ userId, onGoBack }) => {
       });
   };
 
+  const deleteClickHandler = () => {
+    bd.msgbox(t("the-user-will-be-deleted"), null, (hide) => (
+      <>
+        <bd.Button variant="text" color="primary" onClick={hide} className="m-e-2">
+          {t("cancel")}
+        </bd.Button>
+
+        <bd.Button variant="text" color="primary" disabled={deleting} onClick={() => onDeleteClick(hide)}>
+          {deleting && <div className="m-e-2 spinner-border spinner-border-sm"></div>}
+          {t("delete")}
+        </bd.Button>
+      </>
+    ));
+  };
+  const onDeleteClick = (hide) => {
+    setDeleting(true);
+    userManagmentApi
+        .deleteUser(userId)
+        .then((x) => {
+            setDeleting(false);
+            hide();
+            notify.info(t("row-is-deleted"));
+            onGoBack(null);
+        })
+        .catch((ex) => {
+            setDeleting(false);
+            notify.error(ex);
+        });
+};
   const UserForm = () => {
     return (
       <Form>
@@ -82,6 +115,7 @@ export const EditUser = ({ userId, onGoBack }) => {
     return (
       <div className="row">
         <div className="col-md-6">
+          <BasicInput name="id" labelSize="2" style={{ display: "none" }} />
           <BasicInput name="firstName" label={t("first-name")} labelSize="2" autoComplete="off" autoFocus style={inputStyle} />
           <BasicInput name="lastName" label={t("last-name")} labelSize="2" autoComplete="off" style={inputStyle} />
           <BasicInput name="userName" label={t("user-name")} labelSize="2" autoComplete="off" style={inputStyle} />
@@ -149,6 +183,19 @@ export const EditUser = ({ userId, onGoBack }) => {
             {busy && <div className="m-e-2 spinner-border spinner-border-sm"></div>}
             <span>{t("save-changes")}</span>
           </bd.Button>
+
+          <bd.Button
+            className={classNames("m-s-2 edge-end", {
+              "d-none": !userId,
+            })}
+            type="button"
+            variant="outline"
+            disabled={busy || deleting}
+            onClick={deleteClickHandler}
+          >
+            {deleting && <div className="m-e-2 spinner-border spinner-border-sm"></div>}
+            <span>{t("delete")}</span>
+          </bd.Button>
         </bd.Toolbar>
       </div>
 
@@ -180,7 +227,17 @@ export const EditUser = ({ userId, onGoBack }) => {
         )}
         {!user && (
           <Formik
-            initialValues={""}
+            initialValues={{
+              firstName: "",
+              lastName: "",
+              userName: "",
+              nationalCode: "",
+              email: "",
+              password: "",
+              repeatePassword: "",
+              phoneNumber: "",
+              windowsAuthenticate: true,
+            }}
             validationSchema={yup.object({
               firstName: yup.string().required("required"),
               lastName: yup.string().required("required"),
