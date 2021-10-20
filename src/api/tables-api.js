@@ -3,5 +3,6 @@ import { api } from "./api";
 import { apiConfig } from "./config";
 
 export const tablesApi = {
-    menu: () => api.call("post", `${apiConfig.tableDesignerUrl}/getGroups?projectId=${settings.projectId}`),
+    getGroups: () => api.call("post", `${apiConfig.tablesUrl}/get-groups?projectId=${settings.projectId}`),
+    browseTable: (name) => api.call("post", `${apiConfig.tablesUrl}/browse-table?projectId=${settings.projectId}&name=${name}`),
 };

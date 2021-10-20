@@ -12,6 +12,7 @@ namespace Forms.Core
         public string SingularTitle { get; set; }
         public string Description { get; set; }
 
+        public bool FlexLayout { get; set; }
         public bool Sortable { get; set; }
         public bool Filterable { get; set; }
         public string SelectSql { get; set; }

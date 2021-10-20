@@ -25,22 +25,23 @@ namespace Forms.Controllers
 
 
         [HttpPost("get-groups")]
-        public Response<GroupInfoDTO[]> getGroups([FromBody] GetGroupsRequestDTO req)
+        public Response<GroupInfoDTO[]> GetGroups(string projectId)
         {
-            var groups = service.GetAllGroups(req.ProjectId);
+            var groups = service.GetAllGroups(projectId);
             var result = new List<GroupInfoDTO>();
             foreach (var g in groups)
             {
-                var m = new GroupInfoDTO() { Title = g.Title };
-                m.Items = g.Tables.MapTo<GroupItemDTO>().ToArray();
-                if (m.Items.Length > 0) result.Add(m);
+                var dto = g.MapTo<GroupInfoDTO>();
+                dto.Items = service.GetTables(g.ProjectId, g.Id).MapTo<GroupItemDTO>().ToArray();
+                result.Add(dto);
             }
             return new Response<GroupInfoDTO[]>(result.ToArray());
         }
 
         [HttpPost("browse-table")]
-        public Response<BrowseTableDTO> BrowseTable(string projectId, string name, Dictionary<string, object[]> filters)
+        public Response<BrowseTableDTO> BrowseTable(string projectId, string name)
         {
+            var filters = (Dictionary<string, object[]>)null;
             var table = service.GetTable(projectId, name);
             var columns = service.GetColumns(table.ProjectId, table.Name);
             var data = service.ExecuteSelect(table, columns, filters);
@@ -48,7 +49,7 @@ namespace Forms.Controllers
             var result = new BrowseTableDTO();
             result.Schema = table.MapTo<TableDTO>();
             result.Schema.DataColumns = columns.MapTo<ColumnDTO>();
-            result.Data = data;
+            result.Data = data.ToJSON();
             return new Response<BrowseTableDTO>(result);
         }
 

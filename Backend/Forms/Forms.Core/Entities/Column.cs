@@ -16,6 +16,7 @@ namespace Forms.Core
         public int? MaxLen { get; set; }
         public string DefaultValue { get; set; }
         public string Filter { get; set; }
+        public int? Width { get; set; }
 
         public bool IsReadOnly { get; set; }
         public bool ShowInList { get; set; }

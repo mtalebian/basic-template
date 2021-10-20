@@ -8,6 +8,7 @@ export const apiConfig = {
     baseUrl: host,
     accountUrl: host + "/account",
     menuUrl: host + "/menu",
-    tableDesignerUrl: host + "/TableDesigner",
+    tableDesignerUrl: host + "/tableDesigner",
+    tablesUrl: host + "/tables",
     userManegmentUrl: host + "/userManagment",
 };

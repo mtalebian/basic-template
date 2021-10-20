@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 
 namespace Forms.Services
@@ -22,6 +23,11 @@ namespace Forms.Services
             return db.Groups.Where(x => x.ProjectId == projectId);
         }
 
+        public IList<Table> GetTables(string projectId, int groupId)
+        {
+            return db.Tables.Where(x => x.ProjectId == projectId && x.GroupId == groupId);
+        }
+        
         public Table GetTable(string projectId, string name)
         {
             return db.Tables.FirstOrDefault(x => x.ProjectId == projectId && x.Name == name);
@@ -32,60 +38,53 @@ namespace Forms.Services
             return db.Columns.Where(x => x.ProjectId == projectId && x.TableName == tableName);
         }
 
-        public IList<Dictionary<string, string>> ExecuteSelect(Table table, IList<Column> columns, Dictionary<string, object[]> filters)
+        public DataTable ExecuteSelect(Table table, IList<Column> columns, Dictionary<string, object[]> filters)
         {
             var fields = columns.Select(x => x.Name).ToArray();
             var where = new List<string>();
-            var sql = $"select {string.Join(",", fields)} from ${table.Name}";
+            var sql = $"select {string.Join(",", fields)} from {table.Name}";
             db.GetDataTable(sql);
-            foreach (var filter in filters.Where(x => x.Value != null && x.Value.Length > 1))
+            if (filters != null)
             {
-                var c = columns.FirstOrDefault(x => x.Name == filter.Key);
-                if (c != null && !string.IsNullOrEmpty(c.Filter))
+                foreach (var filter in filters.Where(x => x.Value != null && x.Value.Length > 1))
                 {
-                    var rop = filter.Value[0] as string;
-                    var values = filter.Value.Skip(1).ToArray();
-                    switch (rop)
+                    var c = columns.FirstOrDefault(x => x.Name == filter.Key);
+                    if (c != null && !string.IsNullOrEmpty(c.Filter))
                     {
-                        case "=":
-                        case "<>":
-                            where.Add("(" + string.Join(" OR ", values.Select(x => ToDbCondition(c, rop, x))) + ")");
-                            break;
+                        var rop = filter.Value[0] as string;
+                        var values = filter.Value.Skip(1).ToArray();
+                        switch (rop)
+                        {
+                            case "=":
+                            case "<>":
+                                where.Add("(" + string.Join(" OR ", values.Select(x => ToDbCondition(c, rop, x))) + ")");
+                                break;
 
-                        case "<":
-                        case "<=":
-                        case ">":
-                        case ">=":
-                            where.Add(string.Join(" OR ", ToDbCondition(c, rop, values[0])));
-                            break;
+                            case "<":
+                            case "<=":
+                            case ">":
+                            case ">=":
+                                where.Add(ToDbCondition(c, rop, values[0]));
+                                break;
 
-                        case "in":
-                            where.Add(string.Join(" OR ", ToDbCondition(c, ">=", values[0])));
-                            where.Add(string.Join(" OR ", ToDbCondition(c, "<=", values[1])));
-                            break;
+                            case "in":
+                                where.Add(ToDbCondition(c, ">=", values[0]));
+                                where.Add(ToDbCondition(c, "<=", values[1]));
+                                break;
 
-                        case "!in":
-                            where.Add(string.Join(" OR ", ToDbCondition(c, "<=", values[0])));
-                            where.Add(string.Join(" OR ", ToDbCondition(c, ">=", values[1])));
-                            break;
+                            case "!in":
+                                where.Add(ToDbCondition(c, "<=", values[0]));
+                                where.Add(ToDbCondition(c, ">=", values[1]));
+                                break;
 
-                        default:
-                            break;
+                            default:
+                                break;
+                        }
                     }
-                    if (rop == "=")
-                    {
-                        var vals = values.Select(x => ToDbCondition(c, rop, x));
-                        where.Add(string.Join(" OR ", vals));
-                    }
-                    if (rop == "<>")
-                    {
-                        var vals = values.Select(x => $"{c.Name} != '{x.ToString().Replace("'", "''")}'");
-                        where.Add(string.Join(" or ", vals));
-                    }
-
                 }
             }
-            throw new NotImplementedException();
+            if (where.Count > 0) sql += " where" + string.Join(" AND ", where);
+            return db.GetDataTable(sql);
         }
 
         private string ToDbCondition(Column c, string rop, object v)
