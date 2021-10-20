@@ -1,14 +1,28 @@
-import React, { useEffect, useState } from "react";
+import React, { useMemo, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import * as bd from "react-basic-design";
 import * as icons from "../../../assets/icons";
-import { TableTitlebar } from "react-basic-design";
+import { TableTitlebar } from "../../../components/table";
 import { EditUser } from "./edit-user";
-import { Table } from "../../../components/table";
 import { useAccount } from "../../../app/account-context";
 import { userManagmentApi } from "../../../api/user-managment-api";
 import { notify } from "../../../components/basic/notify";
-import { Row } from "react-bootstrap";
+import { RenderTableDiv } from "../../../components/table/render-table-div";
+import { DefaultEditor } from "../../../components/table/editors";
+import {
+  useTable,
+  useGlobalFilter,
+  usePagination,
+  useSortBy,
+  useFilters,
+  useGroupBy,
+  useExpanded,
+  useRowSelect,
+  //useBlockLayout,
+  useFlexLayout,
+  //useRowState,
+  useResizeColumns,
+} from "react-table";
 
 export const UsersApp = ({ ...props }) => {
   const { t } = useTranslation();
@@ -16,26 +30,9 @@ export const UsersApp = ({ ...props }) => {
   const account = useAccount();
   const [users, setUsers] = useState(null);
   const [selectedUser, setSelectedUser] = useState(null);
-  const tableRef = React.useRef();
-  const columns = React.useMemo(
-    () => [
 
-      { Header: t("id"), accessor: "id" },
-      { Header: t("user-name"), accessor: "userName" },
-      { Header: t("first-name"), accessor: "firstName" },
-      { Header: t("last-name"), accessor: "lastName" },
-      { Header: t("windows"), accessor: "windowsAuthenticate" },
-      { Header: t("national-code"), accessor: "nationalCode" },
-      { Header: t("operation"), accessor: (row)=>{return ( <bd.Button size="sm" color="primary" size onClick={() =>{
-        setSelectedUser(row.id);
-        setEditMode(true);
-        console.log(selectedUser);
-      }}>
-      <span>{t("edit")}</span>
-    </bd.Button>)} },
-    ],
-    []
-  );
+  const defaultPageSize = 10;
+  const skipReset = true;
 
   const addUserOnClick = () => {
     setSelectedUser(null);
@@ -55,6 +52,67 @@ export const UsersApp = ({ ...props }) => {
     }
   });
 
+  const tableApi = useTable(
+    {
+      initialState: { pageSize: defaultPageSize },
+      defaultColumn: {
+        Cell: DefaultEditor,
+        minWidth: 30,
+        disableGroupBy: true,
+        //maxWidth: 200,
+      },
+      columns: useMemo(
+        () => [
+          { Header: t("id"), accessor: "id", width: 50 },
+          { Header: t("user-name"), accessor: "userName", width: 100 },
+          { Header: t("first-name"), accessor: "firstName" },
+          { Header: t("last-name"), accessor: "lastName" },
+          { Header: t("national-code"), accessor: "nationalCode" },
+          { Header: t("authenticate"), accessor: "windowsAuthenticate", getDisplayValue: (value) => (value ? "ويندوز" : "فرم") },
+          {
+            Header: t("operation"),
+            accessor: "operation",
+            Cell: (row) => {
+              return (
+                <bd.Button
+                  size="sm"
+                  color="inherit"
+                  size
+                  onClick={() => {
+                    setSelectedUser(row.id);
+                    setEditMode(true);
+                    console.log(selectedUser);
+                  }}
+                >
+                   <icons.Edit className="size-md" />{t("edit")}
+                </bd.Button>
+              );
+            },
+          },
+        ],
+        []
+      ),
+      data: useMemo(() => (users ? users : []), [users]),
+      autoResetPage: !skipReset,
+      autoResetFilters: !skipReset,
+      autoResetSortBy: !skipReset,
+      autoResetSelectedRows: !skipReset,
+      autoResetGlobalFilter: !skipReset,
+      disableMultiSort: false,
+    },
+    useGlobalFilter,
+    useFilters,
+    useGroupBy,
+    useSortBy,
+    useExpanded,
+    usePagination,
+    useRowSelect,
+    //useBlockLayout,
+    useFlexLayout,
+    useResizeColumns
+    //(hooks) => reactTable.addSelectionColumns(hooks)
+  );
+
   return (
     <>
       {!editMode && !users && <div className="middle d-flex h-100">L O D I N G . . .</div>}
@@ -65,50 +123,30 @@ export const UsersApp = ({ ...props }) => {
               <bd.Button variant="text" onClick={addUserOnClick}>
                 <icons.PersonAddAlt className="size-lg" />
               </bd.Button>
-
-              {/* <bd.Button variant="text">
-                                <icons.Person className="size-lg" />
-                                {t("View user")}
-                            </bd.Button> */}
             </bd.Toolbar>
           </div>
           <div className="container">
-            <TableTitlebar title="Users" />
-            <Table
-              //className="w-100"
-              columns={columns}
-              //defaultColumn={defaultColumn}
-              data={users}
-              //updateData={updateMyData}
-              //skipReset={skipResetRef.current}
-              //enablePaging={enablePaging}
-              //enableGrouping={enableGrouping}
-              //enableSorting={enableSorting}
-              //showTableInfo={showTableInfo}
-              //showSummary={showSummary}
-              //showColumnFilter={showColumnFilter}
-              //hideColumns={}
-              //showFooter={showFooter}
-              //showPageSize={true}
-              //border=""
-              editable={false}
-              //clickAction="toggle"
-              //hideCheckbox={hideCheckbox}
-              //selectionMode="single"
-              //messages={messages}
-              tableRef={tableRef}
-              //tableClassName="w-100"
-              //
-              title="Columns"
-              expandableTitlebar={true}
-              showRowsCount={true}
-              titlebarSize="md"
-              titlebarColor="secondary"
-              //
-              defaultPageSize={5}
-              onStateChanged={(state) => {
-                console.log(state);
-              }}
+            <TableTitlebar tableApi={tableApi} hideSettings title="Columns" fixed />
+            <RenderTableDiv
+              tableApi={tableApi}
+              resizable
+              //multiSelect
+              singleSelect
+              hideCheckbox
+              hasSummary
+              showTableInfo
+              showPageSize
+              enablePaging
+              enableGrouping
+              enableSorting
+              //editable
+              clickAction="select"
+              className="border0 nano-scroll"
+              //style={{ minHeight: 400 }}
+              hover
+              striped
+              hasWhitespace
+              stickyFooter
             />
           </div>
         </>
