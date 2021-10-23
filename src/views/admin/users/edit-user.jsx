@@ -10,13 +10,13 @@ import { userManagmentApi } from "../../../api/user-managment-api";
 import { Tab } from "react-bootstrap";
 import classNames from "classnames";
 
-
 export const EditUser = ({ userId, onGoBack }) => {
   const { t } = useTranslation();
   const titlePage = !userId ? "New-Uesr" : "Edit-User";
   const [busy, setBusy] = useState(false);
   const [user, setUser] = useState(null);
   const [deleting, setDeleting] = useState(false);
+  const [activeTab, setActiveTab] = useState("first");
   const formRef = useRef();
   const [windowsAuth, setAuthType] = useState("true");
 
@@ -33,10 +33,13 @@ export const EditUser = ({ userId, onGoBack }) => {
     }
   });
 
-  const onSaveClick = (e) => {
+  const onSaveClick = (e) => {  
     if (!formRef.current) return false;
     if (!formRef.current.isValid) return false;
     var values = formRef.current.values;
+    values.windowsAuthenticate = windowsAuth == "true" ? true : false;
+    debugger;
+    console.log(values);
     setBusy(true);
     var insertMode = !userId;
     userManagmentApi
@@ -69,24 +72,24 @@ export const EditUser = ({ userId, onGoBack }) => {
   const onDeleteClick = (hide) => {
     setDeleting(true);
     userManagmentApi
-        .deleteUser(userId)
-        .then((x) => {
-            setDeleting(false);
-            hide();
-            notify.info(t("row-is-deleted"));
-            onGoBack(null);
-        })
-        .catch((ex) => {
-            setDeleting(false);
-            notify.error(ex);
-        });
-};
+      .deleteUser(userId)
+      .then((x) => {
+        setDeleting(false);
+        hide();
+        notify.info(t("row-is-deleted"));
+        onGoBack(null);
+      })
+      .catch((ex) => {
+        setDeleting(false);
+        notify.error(ex);
+      });
+  };
   const UserForm = () => {
     return (
       <Form>
         <div className="row">
           <div className="col-md-12">
-            <Tab.Container defaultActiveKey="first">
+            <Tab.Container defaultActiveKey={activeTab}>
               <bd.AppBar color="default" shadow="0" color="inherit">
                 <bd.TabStrip shade="primary" indicatorColor="primary">
                   <bd.TabStripItem eventKey="first">{t("general-info-tab")}</bd.TabStripItem>
@@ -133,6 +136,7 @@ export const EditUser = ({ userId, onGoBack }) => {
     return (
       <div className="row mb-2">
         <div className="col-md-6">
+          {windowsAuth}
           <label class="form-label text-start text-md-end col-form-label col-12 col-md-2">{t("auth-type")}</label>
           <bd.Toggle
             color="primary"
@@ -145,11 +149,11 @@ export const EditUser = ({ userId, onGoBack }) => {
             labelClassName="m-e-2"
             model={windowsAuth}
             setModel={setAuthType}
+            onChange={setActiveTab("second")}
           />
           <bd.Toggle
             color="primary"
             dense
-            checked
             radio
             size="sm"
             name="windowsAuthenticate"
@@ -158,7 +162,7 @@ export const EditUser = ({ userId, onGoBack }) => {
             model={windowsAuth}
             setModel={setAuthType}
           />
-          {windowsAuth == "false" && (
+          {windowsAuth === "false" && (
             <div className="mt-4">
               <BasicInput name="password" type="password" label={t("password")} labelSize="3" autoComplete="off" style={inputStyle} />
               <BasicInput name="repeatePassword" type="password" label={t("repeate-password")} labelSize="3" autoComplete="off" style={inputStyle} />

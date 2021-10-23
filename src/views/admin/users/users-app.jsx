@@ -71,20 +71,21 @@ export const UsersApp = ({ ...props }) => {
           { Header: t("authenticate"), accessor: "windowsAuthenticate", getDisplayValue: (value) => (value ? "ويندوز" : "فرم") },
           {
             Header: t("operation"),
-            accessor: "operation",
-            Cell: (row) => {
+            accessor: (row) => {
+              setSelectedUser(row.id);
+            },
+            Cell: () => {
               return (
                 <bd.Button
                   size="sm"
                   color="inherit"
                   size
                   onClick={() => {
-                    setSelectedUser(row.id);
                     setEditMode(true);
-                    console.log(selectedUser);
                   }}
                 >
-                   <icons.Edit className="size-md" />{t("edit")}
+                  <icons.Edit className="size-md" />
+                  {t("edit")}
                 </bd.Button>
               );
             },
