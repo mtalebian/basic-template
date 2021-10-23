@@ -25,6 +25,9 @@ export const EditUser = ({ userId, onGoBack }) => {
       userManagmentApi
         .getUser(userId)
         .then((x) => {
+          if (!x.windowsAuthenticate) {
+            setAuthType("false");
+          }
           setUser(x);
         })
         .catch((ex) => {
@@ -33,13 +36,11 @@ export const EditUser = ({ userId, onGoBack }) => {
     }
   });
 
-  const onSaveClick = (e) => {  
+  const onSaveClick = (e) => {
     if (!formRef.current) return false;
     if (!formRef.current.isValid) return false;
     var values = formRef.current.values;
     values.windowsAuthenticate = windowsAuth == "true" ? true : false;
-    debugger;
-    console.log(values);
     setBusy(true);
     var insertMode = !userId;
     userManagmentApi
@@ -47,7 +48,7 @@ export const EditUser = ({ userId, onGoBack }) => {
       .then((x) => {
         setBusy(false);
         notify.info(t("changes-are-saved"));
-        onGoBack();
+        onGoBack(x);
       })
       .catch((ex) => {
         setBusy(false);
@@ -136,7 +137,6 @@ export const EditUser = ({ userId, onGoBack }) => {
     return (
       <div className="row mb-2">
         <div className="col-md-6">
-          {windowsAuth}
           <label class="form-label text-start text-md-end col-form-label col-12 col-md-2">{t("auth-type")}</label>
           <bd.Toggle
             color="primary"
@@ -149,7 +149,7 @@ export const EditUser = ({ userId, onGoBack }) => {
             labelClassName="m-e-2"
             model={windowsAuth}
             setModel={setAuthType}
-            onChange={setActiveTab("second")}
+            onClick={() => setActiveTab("second")}
           />
           <bd.Toggle
             color="primary"
@@ -161,6 +161,7 @@ export const EditUser = ({ userId, onGoBack }) => {
             label={t("form")}
             model={windowsAuth}
             setModel={setAuthType}
+            onClick={() => setActiveTab("second")}
           />
           {windowsAuth === "false" && (
             <div className="mt-4">
@@ -177,7 +178,7 @@ export const EditUser = ({ userId, onGoBack }) => {
     <div>
       <div className="border-bottom">
         <bd.Toolbar className="container">
-          <bd.Button variant="icon" onClick={onGoBack} size="md" edge="start" className="m-e-2">
+          <bd.Button variant="icon" onClick={()=>onGoBack()} size="md" edge="start" className="m-e-2">
             <icons.ArrowBackIos className="rtl-rotate-180" />
           </bd.Button>
           <h5>{t(titlePage)}</h5>

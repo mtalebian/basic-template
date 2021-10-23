@@ -15,6 +15,7 @@ export const userManagmentApi = {
   saveUser: (insertMode, user) => {
     var action = insertMode ? "insert" : "update";
     var method = insertMode ? "post" : "put";
-    return api.call(`${method}`, `${apiConfig.userManegmentUrl}/${action}-user`, user);
+    var res= api.call(`${method}`, apiConfig.userManegmentUrl + `/${action}-user`, user);
+    return res;
   },
 };

@@ -24,7 +24,7 @@ import {
   useResizeColumns,
 } from "react-table";
 
-export const UsersApp = ({ ...props }) => {
+export const UsersApp = () => {
   const { t } = useTranslation();
   const [editMode, setEditMode] = useState(false);
   const account = useAccount();
@@ -71,16 +71,16 @@ export const UsersApp = ({ ...props }) => {
           { Header: t("authenticate"), accessor: "windowsAuthenticate", getDisplayValue: (value) => (value ? "ويندوز" : "فرم") },
           {
             Header: t("operation"),
-            accessor: (row) => {
-              setSelectedUser(row.id);
-            },
-            Cell: () => {
+            accessor: "operation",
+            Cell: ({ row }) => {
+              const data = row.original;
               return (
                 <bd.Button
                   size="sm"
                   color="inherit"
                   size
                   onClick={() => {
+                    setSelectedUser(data.id);
                     setEditMode(true);
                   }}
                 >
@@ -152,7 +152,28 @@ export const UsersApp = ({ ...props }) => {
           </div>
         </>
       )}
-      {editMode && <EditUser userId={selectedUser} onGoBack={() => setEditMode(false)} />}
+      {editMode && (
+        <EditUser
+          userId={selectedUser}
+          onGoBack={(item) => {
+            setEditMode(false);
+            if (!!item && selectedUser == null) {
+              setUsers([...users, item]);
+              setSelectedUser(item.id);
+            } else if (!!item && selectedUser != null) {
+              const list = [...users];
+              const i = list.findIndex((x) => x.id === item.id);
+              list[i] = item;
+              setUsers(list);
+              setSelectedUser(item.id);
+            } else if (item === null) {
+              const newUsers = users.filter((x) => x.id !== selectedUser);
+              setUsers(newUsers);
+              setSelectedUser(null);
+            }
+          }}
+        />
+      )}
     </>
   );
 };
