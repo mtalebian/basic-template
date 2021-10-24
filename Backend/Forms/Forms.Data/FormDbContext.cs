@@ -74,14 +74,25 @@ namespace Forms.Data
             Column.DefineProjectId(x => x.ProjectId);
             Column.DefineName(x => x.Title);
             Column.DefineTitle(x => x.Title);
-
             Column.IsRequired(x => x.IsPK);
             Column.IsRequired(x => x.IsNull);
-            Column.DefineDescription(x => x.DefaultValue);
+            Column.VarChar(x => x.DataType, 20, false);
+            Column.IsRequired(x => x.MaxLen, false);
+            Column.NVarChar(x => x.DefaultValue, 500, false);
+            Column.NVarChar(x => x.Filter, 20, false);
+            Column.IsRequired(x => x.Width, false);
+
+            Column.DefaultValue(x => x.IsReadOnly, 0, true);
             Column.DefaultValue(x => x.ShowInList, 1, true);
             Column.DefaultValue(x => x.ShowInEditor, 1, true);
+                        
+            Column.VarChar(x => x.Display, 20, false);
+            Column.VarChar(x => x.ValidValues, 2000, false);
+            Column.VarChar(x => x.CellClassName, 100, false);
+            Column.VarChar(x => x.ControlClassName, 100, false);
+
+            Column.NVarChar(x => x.Category, 200, false);
             Column.DefaultValue(x => x.OrdinalPosition, 0, true);
-            //Column.IsRequired(x => x.Category);
 
             Column.Entity()
                 .HasOne(x => x.Table)

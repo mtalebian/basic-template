@@ -32,27 +32,39 @@ namespace Forms.Migrations.Migrations
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("Category")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(200)
+                        .IsUnicode(true)
+                        .HasColumnType("nvarchar(200)");
 
                     b.Property<string>("CellClassName")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(100)
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(100)");
+
+                    b.Property<string>("ControlClassName")
+                        .HasMaxLength(100)
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(100)");
 
                     b.Property<string>("DataType")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(20)
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(20)");
 
                     b.Property<string>("DefaultValue")
-                        .HasMaxLength(2000)
+                        .HasMaxLength(500)
                         .IsUnicode(true)
-                        .HasColumnType("nvarchar(2000)");
-
-                    b.Property<string>("Direction")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(500)");
 
                     b.Property<string>("Display")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(20)
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(20)");
 
                     b.Property<string>("Filter")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(20)
+                        .IsUnicode(true)
+                        .HasColumnType("nvarchar(20)");
 
                     b.Property<bool>("IsNull")
                         .HasColumnType("bit");
@@ -61,7 +73,9 @@ namespace Forms.Migrations.Migrations
                         .HasColumnType("bit");
 
                     b.Property<bool>("IsReadOnly")
-                        .HasColumnType("bit");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
 
                     b.Property<int?>("MaxLen")
                         .HasColumnType("int");
@@ -94,7 +108,12 @@ namespace Forms.Migrations.Migrations
                         .HasColumnType("nvarchar(150)");
 
                     b.Property<string>("ValidValues")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(2000)
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(2000)");
+
+                    b.Property<int?>("Width")
+                        .HasColumnType("int");
 
                     b.HasKey("ProjectId", "Id");
 
@@ -157,6 +176,9 @@ namespace Forms.Migrations.Migrations
                     b.Property<bool>("Filterable")
                         .HasColumnType("bit");
 
+                    b.Property<bool>("FlexLayout")
+                        .HasColumnType("bit");
+
                     b.Property<int>("GroupId")
                         .HasColumnType("int");
 
@@ -193,6 +215,7 @@ namespace Forms.Migrations.Migrations
                             ProjectId = "project1",
                             Name = "tmp.Projects",
                             Filterable = true,
+                            FlexLayout = false,
                             GroupId = 1,
                             SingularTitle = "Project",
                             Sortable = true,

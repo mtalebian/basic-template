@@ -68,10 +68,10 @@ namespace Forms.Data
                 .IsRequired(required);
         }
 
-        internal void IsRequired<TProperty>([NotNull] Expression<Func<T, TProperty>> propertyExpression)
+        internal void IsRequired<TProperty>([NotNull] Expression<Func<T, TProperty>> propertyExpression, bool required = true)
         {
             Builder.Entity<T>().Property(propertyExpression)
-                .IsRequired();
+                .IsRequired(required);
         }
 
         internal void NVarChar<TProperty>([NotNull] Expression<Func<T, TProperty>> propertyExpression, int len, bool required = true)
@@ -130,5 +130,6 @@ namespace Forms.Data
                 .HasDefaultValueSql("getdate()")
                 .IsRequired(required);
         }
+
     }
 }

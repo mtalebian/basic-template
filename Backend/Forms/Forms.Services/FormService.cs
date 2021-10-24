@@ -35,7 +35,7 @@ namespace Forms.Services
 
         public IList<Column> GetColumns(string projectId, string tableName)
         {
-            return db.Columns.Where(x => x.ProjectId == projectId && x.TableName == tableName);
+            return db.Columns.Where(x => x.ProjectId == projectId && x.TableName == tableName).OrderBy(x => x.OrdinalPosition).ToList();
         }
 
         public DataTable ExecuteSelect(Table table, IList<Column> columns, Dictionary<string, object[]> filters)

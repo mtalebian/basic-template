@@ -112,8 +112,14 @@ export function TableDesignerEditTable({ table, group, onChanged, onGoBack }) {
                             return !r.dataType ? "" : `${r.dataType}(${r.maxLen})`;
                         },
                     },
+                    { Header: "DefaultValue", accessor: "defaultValue", width: 100 },
+                    { Header: "Filter", accessor: "filter", display: "select", validValues: ",simple,range", width: 100 },
+                    { Header: "Width", accessor: "width", display: "number", width: 80 },
+
+                    { Header: "ReadOnly", accessor: "isReadOnly", display: "check", width: 80 },
                     { Header: "List", accessor: "showInList", display: "check", width: 50 },
                     { Header: "Editor", accessor: "showInEditor", display: "check", width: 50 },
+
                     {
                         Header: "Display",
                         accessor: "display",
@@ -122,30 +128,15 @@ export function TableDesignerEditTable({ table, group, onChanged, onGoBack }) {
                         validValues: ", text, email, url, number, amount, textarea, check, switch, select, shamsi",
                     },
                     {
-                        Header: "ValidValues",
+                        Header: "Valid Values",
                         accessor: "validValues",
                         display: "textarea",
                         readOnly: (row) => row.values.display !== "select",
                     },
-                    { Header: "DefaultValue", accessor: "defaultValue", width: 100 },
-                    //{ Header: "CellClassName", accessor: "cellClassName" },
-                    //{ Header: "Category", accessor: "category" },
-
-                    {
-                        Header: "Dir",
-                        accessor: "direction",
-                        display: "select",
-                        validValues: ",rtl,ltr",
-                        width: 70,
-                        disableGroupBy: false,
-                    },
-                    {
-                        Header: "Position",
-                        accessor: "ordinalPosition",
-                        display: "number",
-                        width: 70,
-                        disableGroupBy: true,
-                    },
+                    { Header: "Cell CSS", accessor: "cellClassName", display: "text", width: 90, disableGroupBy: true },
+                    { Header: "Control CSS", accessor: "controlClassName", display: "text", width: 90, disableGroupBy: true },
+                    { Header: "Category", accessor: "category", display: "text", width: 90 },
+                    { Header: "Position", accessor: "ordinalPosition", display: "number", width: 65, disableGroupBy: true },
                 ],
                 []
             ),

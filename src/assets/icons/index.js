@@ -662,7 +662,7 @@ export { default as Edit } from "./Edit";
 // export { default as Filter8 } from './Filter8'
 // export { default as Filter9 } from './Filter9'
 // export { default as Filter9Plus } from './Filter9Plus'
-// export { default as FilterAlt } from './FilterAlt'
+export { default as FilterAlt } from "./FilterAlt";
 // export { default as FilterBAndW } from './FilterBAndW'
 // export { default as FilterCenterFocus } from './FilterCenterFocus'
 // export { default as FilterDrama } from './FilterDrama'

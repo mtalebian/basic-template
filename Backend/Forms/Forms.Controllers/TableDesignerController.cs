@@ -109,52 +109,31 @@ namespace Forms.Controllers
             var tb = service.GetSchemaColumn(tableName);
             foreach (DataRow r in tb.Rows)
             {
+                var data_type = r.AsString("DataType");
                 var c = new ColumnDTO
                 {
                     Name = r.AsString("Name"),
                     Title = r.AsString("Name"),
-                    DataType = r.AsString("DataType"),
-                    DefaultValue = r.AsString("DefaultValue"),
-                    IsNull = r.AsString("IsNull") == "YES",
                     IsPK = r.AsInt("IsPK") == 1,
+                    IsNull = r.AsString("IsNull") == "YES",
+                    DataType = data_type,
                     MaxLen = r.AsInt("MaxLen"),
+                    DefaultValue = r.AsString("DefaultValue"),
+                    Filter = data_type == "int" || data_type == "bigint" ? "range" : "simple",
+                    IsReadOnly = false,
+                    ShowInList = true,
+                    ShowInEditor = true,
+                    CellClassName = data_type == "varchar" ? "ltr" : null,
+                    ControlClassName = data_type == "varchar" ? "ltr" : null,
                     OrdinalPosition = r.AsInt("OrdinalPosition", 0),
                 };
-                if (c.DataType == "bit") c.Display = "check";
-                else if (c.DataType == "int" || c.DataType == "bigint") c.Display = "number";
-                else if (c.DataType == "varchar" || c.DataType == "nvarchar") c.Display = "text";
-                else if (c.DataType == "varbinary") c.IsReadOnly = true;
+                if (data_type == "bit") c.Display = "check";
+                else if (data_type == "int" || data_type == "bigint") c.Display = "number";
+                else if (data_type == "varchar" || data_type == "nvarchar") c.Display = "text";
+                else if (data_type == "varbinary") c.IsReadOnly = true;
                 res.Add(c);
             }
             return new Response<IList<ColumnDTO>>(res);
-        }
-
-
-        [HttpPost("insert-column")]
-        public Response<ColumnDTO> InsertColumn(string projectId, string tableName, [FromBody] ColumnDTO column)
-        {
-            var c = column.MapTo<Column>();
-            c.ProjectId = projectId;
-            c.TableName = tableName;
-            service.Insert(c);
-            return new Response<ColumnDTO>(c.MapTo<ColumnDTO>());
-        }
-
-        [HttpPost("update-column")]
-        public Response<ColumnDTO> UpdateColumn(string projectId, string tableName, [FromBody] ColumnDTO column)
-        {
-            var c = column.MapTo<Column>();
-            c.ProjectId = projectId;
-            c.TableName = tableName;
-            service.Update(ref c);
-            return new Response<ColumnDTO>(c.MapTo<ColumnDTO>());
-        }
-
-        [HttpPost("delete-column")]
-        public Response DeleteColumn(int id)
-        {
-            service.DeleteColumn(id);
-            return new Response();
         }
 
     }

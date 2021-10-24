@@ -23,6 +23,7 @@ import { notify } from "../../../components/basic/notify";
 import { TableTitlebar } from "../../../components/table";
 import { useReactTable } from "../../../components/table/use-react-table";
 import { Text } from "../../../components/basic/text";
+import { tablesApi } from "../../../api/tables-api";
 
 /*
  *
@@ -152,7 +153,7 @@ export const BrowseTable = ({ table, onGoBack }) => {
 
     return (
         <>
-            <div className="border-bottom bg-gray-5 mb-3">
+            <div className="border-bottom bg-gray-5 mb-1">
                 <div className="container">
                     <bd.Toolbar>
                         <bd.Button variant="icon" onClick={onGoBack} size="md" edge="start" className="m-e-2">
@@ -161,72 +162,82 @@ export const BrowseTable = ({ table, onGoBack }) => {
 
                         {/* <h5>{t(table.title)}</h5> */}
                         <h5>
-                            <Text>browse-table</Text>
+                            <Text>{table.title}</Text>
                         </h5>
 
                         <div className="flex-grow-1" />
 
-                        <bd.Button color="primary" disabled={saving || deleting} onClick={onSaveClick}>
-                            {saving && <div className="m-e-2 spinner-border spinner-border-sm"></div>}
-                            <span>{t("save-changes")}</span>
+                        <bd.Button
+                            variant="text"
+                            size="md"
+                            onClick={(e) => {
+                                tablesApi
+                                    .browseTable(table.name)
+                                    .then((x) => {
+                                        table.data = x.data;
+                                        tableApi.state.selectedRowIds = {};
+                                        setData(x.data);
+                                    })
+                                    .catch((ex) => {
+                                        notify.error(ex);
+                                    });
+                            }}
+                        >
+                            <icons.Sync />
+                            <Text>refresh</Text>
                         </bd.Button>
 
-                        <bd.Button variant="icon" menu={moreMenu} edge="end" className="m-s-1">
-                            <icons.MoreVert />
+                        <bd.Button
+                            variant="text"
+                            size="md"
+                            onClick={(e) => {
+                                //     var r = newRow();
+                                //     setData([...data, r]);
+                                tableApi.state.selectedRowIds = { [data.length]: true };
+                            }}
+                        >
+                            <icons.Add />
+                            <Text>add</Text>
                         </bd.Button>
                     </bd.Toolbar>
                 </div>
             </div>
 
             <div className="container" style={{ marginBottom: 70 }}>
-                <TableTitlebar
-                    tableApi={tableApi}
-                    //hideSearch
-                    //hideSettings
-                    title={table.title}
-                    fixed
-                    buttons={
-                        <>
-                            <bd.Button
-                                variant="icon"
-                                size="md"
-                                // onClick={(e) => {
-                                //     tableDesignerApi
-                                //         .schemaColumn(table.name)
-                                //         .then((schemaColumns) => {
-                                //             let d = [...data];
-                                //             schemaColumns.forEach((x) => {
-                                //                 const f = d.find((z) => z.name === x.name);
-                                //                 if (!f) d = [...d, x];
-                                //                 else {
-                                //                     f.dataType = x.dataType;
-                                //                     f.maxLen = x.maxLen;
-                                //                     f.isPK = x.isPK;
-                                //                     f.isNull = x.isNull;
-                                //                     f.defaultValue = x.defaultValue;
-                                //                     f.ordinalPosition = x.ordinalPosition;
-                                //                 }
-                                //             });
-                                //             setData(d);
-                                //         })
-                                //         .catch((ex) => notify.error(ex));
-                                // }}
-                            >
-                                <icons.Sync />
+                <div className="container" style={{ marginBottom: 70 }}>
+                    <TableTitlebar
+                        tableApi={tableApi}
+                        hideSearch
+                        hideSettings
+                        title={<Text>filters</Text>}
+                        expanded
+                        fixed
+                        buttons={
+                            <bd.Button color="primary" disabled={saving || deleting} onClick={onSaveClick}>
+                                {saving && <div className="m-e-2 spinner-border spinner-border-sm"></div>}
+                                <span>{t("apply-filter")}</span>
                             </bd.Button>
+                        }
+                    >
+                        <div className="row" style={{ maxWidth: 500 }}>
+                            {table.schema.dataColumns
+                                .filter((x) => x.filter)
+                                .map((x) => (
+                                    <bd.FormRow label={x.title} labelSize="3">
+                                        <input className="form-control" />
+                                    </bd.FormRow>
+                                ))}
+                        </div>
+                    </TableTitlebar>
 
-                            <bd.Button
-                                variant="icon"
-                                size="md"
-                                // onClick={(e) => {
-                                //     var r = newRow();
-                                //     setData([...data, r]);
-                                //     tableApi.state.selectedRowIds = { [data.length]: true };
-                                // }}
-                            >
-                                <icons.Add />
-                            </bd.Button>
-
+                    <TableTitlebar
+                        tableApi={tableApi}
+                        //hideSearch
+                        //hideSettings
+                        //title={<Text>filters</Text>}
+                        expanded
+                        fixed
+                        buttons={
                             <bd.Button
                                 variant="icon"
                                 size="md"
@@ -239,31 +250,31 @@ export const BrowseTable = ({ table, onGoBack }) => {
                             >
                                 <icons.Delete />
                             </bd.Button>
-                        </>
-                    }
-                />
+                        }
+                    />
 
-                <RenderTableDiv
-                    tableApi={tableApi}
-                    //resizable
-                    //multiSelect
-                    singleSelect
-                    //hideCheckbox
-                    //hasSummary
-                    showTableInfo
-                    //showPageSize
-                    //enablePaging
-                    //enableGrouping
-                    enableSorting
-                    //editable
-                    clickAction="toggle"
-                    className="border nano-scroll"
-                    //style={{ minHeight: 400 }}
-                    hover
-                    //striped
-                    hasWhitespace={!table.flexLayout}
-                    //stickyFooter
-                />
+                    <RenderTableDiv
+                        tableApi={tableApi}
+                        //resizable
+                        //multiSelect
+                        singleSelect
+                        //hideCheckbox
+                        //hasSummary
+                        //showTableInfo
+                        showPageSize
+                        enablePaging
+                        //enableGrouping
+                        enableSorting
+                        //editable
+                        clickAction="toggle"
+                        className="border nano-scroll"
+                        //style={{ minHeight: 400 }}
+                        hover
+                        //striped
+                        hasWhitespace={!table.flexLayout}
+                        //stickyFooter
+                    />
+                </div>
             </div>
         </>
     );

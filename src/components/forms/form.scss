@@ -1,0 +1,92 @@
+.bd-input {
+    position: relative;
+
+    .icon {
+        position: absolute;
+        width: 32px;
+        top: 1px;
+        bottom: 1px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 10px;
+        cursor: pointer;
+
+        @include positionEnd(1px);
+    }
+
+    .form-control {
+        color: currentColor;
+
+        &.has-icon {
+            @include paddingEnd(32px);
+        }
+
+        &::placeholder {
+            color: currentColor;
+            opacity: 0.42;
+        }
+    }
+}
+
+.btn-md {
+    height: 2rem;
+}
+
+.bd-form {
+}
+
+.bd-form-input {
+    width: 12rem;
+    min-width: 12rem;
+    max-width: 12rem;
+    input {
+        height: 1.75rem;
+    }
+}
+
+/*******************/
+@mixin basicForm($palette) {
+    $text: map-get($palette, text);
+    $bg: map-get($palette, bg);
+
+    $primary-palette: map-get($palette, primary);
+    $primary: map-get($primary-palette, main);
+
+    $error-palette: map-get($palette, error);
+    $error: map-get($error-palette, main);
+
+    $border: mix($bg, $text, 70%);
+
+    .bd-input {
+        border-color: $border;
+
+        &:hover {
+            border-color: $primary;
+        }
+
+        .icon {
+            color: $primary;
+
+            &:hover {
+                background-color: rgba($primary, 15%);
+            }
+
+            &:active {
+                background-color: $primary;
+                color: $bg;
+            }
+        }
+    }
+}
+
+/*******************/
+.theme-bd.theme-light {
+    $palette: map-get($theme, light);
+    @include basicForm($palette);
+}
+
+.theme-bd.theme-dark {
+    $palette: map-get($theme, dark);
+    @include basicForm($palette);
+}

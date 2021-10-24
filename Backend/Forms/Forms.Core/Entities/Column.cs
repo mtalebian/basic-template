@@ -21,11 +21,11 @@ namespace Forms.Core
         public bool IsReadOnly { get; set; }
         public bool ShowInList { get; set; }
         public bool ShowInEditor { get; set; }
-        public string Direction { get; set; }
 
         public string Display { get; set; }
         public string ValidValues { get; set; }
         public string CellClassName { get; set; }
+        public string ControlClassName { get; set; }
 
         public string Category { get; set; }
         public int OrdinalPosition { get; set; }

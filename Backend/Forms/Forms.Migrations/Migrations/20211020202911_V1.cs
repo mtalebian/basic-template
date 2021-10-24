@@ -51,6 +51,7 @@ namespace Forms.Migrations.Migrations
                     Title = table.Column<string>(type: "nvarchar(150)", maxLength: 150, nullable: false),
                     SingularTitle = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Description = table.Column<string>(type: "nvarchar(2000)", maxLength: 2000, nullable: true),
+                    FlexLayout = table.Column<bool>(type: "bit", nullable: false),
                     Sortable = table.Column<bool>(type: "bit", nullable: false),
                     Filterable = table.Column<bool>(type: "bit", nullable: false),
                     SelectSql = table.Column<string>(type: "nvarchar(max)", nullable: true),
@@ -83,18 +84,19 @@ namespace Forms.Migrations.Migrations
                     Title = table.Column<string>(type: "nvarchar(150)", maxLength: 150, nullable: false),
                     IsPK = table.Column<bool>(type: "bit", nullable: false),
                     IsNull = table.Column<bool>(type: "bit", nullable: false),
-                    DataType = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    DataType = table.Column<string>(type: "varchar(20)", unicode: false, maxLength: 20, nullable: true),
                     MaxLen = table.Column<int>(type: "int", nullable: true),
-                    DefaultValue = table.Column<string>(type: "nvarchar(2000)", maxLength: 2000, nullable: true),
-                    Filter = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    IsReadOnly = table.Column<bool>(type: "bit", nullable: false),
+                    DefaultValue = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true),
+                    Filter = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: true),
+                    Width = table.Column<int>(type: "int", nullable: true),
+                    IsReadOnly = table.Column<bool>(type: "bit", nullable: false, defaultValue: false),
                     ShowInList = table.Column<bool>(type: "bit", nullable: false, defaultValue: true),
                     ShowInEditor = table.Column<bool>(type: "bit", nullable: false, defaultValue: true),
-                    Direction = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Display = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    ValidValues = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    CellClassName = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Category = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Display = table.Column<string>(type: "varchar(20)", unicode: false, maxLength: 20, nullable: true),
+                    ValidValues = table.Column<string>(type: "varchar(2000)", unicode: false, maxLength: 2000, nullable: true),
+                    CellClassName = table.Column<string>(type: "varchar(100)", unicode: false, maxLength: 100, nullable: true),
+                    ControlClassName = table.Column<string>(type: "varchar(100)", unicode: false, maxLength: 100, nullable: true),
+                    Category = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: true),
                     OrdinalPosition = table.Column<int>(type: "int", nullable: false, defaultValue: 0)
                 },
                 constraints: table =>
@@ -118,8 +120,8 @@ namespace Forms.Migrations.Migrations
             migrationBuilder.InsertData(
                 schema: "tmp",
                 table: "Tables",
-                columns: new[] { "Name", "ProjectId", "DeleteSql", "Description", "Filterable", "GroupId", "InsertSql", "SelectSql", "SingularTitle", "Sortable", "Title", "UpdateSql" },
-                values: new object[] { "tmp.Projects", "project1", null, null, true, 1, null, null, "Project", true, "Projects", null });
+                columns: new[] { "Name", "ProjectId", "DeleteSql", "Description", "Filterable", "FlexLayout", "GroupId", "InsertSql", "SelectSql", "SingularTitle", "Sortable", "Title", "UpdateSql" },
+                values: new object[] { "tmp.Projects", "project1", null, null, true, false, 1, null, null, "Project", true, "Projects", null });
 
             migrationBuilder.CreateIndex(
                 name: "IX_Columns_ProjectId_TableName",
