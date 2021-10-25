@@ -158,7 +158,7 @@ export const BrowseTable = ({ table, onGoBack }) => {
 
                         {/* <h5>{t(table.title)}</h5> */}
                         <h5>
-                            <Text>{table.title}</Text>:
+                            <Text>{table.title}</Text>
                         </h5>
 
                         <div className="flex-grow-1" />
@@ -166,49 +166,41 @@ export const BrowseTable = ({ table, onGoBack }) => {
                 </div>
             </div>
 
-            <div className="border-bottom bg-default0 pt-2 pb-4">
-                <bd.Panel
-                    className="container"
-                    tableApi={tableApi}
-                    hideSearch
-                    hideSettings
-                    title={
-                        <bd.Button variant="text" className="btn-lg" color="primary" menu={viewsMenu}>
+            <div className="border-bottom bg-default pt-2 pb-4">
+                <div className="container">
+                    <bd.Toolbar>
+                        <bd.Button variant="text" className="btn-lg p-s-0 bg-transparent" color="primary" menu={viewsMenu}>
                             Standard
                         </bd.Button>
-                    }
-                    expanded
-                    fixed
-                    controls={
-                        <>
-                            <bd.Button
-                                color="primary"
-                                size="md"
-                                disabled={saving || deleting}
-                                className="m-e-2"
-                                onClick={(e) => {
-                                    tablesApi
-                                        .browseTable(table.name)
-                                        .then((x) => {
-                                            table.data = x.data;
-                                            tableApi.state.selectedRowIds = {};
-                                            setData(x.data);
-                                        })
-                                        .catch((ex) => {
-                                            notify.error(ex);
-                                        });
-                                }}
-                            >
-                                {saving && <div className="m-e-2 spinner-border spinner-border-sm"></div>}
-                                <Text>apply-filter</Text>
-                            </bd.Button>
+                        <div className="flex-grow-1"></div>
 
-                            <bd.Button variant="outline" color="primary" size="md" disabled={saving || deleting}>
-                                <Text>Filters</Text>
-                            </bd.Button>
-                        </>
-                    }
-                >
+                        <bd.Button
+                            color="primary"
+                            size="md"
+                            disabled={saving || deleting}
+                            className="m-e-2"
+                            onClick={(e) => {
+                                tablesApi
+                                    .browseTable(table.name)
+                                    .then((x) => {
+                                        table.data = x.data;
+                                        tableApi.state.selectedRowIds = {};
+                                        setData(x.data);
+                                    })
+                                    .catch((ex) => {
+                                        notify.error(ex);
+                                    });
+                            }}
+                        >
+                            {saving && <div className="m-e-2 spinner-border spinner-border-sm"></div>}
+                            <Text>apply-filter</Text>
+                        </bd.Button>
+
+                        <bd.Button variant="outline" color="primary" size="md" disabled={saving || deleting}>
+                            <Text>Filters</Text>
+                        </bd.Button>
+                    </bd.Toolbar>
+
                     <bd2.Form>
                         {table.schema.dataColumns
                             //.filter((x) => x.filter)
@@ -216,7 +208,7 @@ export const BrowseTable = ({ table, onGoBack }) => {
                                 <bd2.FormInput label={x.title} btnIcon={<icons.OpenInNew />} onBtnClick={() => alert("ccc")} />
                             ))}
                     </bd2.Form>
-                </bd.Panel>
+                </div>
             </div>
 
             <div className="container mt-2" style={{ marginBottom: 70 }}>

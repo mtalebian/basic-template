@@ -125,7 +125,7 @@ export function RenderTableDiv({
 
     const onTdClick = (row, cell) => {
         if (row.isGrouped) return;
-        if (cell.column._ignoreToggleOnClick) return;
+        if (cell && cell.column._ignoreToggleOnClick) return;
         if (!singleSelect && !multiSelect) return;
         const is_selected = row.isSelected;
         switch (clickAction) {
@@ -152,12 +152,16 @@ export function RenderTableDiv({
                     {tableApi.headerGroups.map((headerGroup) => (
                         <div {...headerGroup.getHeaderGroupProps()} className="tr">
                             {!hideCheckbox && multiSelect && (
-                                <div className="th selection-column">
+                                <div
+                                    className="th selection-column"
+                                    onClick={() => tableApi.toggleAllRowsSelected(!tableApi.isAllRowsSelected)}
+                                >
                                     <bd.Toggle
                                         size="sm"
                                         color="primary"
                                         labelClassName="m-0"
                                         {...tableApi.getToggleAllRowsSelectedProps()}
+                                        onChange={null}
                                     />
                                 </div>
                             )}
@@ -210,22 +214,25 @@ export function RenderTableDiv({
                         return (
                             <div {...row.getRowProps()} className={classNames("tr", { selected: row.isSelected })}>
                                 {!hideCheckbox && multiSelect && (
-                                    <div className="td selection-column">
-                                        <bd.Toggle size="sm" color="primary" labelClassName="m-0" {...row.getToggleRowSelectedProps()} />
-                                    </div>
-                                )}
-                                {!hideCheckbox && singleSelect && (
-                                    <div className="td selection-column">
+                                    <div className="td selection-column" onClick={() => row.toggleRowSelected()}>
                                         <bd.Toggle
-                                            radio
                                             size="sm"
                                             color="primary"
                                             labelClassName="m-0"
                                             {...row.getToggleRowSelectedProps()}
-                                            onChange={() => {
-                                                tableApi.toggleAllRowsSelected(false);
-                                                tableApi.toggleRowSelected(row.id);
-                                            }}
+                                            onChange={null}
+                                        />
+                                    </div>
+                                )}
+                                {!hideCheckbox && singleSelect && (
+                                    <div className="td selection-column" onClick={() => onTdClick(row)}>
+                                        <bd.Toggle
+                                            radio
+                                            size="sm"
+                                            color="primary"
+                                            labelClassName="m-0 p-0"
+                                            {...row.getToggleRowSelectedProps()}
+                                            onChange={null}
                                         />
                                     </div>
                                 )}

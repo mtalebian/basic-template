@@ -28,7 +28,6 @@ import { BasicTextArea } from "../../../components/basic-form/basic-textarea";
 
 //
 export function TableDesignerEditTable({ table, group, onChanged, onGoBack }) {
-    console.log(table);
     const { t } = useTranslation();
     const [data, setData] = useState(table.dataColumns);
     const [saving, setSaving] = useState(false);
@@ -293,7 +292,7 @@ export function TableDesignerEditTable({ table, group, onChanged, onGoBack }) {
                     //resizable
                     //multiSelect
                     singleSelect
-                    hideCheckbox
+                    //hideCheckbox
                     //hasSummary
                     showTableInfo
                     //showPageSize
