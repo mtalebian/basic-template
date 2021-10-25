@@ -94,7 +94,7 @@ export const EditUser = ({ userId, onGoBack }) => {
               <bd.AppBar color="default" shadow="0" color="inherit">
                 <bd.TabStrip shade="primary" indicatorColor="primary">
                   <bd.TabStripItem eventKey="first">{t("general-info-tab")}</bd.TabStripItem>
-                  <bd.TabStripItem eventKey="second">{t("authentication-type-tab")}</bd.TabStripItem>
+                  {!user && <bd.TabStripItem eventKey="second">{t("authentication-type-tab")}</bd.TabStripItem>}
                   <bd.TabStripItem eventKey="third">{t("role-manage-tab")}</bd.TabStripItem>
                 </bd.TabStrip>
               </bd.AppBar>
@@ -178,7 +178,7 @@ export const EditUser = ({ userId, onGoBack }) => {
     <div>
       <div className="border-bottom">
         <bd.Toolbar className="container">
-          <bd.Button variant="icon" onClick={()=>onGoBack()} size="md" edge="start" className="m-e-2">
+          <bd.Button variant="icon" onClick={() => onGoBack()} size="md" edge="start" className="m-e-2">
             <icons.ArrowBackIos className="rtl-rotate-180" />
           </bd.Button>
           <h5>{t(titlePage)}</h5>
@@ -212,17 +212,17 @@ export const EditUser = ({ userId, onGoBack }) => {
               firstName: yup.string().required("required"),
               lastName: yup.string().required("required"),
               userName: yup.string().required("required"),
-              nationalCode: yup.string().required("required"),
-              email: yup.string().email("email not valid"),
-              password: yup.string().when("windowsAuthenticate", {
-                is: (value) => value == "false",
-                then: yup.string().required("required"),
-              }),
-              repeatePassword: yup.string().when("password", {
-                is: (value) => value && value.length > 0,
-                then: yup.string().required("required"),
-              }),
-              phoneNumber: yup.string().matches(/^[0-9]{11}$/, "Must be exactly 11 digits"),
+              nationalCode: yup.string().required("required").nullable(true),
+              email: yup.string().email("email not valid").nullable(true),
+              // password: yup.string().when("windowsAuthenticate", {
+              //   is: (value) => value == "false",
+              //   then: yup.string().required("required"),
+              // }),
+              // repeatePassword: yup.string().when("password", {
+              //   is: (value) => value && value.length > 0,
+              //   then: yup.string().required("required"),
+              // }),
+              phoneNumber: yup.string().matches(/^[0-9]{11}$/, "Must be exactly 11 digits").nullable(true),
             })}
             onSubmit={onSaveClick}
             innerRef={formRef}
