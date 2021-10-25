@@ -36,7 +36,7 @@ export const AddUser = ({ onGoBack, ...props }) => {
         <div>
             <div className="border-bottom">
                 <bd.Toolbar className="container">
-                    <bd.Button variant="icon" onClick={onGoBack} size="md" edge="start" className="m-e-2">
+                    <bd.Button variant="icon" onClick={onGoBack} edge="start" className="m-e-2">
                         <icons.ArrowBackIos className="rtl-rotate-180" />
                     </bd.Button>
                     <h5>{t("new-user")}</h5>

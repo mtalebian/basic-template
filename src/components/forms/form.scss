@@ -57,6 +57,7 @@
     $error: map-get($error-palette, main);
 
     $border: mix($bg, $text, 70%);
+    $icon: mix($text, $primary, 40%);
 
     .bd-input {
         border-color: $border;
@@ -66,14 +67,14 @@
         }
 
         .icon {
-            color: $primary;
+            color: $icon;
 
             &:hover {
-                background-color: rgba($primary, 15%);
+                background-color: mix($bg, $primary, 85%);
             }
 
             &:active {
-                background-color: $primary;
+                background-color: $icon;
                 color: $bg;
             }
         }

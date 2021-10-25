@@ -1165,7 +1165,7 @@ export { default as NotificationsActive } from "./NotificationsActive";
 // export { default as Opacity } from './Opacity'
 // export { default as OpenInBrowser } from './OpenInBrowser'
 // export { default as OpenInFull } from './OpenInFull'
-// export { default as OpenInNew } from './OpenInNew'
+export { default as OpenInNew } from "./OpenInNew";
 // export { default as OpenInNewOff } from './OpenInNewOff'
 // export { default as OpenWith } from './OpenWith'
 // export { default as OtherHouses } from './OtherHouses'

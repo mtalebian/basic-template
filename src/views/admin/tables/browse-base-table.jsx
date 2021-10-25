@@ -1,24 +1,11 @@
-import React, { useMemo, useState } from "react";
+import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import * as bd from "react-basic-design";
 import * as icons from "../../../assets/icons";
+import * as bd2 from "../../../components/forms";
 import { useAccount } from "../../../app/account-context";
-import {
-    useTable,
-    useGlobalFilter,
-    usePagination,
-    useSortBy,
-    useFilters,
-    useGroupBy,
-    useExpanded,
-    useRowSelect,
-    useBlockLayout,
-    //useFlexLayout,
-    //useRowState,
-    //useResizeColumns,
-} from "react-table";
+
 import { RenderTableDiv } from "../../../components/table/render-table-div";
-import { DefaultEditor } from "../../../components/table/editors";
 import { notify } from "../../../components/basic/notify";
 import { TableTitlebar } from "../../../components/table";
 import { useReactTable } from "../../../components/table/use-react-table";
@@ -142,104 +129,122 @@ export const BrowseTable = ({ table, onGoBack }) => {
 
     const tableApi = useReactTable({ columns: table.schemaColumns, data, updateData, flexLayout: table.flexLayout });
 
-    const moreMenu = (
+    const viewsMenu = (
         <bd.Menu>
-            <bd.MenuItem disabled={insertMode || saving || deleting} onClick={onDeleteClick}>
-                {deleting && <div className="m-e-2 spinner-border spinner-border-sm"></div>}
-                <span>{t("delete")}</span>
-            </bd.MenuItem>
+            <div style={{ minWidth: 300 }}>
+                <bd.MenuItem>
+                    <Text>delete</Text>
+                </bd.MenuItem>
+                <div className="text-end px-2 pt-2 border-top mt-2">
+                    <bd.Button color="primary" className="m-s-2" variant="text">
+                        <Text>manage</Text>
+                    </bd.Button>
+                    <bd.Button color="primary">
+                        <Text>save</Text>
+                    </bd.Button>
+                </div>
+            </div>
         </bd.Menu>
     );
 
     return (
         <>
-            <div className="border-bottom bg-gray-5 mb-1">
+            <div className="border-bottom bg-gray-5">
                 <div className="container">
                     <bd.Toolbar>
-                        <bd.Button variant="icon" onClick={onGoBack} size="md" edge="start" className="m-e-2">
+                        <bd.Button variant="icon" onClick={onGoBack} edge="start" className="m-e-2">
                             <icons.ArrowBackIos className="rtl-rotate-180" />
                         </bd.Button>
 
                         {/* <h5>{t(table.title)}</h5> */}
                         <h5>
-                            <Text>{table.title}</Text>
+                            <Text>{table.title}</Text>:
                         </h5>
 
                         <div className="flex-grow-1" />
-
-                        <bd.Button
-                            variant="text"
-                            size="md"
-                            onClick={(e) => {
-                                tablesApi
-                                    .browseTable(table.name)
-                                    .then((x) => {
-                                        table.data = x.data;
-                                        tableApi.state.selectedRowIds = {};
-                                        setData(x.data);
-                                    })
-                                    .catch((ex) => {
-                                        notify.error(ex);
-                                    });
-                            }}
-                        >
-                            <icons.Sync />
-                            <Text>refresh</Text>
-                        </bd.Button>
-
-                        <bd.Button
-                            variant="text"
-                            size="md"
-                            onClick={(e) => {
-                                //     var r = newRow();
-                                //     setData([...data, r]);
-                                tableApi.state.selectedRowIds = { [data.length]: true };
-                            }}
-                        >
-                            <icons.Add />
-                            <Text>add</Text>
-                        </bd.Button>
                     </bd.Toolbar>
                 </div>
             </div>
 
-            <div className="container" style={{ marginBottom: 70 }}>
-                <div className="container" style={{ marginBottom: 70 }}>
-                    <TableTitlebar
-                        tableApi={tableApi}
-                        hideSearch
-                        hideSettings
-                        title={<Text>filters</Text>}
-                        expanded
-                        fixed
-                        buttons={
-                            <bd.Button color="primary" disabled={saving || deleting} onClick={onSaveClick}>
-                                {saving && <div className="m-e-2 spinner-border spinner-border-sm"></div>}
-                                <span>{t("apply-filter")}</span>
-                            </bd.Button>
-                        }
-                    >
-                        <div className="row" style={{ maxWidth: 500 }}>
-                            {table.schema.dataColumns
-                                .filter((x) => x.filter)
-                                .map((x) => (
-                                    <bd.FormRow label={x.title} labelSize="3">
-                                        <input className="form-control" />
-                                    </bd.FormRow>
-                                ))}
-                        </div>
-                    </TableTitlebar>
-
-                    <TableTitlebar
-                        tableApi={tableApi}
-                        //hideSearch
-                        //hideSettings
-                        //title={<Text>filters</Text>}
-                        expanded
-                        fixed
-                        buttons={
+            <div className="border-bottom bg-default0 pt-2 pb-4">
+                <bd.Panel
+                    className="container"
+                    tableApi={tableApi}
+                    hideSearch
+                    hideSettings
+                    title={
+                        <bd.Button variant="text" className="btn-lg" color="primary" menu={viewsMenu}>
+                            Standard
+                        </bd.Button>
+                    }
+                    expanded
+                    fixed
+                    controls={
+                        <>
                             <bd.Button
-                                variant="icon"
+                                color="primary"
+                                size="md"
+                                disabled={saving || deleting}
+                                className="m-e-2"
+                                onClick={(e) => {
+                                    tablesApi
+                                        .browseTable(table.name)
+                                        .then((x) => {
+                                            table.data = x.data;
+                                            tableApi.state.selectedRowIds = {};
+                                            setData(x.data);
+                                        })
+                                        .catch((ex) => {
+                                            notify.error(ex);
+                                        });
+                                }}
+                            >
+                                {saving && <div className="m-e-2 spinner-border spinner-border-sm"></div>}
+                                <Text>apply-filter</Text>
+                            </bd.Button>
+
+                            <bd.Button variant="outline" color="primary" size="md" disabled={saving || deleting}>
+                                <Text>Filters</Text>
+                            </bd.Button>
+                        </>
+                    }
+                >
+                    <bd2.Form>
+                        {table.schema.dataColumns
+                            //.filter((x) => x.filter)
+                            .map((x) => (
+                                <bd2.FormInput label={x.title} btnIcon={<icons.OpenInNew />} onBtnClick={() => alert("ccc")} />
+                            ))}
+                    </bd2.Form>
+                </bd.Panel>
+            </div>
+
+            <div className="container mt-2" style={{ marginBottom: 70 }}>
+                <TableTitlebar
+                    tableApi={tableApi}
+                    //hideSearch
+                    //hideSettings
+                    //title={<Text>filters</Text>}
+                    expanded
+                    fixed
+                    buttons={
+                        <>
+                            <bd.Button
+                                variant="text"
+                                color="primary"
+                                size="md"
+                                onClick={(e) => {
+                                    //     var r = newRow();
+                                    //     setData([...data, r]);
+                                    tableApi.state.selectedRowIds = { [data.length]: true };
+                                }}
+                            >
+                                {/* <icons.Add /> */}
+                                <Text>add</Text>
+                            </bd.Button>
+                            <bd.Button
+                                variant="text"
+                                color="primary"
                                 size="md"
                                 disabled={!tableApi.selectedFlatRows.length}
                                 onClick={(e) => {
@@ -248,33 +253,34 @@ export const BrowseTable = ({ table, onGoBack }) => {
                                     tableApi.state.selectedRowIds = {};
                                 }}
                             >
-                                <icons.Delete />
+                                {/* <icons.Delete /> */}
+                                <Text>delete</Text>
                             </bd.Button>
-                        }
-                    />
+                        </>
+                    }
+                />
 
-                    <RenderTableDiv
-                        tableApi={tableApi}
-                        //resizable
-                        //multiSelect
-                        singleSelect
-                        //hideCheckbox
-                        //hasSummary
-                        //showTableInfo
-                        showPageSize
-                        enablePaging
-                        //enableGrouping
-                        enableSorting
-                        //editable
-                        clickAction="toggle"
-                        className="border nano-scroll"
-                        //style={{ minHeight: 400 }}
-                        hover
-                        //striped
-                        hasWhitespace={!table.flexLayout}
-                        //stickyFooter
-                    />
-                </div>
+                <RenderTableDiv
+                    tableApi={tableApi}
+                    //resizable
+                    //multiSelect
+                    singleSelect
+                    //hideCheckbox
+                    //hasSummary
+                    //showTableInfo
+                    showPageSize
+                    enablePaging
+                    //enableGrouping
+                    enableSorting
+                    //editable
+                    clickAction="toggle"
+                    className="border nano-scroll bg-default"
+                    //style={{ minHeight: 400 }}
+                    hover
+                    //striped
+                    hasWhitespace={!table.flexLayout}
+                    //stickyFooter
+                />
             </div>
         </>
     );

@@ -13,6 +13,7 @@ interface TableTitlebarProps {
     expanded?: boolean;
     hideSearch?: boolean;
     hideSettings?: boolean;
+    className: string;
     children?: any;
     [x: string]: any;
 }
@@ -26,6 +27,7 @@ export function TableTitlebar({
     buttons,
     hideSearch,
     hideSettings,
+    className,
     children,
     ...props
 }: TableTitlebarProps) {
@@ -35,6 +37,7 @@ export function TableTitlebar({
     return (
         <>
             <bd.Panel
+                className={className}
                 title={title}
                 size="md"
                 fixed={fixed}

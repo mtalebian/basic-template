@@ -9,8 +9,6 @@ import { notify } from "../../../components/basic/notify";
 import { BrowseTable } from "./browse-base-table";
 import { Text } from "../../../components/basic/text";
 import { msgbox } from "react-basic-design";
-import { FilterRow } from "../../../components/table/filter-row";
-import { FilterBox } from "../../../components/table/filter-box";
 import * as bd2 from "../../../components/forms";
 
 export function TablesApp() {
@@ -52,24 +50,6 @@ export function TablesApp() {
 
     return (
         <>
-            <bd2.Form className="mx-3 mt-2">
-                <bd2.FormInput label="جستجو" icon={<icons.Edit />} btnIcon={<icons.Search />} />
-                <bd2.FormInput label="سال مالی" model={2016} btnIcon={<icons.Add />} />
-                <bd2.FormInput label="Currency" model={"Dollar"} btnIcon={<icons.Home />} />
-                <bd2.FormInput label="Customer" model={"IKCO"} btnIcon={<icons.ArrowDownward />} />
-                <bd2.FormInput label="Document Date" />
-                <bd2.FormInput label="Count" />
-                <div className="text-end">
-                    <bd.Button size="md" color="primary" className="m-e-2">
-                        Go
-                    </bd.Button>
-                    <bd.Button size="md" variant="outline" color="primary">
-                        Reset
-                    </bd.Button>
-                </div>
-            </bd2.Form>
-
-            <hr />
             {!table && (
                 <>
                     <div className="border-bottom bg-gray-5 mb-3">
