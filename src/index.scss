@@ -133,8 +133,8 @@ Main Tab
 }
 
 @mixin main-tab-theme($palette) {
-    $text: map-get($palette, text);
-    $bg: map-get($palette, bg);
+    $text: map-get($palette, text, main);
+    $bg: map-get($palette, bg, main);
     $border: rgba($text, 0.17);
 
     $primary-palette: map-get($palette, primary);

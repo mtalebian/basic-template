@@ -34,40 +34,38 @@ export function MainLayout({ component: Comp, ...props }) {
 
     return (
         <div className="d-flex flex-column h-100">
-            <bd.AppBar color="inherit" shadow={0} className="border-bottom bg-shade-5">
-                <div className="container">
-                    <bd.Toolbar>
-                        {/* <bd.Button variant="icon" color="default" href="/home">
+            <bd.AppBar color="shell">
+                <bd.Toolbar size="md" className="container">
+                    {/* <bd.Button variant="icon" color="default" href="/home">
                             <icons.Home style={{ fontSize: "1.65rem" }} />
                         </bd.Button> */}
 
-                        <a href="/home">
-                            <img src={logo_url} alt="logo" height={31} />
-                        </a>
+                    <a href="/home">
+                        <img src={logo_url} alt="logo" height={26} />
+                    </a>
 
-                        <h5 className="appbar-title">{title}</h5>
+                    <h5 className="appbar-title text-center">{title}</h5>
 
-                        {Comp?.Appbar?.buttons}
+                    {Comp?.Appbar?.buttons}
 
-                        <bd.Button variant="text" color="default" onClick={toggleRTL} className="d-none d-md-block">
-                            RTL
-                        </bd.Button>
+                    <bd.Button variant="text" color="default" onClick={toggleRTL} className="d-none d-md-block">
+                        RTL
+                    </bd.Button>
 
-                        <bd.Button variant="icon" color="default" onClick={toggleDarkMode} className="d-none d-md-block">
-                            <icons.DarkMode />
-                        </bd.Button>
+                    <bd.Button variant="icon" color="default" onClick={toggleDarkMode} className="d-none d-md-block">
+                        <icons.DarkMode />
+                    </bd.Button>
 
-                        <bd.Badge value={2} overlapCircle className="bg-warning text-dark d-none d-sm-flex">
-                            <bd.Button variant="icon" color="default" className="d-none d-sm-block">
-                                <icons.NotificationsActive />
-                            </bd.Button>
+                    <bd.Button variant="icon" color="default" className="d-none d-sm-block">
+                        <bd.Badge value={2} className="bg-warning text-dark" position="top-end">
+                            <icons.NotificationsActive />
                         </bd.Badge>
+                    </bd.Button>
 
-                        <bd.Button variant="icon" color="default" menu={menuUser} edge="end" className="d-none d-sm-block">
-                            <icons.AccountCircle />
-                        </bd.Button>
-                    </bd.Toolbar>
-                </div>
+                    <bd.Button variant="icon" color="default" menu={menuUser} edge="end" className="d-none d-sm-block">
+                        <icons.AccountCircle />
+                    </bd.Button>
+                </bd.Toolbar>
             </bd.AppBar>
 
             <main className="content flex-grow-1">

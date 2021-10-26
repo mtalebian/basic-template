@@ -73,7 +73,7 @@ export function TableDesignerEditGroup({ group, onChanged, onGoBack }) {
         <>
             <div className="border-bottom bg-gray-5 mb-3">
                 <bd.Toolbar className="container">
-                    <bd.Button variant="icon" onClick={onGoBack} size="md" edge="start" className="m-e-2">
+                    <bd.Button variant="icon" onClick={onGoBack} edge="start" className="m-e-2">
                         <icons.ArrowBackIos className="rtl-rotate-180" />
                     </bd.Button>
 

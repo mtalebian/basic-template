@@ -21,8 +21,8 @@
 /*
 */
 @mixin nano-scroll($palette) {
-    $text: map-get($palette, text);
-    $bg: map-get($palette, bg);
+    $text: map-get($palette, text, main);
+    $bg: map-get($palette, bg, main);
 
     $primary-palette: map-get($palette, primary);
     $primary: map-get($primary-palette, main);
