@@ -162,6 +162,7 @@ export function RenderTableDiv({
                                         labelClassName="m-0"
                                         {...tableApi.getToggleAllRowsSelectedProps()}
                                         onChange={null}
+                                        disableRipple
                                     />
                                 </div>
                             )}
@@ -221,6 +222,7 @@ export function RenderTableDiv({
                                             labelClassName="m-0"
                                             {...row.getToggleRowSelectedProps()}
                                             onChange={null}
+                                            disableRipple
                                         />
                                     </div>
                                 )}
@@ -233,6 +235,7 @@ export function RenderTableDiv({
                                             labelClassName="m-0 p-0"
                                             {...row.getToggleRowSelectedProps()}
                                             onChange={null}
+                                            disableRipple
                                         />
                                     </div>
                                 )}
