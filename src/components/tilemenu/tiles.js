@@ -10,25 +10,33 @@ export function Tiles({ className, children, ...props }) {
     );
 }
 
-export function Tile({ title, icon, className, selected, onClick, children, ...props }) {
+export function Tile({ title, icon, selected, onClick, isBusy, children, ...props }) {
     const is_folder = !!children;
     var cn = classNames({ "mi-folder": is_folder, "mi-menu": !is_folder });
 
-    if (icon) icon = <i className="size-md">{icon}</i>;
+    if (icon) icon = <i className="size-md m-e-1">{icon}</i>;
     if (title) title = <span className="mi-text">{title}</span>;
 
     return (
         <li className={cn}>
             <div className={classNames("mi-item", { "mi-selected": selected })}>
                 {!is_folder && (
-                    <a href="#/" onClick={onClick} className={className}>
+                    <div onClick={onClick}>
                         {icon}
                         {title}
-                    </a>
+
+                        {isBusy && (
+                            <div className="busy">
+                                <span className="m-e-2 spinner-grow text-info spinner-grow-sm animation-delay--0s"></span>
+                                <span className="m-e-2 spinner-grow text-info spinner-grow-sm animation-delay--1s"></span>
+                                <span className="m-e-2 spinner-grow text-info spinner-grow-sm animation-delay--2s"></span>
+                            </div>
+                        )}
+                    </div>
                 )}
 
                 {is_folder && (
-                    <div onClick={onClick} className={className}>
+                    <div onClick={onClick}>
                         {icon}
                         {title}
                     </div>

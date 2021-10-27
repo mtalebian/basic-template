@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import * as bd from "react-basic-design";
-import * as icons from "../../../assets/icons";
 import { useTranslation } from "react-i18next";
 import { useAccount } from "../../../app/account-context";
 import { Tile, Tiles } from "../../../components/tilemenu/tiles";
@@ -8,10 +7,10 @@ import { tablesApi } from "../../../api/tables-api";
 import { notify } from "../../../components/basic/notify";
 import { BrowseTable } from "./browse-base-table";
 import { Text } from "../../../components/basic/text";
+import * as icons from "../../../assets/icons";
 import { msgbox } from "react-basic-design";
-import * as bd2 from "../../../components/forms";
 
-export function TablesApp() {
+export function TablesApp({ shell }) {
     const account = useAccount();
     const { t } = useTranslation();
     const [groups, setGroups] = useState(null);
@@ -20,12 +19,12 @@ export function TablesApp() {
 
     const onTableClick = (tb) => {
         if (loadingTable) {
-            msgbox(<Text>system-is-busy-please-wait</Text>, null, t("close"));
-            return;
+            notify.warning(<Text>system-is-busy-please-wait</Text>);
+            return false;
         }
         if (tb.schema) {
             setTable(tb);
-            return;
+            return false;
         }
         setLoadingTable(tb);
         tablesApi
@@ -40,7 +39,10 @@ export function TablesApp() {
                 setLoadingTable(null);
                 notify.error(ex);
             });
+        return false;
     };
+
+    useEffect(() => shell.setApp("basic-tables"));
 
     useEffect(() => {
         if (!groups && account.isConnected()) {
@@ -67,11 +69,13 @@ export function TablesApp() {
                                             {g.items.map((t) => (
                                                 <Tile
                                                     key={t.name}
-                                                    title={t.title}
-                                                    icon={
-                                                        loadingTable === t && <div className="m-e-2 spinner-border spinner-border-sm"></div>
+                                                    title={
+                                                        <a href="#/" onClick={(e) => onTableClick(t)}>
+                                                            {t.title}
+                                                        </a>
                                                     }
-                                                    onClick={(e) => onTableClick(t)}
+                                                    icon={<icons.TableView />}
+                                                    isBusy={t === loadingTable}
                                                 />
                                             ))}
                                         </Tile>
@@ -81,7 +85,7 @@ export function TablesApp() {
                 </>
             )}
 
-            {table && <BrowseTable table={table} onGoBack={() => setTable(null)} />}
+            {table && <BrowseTable table={table} onGoBack={() => setTable(null)} shell={shell} />}
         </>
     );
 }

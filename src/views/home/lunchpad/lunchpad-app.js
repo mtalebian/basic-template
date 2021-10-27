@@ -1,13 +1,12 @@
 import React, { useContext, useEffect, useState } from "react";
-import * as bs from "react-basic-design";
 
-import * as icons from "../../../assets/icons";
 import { menuHelper, TileMenu } from "../../../components/tilemenu";
 import { menuApi } from "../../../api/menu-api";
 import { notify } from "../../../components/basic/notify";
 import { AccountContext } from "../../../app/account-context";
+import { Tile, Tiles } from "../../../components/tilemenu/tiles";
 
-export function LunchpadApp() {
+export function LunchpadApp({ shell }) {
     const account = useContext(AccountContext);
     const [menuFolders, setMenuFolders] = useState([]);
     const [menus, setMenus] = useState([]);
@@ -15,6 +14,9 @@ export function LunchpadApp() {
     const [activeItem, setActiveItem] = useState(null);
     const [selectedFolder, setSelectedFolder] = useState(null);
     const [selectedMenu, setSelectedMenu] = useState(null);
+
+    console.log("LunchpadApp");
+    useEffect(() => shell.setApp("home"));
 
     useEffect(() => {
         if (account.isConnected()) {
@@ -50,25 +52,19 @@ export function LunchpadApp() {
 
     return (
         <div className="container p-3">
-            <TileMenu
-                folders={menuFolders}
-                menus={menus}
-                onSelect={onSelectMenu}
-                selectedFolder={selectedFolder}
-                selectedMenu={selectedMenu}
-                activeItem={activeItem}
-            />
+            <Tiles>
+                {menuFolders
+                    .sort((a, b) => a.sortOrder - b.sortOrder)
+                    .map((f) => (
+                        <Tile key={f.id} title={f.title}>
+                            {menus
+                                .filter((m) => m.parentId === f.id)
+                                .map((m) => (
+                                    <Tile key={m.id} title={<a href={m.url}>{m.title}</a>} />
+                                ))}
+                        </Tile>
+                    ))}
+            </Tiles>
         </div>
     );
 }
-
-LunchpadApp.Appbar = {
-    title: "",
-    buttons: (
-        <>
-            <bs.Button variant="icon" color="default">
-                <icons.Search />
-            </bs.Button>
-        </>
-    ),
-};

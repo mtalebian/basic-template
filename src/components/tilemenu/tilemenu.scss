@@ -10,6 +10,17 @@ $tile-height: 100px;
 
     // ROOT
 
+    .busy {
+        position: absolute;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        left: 0;
+        top: 0;
+        right: 0;
+        bottom: 0;
+    }
+
     & > li.mi-folder + .mi-folder {
         margin-top: 15px;
     }
@@ -27,7 +38,8 @@ $tile-height: 100px;
         display: inline-block;
 
         .mi-item {
-            a {
+            & > div {
+                position: relative;
                 display: inline-block;
                 text-decoration: none;
                 width: $tile-width;
@@ -55,24 +67,15 @@ $tile-height: 100px;
 
 /*******************/
 @mixin tilemenuTheme($palette) {
-    $text: map-get($palette, text, main);
+    $text-primary: map-get($palette, text, primary);
     $bg: map-get($palette, bg, main);
+    $divider: map-get($palette, divider);
 
-    $primary-palette: map-get($palette, primary);
-    $primary: map-get($primary-palette, main);
-    $primary-text: map-get($primary-palette, text);
+    $primary: map-get($palette, primary, main);
+    $primary-text: map-get($palette, primary, text);
 
     $secondary-palette: map-get($palette, secondary);
     $secondary: map-get($secondary-palette, main);
-
-    $focus-border: mix($bg, $primary, 10%); //#86b7fe
-
-    $main-border: mix($text, $bg, 32%);
-    $border: mix($text, $bg, 15%);
-
-    $text: mix($bg, $text, 20%);
-    $border: rgba($text, 20%);
-    $hover: mix($primary, $bg, 5%);
 
     .tilemenu {
         .mi-folder {
@@ -81,21 +84,30 @@ $tile-height: 100px;
 
         .mi-menu {
             .mi-item {
+                & > div {
+                    border: 1px solid $divider;
+                    background-color: rgba($bg, 100%);
+                }
+
                 a {
-                    border: 1px solid $border;
-                    background-color: $bg;
-                    color: $text;
+                    color: $text-primary;
+                    text-decoration: none;
+                    display: inline-block;
 
                     &:hover {
-                        background-color: $hover;
+                        color: $primary;
+                        text-decoration: underline;
                     }
+                }
+
+                .busy {
+                    background-color: rgba($bg, 75%);
                 }
             }
         }
 
         .mi-selected {
-            div,
-            a {
+            & > div {
                 padding: 8px 10px;
                 background-color: $primary !important;
                 color: $primary-text !important;

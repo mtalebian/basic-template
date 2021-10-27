@@ -1,6 +1,5 @@
 import classNames from "classnames";
 import React from "react";
-import * as bd from "react-basic-design";
 
 export const FormInput = ({ className, label, labelSize, labelClassName, btnIcon, onBtnClick, type, inputClassName, ...props }) => {
     const cnInput = classNames("form-control", { "has-icon": btnIcon });
@@ -17,7 +16,7 @@ export const FormInput = ({ className, label, labelSize, labelClassName, btnIcon
         </div>
     );
     return (
-        <div className={classNames(className, "bd-form-input col")}>
+        <div className={classNames(className, "bd-form-input")}>
             {lbl}
             {inp}
         </div>
