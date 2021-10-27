@@ -41,7 +41,7 @@ export function ShellHeader({ setAppRef }) {
                 {/* {useRef.current?.getAppTitle()} */}
                 {appData.goBack && (
                     <bd.Button variant="icon" color="default" onClick={appData.goBack}>
-                        <icons.ArrowBackIos size="md" />
+                        <icons.ArrowBackIos size="md" className="rtl-rotate-180" />
                     </bd.Button>
                 )}
 

@@ -170,9 +170,7 @@ export function TableDesignerApp() {
                         } else {
                             // modifed
                             t.title = tb.title;
-                            console.log("A", t, tb);
                             t.data = tb;
-                            console.log("B", t);
                         }
                         goBack();
                         setGroups(groups);
