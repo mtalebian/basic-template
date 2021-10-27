@@ -26,6 +26,8 @@
     <ProjectReference Include="..\Forms\Forms.Controllers\Forms.Controllers.csproj" />
     <ProjectReference Include="..\Forms\Forms.Core\Forms.Core.csproj" />
     <ProjectReference Include="..\Forms\Forms.Migrations\Forms.Migrations.csproj" />
+    <ProjectReference Include="..\Messaging\Message.Core\Message.Core.csproj" />
+    <ProjectReference Include="..\Messaging\Messages.Controllers\Messages.Controllers.csproj" />
   </ItemGroup>
 
 

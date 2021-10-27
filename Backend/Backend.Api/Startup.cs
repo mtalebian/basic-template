@@ -1,5 +1,6 @@
 using Accounts.Core;
 using Forms.Core;
+using Message.Core;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -18,9 +19,6 @@ namespace Backend.Api
     {
         public IConfiguration Configuration { get; }
 
-
-
-
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -32,7 +30,8 @@ namespace Backend.Api
             services.Configure<JwtConfig>(Configuration.GetSection(JwtConfig.SectionName));
             services.Configure<AccountsConfig>(Configuration.GetSection(AccountsConfig.SectionName));
             services.Configure<FormsConfig>(Configuration.GetSection(FormsConfig.SectionName));
-            
+            services.Configure<EmailConfig>(Configuration.GetSection(EmailConfig.SectionName));
+
             //-- Swagger
             services.AddSwaggerGen(swagger =>
             {
@@ -127,9 +126,14 @@ namespace Backend.Api
             //    .AddApplicationPart(Assembly.Load("Forms.Controllers"))
             //    .AddControllersAsServices();
 
+            services.AddEmailServices();
+
+
 
             //-- 
             services.AddControllers();  // web-api
+
+
 
         }
 
