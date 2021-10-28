@@ -216,7 +216,7 @@ export function TableDesignerEditTable({ table, group, onChanged, onGoBack }) {
                                     <BasicInput name="singularTitle" label={t("singular-title")} labelSize="4" />
                                 </div>
                                 <div className="col-md-6">
-                                    <BasicTextArea name="description" placeholder={t("description")} controlClassName="h-100" />
+                                    <BasicTextArea name="description" placeholder={t("description")} className="h-100" />
                                 </div>
                             </div>
                         </form>

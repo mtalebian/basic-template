@@ -73,7 +73,7 @@ export function AppbarShell({ setAppRef }) {
                         <img src={logo_url} alt="logo" height={26} />
                     </a> */}
 
-                <h5 className="appbar-title text-center">{appData.title}</h5>
+                <h5 className="appbar-title">{appData.title}</h5>
 
                 {appData.buttons}
 

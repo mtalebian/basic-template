@@ -11,6 +11,18 @@ import { FilterBox } from "../../../components/filters/filter-box";
 import { EditTableRow } from "./edit-table-row";
 import { useShell } from "../../shared/use-shell";
 
+function findIndex(x, data, columns) {
+    for (let i = 0; i < data.length; i++) {
+        const r = data[i];
+        let is_eq = true;
+        for (let k = 0; is_eq && k < columns.length; k++) {
+            const c = columns[k];
+            if (c.isPK && r[c] != x[c]) is_eq = false;
+        }
+        if (is_eq) return i;
+    }
+}
+
 /*
  *
  */
@@ -55,7 +67,9 @@ export const BrowseTable = ({ table, onGoBack }) => {
 
     const updateData = (rowIndex, columnId, value) => {
         const new_row = { ...data[rowIndex], [columnId]: value };
-        setData(data.map((row, index) => (index === rowIndex ? new_row : row)));
+        const new_data = data.map((row, index) => (index === rowIndex ? new_row : row));
+        setData(new_data);
+        table.data = new_data;
     };
 
     const tableApi = useReactTable({ columns: table.schemaColumns, data, updateData, flexLayout: table.flexLayout });
@@ -149,9 +163,9 @@ export const BrowseTable = ({ table, onGoBack }) => {
                             //striped
                             hasWhitespace={!table.flexLayout}
                             //stickyFooter
-                            onShowMoreClick={(row) => console.log("onShowMoreClick", row)}
-                            onRowClick={(row) => console.log("onRowClick", row)}
-                            onCellClick={(row, cell) => console.log("onCellClick", cell)}
+                            onShowMoreClick={(row) => {
+                                setEditState({ edit: true, row: row.values });
+                            }}
                         />
                     </div>
                 </>
@@ -160,7 +174,17 @@ export const BrowseTable = ({ table, onGoBack }) => {
             {editState.edit && (
                 <EditTableRow
                     table={table}
-                    onGoBack={() => {
+                    onGoBack={() => setEditState({ edit: false })}
+                    onChanged={(x, original) => {
+                        console.log(x, original);
+
+                        if (!original) setData([...data, x]);
+                        else {
+                            var i = findIndex(original, data, table.schemaColumns);
+                            data[i] = x;
+                            console.log(i, data);
+                            setData(data.map((item, index) => (index === i ? x : item)));
+                        }
                         setEditState({ edit: false });
                     }}
                     row={editState.row}

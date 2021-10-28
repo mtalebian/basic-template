@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using System.Text.Json;
 
 namespace Forms.Services
 {
@@ -27,7 +28,7 @@ namespace Forms.Services
         {
             return db.Tables.Where(x => x.ProjectId == projectId && x.GroupId == groupId);
         }
-        
+
         public Table GetTable(string projectId, string name)
         {
             return db.Tables.FirstOrDefault(x => x.ProjectId == projectId && x.Name == name);
@@ -106,15 +107,16 @@ namespace Forms.Services
         {
             var tb = db.Tables.FirstOrDefault(x => x.Name == tableName);
             if (tb == null) throw new Exception($"Table '{tableName}' not found!");
-            var parameters = new Dictionary<string, object>();
             var fields = new List<string>();
-            foreach (var c in tb.Columns)
+            var fields_value = new List<string>();
+            var columns = db.Columns.Where(x => x.ProjectId == tb.ProjectId && x.TableName == tb.Name);
+            foreach (var c in columns)
             {
                 var v = values.ContainsKey(c.Name) ? values[c.Name] : null;
                 if (v != null)
                 {
                     fields.Add(c.Name);
-                    AddParameter(parameters, c.Name, values);
+                    fields_value.Add(GetDbValue(c, values));
                 }
                 else
                 {
@@ -125,42 +127,97 @@ namespace Forms.Services
                 }
             }
             var qFields = string.Join(", ", fields);
-            var qValues = "@" + string.Join(", @", fields);
-            db.ExecuteSql($"insert {tableName} ({qFields}) values({qValues})", parameters);
+            var qValues = string.Join(", ", fields_value);
+            db.ExecuteSql($"insert {tableName} ({qFields}) values({qValues})");
         }
 
         public void ExecuteUpdate(string tableName, Dictionary<string, object> values)
         {
             var tb = db.Tables.FirstOrDefault(x => x.Name == tableName);
             if (tb == null) throw new Exception($"Table '{tableName}' not found!");
-            var parameters = new Dictionary<string, object>();
             var list = new List<string>();
-            foreach (var c in tb.Columns)
+            var columns = db.Columns.Where(x => x.ProjectId == tb.ProjectId && x.TableName == tb.Name);
+            foreach (var c in columns)
             {
                 if (!c.IsPK && values.ContainsKey(c.Name))
                 {
-                    var v = values[c.Name];
-                    list.Add($"{c.Name} = @{c.Name}");
-                    AddParameter(parameters, c.Name, values);
+                    list.Add($"{c.Name} = " + GetDbValue(c, values));
                 }
             }
             var qSet = string.Join(", ", list);
-            var qWhere = GetWhereClause(tb, parameters, values, true);
+            var qWhere = GetWhereClause(tb, values, true);
             var sql = $"update {tableName} set {qSet} {qWhere}";
-            db.ExecuteSql(sql, parameters);
+            db.ExecuteSql(sql);
+        }
+
+        private string GetDbValue(Column c, Dictionary<string, object> values)
+        {
+            var v = values[c.Name];
+            if (v == null) return "Null";
+            if (v is JsonElement)
+            {
+                var j = (JsonElement)v;
+                switch (j.ValueKind)
+                {
+                    case JsonValueKind.Undefined: return "Null";
+                    case JsonValueKind.Object: throw new Exception("Invalid value for property: " + c.Name);
+                    case JsonValueKind.Array: throw new Exception("Invalid value for property: " + c.Name);
+                    case JsonValueKind.String:
+                        v = j.GetString();
+                        break;
+
+                    case JsonValueKind.Number:
+                        v = j.GetInt64();
+                        break;
+
+                    case JsonValueKind.True:
+                        v = j.GetBoolean();
+                        break;
+
+                    case JsonValueKind.False:
+                        v = j.GetBoolean();
+                        break;
+
+                    case JsonValueKind.Null:
+                        return "Null";
+
+                    default:
+                        throw new Exception("Unhandled ValueKind: " + j.ValueKind);
+                }
+            }
+            var s = v as string;
+            if (!string.IsNullOrEmpty(s) && s.ToLower() == "null") return s;
+            if (c.DataType == "bit")
+            {
+                if (v is bool) return !(bool)v ? "0" : "1";
+                if (v is int) return 0 == (int)v ? "0" : "1";
+                return !string.IsNullOrEmpty(s) && s.ToLower() == "true" || s == "1" ? "1" : "0";
+            }
+            if (c.DataType == "varchar" || c.DataType == "text")
+            {
+                return "'" + s.Replace("'", "''") + "'";
+            }
+            if (c.DataType == "nvarchar" || c.DataType == "ntext")
+            {
+                return "N'" + s.Replace("'", "''") + "'";
+            }
+            if (c.DataType == "datetime")
+            {
+                throw new Exception("DateTime type is not handled!!");
+            }
+            return v.ToString().Replace("'", "");
         }
 
         public void ExecuteDelete(string tableName, Dictionary<string, object> values)
         {
             var tb = db.Tables.FirstOrDefault(x => x.Name == tableName);
             if (tb == null) throw new Exception($"Table '{tableName}' not found!");
-            var parameters = new Dictionary<string, object>();
-            var qWhere = GetWhereClause(tb, parameters, values, true);
+            var qWhere = GetWhereClause(tb, values, true);
             var sql = $"delete {tableName} {qWhere}";
-            db.ExecuteSql(sql, parameters);
+            db.ExecuteSql(sql);
         }
 
-        private static string GetWhereClause(Table tb, Dictionary<string, object> parameters, Dictionary<string, object> values, bool pkOnky)
+        private string GetWhereClause(Table tb, Dictionary<string, object> values, bool pkOnky)
         {
             var w = new List<string>();
             foreach (var c in tb.Columns)
@@ -172,18 +229,11 @@ namespace Forms.Services
 
                 if (!pkOnky || c.IsPK)
                 {
-                    w.Add($"{c.Name} = @{c.Name}");
-                    AddParameter(parameters, c.Name, values);
+                    w.Add($"{c.Name} = " + GetDbValue(c, values));
                 }
             }
             if (w.Count < 1) throw new Exception("Where clause is empty!");
             return "where " + string.Join(" and ", w);
-        }
-
-        private static void AddParameter(Dictionary<string, object> parameters, string name, Dictionary<string, object> values)
-        {
-            if (!parameters.ContainsKey(name)) return;
-            parameters.Add("@" + name, values[name]);
         }
 
     }

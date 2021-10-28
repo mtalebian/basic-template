@@ -16,7 +16,7 @@ export const FormInput = ({ className, label, labelSize, labelClassName, btnIcon
         </div>
     );
     return (
-        <div className={classNames(className, "bd-form-input")}>
+        <div className={classNames(className, "bd-form-input")} {...props}>
             {lbl}
             {inp}
         </div>

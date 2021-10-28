@@ -3,7 +3,7 @@ import * as bd from "react-basic-design";
 import { useField } from "formik";
 import React from "react";
 
-export const BasicInput = ({ id, label, labelSize, type, className, children, autoComplete, maxWidth, ...props }) => {
+export const BasicInput = ({ id, label, labelSize, type, className, controlClassName, children, autoComplete, maxWidth, ...props }) => {
     const [field, meta] = useField({ ...props, type });
     if (!field.value) field.value = "";
     var cnControl = classNames("form-control", className, {
