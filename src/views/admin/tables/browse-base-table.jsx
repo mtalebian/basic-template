@@ -10,6 +10,7 @@ import { tablesApi } from "../../../api/tables-api";
 import { FilterBox } from "../../../components/filters/filter-box";
 import { EditTableRow } from "./edit-table-row";
 import { useShell } from "../../shared/use-shell";
+import { msgbox } from "react-basic-design";
 
 function findIndex(x, data, columns) {
     for (let i = 0; i < data.length; i++) {
@@ -17,7 +18,7 @@ function findIndex(x, data, columns) {
         let is_eq = true;
         for (let k = 0; is_eq && k < columns.length; k++) {
             const c = columns[k];
-            if (c.isPK && r[c] != x[c]) is_eq = false;
+            if (c.isPK && r[c.name] !== x[c.name]) is_eq = false;
         }
         if (is_eq) return i;
     }
@@ -30,7 +31,9 @@ export const BrowseTable = ({ table, onGoBack }) => {
     const [data, setData] = useState(table.data);
     const [editState, setEditState] = useState({ edit: false, row: null });
 
-    useShell().setApp("browse-table", onGoBack);
+    const shell = useShell();
+
+    shell.setApp("browse-table", onGoBack);
 
     if (!table.schemaColumns) {
         table.schemaColumns = table.schema.dataColumns
@@ -73,6 +76,23 @@ export const BrowseTable = ({ table, onGoBack }) => {
     };
 
     const tableApi = useReactTable({ columns: table.schemaColumns, data, updateData, flexLayout: table.flexLayout });
+
+    const deleteTableRow = (row) => {
+        shell.setBusyMode(true);
+        tablesApi
+            .delete(table.name, row.values)
+            .then((x) => {
+                shell.setBusyMode(false);
+                var i = findIndex(row.values, data, table.schema.dataColumns);
+                setData(data.filter((x, index) => index !== i));
+                tableApi.state.selectedRowIds = {};
+                notify.dark(<Text>record-is-deleted</Text>);
+            })
+            .catch((ex) => {
+                shell.setBusyMode(false);
+                notify.error(ex);
+            });
+    };
 
     return (
         <>
@@ -130,10 +150,19 @@ export const BrowseTable = ({ table, onGoBack }) => {
                                         color="primary"
                                         size="md"
                                         disabled={!tableApi.selectedFlatRows.length}
+                                        className="m-e-1"
                                         onClick={(e) => {
-                                            const updatedRows = data.filter((x, index) => !tableApi.state.selectedRowIds[index]);
-                                            setData(updatedRows);
-                                            tableApi.state.selectedRowIds = {};
+                                            if (tableApi.selectedFlatRows.length !== 1) return;
+                                            msgbox(<Text>deleting-selected-row</Text>, null, [
+                                                {
+                                                    title: "delete",
+                                                    action: (hide) => {
+                                                        hide();
+                                                        deleteTableRow(tableApi.selectedFlatRows[0]);
+                                                    },
+                                                },
+                                                { title: "cancel" },
+                                            ]);
                                         }}
                                     >
                                         {/* <icons.Delete /> */}
@@ -180,7 +209,7 @@ export const BrowseTable = ({ table, onGoBack }) => {
 
                         if (!original) setData([...data, x]);
                         else {
-                            var i = findIndex(original, data, table.schemaColumns);
+                            var i = findIndex(original, data, table.schema.dataColumns);
                             data[i] = x;
                             console.log(i, data);
                             setData(data.map((item, index) => (index === i ? x : item)));

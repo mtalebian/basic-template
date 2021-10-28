@@ -220,7 +220,8 @@ namespace Forms.Services
         private string GetWhereClause(Table tb, Dictionary<string, object> values, bool pkOnky)
         {
             var w = new List<string>();
-            foreach (var c in tb.Columns)
+            var columns = db.Columns.Where(x => x.ProjectId == tb.ProjectId && x.TableName == tb.Name);
+            foreach (var c in columns)
             {
                 if (pkOnky && (!values.ContainsKey(c.Name) || values[c.Name] == null))
                 {

@@ -5,5 +5,7 @@ export const useShell = () => {
         setApp: (title, goBack, buttons) => {
             g_shell_set_app(title, goBack, buttons);
         },
+
+        setBusyMode: (value) => {},
     };
 };

@@ -57,7 +57,14 @@ export function TableTitlebar({
                         )}
 
                         {!hideSettings && (
-                            <bd.Button variant="icon" color={color} size="md" edge="end" onClick={() => setShowSettings(true)}>
+                            <bd.Button
+                                variant="icon"
+                                color={color}
+                                size="md"
+                                edge="end"
+                                className="m-s-1"
+                                onClick={() => setShowSettings(true)}
+                            >
                                 <icons.Settings />
                             </bd.Button>
                         )}
