@@ -1,6 +1,5 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import * as bd from "react-basic-design";
-import * as icons from "../../../assets/icons";
 
 import { RenderTableDiv } from "../../../components/table/render-table-div";
 import { notify } from "../../../components/basic/notify";
@@ -9,14 +8,17 @@ import { useReactTable } from "../../../components/table/use-react-table";
 import { Text } from "../../../components/basic/text";
 import { tablesApi } from "../../../api/tables-api";
 import { FilterBox } from "../../../components/filters/filter-box";
+import { EditTableRow } from "./edit-table-row";
+import { useShell } from "../../shared/use-shell";
 
 /*
  *
  */
-export const BrowseTable = ({ shell, table, onGoBack }) => {
+export const BrowseTable = ({ table, onGoBack }) => {
     const [data, setData] = useState(table.data);
+    const [editState, setEditState] = useState({ edit: false, row: null });
 
-    useEffect(() => shell.setApp("browse-table", onGoBack));
+    useShell().setApp("browse-table", onGoBack);
 
     if (!table.schemaColumns) {
         table.schemaColumns = table.schema.dataColumns
@@ -60,92 +62,107 @@ export const BrowseTable = ({ shell, table, onGoBack }) => {
 
     return (
         <>
-            <div className="border-bottom bg-default pt-2 pb-4">
-                <div className="container">
-                    <FilterBox
-                        fields={[{ title: "F1" }, { title: "F2" }, { title: "F3" }]}
-                        variants={null}
-                        systemIsBusy={false}
-                        onClick={(e) => {
-                            tablesApi
-                                .browseTable(table.name)
-                                .then((x) => {
-                                    table.data = x.data;
-                                    tableApi.state.selectedRowIds = {};
-                                    setData(x.data);
-                                })
-                                .catch((ex) => {
-                                    notify.error(ex);
-                                });
-                        }}
-                    />
-                </div>
-            </div>
-
-            <div className="container mt-2" style={{ marginBottom: 70 }}>
-                <TableTitlebar
-                    title={table.title}
-                    tableApi={tableApi}
-                    //hideSearch
-                    //hideSettings
-                    //title={<Text>filters</Text>}
-                    expanded
-                    fixed
-                    buttons={
-                        <>
-                            <bd.Button
-                                variant="text"
-                                color="primary"
-                                size="md"
+            {!editState.edit && (
+                <>
+                    <div className="border-bottom bg-default pt-2 pb-4">
+                        <div className="container">
+                            <FilterBox
+                                fields={[{ title: "F1" }, { title: "F2" }, { title: "F3" }]}
+                                variants={null}
+                                systemIsBusy={false}
                                 onClick={(e) => {
-                                    //     var r = newRow();
-                                    //     setData([...data, r]);
-                                    tableApi.state.selectedRowIds = { [data.length]: true };
+                                    tablesApi
+                                        .browseTable(table.name)
+                                        .then((x) => {
+                                            table.data = x.data;
+                                            tableApi.state.selectedRowIds = {};
+                                            setData(x.data);
+                                        })
+                                        .catch((ex) => {
+                                            notify.error(ex);
+                                        });
                                 }}
-                            >
-                                {/* <icons.Add /> */}
-                                <Text>add</Text>
-                            </bd.Button>
-                            <bd.Button
-                                variant="text"
-                                color="primary"
-                                size="md"
-                                disabled={!tableApi.selectedFlatRows.length}
-                                onClick={(e) => {
-                                    const updatedRows = data.filter((x, index) => !tableApi.state.selectedRowIds[index]);
-                                    setData(updatedRows);
-                                    tableApi.state.selectedRowIds = {};
-                                }}
-                            >
-                                {/* <icons.Delete /> */}
-                                <Text>delete</Text>
-                            </bd.Button>
-                        </>
-                    }
-                />
+                            />
+                        </div>
+                    </div>
 
-                <RenderTableDiv
-                    tableApi={tableApi}
-                    //resizable
-                    //multiSelect
-                    singleSelect
-                    //hideCheckbox
-                    //hasSummary
-                    //showTableInfo
-                    showPageSize
-                    enablePaging
-                    //enableGrouping
-                    enableSorting
-                    //editable
-                    clickAction="toggle"
-                    className="border nano-scroll bg-default"
-                    //style={{ minHeight: 400 }}
-                    hover
-                    //striped
-                    hasWhitespace={!table.flexLayout}
-                    //stickyFooter
+                    <div className="container mt-2" style={{ marginBottom: 70 }}>
+                        <TableTitlebar
+                            title={table.title}
+                            tableApi={tableApi}
+                            //hideSearch
+                            //hideSettings
+                            //title={<Text>filters</Text>}
+                            expanded
+                            fixed
+                            buttons={
+                                <>
+                                    <bd.Button
+                                        variant="text"
+                                        color="primary"
+                                        size="md"
+                                        onClick={(e) => {
+                                            //     var r = newRow();
+                                            //     setData([...data, r]);
+                                            tableApi.state.selectedRowIds = { [data.length]: true };
+                                            setEditState({ edit: true, row: null });
+                                        }}
+                                    >
+                                        {/* <icons.Add /> */}
+                                        <Text>add</Text>
+                                    </bd.Button>
+                                    <bd.Button
+                                        variant="text"
+                                        color="primary"
+                                        size="md"
+                                        disabled={!tableApi.selectedFlatRows.length}
+                                        onClick={(e) => {
+                                            const updatedRows = data.filter((x, index) => !tableApi.state.selectedRowIds[index]);
+                                            setData(updatedRows);
+                                            tableApi.state.selectedRowIds = {};
+                                        }}
+                                    >
+                                        {/* <icons.Delete /> */}
+                                        <Text>delete</Text>
+                                    </bd.Button>
+                                </>
+                            }
+                        />
+
+                        <RenderTableDiv
+                            tableApi={tableApi}
+                            //resizable
+                            //multiSelect
+                            singleSelect
+                            //hideCheckbox
+                            //hasSummary
+                            //showTableInfo
+                            showPageSize
+                            enablePaging
+                            //enableGrouping
+                            enableSorting
+                            //editable
+                            clickAction="toggle"
+                            className="border nano-scroll bg-default"
+                            //style={{ minHeight: 400 }}
+                            hover
+                            //striped
+                            hasWhitespace={!table.flexLayout}
+                            //stickyFooter
+                        />
+                    </div>
+                </>
+            )}
+
+            {editState.edit && (
+                <EditTableRow
+                    table={table}
+                    onGoBack={() => {
+                        setEditState({ edit: false });
+                    }}
+                    row={editState.row}
                 />
-            </div>
+            )}
         </>
     );
 };

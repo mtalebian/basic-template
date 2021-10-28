@@ -25,7 +25,7 @@ i18n.use(HttpApi)
     .init({
         supportedLngs: ["en", "fa"],
         fallbackLng: "en",
-        debug: true,
+        debug: false,
         saveMissing: settings.debugMode,
 
         detection: {

@@ -1,11 +1,15 @@
-import React, { useState } from "react";
+/* eslint-disable react-hooks/exhaustive-deps */
+import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import * as bd from "react-basic-design";
 import settings from "../../app/settings";
 import * as icons from "../../assets/icons";
 import { useAccount } from "../../app/account-context";
 
-export function ShellHeader({ setAppRef }) {
+let g_timer_handler = null;
+export let g_shell_set_app = null;
+
+export function AppbarShell({ setAppRef }) {
     const [appData, setAppData] = useState({ title: "", goBack: null, buttons: null });
     const { t } = useTranslation();
     const account = useAccount();
@@ -31,17 +35,31 @@ export function ShellHeader({ setAppRef }) {
         </bd.Menu>
     );
 
-    setAppRef.current = (title, goBack, buttons) => {
-        if (appData.title !== title) setAppData({ title, goBack, buttons });
+    let isMounted = true;
+    useEffect(() => () => (isMounted = false), []);
+
+    g_shell_set_app = (title, goBack, buttons) => {
+        if (g_timer_handler) {
+            clearTimeout(g_timer_handler);
+            g_timer_handler = null;
+        }
+        g_timer_handler = setTimeout(() => {
+            if (isMounted) {
+                setAppData({ title, goBack, buttons });
+            }
+        }, 100);
+        //if (appData.title !== title) setAppData({ title, goBack, buttons });
     };
+
+    setAppRef.current = g_shell_set_app;
 
     return (
         <bd.AppBar color="shell">
             <bd.Toolbar size="md" className="container">
                 {/* {useRef.current?.getAppTitle()} */}
                 {appData.goBack && (
-                    <bd.Button variant="icon" color="default" onClick={appData.goBack}>
-                        <icons.ArrowBackIos size="md" />
+                    <bd.Button variant="icon" color="default" onClick={() => appData.goBack()}>
+                        <icons.ArrowBackIos size="md" className="rtl-rotate-180" />
                     </bd.Button>
                 )}
 

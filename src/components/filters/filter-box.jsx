@@ -8,7 +8,12 @@ export const FilterBox = ({ variants, fields, systemIsBusy, onExecute, ...props 
     const variantsMenu = (
         <bd.Menu>
             <div style={{ minWidth: 300 }}>
-                {variants && variants.map((x) => <bd.MenuItem onClick={() => applyVariant(x)}>{x.title}</bd.MenuItem>)}
+                {variants &&
+                    variants.map((x) => (
+                        <bd.MenuItem key={x.title} onClick={() => applyVariant(x)}>
+                            {x.title}
+                        </bd.MenuItem>
+                    ))}
                 <div className="text-end px-2 pt-2 border-top mt-2">
                     <bd.Button color="primary" className="m-s-2" variant="text">
                         <Text>manage</Text>
@@ -54,7 +59,7 @@ export const FilterBox = ({ variants, fields, systemIsBusy, onExecute, ...props 
 
             <bd2.Form className="mx-2">
                 {fields.map((x) => (
-                    <Filter title={x.title} onBlur={(e) => onBlur(x)} />
+                    <Filter key={x.title} title={x.title} onBlur={(e) => onBlur(x)} />
                 ))}
             </bd2.Form>
         </div>

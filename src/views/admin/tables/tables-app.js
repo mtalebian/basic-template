@@ -8,9 +8,9 @@ import { notify } from "../../../components/basic/notify";
 import { BrowseTable } from "./browse-base-table";
 import { Text } from "../../../components/basic/text";
 import * as icons from "../../../assets/icons";
-import { msgbox } from "react-basic-design";
+import { useShell } from "../../shared/use-shell";
 
-export function TablesApp({ shell }) {
+export function TablesApp() {
     const account = useAccount();
     const { t } = useTranslation();
     const [groups, setGroups] = useState(null);
@@ -42,7 +42,7 @@ export function TablesApp({ shell }) {
         return false;
     };
 
-    useEffect(() => shell.setApp("basic-tables"));
+    useShell().setApp("basic-tables", null);
 
     useEffect(() => {
         if (!groups && account.isConnected()) {
@@ -54,11 +54,6 @@ export function TablesApp({ shell }) {
         <>
             {!table && (
                 <>
-                    <div className="border-bottom bg-gray-5 mb-3">
-                        <bd.Toolbar className="container">
-                            <h5 className="text-secondary-text">{t("select-a-table...")}</h5>
-                        </bd.Toolbar>
-                    </div>
                     <div className="container">
                         <Tiles>
                             {groups &&
@@ -85,7 +80,14 @@ export function TablesApp({ shell }) {
                 </>
             )}
 
-            {table && <BrowseTable table={table} onGoBack={() => setTable(null)} shell={shell} />}
+            {table && (
+                <BrowseTable
+                    table={table}
+                    onGoBack={() => {
+                        setTable(null);
+                    }}
+                />
+            )}
         </>
     );
 }
