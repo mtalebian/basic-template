@@ -48,6 +48,9 @@ export function RenderTableDiv({
     striped,
     hasWhitespace,
     stickyFooter,
+    onShowMoreClick,
+    onCellClick,
+    onRowClick,
 }) {
     const { t } = useTranslation();
     const { rows, page, state } = tableApi;
@@ -125,6 +128,7 @@ export function RenderTableDiv({
 
     const onTdClick = (row, cell) => {
         if (row.isGrouped) return;
+        if (cell && onCellClick) onCellClick(row, cell);
         if (cell && cell.column._ignoreToggleOnClick) return;
         if (!singleSelect && !multiSelect) return;
         const is_selected = row.isSelected;
@@ -204,6 +208,7 @@ export function RenderTableDiv({
                                     )} */}
                                 </div>
                             ))}
+                            {!!onShowMoreClick && <div className="th selection-column"></div>}
                         </div>
                     ))}
                 </div>
@@ -213,7 +218,7 @@ export function RenderTableDiv({
                     {list.map((row, rowIndex) => {
                         tableApi.prepareRow(row);
                         return (
-                            <div {...row.getRowProps()} className={classNames("tr", { selected: row.isSelected })}>
+                            <div {...row.getRowProps()} className={classNames("tr", { selected: row.isSelected })} onClick={onRowClick}>
                                 {!hideCheckbox && multiSelect && (
                                     <div className="td selection-column" onClick={() => row.toggleRowSelected()}>
                                         <bd.Toggle
@@ -268,6 +273,11 @@ export function RenderTableDiv({
                                         </div>
                                     );
                                 })}
+                                {!!onShowMoreClick && (
+                                    <div className="td selection-column cur-pointer" onClick={(e) => onShowMoreClick(row)}>
+                                        <icons.ChevronRight className="rtl-rotate-180 text-secondary-text" />
+                                    </div>
+                                )}
                             </div>
                         );
                     })}
@@ -285,6 +295,7 @@ export function RenderTableDiv({
                                     </div>
                                 );
                             })}
+                            {!!onShowMoreClick && <div className="th selection-column"></div>}
                         </div>
                     </div>
                 )}

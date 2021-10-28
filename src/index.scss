@@ -1,3 +1,7 @@
+.disable-ripple .toggle {
+    padding: 0 !important;
+}
+
 @import "node_modules/react-basic-design/dist/index.scss";
 
 @import "./components/forms/form.scss";

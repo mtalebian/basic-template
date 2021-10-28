@@ -149,6 +149,9 @@ export const BrowseTable = ({ table, onGoBack }) => {
                             //striped
                             hasWhitespace={!table.flexLayout}
                             //stickyFooter
+                            onShowMoreClick={(row) => console.log("onShowMoreClick", row)}
+                            onRowClick={(row) => console.log("onRowClick", row)}
+                            onCellClick={(row, cell) => console.log("onCellClick", cell)}
                         />
                     </div>
                 </>
