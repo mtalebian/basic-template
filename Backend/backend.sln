@@ -37,7 +37,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Forms.Migrations", "Forms\F
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "4 - Messaging", "4 - Messaging", "{8ACDE4C6-0B52-4068-B855-57C13C785565}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Messaging.Core", "Messaging.Core\Messaging.Core.csproj", "{133BC0D2-5D03-4A0A-9A08-A66930FBB8E1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Messaging.Core", "Messaging.Core\Messaging.Core.csproj", "{133BC0D2-5D03-4A0A-9A08-A66930FBB8E1}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "5 - Attachments", "5 - Attachments", "{E887895C-9D30-44F7-B77C-773DB8D37717}"
 EndProject

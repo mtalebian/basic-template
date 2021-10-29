@@ -8,12 +8,12 @@ using System.Text.Json;
 
 namespace Forms.Services
 {
-    internal class FormService : IFormService
+    internal class GridService : IGridService
     {
         private readonly IFormUnitOfWork db;
 
 
-        public FormService(IFormUnitOfWork db)
+        public GridService(IFormUnitOfWork db)
         {
             this.db = db;
         }
@@ -24,26 +24,26 @@ namespace Forms.Services
             return db.Groups.Where(x => x.ProjectId == projectId);
         }
 
-        public IList<Table> GetTables(string projectId, int groupId)
+        public IList<Grid> GetGrids(string projectId, int groupId)
         {
-            return db.Tables.Where(x => x.ProjectId == projectId && x.GroupId == groupId);
+            return db.Grids.Where(x => x.ProjectId == projectId && x.GroupId == groupId);
         }
 
-        public Table GetTable(string projectId, string name)
+        public Grid GetGrid(string projectId, string id)
         {
-            return db.Tables.FirstOrDefault(x => x.ProjectId == projectId && x.Name == name);
+            return db.Grids.FirstOrDefault(x => x.ProjectId == projectId && x.Id == id);
         }
 
-        public IList<Column> GetColumns(string projectId, string tableName)
+        public IList<GridColumn> GetGridColumns(string projectId, string gridId)
         {
-            return db.Columns.Where(x => x.ProjectId == projectId && x.TableName == tableName).OrderBy(x => x.OrdinalPosition).ToList();
+            return db.GridColumns.Where(x => x.ProjectId == projectId && x.GridId == gridId).OrderBy(x => x.OrdinalPosition).ToList();
         }
 
-        public DataTable ExecuteSelect(Table table, IList<Column> columns, Dictionary<string, object[]> filters)
+        public DataTable ExecuteSelect(Grid grid, IList<GridColumn> columns, Dictionary<string, object[]> filters)
         {
             var fields = columns.Select(x => x.Name).ToArray();
             var where = new List<string>();
-            var sql = $"select {string.Join(",", fields)} from {table.Name}";
+            var sql = $"select {string.Join(",", fields)} from {grid.TableName}";
             db.GetDataTable(sql);
             if (filters != null)
             {
@@ -88,7 +88,7 @@ namespace Forms.Services
             return db.GetDataTable(sql);
         }
 
-        private string ToDbCondition(Column c, string rop, object v)
+        private string ToDbCondition(GridColumn c, string rop, object v)
         {
             if (v == null)
             {
@@ -103,13 +103,13 @@ namespace Forms.Services
             return $"{c.Name} {rop} '{s}";
         }
 
-        public void ExecuteInsert(string tableName, Dictionary<string, object> values)
+        public void ExecuteInsert(string projectId, string gridId, Dictionary<string, object> values)
         {
-            var tb = db.Tables.FirstOrDefault(x => x.Name == tableName);
-            if (tb == null) throw new Exception($"Table '{tableName}' not found!");
+            var gr = db.Grids.FirstOrDefault(x => x.ProjectId == projectId && x.Id == gridId);
+            if (gr == null) throw new Exception($"Table '{gr.TableName}' not found!");
             var fields = new List<string>();
             var fields_value = new List<string>();
-            var columns = db.Columns.Where(x => x.ProjectId == tb.ProjectId && x.TableName == tb.Name);
+            var columns = db.GridColumns.Where(x => x.ProjectId == gr.ProjectId && x.GridId == gr.Id);
             foreach (var c in columns)
             {
                 var v = values.ContainsKey(c.Name) ? values[c.Name] : null;
@@ -128,15 +128,15 @@ namespace Forms.Services
             }
             var qFields = string.Join(", ", fields);
             var qValues = string.Join(", ", fields_value);
-            db.ExecuteSql($"insert {tableName} ({qFields}) values({qValues})");
+            db.ExecuteSql($"insert {gridId} ({qFields}) values({qValues})");
         }
 
-        public void ExecuteUpdate(string tableName, Dictionary<string, object> values)
+        public void ExecuteUpdate(string projectId, string gridId, Dictionary<string, object> values)
         {
-            var tb = db.Tables.FirstOrDefault(x => x.Name == tableName);
-            if (tb == null) throw new Exception($"Table '{tableName}' not found!");
+            var gr = db.Grids.FirstOrDefault(x => x.ProjectId == projectId && x.Id == gridId);
+            if (gr == null) throw new Exception($"Table '{gr.TableName}' not found!");
             var list = new List<string>();
-            var columns = db.Columns.Where(x => x.ProjectId == tb.ProjectId && x.TableName == tb.Name);
+            var columns = db.GridColumns.Where(x => x.ProjectId == gr.ProjectId && x.GridId == gr.Id);
             foreach (var c in columns)
             {
                 if (!c.IsPK && values.ContainsKey(c.Name))
@@ -145,12 +145,12 @@ namespace Forms.Services
                 }
             }
             var qSet = string.Join(", ", list);
-            var qWhere = GetWhereClause(tb, values, true);
-            var sql = $"update {tableName} set {qSet} {qWhere}";
+            var qWhere = GetWhereClause(gr, values, true);
+            var sql = $"update {gridId} set {qSet} {qWhere}";
             db.ExecuteSql(sql);
         }
 
-        private string GetDbValue(Column c, Dictionary<string, object> values)
+        private string GetDbValue(GridColumn c, Dictionary<string, object> values)
         {
             var v = values[c.Name];
             if (v == null) return "Null";
@@ -208,19 +208,19 @@ namespace Forms.Services
             return v.ToString().Replace("'", "");
         }
 
-        public void ExecuteDelete(string tableName, Dictionary<string, object> values)
+        public void ExecuteDelete(string projectId, string gridId, Dictionary<string, object> values)
         {
-            var tb = db.Tables.FirstOrDefault(x => x.Name == tableName);
-            if (tb == null) throw new Exception($"Table '{tableName}' not found!");
-            var qWhere = GetWhereClause(tb, values, true);
-            var sql = $"delete {tableName} {qWhere}";
+            var gr = db.Grids.FirstOrDefault(x => x.ProjectId == projectId && x.Id == gridId);
+            if (gr == null) throw new Exception($"The grid '{gridId}' not found!");
+            var qWhere = GetWhereClause(gr, values, true);
+            var sql = $"delete {gr.TableName} {qWhere}";
             db.ExecuteSql(sql);
         }
 
-        private string GetWhereClause(Table tb, Dictionary<string, object> values, bool pkOnky)
+        private string GetWhereClause(Grid tb, Dictionary<string, object> values, bool pkOnky)
         {
             var w = new List<string>();
-            var columns = db.Columns.Where(x => x.ProjectId == tb.ProjectId && x.TableName == tb.Name);
+            var columns = db.GridColumns.Where(x => x.ProjectId == tb.ProjectId && x.GridId == tb.Id);
             foreach (var c in columns)
             {
                 if (pkOnky && (!values.ContainsKey(c.Name) || values[c.Name] == null))

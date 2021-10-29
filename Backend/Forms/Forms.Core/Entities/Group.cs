@@ -11,6 +11,6 @@ namespace Forms.Core
         public string Title { get; set; }
 
         [IgnoreMap]
-        public ICollection<Table> Tables { get; set; }
+        public ICollection<Grid> Tables { get; set; }
     }
 }

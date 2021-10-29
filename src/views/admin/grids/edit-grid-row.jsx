@@ -9,7 +9,7 @@ import { BasicToggle } from "../../../components/basic-form/basic-toggle";
 import { BasicSwitch } from "../../../components/basic-form/basic-switch";
 import { BasicSelect } from "../../../components/basic-form/basic-select";
 import { BasicTextArea } from "../../../components/basic-form/basic-textarea";
-import { tablesApi } from "../../../api/tables-api";
+import { gridsApi } from "../../../api/grids-api";
 import { notify } from "../../../components/basic/notify";
 
 export const EditTableRow = ({ table, row, onGoBack, onChanged }) => {
@@ -22,7 +22,7 @@ export const EditTableRow = ({ table, row, onGoBack, onChanged }) => {
         var values = formRef.current.values;
         console.log(values);
         setSaving(true);
-        tablesApi
+        gridsApi
             .save(table.name, values, insertMode)
             .then((x) => {
                 setSaving(false);
@@ -36,8 +36,6 @@ export const EditTableRow = ({ table, row, onGoBack, onChanged }) => {
     };
 
     useShell().setApp("edit-table-row", onGoBack);
-
-    console.log(table.schema.dataColumns);
 
     function getFieldProps(x) {
         var props = {

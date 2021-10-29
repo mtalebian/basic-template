@@ -7,12 +7,12 @@ using System.Linq;
 
 namespace Forms.Services
 {
-    internal class FormDesignerService : IFormDesignerService
+    internal class GridBuilderService : IGridBuilderService
     {
         private readonly IFormUnitOfWork db;
 
 
-        public FormDesignerService(IFormUnitOfWork db)
+        public GridBuilderService(IFormUnitOfWork db)
         {
             this.db = db;
         }
@@ -53,14 +53,14 @@ namespace Forms.Services
 
 
 
-        public IList<Table> GetTables(string projectId, int groupId)
+        public IList<Grid> GetGrids(string projectId, int groupId)
         {
-            return db.Tables.Where(x => x.ProjectId == projectId && x.GroupId == groupId);
+            return db.Grids.Where(x => x.ProjectId == projectId && x.GroupId == groupId);
         }
 
-        public Table GetTable(string projectId, string name)
+        public Grid GetGrid(string projectId, string id)
         {
-            return db.Tables.FirstOrDefault(x => x.ProjectId == projectId && x.Name == name);
+            return db.Grids.FirstOrDefault(x => x.ProjectId == projectId && x.Id == id);
         }
 
         public DataTable GetSchemaColumn(string tableName)
@@ -83,25 +83,25 @@ namespace Forms.Services
             return db.GetDataTable(sql);
         }
 
-        public void SaveTable(ref Table item, IList<Column> dataColumns)
+        public void SaveGrid(ref Grid item, IList<GridColumn> dataColumns)
         {
-            var tb = item;
-            tb = db.Tables.FirstOrDefault(x => x.ProjectId == tb.ProjectId && x.Name == tb.Name);
-            if (tb == null)
+            var gr = item;
+            gr = db.Grids.FirstOrDefault(x => x.ProjectId == gr.ProjectId && x.Id== gr.Id);
+            if (gr == null)
             {
-                db.Tables.Add(item);
-                tb = item;
+                db.Grids.Add(item);
+                gr = item;
             }
             else
             {
-                item.MapTo(tb);
-                db.Tables.Update(tb);
+                item.MapTo(gr);
+                db.Grids.Update(gr);
                 //---
-                var columns = db.Columns.Where(x => x.ProjectId == tb.ProjectId && x.TableName == tb.Name);
+                var columns = db.GridColumns.Where(x => x.ProjectId == gr.ProjectId && x.GridId == gr.Id);
                 foreach (var _col in columns)
                 {
                     if (!dataColumns.Any(x => x.Id == _col.Id))
-                        db.Columns.Remove(_col);
+                        db.GridColumns.Remove(_col);
                 }
             }
 
@@ -109,60 +109,60 @@ namespace Forms.Services
             {
                 var dataColumn = dataColumns[i];
                 if (dataColumn.Id == 0)
-                    db.Columns.Add(dataColumn);
+                    db.GridColumns.Add(dataColumn);
                 else
                 {
-                    var c = db.Columns.FirstOrDefault(x => x.Id == dataColumn.Id);
+                    var c = db.GridColumns.FirstOrDefault(x => x.Id == dataColumn.Id);
                     dataColumn.MapTo(c);
-                    db.Columns.Update(c);
+                    db.GridColumns.Update(c);
                 }
             }
 
             db.SaveChanges();
-            item = tb;
+            item = gr;
         }
 
-        public void DeleteTable(string projectId, string name)
+        public void DeleteGrid(string projectId, string gridId)
         {
-            var tb = db.Tables.FirstOrDefault(x => x.ProjectId == projectId && x.Name == name);
-            var columns = db.Columns.Where(x => x.ProjectId == projectId && x.TableName == name);
+            var tb = db.Grids.FirstOrDefault(x => x.ProjectId == projectId && x.Id == gridId);
+            var columns = db.GridColumns.Where(x => x.ProjectId == projectId && x.GridId == gridId);
             if (tb == null) throw new Exception("Record not found!");
             foreach (var c in columns)
             {
-                db.Columns.Remove(c);
+                db.GridColumns.Remove(c);
             }
-            db.Tables.Remove(tb);
+            db.Grids.Remove(tb);
             db.SaveChanges();
         }
 
 
 
-        public IList<Column> GetColumns(string projectId, string tableName)
+        public IList<GridColumn> GetGridColumns(string projectId, string gridId)
         {
-            return db.Columns.Where(x => x.ProjectId == projectId && x.TableName == tableName).OrderBy(x => x.OrdinalPosition).ToList(); 
+            return db.GridColumns.Where(x => x.ProjectId == projectId && x.GridId == gridId).OrderBy(x => x.OrdinalPosition).ToList();
         }
 
-        public void Insert(Column item)
+        public void Insert(GridColumn item)
         {
-            db.Columns.Add(item);
+            db.GridColumns.Add(item);
             db.SaveChanges();
         }
 
-        public void Update(ref Column item)
+        public void Update(ref GridColumn item)
         {
             var c = item;
-            c = db.Columns.FirstOrDefault(x => x.Id == c.Id);
+            c = db.GridColumns.FirstOrDefault(x => x.Id == c.Id);
             item.MapTo(c);
-            db.Columns.Update(c);
+            db.GridColumns.Update(c);
             db.SaveChanges();
             item = c;
         }
 
         public void DeleteColumn(int id)
         {
-            var item = db.Columns.FirstOrDefault(x => x.Id == id);
+            var item = db.GridColumns.FirstOrDefault(x => x.Id == id);
             if (item == null) throw new Exception("Record not found!");
-            db.Columns.Remove(item);
+            db.GridColumns.Remove(item);
             db.SaveChanges();
         }
     }

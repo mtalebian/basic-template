@@ -21,8 +21,7 @@ namespace Forms.Data
         {
             base.OnModelCreating(modelBuilder);
 
-            var schema = ConfigHelper<object>.GetSchema(_FormsConfig.TableFormsTableName);
-
+            
 
             //
             // Group 
@@ -37,38 +36,37 @@ namespace Forms.Data
                 .HasData(new Group { Id = 1, ProjectId = "project1", Title = "System Tables" });
 
             //
-            // Table 
+            // Grid 
             //
-            var Table = new ConfigHelper<Table>(modelBuilder, _FormsConfig.TablesTableName);
-            Table.HasKey(x => new { x.ProjectId, x.Name });
-            Table.DefineProjectId(x => x.ProjectId);
-            Table.DefineName(x => x.Name);
-            Table.IsRequired(x => x.GroupId);
-            Table.DefineTitle(x => x.Title);
-            Table.DefineDescription(x => x.Description);
+            var Grid = new ConfigHelper<Grid>(modelBuilder, _FormsConfig.GridsTableName);
+            Grid.HasKey(x => new { x.ProjectId, x.Id });
+            Grid.DefineProjectId(x => x.ProjectId);
+            Grid.DefineName(x => x.Id);
+            Grid.IsRequired(x => x.GroupId);
+            Grid.DefineTitle(x => x.Title);
+            Grid.DefineDescription(x => x.Description);
 
-            Table.Entity()
+            Grid.Entity()
                 .HasOne(x => x.Group)
                 .WithMany(x => x.Tables)
                 .HasForeignKey(x => new { x.ProjectId, x.GroupId });
 
-            Table.Entity()
-                .HasData(new Table
+            
+            Grid.Entity()
+                .HasData(new Grid
                 {
                     ProjectId = "project1",
-                    Name = $"{schema}.Projects",
+                    Id = $"{Grid.Schema}.Projects",
                     GroupId = 1,
                     Title = "Projects",
-                    SingularTitle = "Project",
-                    Sortable = true,
-                    Filterable = true,
+                    FlexLayout = false,
                 });
 
 
             //
             // Column 
             //
-            var Column = new ConfigHelper<Column>(modelBuilder, _FormsConfig.ColumnsTableName);
+            var Column = new ConfigHelper<GridColumn>(modelBuilder, _FormsConfig.GridColumnsTableName);
             Column.HasKey(x => new { x.ProjectId, x.Id });
             Column.IsAutoIncrement(x => x.Id);
             Column.DefineProjectId(x => x.ProjectId);
@@ -85,7 +83,7 @@ namespace Forms.Data
             Column.DefaultValue(x => x.IsReadOnly, 0, true);
             Column.DefaultValue(x => x.ShowInList, 1, true);
             Column.DefaultValue(x => x.ShowInEditor, 1, true);
-                        
+
             Column.VarChar(x => x.Display, 20, false);
             Column.VarChar(x => x.ValidValues, 2000, false);
             Column.VarChar(x => x.CellClassName, 100, false);
@@ -97,8 +95,22 @@ namespace Forms.Data
             Column.Entity()
                 .HasOne(x => x.Table)
                 .WithMany(x => x.Columns)
-                .HasForeignKey(x => new { x.ProjectId, x.TableName });
+                .HasForeignKey(x => new { x.ProjectId, x.GridId });
 
+
+
+            //
+            // GridVariant
+            //
+            var GridVariant = new ConfigHelper<GridVariant>(modelBuilder, _FormsConfig.GridVariantsTableName);
+            GridVariant.HasKey(x => x.Serial);
+            GridVariant.IsAutoIncrement(x => x.Serial);
+            GridVariant.DefineProjectId(x => x.ProjectId);
+            GridVariant.DefineGridId(x => x.GridId);
+            GridVariant.DefineName(x => x.TableName);
+            GridVariant.NVarChar(x => x.FiltersData, 2000, false);
+            GridVariant.DefineUserName(x => x.CreatedBy);
+            GridVariant.DefineCreatedAt(x => x.CreatedAt);
 
 
 
@@ -112,6 +124,7 @@ namespace Forms.Data
             Text.NVarChar(x => x.Name, 100, true);
             Text.NVarChar(x => x.Value, 1000, false);
             Text.DefineCreatedAt(x => x.CreatedAt, true);
+
 
         }
     }

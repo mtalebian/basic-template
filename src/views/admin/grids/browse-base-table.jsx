@@ -6,9 +6,9 @@ import { notify } from "../../../components/basic/notify";
 import { TableTitlebar } from "../../../components/table";
 import { useReactTable } from "../../../components/table/use-react-table";
 import { Text } from "../../../components/basic/text";
-import { tablesApi } from "../../../api/tables-api";
+import { gridsApi } from "../../../api/grids-api";
 import { FilterBox } from "../../../components/filters/filter-box";
-import { EditTableRow } from "./edit-table-row";
+import { EditTableRow } from "./edit-grid-row";
 import { useShell } from "../../shared/use-shell";
 import { msgbox } from "react-basic-design";
 
@@ -79,7 +79,7 @@ export const BrowseTable = ({ table, onGoBack }) => {
 
     const deleteTableRow = (row) => {
         shell.setBusyMode(true);
-        tablesApi
+        gridsApi
             .delete(table.name, row.values)
             .then((x) => {
                 shell.setBusyMode(false);
@@ -105,8 +105,8 @@ export const BrowseTable = ({ table, onGoBack }) => {
                                 variants={null}
                                 systemIsBusy={false}
                                 onClick={(e) => {
-                                    tablesApi
-                                        .browseTable(table.name)
+                                    gridsApi
+                                        .browseGrid(table.name)
                                         .then((x) => {
                                             table.data = x.data;
                                             tableApi.state.selectedRowIds = {};
@@ -205,13 +205,10 @@ export const BrowseTable = ({ table, onGoBack }) => {
                     table={table}
                     onGoBack={() => setEditState({ edit: false })}
                     onChanged={(x, original) => {
-                        console.log(x, original);
-
                         if (!original) setData([...data, x]);
                         else {
                             var i = findIndex(original, data, table.schema.dataColumns);
                             data[i] = x;
-                            console.log(i, data);
                             setData(data.map((item, index) => (index === i ? x : item)));
                         }
                         setEditState({ edit: false });

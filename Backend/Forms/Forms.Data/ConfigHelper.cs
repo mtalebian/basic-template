@@ -10,11 +10,17 @@ namespace Forms.Data
     {
         private ModelBuilder Builder;
 
+        public string Name { get; private set; }
+        public string Schema { get; private set; }
+
+
         public ConfigHelper(ModelBuilder modelBuilder, string tableName)
         {
             Builder = modelBuilder;
+            Name = GetName(tableName);
+            Schema = GetSchema(tableName);
             Builder.Entity<T>()
-                .ToTable(GetName(tableName), GetSchema(tableName));
+                .ToTable(Name, Schema);
         }
 
         internal static string GetName(string value)
@@ -85,7 +91,23 @@ namespace Forms.Data
 
 
 
+        internal void DefineUserName<TProperty>([NotNull] Expression<Func<T, TProperty>> propertyExpression)
+        {
+            Builder.Entity<T>().Property(propertyExpression)
+                .HasMaxLength(50)
+                .IsUnicode(false)
+                .IsRequired();
+        }
+
         internal void DefineProjectId<TProperty>([NotNull] Expression<Func<T, TProperty>> propertyExpression)
+        {
+            Builder.Entity<T>().Property(propertyExpression)
+                .HasMaxLength(20)
+                .IsUnicode(false)
+                .IsRequired();
+        }
+
+        internal void DefineGridId<TProperty>([NotNull] Expression<Func<T, TProperty>> propertyExpression)
         {
             Builder.Entity<T>().Property(propertyExpression)
                 .HasMaxLength(20)

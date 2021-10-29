@@ -3,7 +3,7 @@ import * as bd from "react-basic-design";
 import { useTranslation } from "react-i18next";
 import { useAccount } from "../../../app/account-context";
 import { Tile, Tiles } from "../../../components/tilemenu/tiles";
-import { tablesApi } from "../../../api/tables-api";
+import { gridsApi } from "../../../api/grids-api";
 import { notify } from "../../../components/basic/notify";
 import { BrowseTable } from "./browse-base-table";
 import { Text } from "../../../components/basic/text";
@@ -27,8 +27,8 @@ export function TablesApp() {
             return false;
         }
         setLoadingTable(tb);
-        tablesApi
-            .browseTable(tb.name)
+        gridsApi
+            .browseGrid(tb.name)
             .then((x) => {
                 tb.data = x.data;
                 tb.schema = x.schema;
@@ -46,7 +46,7 @@ export function TablesApp() {
 
     useEffect(() => {
         if (!groups && account.isConnected()) {
-            tablesApi.getGroups().then((x) => setGroups(x));
+            gridsApi.getGroups().then((x) => setGroups(x));
         }
     }, [groups, account]);
 

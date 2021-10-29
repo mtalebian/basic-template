@@ -4,11 +4,11 @@
     {
         public const string SectionName = "Forms";
 
-        public string ColumnsTableName { get; set; }
-        public string FormsTableName { get; set; }
+        public string GridsTableName { get; set; }
+        public string GridColumnsTableName { get; set; }
+        public string GridVariantsTableName { get; set; }
         public string GroupsTableName { get; set; }
-        public string TablesTableName { get; set; }
-        public string TableFormsTableName { get; set; }
         public string TextsTableName { get; set; }
+        
     }
 }

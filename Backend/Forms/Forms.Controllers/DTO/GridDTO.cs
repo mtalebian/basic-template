@@ -2,22 +2,21 @@
 
 namespace Forms.Controllers
 {
-    public class TableDTO
+    public class GridDTO
     {
-        public string Name { get; set; }
+        public string Id { get; set; }
 
         public string Title { get; set; }
-        public string SingularTitle { get; set; }
         public string Description { get; set; }
+        public string TableName { get; set; }
 
-        public bool Sortable { get; set; }
-        public bool Filterable { get; set; }
+        public bool FlexLayout { get; set; }
         public string SelectSql { get; set; }
         public string InsertSql { get; set; }
         public string UpdateSql { get; set; }
         public string DeleteSql { get; set; }
 
-        public IList<ColumnDTO> DataColumns { get; set; }
+        public IList<GridColumnDTO> DataColumns { get; set; }
 
     }
 }

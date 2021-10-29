@@ -4,14 +4,16 @@ import * as bd from "react-basic-design";
 //import accountManager from "../../../app/account-manager";
 
 import classNames from "classnames";
-import { tableDesignerApi } from "../../../api/table-designer-api";
+import { gridBuilderApi } from "../../../api/grid-builder-api";
 import { TableDesignerEditGroup } from "./edit-group";
-import { TableDesignerEditTable } from "./edit-table";
+import { TableDesignerEditTable } from "./edit-grid";
 import { notify } from "../../../components/basic/notify";
 import { Tile, Tiles } from "../../../components/tilemenu/tiles";
 import * as icons from "../../../assets/icons";
 import { useTranslation } from "react-i18next";
 import { useAccount } from "../../../app/account-context";
+import { Text } from "../../../components/basic/text";
+import { useShell } from "../../shared/use-shell";
 
 //
 export function TableDesignerApp() {
@@ -19,16 +21,11 @@ export function TableDesignerApp() {
     const { t } = useTranslation();
     const [groups, setGroups] = useState(null);
     const [group, setGroup] = useState(null);
-    const [table, setTable] = useState(null);
-    const [column, setColumn] = useState(null);
+    const [table, setGrid] = useState(null);
 
     function goBack() {
-        if (column) {
-            setColumn(null);
-            return;
-        }
         if (group) setGroup(null);
-        if (table) setTable(null);
+        if (table) setGrid(null);
     }
 
     function onEditGroupClick(g) {
@@ -36,29 +33,29 @@ export function TableDesignerApp() {
         return false;
     }
 
-    function onAddFormClick(g) {
+    function onNewGridClick(g) {
         setGroup(g);
-        setTable({ data: { dataColumns: [] } });
+        setGrid({ data: { dataColumns: [] } });
         return false;
     }
 
-    function onEditTableClick(g, t) {
-        if (t.data) {
+    function onEditGridClick(event, g, grid) {
+        event.preventDefault();
+        if (grid.data) {
             setGroup(g);
-            setTable(t);
-            return false;
+            setGrid(grid);
+            return;
         }
-        tableDesignerApi
-            .getTable(t.name)
+        gridBuilderApi
+            .getGrid(grid.id)
             .then((x) => {
-                t.data = x;
+                grid.data = x;
                 setGroup(g);
-                setTable(t);
+                setGrid(grid);
             })
             .catch((ex) => {
                 notify.error(ex);
             });
-        return false;
     }
 
     function onAddGroupClicked() {
@@ -67,24 +64,15 @@ export function TableDesignerApp() {
 
     useEffect(() => {
         if (!groups && account.isConnected()) {
-            tableDesignerApi.getGroups().then((x) => setGroups(x));
+            gridBuilderApi.getGroups().then((x) => setGroups(x));
         }
-        // return accountManager.status.onConnected(function () {
-        //     if (!groups) tableDesignerApi.getGroups().then((x) => setGroups(x));
-        // }).remove;
     }, [groups, account]);
+
+    useShell().setApp(<Text>grid-builder</Text>, null);
 
     return (
         <>
             <div className={classNames({ "d-none": group || table })}>
-                <div className="border-bottom bg-gray-5 mb-3">
-                    <bd.Toolbar className="container">
-                        <bd.Button color="primary" size="sm" onClick={onAddGroupClicked}>
-                            <icons.Folder />
-                            {t("add-new-group")}
-                        </bd.Button>
-                    </bd.Toolbar>
-                </div>
                 <div className="container">
                     <Tiles>
                         {groups &&
@@ -95,34 +83,60 @@ export function TableDesignerApp() {
                                         key={g.id}
                                         title={
                                             <>
-                                                <span className="size-md"> {g.title}</span>
                                                 <bd.Button
                                                     variant="text"
-                                                    size="sm"
-                                                    className="mx-2"
-                                                    color="secondary"
+                                                    color="primary"
+                                                    className="m-s-n2"
                                                     onClick={() => onEditGroupClick(g)}
+                                                    disableRipple
                                                 >
-                                                    <icons.Edit />
-                                                    Edit Group
-                                                </bd.Button>
-                                                <bd.Button variant="text" size="sm" color="secondary" onClick={() => onAddFormClick(g)}>
-                                                    <icons.Add />
-                                                    New table
+                                                    {g.title}
                                                 </bd.Button>
                                             </>
                                         }
                                     >
                                         {g.items.map((t) => (
-                                            <Tile key={t.name} title={t.title} onClick={() => onEditTableClick(g, t)} />
+                                            <Tile
+                                                key={t.id}
+                                                title={
+                                                    <a href="#/" onClick={(e) => onEditGridClick(e, g, t)}>
+                                                        <Text>{t.title}</Text>
+                                                    </a>
+                                                }
+                                            />
                                         ))}
+                                        <Tile
+                                            title={
+                                                <bd.Button
+                                                    variant="text"
+                                                    size="sm"
+                                                    color="secondary "
+                                                    onClick={() => onNewGridClick(g)}
+                                                    disableRipple
+                                                >
+                                                    <icons.Add />
+                                                    <Text>new-grid</Text>
+                                                </bd.Button>
+                                            }
+                                            className="bg-transparent"
+                                        />
                                     </Tile>
                                 ))}
+                        <Tile
+                            title={
+                                <bd.Button variant="text" color="secondary" size="sm" onClick={onAddGroupClicked} disableRipple>
+                                    <icons.Add />
+                                    <Text>add-new-group</Text>
+                                </bd.Button>
+                            }
+                        >
+                            <span></span>
+                        </Tile>
                     </Tiles>
                 </div>
             </div>
 
-            {group && !table && !column && (
+            {group && !table && (
                 <TableDesignerEditGroup
                     onGoBack={goBack}
                     group={group}
@@ -149,23 +163,23 @@ export function TableDesignerApp() {
                 />
             )}
 
-            {group && table && !column && (
+            {group && table && (
                 <TableDesignerEditTable
                     onGoBack={goBack}
                     group={group}
                     table={table.data}
-                    onChanged={(tb, tbName) => {
-                        var g = groups.find((x) => x.id === group.id);
-                        var t = g.items.find((x) => x.name === (tb ? tb.name : tbName));
+                    onChanged={(tb, original, originalGroup) => {
+                        const g = groups.find((x) => x.id === originalGroup.id);
+                        var t = !tb ? null : g.items.find((x) => x.id === tb.id);
                         if (!tb) {
                             // removed
-                            g.items = g.items.filter((x) => x !== t);
-                        } else if (!t) {
+                            g.items = g.items.filter((_grd) => _grd.id !== original.id);
+                        } else if (!original.id) {
                             // added
                             g.items.push({
-                                name: tb.name,
+                                id: tb.id,
                                 title: tb.title,
-                                table: tb,
+                                data: tb,
                             });
                         } else {
                             // modifed
@@ -182,6 +196,6 @@ export function TableDesignerApp() {
 }
 
 TableDesignerApp.Appbar = {
-    title: "Table Designer",
+    title: "grid-builder",
     buttons: null,
 };

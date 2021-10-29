@@ -10,7 +10,7 @@ export function Tiles({ className, children, ...props }) {
     );
 }
 
-export function Tile({ title, icon, selected, onClick, isBusy, children, ...props }) {
+export function Tile({ className, title, icon, selected, onClick, isBusy, children, ...props }) {
     const is_folder = !!children;
     var cn = classNames({ "mi-folder": is_folder, "mi-menu": !is_folder });
 
@@ -21,7 +21,7 @@ export function Tile({ title, icon, selected, onClick, isBusy, children, ...prop
         <li className={cn}>
             <div className={classNames("mi-item", { "mi-selected": selected })}>
                 {!is_folder && (
-                    <div onClick={onClick}>
+                    <div onClick={onClick} className={className}>
                         {icon}
                         {title}
 

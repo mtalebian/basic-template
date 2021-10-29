@@ -2,10 +2,10 @@
 
 namespace Forms.Controllers
 {
-    public class TableActionDTO
+    public class GridActionDTO
     {
         public string Name { get; set; }
-        public string TableName { get; set; }
+        public string GridId { get; set; }
         public Dictionary<string, object> Values{ get; set; }
     }
 }

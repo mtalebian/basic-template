@@ -14,13 +14,13 @@ namespace Forms.Controllers
     [Route("[controller]")]
     [Authorize(AuthenticationSchemes = "Bearer")]
     [EnableCors("react")]
-    public class TableDesignerController : ControllerBase
+    public class GridBuilderController : ControllerBase
     {
-        private readonly IFormDesignerService service;
+        private readonly IGridBuilderService service;
 
 
 
-        public TableDesignerController(IFormDesignerService formService)
+        public GridBuilderController(IGridBuilderService formService)
         {
             this.service = formService;
         }
@@ -33,7 +33,7 @@ namespace Forms.Controllers
             foreach (var g in groups)
             {
                 var dto = g.MapTo<GroupInfoDTO>();
-                dto.Items = service.GetTables(g.ProjectId, g.Id).MapTo<GroupItemDTO>().ToArray();
+                dto.Items = service.GetGrids(g.ProjectId, g.Id).MapTo<GroupItemDTO>().ToArray();
                 result.Add(dto);
             }
             return new Response<GroupInfoDTO[]>(result.ToArray());
@@ -66,51 +66,52 @@ namespace Forms.Controllers
 
 
 
-        [HttpPost("get-table")]
-        public Response<TableDTO> GetTable(string projectId, string tableName)
+        [HttpPost("get-grid")]
+        public Response<GridDTO> GetGrid(string projectId, string id)
         {
-            var table = service.GetTable(projectId, tableName);
-            var result = table.MapTo<TableDTO>();
-            result.DataColumns = service.GetColumns(table.ProjectId, table.Name).MapTo<ColumnDTO>();
-            return new Response<TableDTO>(result);
+            var grid = service.GetGrid(projectId, id);
+            var result = grid.MapTo<GridDTO>();
+            result.DataColumns = service.GetGridColumns(grid.ProjectId, grid.Id).MapTo<GridColumnDTO>();
+            return new Response<GridDTO>(result);
         }
 
-        [HttpPost("save-table")]
-        public Response<TableDTO> SaveTable(string projectId, int groupId, [FromBody] TableDTO table)
+        [HttpPost("save-grid")]
+        public Response<GridDTO> SaveGrid(string projectId, int groupId, [FromBody] GridDTO dto)
         {
-            var tb = table.MapTo<Table>();
-            tb.ProjectId = projectId;
-            tb.GroupId = groupId;
-            var columns = table.DataColumns.MapTo<Column>();
+            var grd = dto.MapTo<Grid>();
+            grd.ProjectId = projectId;
+            grd.GroupId = groupId;
+            var columns = dto.DataColumns.MapTo<GridColumn>();
             foreach (var c in columns)
             {
                 c.ProjectId = projectId;
-                c.TableName = tb.Name;
+                c.GridId = grd.Id;
             }
-            service.SaveTable(ref tb, columns);
-            var result = tb.MapTo<TableDTO>();
-            result.DataColumns = service.GetColumns(tb.ProjectId, tb.Name).MapTo<ColumnDTO>();
-            return new Response<TableDTO>(result);
+            service.SaveGrid(ref grd, columns);
+            var result = grd.MapTo<GridDTO>();
+            result.DataColumns = service.GetGridColumns(grd.ProjectId, grd.Id).MapTo<GridColumnDTO>();
+            return new Response<GridDTO>(result);
         }
 
-        [HttpPost("delete-table")]
-        public Response DeleteTable(string projectId, string tableName)
+        [HttpPost("delete-grid")]
+        public Response DeleteGrid(string projectId, string gridId)
         {
-            service.DeleteTable(projectId, tableName);
+            service.DeleteGrid(projectId, gridId);
             return new Response();
         }
 
 
 
         [HttpPost("schema-columns")]
-        public Response<IList<ColumnDTO>> GetSchemaColumns(string tableName)
+        public Response<IList<GridColumnDTO>> GetSchemaColumns(string projectId, string gridId)
         {
-            var res = new List<ColumnDTO>();
-            var tb = service.GetSchemaColumn(tableName);
+            var grid = service.GetGrid(projectId, gridId);
+            var res = new List<GridColumnDTO>();
+            var tb = service.GetSchemaColumn(grid.TableName);
             foreach (DataRow r in tb.Rows)
             {
                 var data_type = r.AsString("DataType");
-                var c = new ColumnDTO
+                var c = new GridColumnDTO
                 {
                     Name = r.AsString("Name"),
                     Title = r.AsString("Name"),
@@ -133,7 +134,7 @@ namespace Forms.Controllers
                 else if (data_type == "varbinary") c.IsReadOnly = true;
                 res.Add(c);
             }
-            return new Response<IList<ColumnDTO>>(res);
+            return new Response<IList<GridColumnDTO>>(res);
         }
 
     }

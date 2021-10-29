@@ -1,13 +1,9 @@
-﻿using System;
-
-namespace Forms.Core
+﻿namespace Forms.Controllers
 {
-    public class Column
+    public class GridColumnDTO
     {
         public int Id { get; set; }
 
-        public string ProjectId { get; set; }
-        public string TableName { get; set; }
         public string Name { get; set; }
         public string Title { get; set; }
         public bool IsPK { get; set; }
@@ -30,7 +26,5 @@ namespace Forms.Core
         public string Category { get; set; }
         public int OrdinalPosition { get; set; }
 
-        [IgnoreMap]
-        public virtual Table Table { get; set; }
     }
 }

@@ -10,8 +10,10 @@ namespace Forms.Data
     public class FormUnitOfWork : UnitOfWork, IFormUnitOfWork
     {
         private readonly FormDbContext context;
-        public IColumnRepository Columns { get; }
-        public ITableRepository Tables { get; }
+
+        public ITableRepository Grids { get; }
+        public IGridColumnRepository GridColumns { get; }
+        public IGridVariantRepository GridVariants { get; }
         public IGroupRepository Groups { get; }
         public ITextRepository Texts { get; }
 
@@ -19,9 +21,10 @@ namespace Forms.Data
         public FormUnitOfWork(FormDbContext context) : base(context)
         {
             this.context = context;
-            Columns = new ColumnRepository(context);
+            Grids = new GridRepository(context);
+            GridColumns = new GridColumnRepository(context);
+            GridVariants = new GridVariantRepository(context);
             Groups = new GroupRepository(context);
-            Tables = new TableRepository(context);
             Texts = new TextRepository(context);
         }
     }

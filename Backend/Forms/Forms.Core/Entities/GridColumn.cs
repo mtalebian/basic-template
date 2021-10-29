@@ -1,9 +1,13 @@
-﻿namespace Forms.Controllers
+﻿using System;
+
+namespace Forms.Core
 {
-    public class ColumnDTO
+    public class GridColumn
     {
         public int Id { get; set; }
 
+        public string ProjectId { get; set; }
+        public string GridId { get; set; }
         public string Name { get; set; }
         public string Title { get; set; }
         public bool IsPK { get; set; }
@@ -11,8 +15,13 @@
         public string DataType { get; set; }
         public int? MaxLen { get; set; }
         public string DefaultValue { get; set; }
-        public string Filter { get; set; }
         public int? Width { get; set; }
+        
+        public string Filter { get; set; }
+        public bool UseInFilterVariant { get; set; }
+        
+        public string CheckGrid { get; set; }
+        public string CheckField { get; set; }
 
         public bool IsReadOnly { get; set; }
         public bool ShowInList { get; set; }
@@ -26,5 +35,7 @@
         public string Category { get; set; }
         public int OrdinalPosition { get; set; }
 
+        [IgnoreMap]
+        public virtual Grid Table { get; set; }
     }
 }

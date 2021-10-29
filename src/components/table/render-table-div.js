@@ -149,9 +149,14 @@ export function RenderTableDiv({
         }
     };
 
+    function getTableProps() {
+        console.log(tableApi.getTableProps());
+        return tableApi.getTableProps();
+    }
+
     return (
         <div className="bd-table-div-container" style={{ ...style }}>
-            <div {...tableApi.getTableProps()} className={cn}>
+            <div {...getTableProps()} className={cn}>
                 <div className="thead">
                     {tableApi.headerGroups.map((headerGroup) => (
                         <div {...headerGroup.getHeaderGroupProps()} className="tr">

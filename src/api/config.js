@@ -8,7 +8,7 @@ export const apiConfig = {
     baseUrl: host,
     accountUrl: host + "/account",
     menuUrl: host + "/menu",
-    tableDesignerUrl: host + "/tableDesigner",
-    tablesUrl: host + "/tables",
+    gridBuilderUrl: host + "/gridBuilder",
+    gridsUrl: host + "/grids",
     userManegmentUrl: host + "/userManagment",
 };

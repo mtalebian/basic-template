@@ -14,11 +14,11 @@ namespace Forms.Controllers
     [Route("[controller]")]
     [Authorize(AuthenticationSchemes = "Bearer")]
     [EnableCors("react")]
-    public class TablesController : ControllerBase
+    public class GridsController : ControllerBase
     {
-        private readonly IFormService service;
+        private readonly IGridService service;
 
-        public TablesController(IFormService formService)
+        public GridsController(IGridService formService)
         {
             this.service = formService;
         }
@@ -32,7 +32,7 @@ namespace Forms.Controllers
             foreach (var g in groups)
             {
                 var dto = g.MapTo<GroupInfoDTO>();
-                dto.Items = service.GetTables(g.ProjectId, g.Id).MapTo<GroupItemDTO>().ToArray();
+                dto.Items = service.GetGrids(g.ProjectId, g.Id).MapTo<GroupItemDTO>().ToArray();
                 result.Add(dto);
             }
             return new Response<GroupInfoDTO[]>(result.ToArray());
@@ -42,32 +42,32 @@ namespace Forms.Controllers
         public Response<BrowseTableDTO> BrowseTable(string projectId, string name)
         {
             var filters = (Dictionary<string, object[]>)null;
-            var table = service.GetTable(projectId, name);
-            var columns = service.GetColumns(table.ProjectId, table.Name);
+            var table = service.GetGrid(projectId, name);
+            var columns = service.GetGridColumns(table.ProjectId, table.Id);
             var data = service.ExecuteSelect(table, columns, filters);
 
             var result = new BrowseTableDTO();
-            result.Schema = table.MapTo<TableDTO>();
-            result.Schema.DataColumns = columns.MapTo<ColumnDTO>();
+            result.Schema = table.MapTo<GridDTO>();
+            result.Schema.DataColumns = columns.MapTo<GridColumnDTO>();
             result.Data = data.ToJSON();
             return new Response<BrowseTableDTO>(result);
         }
 
         [HttpPost("exec-table-action")]
-        public Response ExecTableAction([FromBody] TableActionDTO action)
+        public Response ExecTableAction(string projectId, [FromBody] GridActionDTO dto)
         {
-            switch (action.Name)
+            switch (dto.Name)
             {
                 case "insert":
-                    service.ExecuteInsert(action.TableName, action.Values);
+                    service.ExecuteInsert(projectId, dto.GridId, dto.Values);
                     break;
 
                 case "update":
-                    service.ExecuteUpdate(action.TableName, action.Values);
+                    service.ExecuteUpdate(projectId, dto.GridId, dto.Values);
                     break;
 
                 case "delete":
-                    service.ExecuteDelete(action.TableName, action.Values);
+                    service.ExecuteDelete(projectId, dto.GridId, dto.Values);
                     break;
 
                 default: return new Response("Invalid action!");

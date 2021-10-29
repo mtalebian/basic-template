@@ -5,7 +5,7 @@ import * as bd from "react-basic-design";
 
 import { messages } from "../../../components/messages";
 import classNames from "classnames";
-import { tableDesignerApi } from "../../../api/table-designer-api";
+import { gridBuilderApi } from "../../../api/grid-builder-api";
 import { notify } from "../../../components/basic/notify";
 import * as icons from "../../../assets/icons";
 import { Form, Formik } from "formik";
@@ -24,7 +24,7 @@ export function TableDesignerEditGroup({ group, onChanged, onGoBack }) {
 
         setLoading(true);
         var insertMode = !group.id;
-        tableDesignerApi
+        gridBuilderApi
             .saveGroup(values, insertMode)
             .then((x) => {
                 setLoading(false);
@@ -40,7 +40,7 @@ export function TableDesignerEditGroup({ group, onChanged, onGoBack }) {
 
     const onDeleteClick = (hide) => {
         setDeleting(true);
-        tableDesignerApi
+        gridBuilderApi
             .deleteGroup(group.id)
             .then((x) => {
                 setLoading(false);
