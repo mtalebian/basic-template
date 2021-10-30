@@ -1,17 +1,18 @@
-﻿using Forms.Core;
+﻿using Common.Data;
+using Common.Security;
+using Forms.Core;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
-using System;
 
 namespace Forms.Data
 {
-    public class FormDbContext : DbContext
+    public class FormDbContext : BaseDbContext
     {
         private readonly FormsConfig _FormsConfig;
 
 
-
-        public FormDbContext(DbContextOptions<FormDbContext> options, IOptions<FormsConfig> formsConfig) : base(options)
+        public FormDbContext(DbContextOptions<FormDbContext> options, IOptions<FormsConfig> formsConfig, ICurrentUserNameService currentUserNameService)
+            : base(options, currentUserNameService)
         {
             _FormsConfig = formsConfig.Value;
         }
@@ -21,7 +22,6 @@ namespace Forms.Data
         {
             base.OnModelCreating(modelBuilder);
 
-            
 
             //
             // Group 
@@ -45,29 +45,32 @@ namespace Forms.Data
             Grid.IsRequired(x => x.GroupId);
             Grid.DefineTitle(x => x.Title);
             Grid.DefineDescription(x => x.Description);
+            Grid.DefineUserName(x => x.CreatedBy, "");
+            Grid.DefineUserName(x => x.ModifiedBy, "");
+            Grid.DefineCreatedAt(x => x.CreatedAt, "");
+            Grid.DefineCreatedAt(x => x.ModifiedAt, "");
 
             Grid.Entity()
                 .HasOne(x => x.Group)
                 .WithMany(x => x.Tables)
                 .HasForeignKey(x => new { x.ProjectId, x.GroupId });
 
-            
+
             Grid.Entity()
-                .HasData(new Grid
-                {
-                    ProjectId = "project1",
-                    Id = $"{Grid.Schema}.Projects",
-                    GroupId = 1,
-                    Title = "Projects",
-                    FlexLayout = false,
-                });
+                .HasData(
+                new Grid { ProjectId = "project1", Id = $"{Grid.Schema}.Projects", GroupId = 1, Title = "Projects", FlexLayout = false, },
+                new Grid { ProjectId = "project1", Id = $"{Grid.Schema}.AzObjects", GroupId = 1, Title = "AzObjects", FlexLayout = false, },
+                new Grid { ProjectId = "project1", Id = $"{Grid.Schema}.AzObjectFields", GroupId = 1, Title = "AzObjectFields", FlexLayout = false, },
+                new Grid { ProjectId = "project1", Id = $"{Grid.Schema}.AzFields", GroupId = 1, Title = "AzFields", FlexLayout = false, },
+                new Grid { ProjectId = "project1", Id = $"{Grid.Schema}.Applications", GroupId = 1, Title = "Applications", FlexLayout = false, }
+                );
 
 
             //
             // Column 
             //
             var Column = new ConfigHelper<GridColumn>(modelBuilder, _FormsConfig.GridColumnsTableName);
-            Column.HasKey(x => new { x.ProjectId, x.Id });
+            Column.HasKey(x => new { x.Id });
             Column.IsAutoIncrement(x => x.Id);
             Column.DefineProjectId(x => x.ProjectId);
             Column.DefineName(x => x.Title);
@@ -107,10 +110,12 @@ namespace Forms.Data
             GridVariant.IsAutoIncrement(x => x.Serial);
             GridVariant.DefineProjectId(x => x.ProjectId);
             GridVariant.DefineGridId(x => x.GridId);
-            GridVariant.DefineName(x => x.TableName);
             GridVariant.NVarChar(x => x.FiltersData, 2000, false);
-            GridVariant.DefineUserName(x => x.CreatedBy);
-            GridVariant.DefineCreatedAt(x => x.CreatedAt);
+            GridVariant.DefineUserName(x => x.CreatedBy, "");
+            GridVariant.DefineUserName(x => x.ModifiedBy, "");
+            GridVariant.DefineCreatedAt(x => x.CreatedAt, "");
+            GridVariant.DefineCreatedAt(x => x.ModifiedAt, "");
+
 
 
 
@@ -123,7 +128,7 @@ namespace Forms.Data
             Text.VarChar(x => x.LanguageCode, 10, true);
             Text.NVarChar(x => x.Name, 100, true);
             Text.NVarChar(x => x.Value, 1000, false);
-            Text.DefineCreatedAt(x => x.CreatedAt, true);
+            Text.DefineCreatedAt(x => x.CreatedAt, "_CreatedAt");
 
 
         }

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace Forms.Controllers
 {
@@ -15,6 +16,18 @@ namespace Forms.Controllers
         public string InsertSql { get; set; }
         public string UpdateSql { get; set; }
         public string DeleteSql { get; set; }
+
+        [IgnoreSourceMap]
+        public string CreatedBy { get; set; }
+
+        [IgnoreSourceMap]
+        public DateTime CreatedAt { get; set; }
+
+        [IgnoreSourceMap]
+        public string ModifiedBy { get; set; }
+
+        [IgnoreSourceMap]
+        public DateTime ModifiedAt { get; set; }
 
         public IList<GridColumnDTO> DataColumns { get; set; }
 

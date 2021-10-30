@@ -166,9 +166,9 @@ namespace Accounts.Data
 
             Menu.Entity()
                 .HasData(
-                    new Menu { ProjectId = "project1", Id = "config-admin-tables", ParentId = "config", Title = "Maintain base tables", Url = "/admin/tables" },
+                    new Menu { ProjectId = "project1", Id = "config-admin-grids", ParentId = "config", Title = "Maintain base tables", Url = "/admin/grids" },
                     new Menu { ProjectId = "project1", Id = "config-menu", ParentId = "config", Title = "Maintain project menu", Url = "/admin/menu" },
-                    new Menu { ProjectId = "project1", Id = "config-table-designer", ParentId = "config", Title = "Table designer", Url = "/admin/table-designer" },
+                    new Menu { ProjectId = "project1", Id = "config-grid-builder", ParentId = "config", Title = "Table designer", Url = "/admin/grid-builder" },
                     new Menu { ProjectId = "project1", Id = "users", ParentId = "admin", Title = "Manage Users", Url = "/admin/users" }
                 );
 

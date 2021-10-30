@@ -91,14 +91,6 @@ namespace Forms.Data
 
 
 
-        internal void DefineUserName<TProperty>([NotNull] Expression<Func<T, TProperty>> propertyExpression)
-        {
-            Builder.Entity<T>().Property(propertyExpression)
-                .HasMaxLength(50)
-                .IsUnicode(false)
-                .IsRequired();
-        }
-
         internal void DefineProjectId<TProperty>([NotNull] Expression<Func<T, TProperty>> propertyExpression)
         {
             Builder.Entity<T>().Property(propertyExpression)
@@ -146,11 +138,21 @@ namespace Forms.Data
                     .IsUnicode(true);
         }
 
-        internal void DefineCreatedAt<TProperty>([NotNull] Expression<Func<T, TProperty>> propertyExpression, bool required = true)
+        internal void DefineUserName<TProperty>([NotNull] Expression<Func<T, TProperty>> propertyExpression, string fieldName)
         {
-            Builder.Entity<T>().Property(propertyExpression)
+            var p = Builder.Entity<T>().Property(propertyExpression)
+                .HasMaxLength(50)
+                .IsUnicode(false)
+                .IsRequired();
+            if (!string.IsNullOrEmpty(fieldName)) p.HasField(fieldName);
+        }
+
+        internal void DefineCreatedAt<TProperty>([NotNull] Expression<Func<T, TProperty>> propertyExpression, string fieldName)
+        {
+            var p = Builder.Entity<T>().Property(propertyExpression)
                 .HasDefaultValueSql("getdate()")
-                .IsRequired(required);
+                .IsRequired();
+            if (!string.IsNullOrEmpty(fieldName)) p.HasField(fieldName);
         }
 
     }

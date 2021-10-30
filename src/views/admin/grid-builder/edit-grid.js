@@ -40,6 +40,14 @@ export function TableDesignerEditTable({ table, group, onChanged, onGoBack }) {
     const [deleting, setDeleting] = useState(false);
     const insertMode = !table.id;
     const formRef = useRef();
+    const newColumnObject = {
+        isPK: false,
+        isNull: true,
+        useInFilterVariant: true,
+        showInList: true,
+        showInEditor: true,
+        isReadOnly: false,
+    };
 
     const onSaveClick = () => {
         var values = formRef.current.values;
@@ -190,7 +198,6 @@ export function TableDesignerEditTable({ table, group, onChanged, onGoBack }) {
         </bd.Menu>
     );
 
-    const newRow = () => ({ id: 0 });
     const [tab, setTab] = useState();
 
     const canShowTab = (t) => !tab || tab === t;
@@ -201,8 +208,21 @@ export function TableDesignerEditTable({ table, group, onChanged, onGoBack }) {
                 column={column}
                 table={table}
                 onChanged={(row) => {
-                    setData([...data, row]);
-                    tableApi.state.selectedRowIds = { [data.length]: true };
+                    var i = data.findIndex((x) => x.name === row.name);
+                    if (row.id === undefined) {
+                        if (i >= 0) {
+                            msgbox(<Text>duplicate-column</Text>, null, [{ title: <Text>close</Text> }]);
+                            return;
+                        }
+                        row.id = 0;
+                        setData([...data, row]);
+                        tableApi.state.selectedRowIds = { [data.length]: true };
+                    } else {
+                        var new_data = data.map((item, index) => (index === i ? row : item));
+                        setData(new_data);
+                        tableApi.state.selectedRowIds = { [i]: true };
+                    }
+                    setColumn(null);
                 }}
                 onGoBack={() => {
                     setColumn(null);
@@ -247,9 +267,6 @@ export function TableDesignerEditTable({ table, group, onChanged, onGoBack }) {
                         <bd.TabStripItem eventKey="general" onClick={(e) => setTab("general")}>
                             <Text>general</Text>
                         </bd.TabStripItem>
-                        <bd.TabStripItem eventKey="relations" onClick={(e) => setTab("relations")}>
-                            <Text>relations</Text>
-                        </bd.TabStripItem>
                         <bd.TabStripItem eventKey="data" onClick={(e) => setTab("data")}>
                             <Text>data</Text>
                         </bd.TabStripItem>
@@ -263,7 +280,7 @@ export function TableDesignerEditTable({ table, group, onChanged, onGoBack }) {
             <div className="container" style={{ marginBottom: 70 }}>
                 <div className="mt-4" style={{ maxWidth: 1000 }}>
                     <Formik
-                        initialValues={table || { name: "", title: "", singularTitle: "" }}
+                        initialValues={table}
                         validationSchema={yup.object({
                             id: yup.string().max(50).required("Required"),
                             title: yup.string().max(50).required("Required"),
@@ -284,17 +301,6 @@ export function TableDesignerEditTable({ table, group, onChanged, onGoBack }) {
                                         <BasicTextArea name="description" label={<Text>description</Text>} className="h-100" />
                                     </div>
                                 </div>
-                            )}
-
-                            {canShowTab("relations") && (
-                                <bd.Panel title={<Text>relations</Text>} expanded fixed>
-                                    <div className="row mb-3">
-                                        <div className="col-md-6">
-                                            <BasicInput name="checkGrid" label={t("check-grid")} labelSize="4" />
-                                            <BasicInput name="checkField" label={t("check-field")} labelSize="4" />
-                                        </div>
-                                    </div>
-                                </bd.Panel>
                             )}
 
                             {canShowTab("data") && (
@@ -348,12 +354,25 @@ export function TableDesignerEditTable({ table, group, onChanged, onGoBack }) {
                                         <icons.Sync />
                                     </bd.Button>
 
-                                    <bd.Button variant="icon" size="md" onClick={(e) => setColumn({})}>
+                                    <bd.Button variant="text" size="md" onClick={(e) => setColumn(newColumnObject)}>
                                         <icons.Add />
+                                        <Text>add</Text>
                                     </bd.Button>
 
                                     <bd.Button
-                                        variant="icon"
+                                        variant="text"
+                                        size="md"
+                                        disabled={!tableApi.selectedFlatRows.length}
+                                        onClick={(e) => {
+                                            setColumn(tableApi.selectedFlatRows[0].values);
+                                        }}
+                                    >
+                                        <icons.Edit />
+                                        <Text>edit</Text>
+                                    </bd.Button>
+
+                                    <bd.Button
+                                        variant="text"
                                         size="md"
                                         disabled={!tableApi.selectedFlatRows.length}
                                         onClick={(e) => {
@@ -363,6 +382,7 @@ export function TableDesignerEditTable({ table, group, onChanged, onGoBack }) {
                                         }}
                                     >
                                         <icons.Delete />
+                                        <Text>delete</Text>
                                     </bd.Button>
                                 </>
                             }
@@ -388,7 +408,10 @@ export function TableDesignerEditTable({ table, group, onChanged, onGoBack }) {
                             //striped
                             //hasWhitespace
                             //stickyFooter
-                            onShowMoreClick={() => {}}
+                            onShowMoreClick={(row) => {
+                                tableApi.state.selectedRowIds = {};
+                                setColumn(row.values);
+                            }}
                         />
                     </>
                 )}

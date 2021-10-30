@@ -22,6 +22,7 @@ export function TableDesignerApp() {
     const [groups, setGroups] = useState(null);
     const [group, setGroup] = useState(null);
     const [table, setGrid] = useState(null);
+    const newGridObject = { data: { dataColumns: [], flexLayout: false } };
 
     function goBack() {
         if (group) setGroup(null);
@@ -35,7 +36,7 @@ export function TableDesignerApp() {
 
     function onNewGridClick(g) {
         setGroup(g);
-        setGrid({ data: { dataColumns: [] } });
+        setGrid(newGridObject);
         return false;
     }
 

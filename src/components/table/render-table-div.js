@@ -109,7 +109,7 @@ export function RenderTableDiv({
         return { ...props, className: cn, ...remUserProps };
     }
 
-    function getCellProps(row, cell) {
+    function getCellProps(row, cell, rowIndex) {
         if (!cell) cell = row.cells[0];
         var props = cell.getCellProps();
         var userProps = cell.column._cellProps;
@@ -123,12 +123,12 @@ export function RenderTableDiv({
             [`d-none d-${cell.column._breakPoint}-table-cell`]: enable_responsive && cell.column._breakPoint,
         });
 
-        return { ...props, ...remUserProps, className: cn, onClick: () => onTdClick(row, cell) };
+        return { ...props, ...remUserProps, className: cn, onClick: () => onTdClick(row, cell, rowIndex) };
     }
 
-    const onTdClick = (row, cell) => {
+    const onTdClick = (row, cell, rowIndex) => {
         if (row.isGrouped) return;
-        if (cell && onCellClick) onCellClick(row, cell);
+        if (cell && onCellClick) onCellClick(row, cell, rowIndex);
         if (cell && cell.column._ignoreToggleOnClick) return;
         if (!singleSelect && !multiSelect) return;
         const is_selected = row.isSelected;
@@ -223,7 +223,11 @@ export function RenderTableDiv({
                     {list.map((row, rowIndex) => {
                         tableApi.prepareRow(row);
                         return (
-                            <div {...row.getRowProps()} className={classNames("tr", { selected: row.isSelected })} onClick={onRowClick}>
+                            <div
+                                {...row.getRowProps()}
+                                className={classNames("tr", { selected: row.isSelected })}
+                                onClick={() => onRowClick && onRowClick(row, rowIndex)}
+                            >
                                 {!hideCheckbox && multiSelect && (
                                     <div className="td selection-column" onClick={() => row.toggleRowSelected()}>
                                         <bd.Toggle
@@ -251,7 +255,7 @@ export function RenderTableDiv({
                                 )}
                                 {row.cells.map((cell) => {
                                     return (
-                                        <div {...getCellProps(row, cell)} className="td">
+                                        <div {...getCellProps(row, cell, rowIndex)} className="td">
                                             {cell.isGrouped ? (
                                                 // If it's a grouped cell, add an expander and row count
                                                 <>
@@ -279,7 +283,7 @@ export function RenderTableDiv({
                                     );
                                 })}
                                 {!!onShowMoreClick && (
-                                    <div className="td selection-column cur-pointer" onClick={(e) => onShowMoreClick(row)}>
+                                    <div className="td selection-column cur-pointer" onClick={(e) => onShowMoreClick(row, rowIndex)}>
                                         <icons.ChevronRight className="rtl-rotate-180 text-secondary-text" />
                                     </div>
                                 )}
