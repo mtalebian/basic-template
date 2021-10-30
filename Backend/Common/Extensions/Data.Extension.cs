@@ -500,33 +500,50 @@ namespace System
         {
             foreach (var srcProp in src.GetType().GetProperties())
             {
-                var aProp = srcProp.GetCustomAttribute(typeof(IgnoreMapAttribute));
-                var aType = srcProp.PropertyType.GetCustomAttribute(typeof(IgnoreMapAttribute));
-                if (aProp == null && aType == null)
+                if (!CanIgnore(srcProp, true))
                 {
                     var value = srcProp.GetValue(src);
                     var pi = properties.Where(x => x.Name == srcProp.Name).FirstOrDefault();
-                    try
+                    if (!CanIgnore(pi, false))
                     {
-                        if (pi?.SetMethod != null)
+                        try
                         {
-                            if (srcProp.PropertyType != pi.PropertyType)
-                                throw new Exception($"Invalid type {srcProp.PropertyType.Name} => {pi.PropertyType.Name}");
-                            if (value == null)
-                                pi.SetValue(dest, null);
-                            else
-                                pi.SetValue(dest, value);
+                            if (pi?.SetMethod != null)
+                            {
+                                if (srcProp.PropertyType != pi.PropertyType)
+                                    throw new Exception($"Invalid type {srcProp.PropertyType.Name} => {pi.PropertyType.Name}");
+                                if (value == null)
+                                    pi.SetValue(dest, null);
+                                else
+                                    pi.SetValue(dest, value);
+                            }
                         }
-                    }
-                    catch (Exception ex)
-                    {
-                        var destPropName = pi == null ? "?" : pi.Name;
-                        throw new Exception($"Error in Mapping {src?.GetType().Name}.{srcProp?.Name} => {dest?.GetType().Name}.{destPropName}: {ex.Message}");
+                        catch (Exception ex)
+                        {
+                            var destPropName = pi == null ? "?" : pi.Name;
+                            throw new Exception($"Error in Mapping {src?.GetType().Name}.{srcProp?.Name} => {dest?.GetType().Name}.{destPropName}: {ex.Message}");
+                        }
                     }
                 }
             }
         }
 
-
+        private static bool CanIgnore(PropertyInfo prop, bool isSource)
+        {
+            if (prop == null) return true;
+            if (prop.GetCustomAttribute(typeof(IgnoreMapAttribute)) != null) return true;
+            if (prop.PropertyType.GetCustomAttribute(typeof(IgnoreMapAttribute)) != null) return true;
+            if (isSource)
+            {
+                if (prop.GetCustomAttribute(typeof(IgnoreSourceMapAttribute)) != null) return true;
+                if (prop.PropertyType.GetCustomAttribute(typeof(IgnoreSourceMapAttribute)) != null) return true;
+            }
+            else
+            {
+                if (prop.GetCustomAttribute(typeof(IgnoreDestinationMapAttribute)) != null) return true;
+                if (prop.PropertyType.GetCustomAttribute(typeof(IgnoreDestinationMapAttribute)) != null) return true;
+            }
+            return false;
+        }
     }
 }
