@@ -15,7 +15,6 @@ import { notify } from "../../../components/basic/notify";
 export const EditTableRow = ({ table, row, onGoBack, onChanged }) => {
     const insertMode = row === null;
     const [saving, setSaving] = useState(false);
-    const [deleting, setDeleting] = useState(false);
     const formRef = useRef();
 
     const onSaveClick = () => {
@@ -23,7 +22,7 @@ export const EditTableRow = ({ table, row, onGoBack, onChanged }) => {
         console.log(values);
         setSaving(true);
         gridsApi
-            .save(table.name, values, insertMode)
+            .save(table.id, values, insertMode)
             .then((x) => {
                 setSaving(false);
                 notify.info(<Text>changes-are-saved</Text>);
@@ -51,6 +50,7 @@ export const EditTableRow = ({ table, row, onGoBack, onChanged }) => {
         else if (x.display === "amount") props["type"] = "number";
         else if (x.display === "email") props["type"] = "email";
         else if (x.display === "url") props["type"] = "url";
+        if (x.maxLen > 0) props["maxLength"] = x.maxLen;
         return props;
     }
 
@@ -81,7 +81,7 @@ export const EditTableRow = ({ table, row, onGoBack, onChanged }) => {
                             <Text>{insertMode ? "INSERT" : "EDIT"}</Text>
                         </h4>
                         <div className="flex-grow-1"></div>
-                        <bd.Button color="primary" disabled={saving || deleting} onClick={onSaveClick}>
+                        <bd.Button color="primary" disabled={saving} onClick={onSaveClick}>
                             {saving && <div className="m-e-2 spinner-border spinner-border-sm"></div>}
                             <Text>save</Text>
                         </bd.Button>
@@ -103,7 +103,7 @@ export const EditTableRow = ({ table, row, onGoBack, onChanged }) => {
                     >
                         <form style={{ maxWidth: 700 }}>
                             {table.schema.dataColumns.map((x, index) =>
-                                index !== 0 && x.display !== "textarea" ? (
+                                x.display === "textarea" ? (
                                     <BasicTextArea {...getFieldProps(x)} />
                                 ) : x.display === "select" ? (
                                     <BasicSelect {...getFieldProps(x)}>

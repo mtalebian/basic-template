@@ -38,23 +38,23 @@ namespace Forms.Controllers
             return new Response<GroupInfoDTO[]>(result.ToArray());
         }
 
-        [HttpPost("browse-table")]
-        public Response<BrowseTableDTO> BrowseTable(string projectId, string name)
+        [HttpPost("browse-grid")]
+        public Response<BrowseGridDTO> BrowseGrid(string projectId, string name)
         {
             var filters = (Dictionary<string, object[]>)null;
-            var table = service.GetGrid(projectId, name);
-            var columns = service.GetGridColumns(table.ProjectId, table.Id);
-            var data = service.ExecuteSelect(table, columns, filters);
+            var grid = service.GetGrid(projectId, name);
+            var columns = service.GetGridColumns(grid.ProjectId, grid.Id);
+            var data = service.ExecuteSelect(grid, columns, filters);
 
-            var result = new BrowseTableDTO();
-            result.Schema = table.MapTo<GridDTO>();
+            var result = new BrowseGridDTO();
+            result.Schema = grid.MapTo<GridDTO>();
             result.Schema.DataColumns = columns.MapTo<GridColumnDTO>();
             result.Data = data.ToJSON();
-            return new Response<BrowseTableDTO>(result);
+            return new Response<BrowseGridDTO>(result);
         }
 
-        [HttpPost("exec-table-action")]
-        public Response ExecTableAction(string projectId, [FromBody] GridActionDTO dto)
+        [HttpPost("exec-grid-action")]
+        public Response ExecGridAction(string projectId, [FromBody] GridActionDTO dto)
         {
             switch (dto.Name)
             {

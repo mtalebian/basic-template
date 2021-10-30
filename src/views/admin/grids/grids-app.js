@@ -28,7 +28,7 @@ export function TablesApp() {
         }
         setLoadingTable(tb);
         gridsApi
-            .browseGrid(tb.name)
+            .browseGrid(tb.id)
             .then((x) => {
                 tb.data = x.data;
                 tb.schema = x.schema;
@@ -63,7 +63,7 @@ export function TablesApp() {
                                         <Tile key={g.id} title={g.title}>
                                             {g.items.map((t) => (
                                                 <Tile
-                                                    key={t.name}
+                                                    key={t.id}
                                                     title={
                                                         <a href="#/" onClick={(e) => onTableClick(t)}>
                                                             {t.title}

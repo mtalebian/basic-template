@@ -80,7 +80,7 @@ export const BrowseTable = ({ table, onGoBack }) => {
     const deleteTableRow = (row) => {
         shell.setBusyMode(true);
         gridsApi
-            .delete(table.name, row.values)
+            .delete(table.id, row.values)
             .then((x) => {
                 shell.setBusyMode(false);
                 var i = findIndex(row.values, data, table.schema.dataColumns);
@@ -106,7 +106,7 @@ export const BrowseTable = ({ table, onGoBack }) => {
                                 systemIsBusy={false}
                                 onClick={(e) => {
                                     gridsApi
-                                        .browseGrid(table.name)
+                                        .browseGrid(table.id)
                                         .then((x) => {
                                             table.data = x.data;
                                             tableApi.state.selectedRowIds = {};
@@ -144,6 +144,18 @@ export const BrowseTable = ({ table, onGoBack }) => {
                                     >
                                         {/* <icons.Add /> */}
                                         <Text>add</Text>
+                                    </bd.Button>
+                                    <bd.Button
+                                        variant="text"
+                                        color="primary"
+                                        size="md"
+                                        disabled={!tableApi.selectedFlatRows.length}
+                                        onClick={(e) => {
+                                            setEditState({ edit: true, row: tableApi.selectedFlatRows[0].values });
+                                        }}
+                                    >
+                                        {/* <icons.Add /> */}
+                                        <Text>edit</Text>
                                     </bd.Button>
                                     <bd.Button
                                         variant="text"

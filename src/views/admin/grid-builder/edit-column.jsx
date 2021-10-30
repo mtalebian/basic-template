@@ -77,6 +77,7 @@ export const EditColumn = ({ column, onGoBack, onChanged }) => {
                                     <BasicInput name="maxLen" label={<Text>max-length</Text>} labelSize="4" type="number" />
                                     <BasicInput name="defaultValue" label={<Text>default-value</Text>} labelSize="4" />
                                     <BasicInput name="width" label={<Text>width</Text>} labelSize="4" type="number" />
+                                    <BasicInput name="ordinalPosition" label={<Text>position</Text>} labelSize="4" type="number" />
                                 </>
                             )}
 
@@ -143,14 +144,13 @@ export const EditColumn = ({ column, onGoBack, onChanged }) => {
                                     <BasicInput name="validValues" label={<Text>valid-values</Text>} labelSize="4" />
                                     <BasicInput name="controlClassName" label={<Text>control-css</Text>} labelSize="4" />
                                     <BasicInput name="category" label={<Text>category</Text>} labelSize="4" />
-                                    <BasicInput name="ordinalPosition" label={<Text>position</Text>} labelSize="4" type="number" />
                                 </>
                             )}
 
                             <div style={{ position: "fixed", bottom: 0, left: 0, right: 0, zIndex: 1 }}>
-                                <div className="container text-end p-2 bg-default border border-secondary rounded-pill mb-2 shadow-3">
+                                <div className="container text-end p-2 bg-default border rounded-pill mb-2 shadow-3">
                                     <bd.Button color="secondary" type="submit">
-                                        <Text>save</Text>
+                                        <Text>apply</Text>
                                     </bd.Button>
                                     <bd.Button variant="text" onClick={onGoBack} className="m-s-2 me-3">
                                         <Text>cancel</Text>
