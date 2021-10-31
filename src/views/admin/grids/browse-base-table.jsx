@@ -11,6 +11,7 @@ import { FilterBox } from "../../../components/filters/filter-box";
 import { EditTableRow } from "./edit-grid-row";
 import { useShell } from "../../shared/use-shell";
 import { msgbox } from "react-basic-design";
+import { Filter } from "../../../components/filters/filter";
 
 function findIndex(x, data, columns) {
     for (let i = 0; i < data.length; i++) {
@@ -98,15 +99,15 @@ export const BrowseTable = ({ table, onGoBack }) => {
         <>
             {!editState.edit && (
                 <>
-                    <div className="border-bottom bg-default pt-2 pb-4">
+                    <div className="border-bottom bg-default">
                         <div className="container">
                             <FilterBox
-                                fields={[{ title: "F1" }, { title: "F2" }, { title: "F3" }]}
-                                variants={null}
+                                initialFilters={{ f1: 1, f2: "tow", f3: true }}
+                                variants={[{ title: "standard" }]}
                                 systemIsBusy={false}
-                                onClick={(e) => {
+                                onExecute={(filters) => {
                                     gridsApi
-                                        .browseGrid(table.id)
+                                        .browseGrid(table.id, filters)
                                         .then((x) => {
                                             table.data = x.data;
                                             tableApi.state.selectedRowIds = {};
@@ -116,7 +117,18 @@ export const BrowseTable = ({ table, onGoBack }) => {
                                             notify.error(ex);
                                         });
                                 }}
-                            />
+                            >
+                                <Filter name="f1" title="F1" onBlur={(e) => 0} />
+                                <Filter name="f2" title="F2" onBlur={(e) => 0} />
+                                <Filter name="f3" title="F3" onBlur={(e) => 0} />
+                                <Filter name="f4" title="F4" onBlur={(e) => 0} />
+                                <Filter name="f5" title="F5" onBlur={(e) => 0} />
+                                <Filter name="f6" title="F6" onBlur={(e) => 0} />
+                                <Filter name="f7" title="F7" onBlur={(e) => 0} />
+                                <Filter name="f8" title="F8" onBlur={(e) => 0} />
+                                <Filter name="f9" title="F9" onBlur={(e) => 0} />
+                                <div></div>
+                            </FilterBox>
                         </div>
                     </div>
 

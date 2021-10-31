@@ -9,6 +9,10 @@ namespace Forms.Core
         IList<Grid> GetGrids(string projectId, int groupId);
         Grid GetGrid(string projectId, string id);
         IList<GridColumn> GetGridColumns(string projectId, string gridId);
+        IList<GridVariant> GetGridVariants(string projectId, string gridId);
+        
+        void SaveGridVariant(GridVariant variant);
+        void DeleteGridVariant(GridVariant variant);
 
         DataTable ExecuteSelect(Grid table, IList<GridColumn> columns, Dictionary<string, object[]> filters);
         void ExecuteInsert(string projectId, string tableName, Dictionary<string, object> values);

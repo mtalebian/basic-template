@@ -5,15 +5,15 @@ import { apiConfig } from "./config";
 export const gridsApi = {
     getGroups: () => api.call("post", `${apiConfig.gridsUrl}/get-groups?projectId=${settings.projectId}`),
 
-    browseGrid: (name) => api.call("post", `${apiConfig.gridsUrl}/browse-grid?projectId=${settings.projectId}&name=${name}`),
+    browseGrid: (id, filters) => api.call("post", `${apiConfig.gridsUrl}/browse-grid?projectId=${settings.projectId}&id=${id}`, filters),
 
     save: (gridId, values, insertMode) => {
-        var dto = { name: insertMode ? "insert" : "update", gridId, values };
+        var dto = { action: insertMode ? "insert" : "update", gridId, values };
         return api.call("post", `${apiConfig.gridsUrl}/exec-grid-action?projectId=${settings.projectId}`, dto);
     },
 
     delete: (gridId, values) => {
-        var dto = { name: "delete", gridId, values };
+        var dto = { action: "delete", gridId, values };
         return api.call("post", `${apiConfig.gridsUrl}/exec-grid-action?projectId=${settings.projectId}`, dto);
     },
 };

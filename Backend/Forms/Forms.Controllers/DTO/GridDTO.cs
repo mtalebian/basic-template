@@ -30,6 +30,7 @@ namespace Forms.Controllers
         public DateTime ModifiedAt { get; set; }
 
         public IList<GridColumnDTO> DataColumns { get; set; }
+        public IList<GridVariantDTO> Variants { get; set; }
 
     }
 }

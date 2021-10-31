@@ -43,7 +43,7 @@ export function TableDesignerEditTable({ table, group, onChanged, onGoBack }) {
     const newColumnObject = {
         isPK: false,
         isNull: true,
-        useInFilterVariant: true,
+        useInVariant: true,
         showInList: true,
         showInEditor: true,
         isReadOnly: false,

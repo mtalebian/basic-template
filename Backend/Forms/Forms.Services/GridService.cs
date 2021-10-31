@@ -237,5 +237,34 @@ namespace Forms.Services
             return "where " + string.Join(" and ", w);
         }
 
+        public IList<GridVariant> GetGridVariants(string projectId, string gridId)
+        {
+            var list = db.GridVariants.Where(x => x.ProjectId == projectId && x.GridId == gridId);
+            if (list.Count == 0)
+            {
+                var v = new GridVariant { ProjectId =projectId, GridId=gridId, Title="" };
+            }
+            return list;
+        }
+
+        public void SaveGridVariant(GridVariant variant)
+        {
+            if (variant.Serial < 1)
+            {
+                db.GridVariants.Add(variant);
+            }
+            else
+            {
+                var v = db.GridVariants.FirstOrDefault(x=>x.Serial==variant.Serial);
+                variant.MapTo(v);
+                db.GridVariants.Add(variant);
+            }
+            db.SaveChanges();
+        }
+
+        public void DeleteGridVariant(GridVariant variant)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

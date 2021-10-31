@@ -4,7 +4,7 @@ namespace Forms.Controllers
 {
     public class GridActionDTO
     {
-        public string Name { get; set; }
+        public string Action { get; set; }
         public string GridId { get; set; }
         public Dictionary<string, object> Values{ get; set; }
     }
