@@ -20,7 +20,7 @@ export function MainLayout({ component: Comp, ...props }) {
 
     const menuUser = (
         <bd.Menu className="mt-n4 shadow-5">
-            <bd.MenuItem href="/user/user-Profile">{t("User Profile")}</bd.MenuItem>
+            <bd.MenuItem href="/account/user-profile">{t("User Profile")}</bd.MenuItem>
             {settings.debugMode && <bd.MenuItem onClick={settings.logMissings}>{t("Missing Translations")}</bd.MenuItem>}
             <div className="dropdown-divider"></div>
             <bd.MenuItem href="/user/settings">{t("Settings")}</bd.MenuItem>

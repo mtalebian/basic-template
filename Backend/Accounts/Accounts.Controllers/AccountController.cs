@@ -1,5 +1,6 @@
 ﻿using Accounts.Core;
 using Common;
+using Common.Helper;
 using Common.Validation;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
@@ -20,14 +21,99 @@ namespace Accounts.Controllers
         private readonly IAuthenticationService<User> service;
         private readonly IUserManagementService userManagmentService;
         private readonly IConfiguration _Configuration;
-
+        private const string InternalKey = "8gfB50.!#_Aau61n.-$!";
         internal const string SecurityKeyCookieName = "x-security-key";
 
-        public AccountController(IAuthenticationService<User> accountService, IConfiguration configuration,IUserManagementService userService)
+        public AccountController(IAuthenticationService<User> accountService, IConfiguration configuration, IUserManagementService userService)
         {
             this.service = accountService;
             this.userManagmentService = userService;
             _Configuration = configuration;
+        }
+
+
+        [AllowAnonymous]
+        [HttpPost("forgot-password/{projectId}")]
+        public async Task<Response<ForgotPasswordResultDTO>> ForgotPassword(string projectId, [FromBody] ForgotPasswordDTO model)
+        {
+            if (!SkipCaptcha())
+            {
+                Request.Cookies.TryGetValue(CaptchaController.SecurityKeyCookieName, out var securityKeyString);
+                var securityKey = string.IsNullOrEmpty(securityKeyString) ? null : System.Convert.FromBase64String(securityKeyString);
+
+                if (securityKey == null || !SecurityKeyGenerator.IsValidTimeStampKey("", model.Captcha, securityKey))
+                {
+                    return new Response<ForgotPasswordResultDTO>(Messages.InvalidCaptcha);
+                }
+            }
+
+            var app = await service.GetProjectAsync(projectId);
+            if (app == null)
+            {
+                return new Response<ForgotPasswordResultDTO>(Messages.InvalidProjectId);
+            }
+
+            var user = userManagmentService.GetUserByUserName(model.UserName);
+            if (user == null)
+            {
+                return new Response<ForgotPasswordResultDTO>(Messages.InvalidUserName);
+            }
+            if (user.WindowsAuthenticate)
+            {
+                return new Response<ForgotPasswordResultDTO>(Messages.InvalidResetPassword);
+            }
+
+            var now = DateTime.Now;
+            var vcode = HelperMethods.GetVerificationCode(5);
+            var key = Common.Cryptography.Rijndael.Encrypt(vcode.GetHashCode().ToString() + model.UserName + "@" + now.ToString(), InternalKey);
+            var result = new ForgotPasswordResultDTO() { Code = vcode, Key = key };
+            return new Response<ForgotPasswordResultDTO>(result);
+        }
+
+        [AllowAnonymous]
+        [HttpPost("reset-password/{projectId}")]
+        public async Task<Response<ResetPasswordResultDTO>> ResetPassword(string projectId, [FromBody] ResetPasswordDTO model)
+        {
+            var app = await service.GetProjectAsync(projectId);
+            if (app == null)
+            {
+                return new Response<ResetPasswordResultDTO>(Messages.InvalidProjectId);
+            }
+            var bytes = Common.Cryptography.Rijndael.Decrypt(model.Key, InternalKey);
+            var plain_text = System.Text.Encoding.UTF8.GetString(bytes);
+            var p = plain_text.Split('@');
+            if (p.Length != 2)
+            {
+                return new Response<ResetPasswordResultDTO>(Messages.InvalidEnterCode);
+            }
+
+            var time = DateTime.Parse(p[1]);
+            var is_expired = DateTime.Now.Subtract(time).TotalMilliseconds > 60000 * 2;
+            //--------------
+            if (model.Code.GetHashCode().ToString() + model.UserName != p[0])
+            {
+                return new Response<ResetPasswordResultDTO>(Messages.InvalidEnterCode);
+            }
+            if (is_expired)
+            {
+                return new Response<ResetPasswordResultDTO>(Messages.ExpiredVerificationCode);
+            }
+            //--------------
+            var new_password = HelperMethods.GeneratePassword();
+            var user = userManagmentService.GetUserByUserName(model.UserName);
+            if (user == null)
+            {
+                return new Response<ResetPasswordResultDTO>(Messages.InvalidUserName);
+            }
+            if (user.WindowsAuthenticate)
+            {
+                return new Response<ResetPasswordResultDTO>(Messages.InvalidResetPassword);
+            }
+            var _passwordHash = Common.Cryptography.Helper.HashPassword(new_password);
+            user.PasswordHash = _passwordHash;
+            userManagmentService.Update(user);
+            var result = new ResetPasswordResultDTO() { NewPassword = new_password };//while implement sms or email remove this part
+            return new Response<ResetPasswordResultDTO>(result);
         }
 
 
@@ -158,13 +244,13 @@ namespace Accounts.Controllers
             var user = await service.GetUserByIdAsync(session.UserId);
             var user_info = new ProfileInfoDTO
             {
-                UserName=user.UserName,
+                UserName = user.UserName,
                 FirstName = user.FirstName,
                 LastName = user.LastName,
                 NationalCode = user.NationalCode,
-                PhoneNumber=user.PhoneNumber,
-                Email=user.Email,
-                WindowsAuthenticate=user.WindowsAuthenticate
+                PhoneNumber = user.PhoneNumber,
+                Email = user.Email,
+                WindowsAuthenticate = user.WindowsAuthenticate
             };
             return new Response<ProfileInfoDTO>(user_info);
         }
@@ -177,8 +263,8 @@ namespace Accounts.Controllers
             {
                 return new Response<ProfileInfoDTO>(string.Join(",", ModelState.GetModelStateErrors()));
             }
-            var user= userManagmentService.GetUserByUserName(model.UserName);
-            if(user is null)
+            var user = userManagmentService.GetUserByUserName(model.UserName);
+            if (user is null)
             {
                 return new Response<ProfileInfoDTO>(Messages.InvalidInfo);
             }
@@ -189,7 +275,7 @@ namespace Accounts.Controllers
                     return new Response<ProfileInfoDTO>(Messages.InvalidNationalCode);
                 }
                 var _tempTb = userManagmentService.GetUser(model.NationalCode);
-                if(_tempTb is not null && _tempTb.UserName != model.UserName)
+                if (_tempTb is not null && _tempTb.UserName != model.UserName)
                 {
                     return new Response<ProfileInfoDTO>(Messages.DuplicateNationalCode);
                 }
@@ -198,7 +284,7 @@ namespace Accounts.Controllers
             user.LastUpdate = DateTime.Now;
             userManagmentService.Update(user);
             var result = userManagmentService.GetUserByUserName(model.UserName).MapTo<ProfileInfoDTO>();
-            return new Response<ProfileInfoDTO>(result);   
+            return new Response<ProfileInfoDTO>(result);
         }
 
         [HttpPut("change-password")]
@@ -214,11 +300,11 @@ namespace Accounts.Controllers
                 return new Response(Messages.InvalidInfo);
             }
             var _PasswordHash = Common.Cryptography.Helper.HashPassword(model.OldPassword);
-            if(user.PasswordHash != _PasswordHash)
+            if (user.PasswordHash != _PasswordHash)
             {
                 return new Response(Messages.InvalidOldPassword);
             }
-            user.PasswordHash= Common.Cryptography.Helper.HashPassword(model.Password);
+            user.PasswordHash = Common.Cryptography.Helper.HashPassword(model.Password);
             user.LastUpdate = DateTime.Now;
             userManagmentService.Update(user);
             return new Response();

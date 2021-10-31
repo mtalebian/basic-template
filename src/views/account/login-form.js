@@ -75,7 +75,7 @@ export const LoginForm = ({ inline, ...props }) => {
                         {!inline && (
                             <div className="text-center">
                                 <p className="pt-3">
-                                    <a className="text-decoration-none text-primary" href="/account/ForgotPassword">
+                                    <a className="text-decoration-none text-primary" href="/account/forgot-password">
                                         {messages.IForgotMyPassword}
                                     </a>
                                 </p>

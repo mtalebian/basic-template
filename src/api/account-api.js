@@ -14,6 +14,12 @@ export const accountApi = {
 
   changePassword: (info) => api.directCall("put", apiConfig.accountUrl + "/change-password", info),
 
+  forgotPassword: ({ userName , captcha}) =>
+    api.directCall("post", apiConfig.accountUrl + "/forgot-password/" + settings.projectId, { userName , captcha }),
+
+  resetPassword:({ userName , code , key}) =>
+    api.directCall("post", apiConfig.accountUrl + "/reset-password/" + settings.projectId, { userName , code , key }),
+
   logout: () => {
     api.directCall("post", apiConfig.accountUrl + "/logout");
   },

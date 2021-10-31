@@ -10,10 +10,14 @@ namespace Accounts.Controllers
         public const string InvalidCaptcha = "کد امنیتی اشتباه است";
         public const string LOGIN_COMMAND = "LOGIN";
         public const string InvalidUserNameOrPassword = "نام کاربری یا رمز ورود صحیح نمی باشد";
-        public const string InvalidUserName = "نام کاربری یافت تشد";
+        public const string InvalidUserName = "نام کاربری یافت نشد";
         public const string InsufficientPrivilege = "شما دسترسی لازم، برای کار با این وب سایت را ندارید";
         public const string InvalidProjectId = "نام پروژه نامعتبر است";
+        public const string InvalidEnterCode = "كد وارد شده نامعتبر است";
+        public const string ExpiredVerificationCode = "كد وارد شده منقضي شده است";
+
         public const string InvalidOperation = "عمليات نامعتبر است";
+        public const string InvalidResetPassword = "شما امكان بازنشاني گذرواژه براي اين حساب كاربري را نداريد";
         #region UserManagment
         public const string DuplicateUser = "اين كاربر قبلا ثبت شده است";
         public const string DuplicateNationalCode = "اين كدملي قبلا ثبت شده است";
