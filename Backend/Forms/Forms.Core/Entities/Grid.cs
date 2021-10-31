@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace Forms.Core
 {
-    public class Grid  : FullAuditEntity
+    public class Grid : FullAuditEntity
     {
         public string ProjectId { get; set; }
         public string Id { get; set; }
@@ -22,5 +22,6 @@ namespace Forms.Core
 
         public virtual Group Group { get; set; }
         public virtual ICollection<GridColumn> Columns { get; set; }
+        public virtual ICollection<GridVariant> Variants { get; set; }
     }
 }

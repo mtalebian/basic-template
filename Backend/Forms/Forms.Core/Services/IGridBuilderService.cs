@@ -12,7 +12,7 @@ namespace Forms.Core
         void DeleteGroup(string projectId, int groupId);
 
         IList<Grid> GetGrids(string projectId, int groupId);
-        Grid GetGrid(string projectId, string id);
+        Grid GetGrid(string projectId, string tableName);
         void SaveGrid(ref Grid item, IList<GridColumn> columns);
         void DeleteGrid(string projectId, string id);
 

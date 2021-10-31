@@ -99,14 +99,6 @@ namespace Forms.Data
                 .IsRequired();
         }
 
-        internal void DefineGridId<TProperty>([NotNull] Expression<Func<T, TProperty>> propertyExpression)
-        {
-            Builder.Entity<T>().Property(propertyExpression)
-                .HasMaxLength(20)
-                .IsUnicode(false)
-                .IsRequired();
-        }
-
         internal void DefineTitle<TProperty>([NotNull] Expression<Func<T, TProperty>> propertyExpression)
         {
             Builder.Entity<T>().Property(propertyExpression)

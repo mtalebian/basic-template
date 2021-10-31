@@ -330,12 +330,13 @@ export function TableDesignerEditTable({ table, group, onChanged, onGoBack }) {
                                         variant="icon"
                                         size="md"
                                         onClick={(e) => {
+                                            var table_name = formRef.current.values["tableName"];
                                             gridBuilderApi
-                                                .schemaColumn(table.id)
+                                                .schemaColumn(table_name)
                                                 .then((schemaColumns) => {
                                                     let d = [...data];
                                                     schemaColumns.forEach((x) => {
-                                                        const f = d.find((z) => z.id === x.id);
+                                                        const f = d.find((z) => z.name === x.name);
                                                         if (!f) d = [...d, x];
                                                         else {
                                                             f.dataType = x.dataType;

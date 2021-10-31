@@ -9,6 +9,8 @@
         public string GridVariantsTableName { get; set; }
         public string GroupsTableName { get; set; }
         public string TextsTableName { get; set; }
+        public string CDHDRTableName { get; set; }
+        public string CDPOSTableName { get; set; }
         
     }
 }

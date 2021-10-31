@@ -25,7 +25,7 @@ export const gridBuilderApi = {
         return api.call("post", `${apiConfig.gridBuilderUrl}/delete-grid?projectId=${settings.projectId}&gridId=${gridId}`);
     },
 
-    schemaColumn: (gridId) => {
-        return api.call("post", `${apiConfig.gridBuilderUrl}/schema-columns?projectId=${settings.projectId}&gridId=${gridId}`);
+    schemaColumn: (tableName) => {
+        return api.call("post", `${apiConfig.gridBuilderUrl}/schema-columns?tableName=${tableName}`);
     },
 };

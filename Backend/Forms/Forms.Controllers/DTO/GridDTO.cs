@@ -29,7 +29,10 @@ namespace Forms.Controllers
         [IgnoreSourceMap]
         public DateTime ModifiedAt { get; set; }
 
+        [IgnoreMap]
         public IList<GridColumnDTO> DataColumns { get; set; }
+
+        [IgnoreMap]
         public IList<GridVariantDTO> Variants { get; set; }
 
     }

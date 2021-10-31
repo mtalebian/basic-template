@@ -103,11 +103,10 @@ namespace Forms.Controllers
 
 
         [HttpPost("schema-columns")]
-        public Response<IList<GridColumnDTO>> GetSchemaColumns(string projectId, string gridId)
+        public Response<IList<GridColumnDTO>> GetSchemaColumns(string tableName)
         {
-            var grid = service.GetGrid(projectId, gridId);
             var res = new List<GridColumnDTO>();
-            var tb = service.GetSchemaColumn(grid.TableName);
+            var tb = service.GetSchemaColumn(tableName);
             foreach (DataRow r in tb.Rows)
             {
                 var data_type = r.AsString("DataType");

@@ -10,15 +10,12 @@ namespace Forms.Core
 
         public string ObjectClass { get; set; } //15
         public string ObjectValue { get; set; } //90
-        public int ChangeNumber { get; set; }   //10
-
 
         public string Url { get; set; }
 
         public string UserName { get; set; }    //12
         public DateTime CreatedAt { get; set; } 
 
-        //public virtual Group Group { get; set; }
-        //public virtual ICollection<GridColumn> Columns { get; set; }
+        public virtual ICollection<ChangeDocumentItem> Items { get; set; }
     }
 }

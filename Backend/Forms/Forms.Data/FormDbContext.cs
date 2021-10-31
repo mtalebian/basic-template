@@ -45,6 +45,11 @@ namespace Forms.Data
             Grid.IsRequired(x => x.GroupId);
             Grid.DefineTitle(x => x.Title);
             Grid.DefineDescription(x => x.Description);
+            Grid.DefaultValue(x => x.FlexLayout, 0, true);
+            Grid.NVarChar(x => x.SelectSql, 2000, false);
+            Grid.NVarChar(x => x.InsertSql, 1000, false);
+            Grid.NVarChar(x => x.UpdateSql, 1000, false);
+            Grid.NVarChar(x => x.DeleteSql, 1000, false);
             Grid.DefineUserName(x => x.CreatedBy, "");
             Grid.DefineUserName(x => x.ModifiedBy, "");
             Grid.DefineCreatedAt(x => x.CreatedAt, "");
@@ -56,13 +61,14 @@ namespace Forms.Data
                 .HasForeignKey(x => new { x.ProjectId, x.GroupId });
 
 
+
             Grid.Entity()
                 .HasData(
-                new Grid { ProjectId = "project1", Id = $"{Grid.Schema}.Projects", GroupId = 1, Title = "Projects", FlexLayout = false, },
-                new Grid { ProjectId = "project1", Id = $"{Grid.Schema}.AzObjects", GroupId = 1, Title = "AzObjects", FlexLayout = false, },
-                new Grid { ProjectId = "project1", Id = $"{Grid.Schema}.AzObjectFields", GroupId = 1, Title = "AzObjectFields", FlexLayout = false, },
-                new Grid { ProjectId = "project1", Id = $"{Grid.Schema}.AzFields", GroupId = 1, Title = "AzFields", FlexLayout = false, },
-                new Grid { ProjectId = "project1", Id = $"{Grid.Schema}.Applications", GroupId = 1, Title = "Applications", FlexLayout = false, }
+                new Grid { ProjectId = "project1", Id = $"{Grid.Schema}.Projects", TableName = $"{Grid.Schema}.Projects", GroupId = 1, Title = "Projects", FlexLayout = false, },
+                new Grid { ProjectId = "project1", Id = $"{Grid.Schema}.AzObjects", TableName = $"{Grid.Schema}.AzObjects", GroupId = 1, Title = "AzObjects", FlexLayout = false, },
+                new Grid { ProjectId = "project1", Id = $"{Grid.Schema}.AzObjectFields", TableName = $"{Grid.Schema}.AzObjectFields", GroupId = 1, Title = "AzObjectFields", FlexLayout = false, },
+                new Grid { ProjectId = "project1", Id = $"{Grid.Schema}.AzFields", TableName = $"{Grid.Schema}.AzFields", GroupId = 1, Title = "AzFields", FlexLayout = false, },
+                new Grid { ProjectId = "project1", Id = $"{Grid.Schema}.Applications", TableName = $"{Grid.Schema}.Applications", GroupId = 1, Title = "Applications", FlexLayout = false, }
                 );
 
 
@@ -109,14 +115,22 @@ namespace Forms.Data
             GridVariant.HasKey(x => x.Serial);
             GridVariant.IsAutoIncrement(x => x.Serial);
             GridVariant.DefineProjectId(x => x.ProjectId);
-            GridVariant.DefineGridId(x => x.GridId);
+            GridVariant.DefineName(x => x.GridId);
+            GridVariant.DefineTitle(x => x.Title);
+            GridVariant.DefaultValue(x => x.IsPublic, 0, true);
+            GridVariant.DefaultValue(x => x.AutoApply, 0, true);
             GridVariant.NVarChar(x => x.FiltersData, 2000, false);
+            GridVariant.NVarChar(x => x.ColumnsData, 500, false);
+            GridVariant.NVarChar(x => x.SortsData, 500, false);
             GridVariant.DefineUserName(x => x.CreatedBy, "");
             GridVariant.DefineUserName(x => x.ModifiedBy, "");
             GridVariant.DefineCreatedAt(x => x.CreatedAt, "");
             GridVariant.DefineCreatedAt(x => x.ModifiedAt, "");
 
-
+            GridVariant.Entity()
+                .HasOne(x => x.Grid)
+                .WithMany(x => x.Variants)
+                .HasForeignKey(x => new { x.ProjectId, x.GridId });
 
 
 
@@ -129,6 +143,40 @@ namespace Forms.Data
             Text.NVarChar(x => x.Name, 100, true);
             Text.NVarChar(x => x.Value, 1000, false);
             Text.DefineCreatedAt(x => x.CreatedAt, "_CreatedAt");
+
+
+
+            //
+            // ChangeDocumentHeader
+            //
+            var CDHDR = new ConfigHelper<ChangeDocumentHeader>(modelBuilder, _FormsConfig.CDHDRTableName);
+            CDHDR.HasKey(x => x.Serial);
+            CDHDR.IsAutoIncrement(x => x.Serial);
+            CDHDR.VarChar(x => x.ObjectClass, 20, true);
+            CDHDR.VarChar(x => x.ObjectValue, 200, true);
+            CDHDR.NVarChar(x => x.Url, 300, true);
+            CDHDR.DefineUserName(x => x.UserName, "");
+            CDHDR.DefineCreatedAt(x => x.CreatedAt, "");
+
+            //
+            // ChangeDocumentHeader
+            //
+            var CDPOS = new ConfigHelper<ChangeDocumentItem>(modelBuilder, _FormsConfig.CDPOSTableName);
+            CDPOS.HasKey(x => x.Serial);
+            CDPOS.IsAutoIncrement(x => x.Serial);
+            CDPOS.IsRequired(x => x.HeaderSerial, true);
+            CDPOS.VarChar(x => x.TableName, 50, true);
+            CDPOS.VarChar(x => x.TableKey, 200, true);
+            CDPOS.VarChar(x => x.FieldName, 30, true);
+            CDPOS.VarChar(x => x.ChangeType, 1, true);
+            CDPOS.NVarChar(x => x.OldValue, 1000, true);
+            CDPOS.NVarChar(x => x.NewValue, 1000, true);
+
+            CDPOS.Entity()
+                .HasOne(x => x.Header)
+                .WithMany(x => x.Items)
+                .HasForeignKey(x => x.HeaderSerial);
+
 
 
         }

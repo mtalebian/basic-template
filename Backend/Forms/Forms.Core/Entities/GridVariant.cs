@@ -16,5 +16,7 @@ namespace Forms.Core
         public string FiltersData { get; set; }
         public string ColumnsData { get; set; }
         public string SortsData { get; set; }
+
+        public virtual Grid Grid{ get; set; }
     }
 }
