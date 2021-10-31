@@ -122,7 +122,7 @@ export const EditUser = ({ userId, onGoBack }) => {
           <BasicInput name="id" labelSize="2" style={{ display: "none" }} />
           <BasicInput name="firstName" label={t("first-name")} labelSize="2" autoComplete="off" autoFocus style={inputStyle} />
           <BasicInput name="lastName" label={t("last-name")} labelSize="2" autoComplete="off" style={inputStyle} />
-          <BasicInput name="userName" label={t("user-name")} labelSize="2" autoComplete="off" style={inputStyle} />
+          <BasicInput name="userName" label={t("user-name")} labelSize="2" autoComplete="off" readOnly={!!userId} style={inputStyle} read />
           <BasicInput name="nationalCode" label={t("national-code")} labelSize="2" autoComplete="off" style={inputStyle} />
           <BasicInput name="email" label={t("email")} labelSize="2" autoComplete="off" style={inputStyle} />
           <BasicInput name="phoneNumber" label={t("phone-number")} labelSize="2" autoComplete="off" style={inputStyle} />

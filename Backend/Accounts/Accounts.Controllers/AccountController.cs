@@ -1,5 +1,6 @@
 ﻿using Accounts.Core;
 using Common;
+using Common.Validation;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
@@ -17,12 +18,15 @@ namespace Accounts.Controllers
     public class AccountController : ControllerBase
     {
         private readonly IAuthenticationService<User> service;
+        private readonly IUserManagementService userManagmentService;
         private readonly IConfiguration _Configuration;
+
         internal const string SecurityKeyCookieName = "x-security-key";
 
-        public AccountController(IAuthenticationService<User> accountService, IConfiguration configuration)
+        public AccountController(IAuthenticationService<User> accountService, IConfiguration configuration,IUserManagementService userService)
         {
             this.service = accountService;
+            this.userManagmentService = userService;
             _Configuration = configuration;
         }
 
@@ -135,6 +139,90 @@ namespace Accounts.Controllers
             return new Response<UserInfoDTO>(user_info);
         }
 
+        [AllowAnonymous]
+        [HttpGet("profile-info/{projectId}")]
+        public async Task<Response<ProfileInfoDTO>> GetProfileInfo(string projectId)
+        {
+            var app = await service.GetProjectAsync(projectId);
+            if (app == null)
+            {
+                return new Response<ProfileInfoDTO>(Messages.InvalidProjectId);
+            }
+            Request.Cookies.TryGetValue(Settings.SessionIdCookieName, out var sessionId);
+            Request.Cookies.TryGetValue(Settings.RefTokenCookieName, out var ref_token);
+            var session = await service.GetSessionByRefreshTokenAsync(sessionId.ToLong(0), ref_token);
+            if (session == null)
+            {
+                return new Response<ProfileInfoDTO>(Messages.Error401);
+            }
+            var user = await service.GetUserByIdAsync(session.UserId);
+            var user_info = new ProfileInfoDTO
+            {
+                UserName=user.UserName,
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+                NationalCode = user.NationalCode,
+                PhoneNumber=user.PhoneNumber,
+                Email=user.Email,
+                WindowsAuthenticate=user.WindowsAuthenticate
+            };
+            return new Response<ProfileInfoDTO>(user_info);
+        }
+
+
+        [HttpPut("update-user-profile")]
+        public Response<ProfileInfoDTO> UpdateProfile([FromBody] ProfileInfoDTO model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return new Response<ProfileInfoDTO>(string.Join(",", ModelState.GetModelStateErrors()));
+            }
+            var user= userManagmentService.GetUserByUserName(model.UserName);
+            if(user is null)
+            {
+                return new Response<ProfileInfoDTO>(Messages.InvalidInfo);
+            }
+            if (!string.IsNullOrEmpty(model.NationalCode))
+            {
+                if (!ValidationHelper.IsValidNationalCode(model.NationalCode))
+                {
+                    return new Response<ProfileInfoDTO>(Messages.InvalidNationalCode);
+                }
+                var _tempTb = userManagmentService.GetUser(model.NationalCode);
+                if(_tempTb is not null && _tempTb.UserName != model.UserName)
+                {
+                    return new Response<ProfileInfoDTO>(Messages.DuplicateNationalCode);
+                }
+            }
+            model.MapTo(user);
+            user.LastUpdate = DateTime.Now;
+            userManagmentService.Update(user);
+            var result = userManagmentService.GetUserByUserName(model.UserName).MapTo<ProfileInfoDTO>();
+            return new Response<ProfileInfoDTO>(result);   
+        }
+
+        [HttpPut("change-password")]
+        public Response ChangePassword([FromBody] ChangePasswordDTO model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return new Response(string.Join(",", ModelState.GetModelStateErrors()));
+            }
+            var user = userManagmentService.GetUserByUserName(model.UserName);
+            if (user is null)
+            {
+                return new Response(Messages.InvalidInfo);
+            }
+            var _PasswordHash = Common.Cryptography.Helper.HashPassword(model.OldPassword);
+            if(user.PasswordHash != _PasswordHash)
+            {
+                return new Response(Messages.InvalidOldPassword);
+            }
+            user.PasswordHash= Common.Cryptography.Helper.HashPassword(model.Password);
+            user.LastUpdate = DateTime.Now;
+            userManagmentService.Update(user);
+            return new Response();
+        }
 
         [AllowAnonymous]
         [EnableCors("react")]

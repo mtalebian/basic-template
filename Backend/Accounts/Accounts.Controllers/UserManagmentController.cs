@@ -116,7 +116,8 @@ namespace Accounts.Controllers
             {
                 return new Response<UserUpdateDTO>(Messages.InvalidNationalCode);
             }
-            if (_user is not null && _user.UserName != model.UserName)
+            var _tempTb = userService.GetUser(model.NationalCode);
+            if (_tempTb is not null && _tempTb.UserName != model.UserName)
             {
                 return new Response<UserUpdateDTO>(Messages.DuplicateNationalCode);
             }
