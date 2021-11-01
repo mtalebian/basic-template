@@ -62,11 +62,11 @@ namespace Accounts.Controllers
             {
                 return new Response<ForgotPasswordResultDTO>(Messages.InvalidResetPassword);
             }
-
+            var expiry = _Configuration["ExpirationTime:SMS"].ToInt(Settings.DefaultExpiry);
             var now = DateTime.Now;
             var vcode = HelperMethods.GetVerificationCode(5);
             var key = Common.Cryptography.Rijndael.Encrypt(vcode.GetHashCode().ToString() + model.UserName + "@" + now.ToString(), InternalKey);
-            var result = new ForgotPasswordResultDTO() { Code = vcode, Key = key };
+            var result = new ForgotPasswordResultDTO() { Code = vcode, Key = key, Expiry = expiry };
             return new Response<ForgotPasswordResultDTO>(result);
         }
 

@@ -9,7 +9,7 @@ import { accountApi } from "../../api/account-api";
 import { notify } from "../../components/basic/notify";
 import { useAccount } from "../../app/account-context";
 
-export const UserProfileApp = () => {
+export const UserProfile = () => {
   const { t } = useTranslation();
   const formRef = useRef();
   const [editMode, setEditMode] = useState(false);
@@ -63,16 +63,16 @@ export const UserProfileApp = () => {
     }
     if (chPassMode) {
       accountApi
-      .changePassword(model)
-      .then((x) => {
-        setBusy(false);
-        notify.info(t("changes-are-saved"));
-        onGoBack(x);
-      })
-      .catch((ex) => {
-        setBusy(false);
-        notify.error(ex);
-      });
+        .changePassword(model)
+        .then((x) => {
+          setBusy(false);
+          notify.info(t("changes-are-saved"));
+          onGoBack(x);
+        })
+        .catch((ex) => {
+          setBusy(false);
+          notify.error(ex);
+        });
     }
   };
 
@@ -91,7 +91,7 @@ export const UserProfileApp = () => {
     };
 
     return (
-      <div className="mt-4">
+      <>
         <bd.Avatar alt="Image Profile" src="/../../images/avatar/user3.jpg" style={{ height: "150px", width: "150px" }} />
         {!editMode && !chPassMode && user && (
           <>
@@ -100,36 +100,36 @@ export const UserProfileApp = () => {
               <span>{user.firstName + " " + user.lastName}</span>
             </div>
             <div className="row pt-2">
-              <span className="col-3">{Atthenticate}</span>
+              <span className="col-6 pt-2">{Atthenticate}</span>
               {!WinAuth && (
-                <bd.Button className="col-3" color="default" onClick={changePasswordOnClick}>
+                <bd.Button className="col-6" color="default" onClick={changePasswordOnClick}>
                   <span>{t("change-Password")}</span>
                 </bd.Button>
               )}
             </div>
             <div className="row pt-3">
-              <bd.Button className="col-6" color="default" onClick={editProfileOnClick}>
+              <bd.Button className="col-12" color="default" onClick={editProfileOnClick}>
                 <span>{t("edit-profile")}</span>
               </bd.Button>
             </div>
-            <div className="row pt-2">
-              <ul style={{ listStyleType: "none" }}>
+            <div className="pt-3">
+              <ul style={{listStyleType:"none",padding:0}}>
                 {user.nationalCode && (
-                  <li className="pt-1">
+                  <li className="pt-2">
                     <icons.Person className="size-md" />
-                    <label> {user.nationalCode}</label>
+                    <label style={{paddingLeft:3}}>{user.nationalCode}</label>
                   </li>
                 )}
                 {user.email && (
-                  <li>
+                  <li className="pt-2">
                     <icons.Mail className="size-md" />
-                    <label> {user.email}</label>
+                    <label style={{paddingLeft:3}}>{user.email} </label>
                   </li>
                 )}
                 {user.phoneNumber && (
-                  <li className="pt-1">
-                    <icons.PhoneIphone className="size-md" />
-                    <label>{user.phoneNumber}</label>
+                  <li className="pt-2">
+                      <icons.PhoneIphone className="size-md" />
+                      <lable style={{paddingLeft:3}}>{user.phoneNumber}</lable>
                   </li>
                 )}
               </ul>
@@ -149,13 +149,13 @@ export const UserProfileApp = () => {
             onSubmit={onSaveClick}
             innerRef={formRef}
           >
-            <form>
-              <BasicInput name="firstName" label={t("first-name")} labelSize="2" autoComplete="off" autoFocus style={inputStyle} />
-              <BasicInput name="lastName" label={t("last-name")} labelSize="2" autoComplete="off" style={inputStyle} />
-              <BasicInput name="userName" label={t("user-name")} readOnly labelSize="2" autoComplete="off" style={inputStyle} />
-              <BasicInput name="nationalCode" label={t("national-code")} labelSize="2" autoComplete="off" style={inputStyle} />
-              <BasicInput name="email" label={t("email")} labelSize="2" autoComplete="off" style={inputStyle} />
-              <BasicInput name="phoneNumber" label={t("phone-number")} labelSize="2" autoComplete="off" style={inputStyle} />
+            <form className="pt-3">
+              <BasicInput name="firstName" label={t("first-name")} labelSize="4" autoComplete="off" autoFocus style={inputStyle} />
+              <BasicInput name="lastName" label={t("last-name")} labelSize="4" autoComplete="off" style={inputStyle} />
+              <BasicInput name="userName" label={t("user-name")} readOnly labelSize="4" autoComplete="off" style={inputStyle} />
+              <BasicInput name="nationalCode" label={t("national-code")} labelSize="4" autoComplete="off" style={inputStyle} />
+              <BasicInput name="email" label={t("email")} labelSize="4" autoComplete="off" style={inputStyle} />
+              <BasicInput name="phoneNumber" label={t("phone-number")} labelSize="4" autoComplete="off" style={inputStyle} />
             </form>
           </Formik>
         )}
@@ -181,44 +181,44 @@ export const UserProfileApp = () => {
                 name="oldPassword"
                 type="password"
                 label={t("old-password")}
-                labelSize="2"
+                labelSize="4"
                 autoComplete="off"
                 autoFocus
                 style={inputStyle}
               />
-              <BasicInput name="password" type="password" label={t("password")} labelSize="2" autoComplete="off" style={inputStyle} />
-              <BasicInput name="repeatePassword" type="password" label={t("repeate-password")} labelSize="2" autoComplete="off" style={inputStyle} />
+              <BasicInput name="password" type="password" label={t("password")} labelSize="4" autoComplete="off" style={inputStyle} />
+              <BasicInput name="repeatePassword" type="password" label={t("repeate-password")} labelSize="4" autoComplete="off" style={inputStyle} />
             </form>
           </Formik>
         )}
-      </div>
+      </>
     );
   };
   return (
     <>
-      {editMode | chPassMode && (
-        <div className="border-bottom">
-          <bd.Toolbar className="container">
-            <bd.Button variant="icon" onClick={() => onGoBack()} size="md" edge="start" className="m-e-2">
-              <icons.ArrowBackIos className="rtl-rotate-180" />
-            </bd.Button>
-            <h5>{t(PageTitle)}</h5>
-            <div className="flex-grow-1" />
-            <bd.Button color="primary" disabled={busy} onClick={() => formRef.current.submitForm()}>
-              {busy && <div className="m-e-2 spinner-border spinner-border-sm"></div>}
-              <span>{t("save-changes")}</span>
-            </bd.Button>
-          </bd.Toolbar>
-        </div>
-      )}
-      <div className="m-auto p-2" style={{ maxWidth: 600 }}>
+      {(editMode || chPassMode) && (
+          <div className="border-bottom">
+            <bd.Toolbar className="container">
+              <bd.Button variant="icon" onClick={() => onGoBack()} size="md" edge="start" className="m-e-2">
+                <icons.ArrowBackIos className="rtl-rotate-180" />
+              </bd.Button>
+              <h5>{t(PageTitle)}</h5>
+              <div className="flex-grow-1" />
+              <bd.Button color="primary" disabled={busy} onClick={() => formRef.current.submitForm()}>
+                {busy && <div className="m-e-2 spinner-border spinner-border-sm"></div>}
+                <span>{t("save-changes")}</span>
+              </bd.Button>
+            </bd.Toolbar>
+          </div>
+        )}
+      <div className="m-auto p-4" style={{ maxWidth: 350 }}>
         <ViewUserInfo />
       </div>
     </>
   );
 };
 
-UserProfileApp.Appbar = {
+UserProfile.Appbar = {
   title: "user-profile",
   buttons: null,
 };

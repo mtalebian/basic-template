@@ -20,7 +20,15 @@ namespace Messages.Services
         {
             using (var Client = new SmtpClient())
             {
-                Client.UseDefaultCredentials = true;
+                if (!_EmailConfig.WindowsAuthenticate)
+                {
+                    var credentials = new NetworkCredential(_EmailConfig.UserName, _EmailConfig.Password);
+                    Client.Credentials = credentials;
+                }
+                else
+                {
+                    Client.UseDefaultCredentials = true;
+                }
                 Client.Host = _EmailConfig.Host;
                 Client.Port = _EmailConfig.Port;
                 Client.EnableSsl = _EmailConfig.EnableSsl;
@@ -37,35 +45,6 @@ namespace Messages.Services
                 await Task.CompletedTask;
             }
         }
-        public async Task SendWelcomeEmailAsync(WelcomeRequest request)
-        {
-            string workingDirectory = Environment.CurrentDirectory;
-            string projectDirectory = Directory.GetParent(workingDirectory).Parent.FullName;
 
-            string FilePath = projectDirectory + "\\Backend\\Messaging\\Messages.Services\\Template\\WelcomeTemplate.html";
-            StreamReader str = new StreamReader(FilePath);
-            string MailText = str.ReadToEnd();
-            str.Close();
-            MailText = MailText.Replace("[username]", request.UserName).Replace("[email]", request.ToEmail);
-
-            using (var Client = new SmtpClient())
-            {
-                Client.UseDefaultCredentials = true;
-                Client.Host = _EmailConfig.Host;
-                Client.Port = _EmailConfig.Port;
-                Client.EnableSsl = _EmailConfig.EnableSsl;
-                using (var emailMessage = new MailMessage())
-                {
-                    emailMessage.To.Add(new MailAddress(request.ToEmail));
-                    emailMessage.From = new MailAddress(_EmailConfig.From);
-                    emailMessage.Subject = "Welcome";
-                    emailMessage.IsBodyHtml = _EmailConfig.IsBodyHtml;
-                    emailMessage.Body = MailText;
-
-                    Client.Send(emailMessage);
-                };
-                await Task.CompletedTask;
-            }
-        }
     }
 }

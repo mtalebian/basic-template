@@ -2,6 +2,7 @@
 using Message.Core;
 using Microsoft.AspNetCore.Mvc;
 using System;
+using System.IO;
 using System.Threading.Tasks;
 
 namespace Messages.Controllers
@@ -34,7 +35,17 @@ namespace Messages.Controllers
         {
             try
             {
-                await mailService.SendWelcomeEmailAsync(request);
+                string workingDirectory = Environment.CurrentDirectory;
+                string projectDirectory = Directory.GetParent(workingDirectory).Parent.FullName;
+
+                string FilePath = projectDirectory + "\\Backend\\Messaging\\Messages.Services\\Template\\WelcomeTemplate.html";
+                StreamReader str = new StreamReader(FilePath);
+                string MailText = str.ReadToEnd();
+                str.Close();
+                MailText = MailText.Replace("[username]", request.UserName).Replace("[email]", request.ToEmail);
+                var mailRequest = new MailRequest() { ToMail = request.ToEmail, Subject = "Welcome", Body = MailText };
+
+                await mailService.SendEmailAsync(mailRequest);
                 return new Response();
             }
             catch (Exception)
