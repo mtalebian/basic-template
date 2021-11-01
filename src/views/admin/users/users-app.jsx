@@ -145,7 +145,7 @@ export const UsersApp = () => {
               className="border0 nano-scroll"
               //style={{ minHeight: 400 }}
               hover
-              striped
+             // striped
               hasWhitespace
               stickyFooter
             />

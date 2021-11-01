@@ -113,23 +113,23 @@ export const UserProfile = () => {
               </bd.Button>
             </div>
             <div className="pt-3">
-              <ul style={{listStyleType:"none",padding:0}}>
+              <ul style={{ listStyleType: "none", padding: 0 }}>
                 {user.nationalCode && (
                   <li className="pt-2">
                     <icons.Person className="size-md" />
-                    <label style={{paddingLeft:3}}>{user.nationalCode}</label>
+                    <label style={{ paddingLeft: 3 }}>{user.nationalCode}</label>
                   </li>
                 )}
                 {user.email && (
                   <li className="pt-2">
                     <icons.Mail className="size-md" />
-                    <label style={{paddingLeft:3}}>{user.email} </label>
+                    <label style={{ paddingLeft: 3 }}>{user.email} </label>
                   </li>
                 )}
                 {user.phoneNumber && (
                   <li className="pt-2">
-                      <icons.PhoneIphone className="size-md" />
-                      <lable style={{paddingLeft:3}}>{user.phoneNumber}</lable>
+                    <icons.PhoneIphone className="size-md" />
+                    <lable style={{ paddingLeft: 3 }}>{user.phoneNumber}</lable>
                   </li>
                 )}
               </ul>
@@ -194,24 +194,32 @@ export const UserProfile = () => {
       </>
     );
   };
+  const profileStyle = {
+    
+    maxWidth: 350,
+    border: "1px groove #ddd2d263",
+    boxShadow: "rgb(0 0 0 / 24%) 0px 3px 8px",
+    borderRadius: 9,
+    margin: "22px auto"
+  };
   return (
     <>
       {(editMode || chPassMode) && (
-          <div className="border-bottom">
-            <bd.Toolbar className="container">
-              <bd.Button variant="icon" onClick={() => onGoBack()} size="md" edge="start" className="m-e-2">
-                <icons.ArrowBackIos className="rtl-rotate-180" />
-              </bd.Button>
-              <h5>{t(PageTitle)}</h5>
-              <div className="flex-grow-1" />
-              <bd.Button color="primary" disabled={busy} onClick={() => formRef.current.submitForm()}>
-                {busy && <div className="m-e-2 spinner-border spinner-border-sm"></div>}
-                <span>{t("save-changes")}</span>
-              </bd.Button>
-            </bd.Toolbar>
-          </div>
-        )}
-      <div className="m-auto p-4" style={{ maxWidth: 350 }}>
+        <div className="border-bottom">
+          <bd.Toolbar className="container">
+            <bd.Button variant="icon" onClick={() => onGoBack()} size="md" edge="start" className="m-e-2">
+              <icons.ArrowBackIos className="rtl-rotate-180" />
+            </bd.Button>
+            <h5>{t(PageTitle)}</h5>
+            <div className="flex-grow-1" />
+            <bd.Button color="primary" disabled={busy} onClick={() => formRef.current.submitForm()}>
+              {busy && <div className="m-e-2 spinner-border spinner-border-sm"></div>}
+              <span>{t("save-changes")}</span>
+            </bd.Button>
+          </bd.Toolbar>
+        </div>
+      )}
+      <div className="p-4" style={profileStyle}>
         <ViewUserInfo />
       </div>
     </>
