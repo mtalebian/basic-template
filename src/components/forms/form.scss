@@ -1,7 +1,10 @@
 .bd-input {
+    $icon-width: 32px;
+
     position: relative;
 
-    .icon {
+    .icon1,
+    .icon2 {
         position: absolute;
         width: 32px;
         top: 1px;
@@ -15,11 +18,19 @@
         @include positionEnd(1px);
     }
 
+    .icon2 {
+        @include positionEnd($icon-width + 1px);
+    }
+
     .form-control {
         color: currentColor;
 
         &.has-icon {
-            @include paddingEnd(32px);
+            @include paddingEnd($icon-width);
+        }
+
+        &.has-2-icon {
+            @include paddingEnd($icon-width * 2);
         }
 
         &::placeholder {
@@ -29,11 +40,24 @@
     }
 }
 
-.bd-form-input {
+.bd-form-dense {
     .form-control {
+        height: 1.75rem;
+        @include paddingStart(8px);
+    }
+
+    .btn {
         height: 1.75rem;
     }
 }
+/*
+.form-control.densed {
+    height: 1.75rem;
+}
+
+.btn.densed {
+    height: 1.75rem;
+}*/
 
 /*******************/
 @mixin basicForm($palette) {
@@ -56,7 +80,8 @@
             border-color: $primary;
         }
 
-        .icon {
+        .icon1,
+        .icon2 {
             color: $icon;
 
             &:hover {

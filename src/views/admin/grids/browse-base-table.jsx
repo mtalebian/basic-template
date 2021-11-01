@@ -103,7 +103,10 @@ export const BrowseTable = ({ table, onGoBack }) => {
                         <div className="container">
                             <FilterBox
                                 initialFilters={{ f1: 1, f2: "tow", f3: true }}
-                                variants={[{ title: "standard" }]}
+                                expanded
+                                showSettings
+                                //variants={[{ title: "standard" }]}
+                                variants={null}
                                 systemIsBusy={false}
                                 onExecute={(filters) => {
                                     gridsApi
@@ -118,16 +121,15 @@ export const BrowseTable = ({ table, onGoBack }) => {
                                         });
                                 }}
                             >
-                                <Filter name="f1" title="F1" onBlur={(e) => 0} />
-                                <Filter name="f2" title="F2" onBlur={(e) => 0} />
-                                <Filter name="f3" title="F3" onBlur={(e) => 0} />
-                                <Filter name="f4" title="F4" onBlur={(e) => 0} />
-                                <Filter name="f5" title="F5" onBlur={(e) => 0} />
-                                <Filter name="f6" title="F6" onBlur={(e) => 0} />
-                                <Filter name="f7" title="F7" onBlur={(e) => 0} />
-                                <Filter name="f8" title="F8" onBlur={(e) => 0} />
-                                <Filter name="f9" title="F9" onBlur={(e) => 0} />
-                                <div></div>
+                                <Filter name="f1" label="F1" onBlur={(e) => 0} width="12rem" />
+                                <Filter name="f2" label="F2" onBlur={(e) => 0} width="12rem" />
+                                <Filter name="f3" label="F3" onBlur={(e) => 0} width="12rem" />
+                                <Filter name="f4" label="F4" onBlur={(e) => 0} width="12rem" />
+                                <Filter name="f5" label="F5" onBlur={(e) => 0} width="12rem" />
+                                {/*<Filter name="f6" label="F6" onBlur={(e) => 0} width="12rem" />
+                                 <Filter name="f7" label="F7" onBlur={(e) => 0} width="12rem" />
+                                <Filter name="f8" label="F8" onBlur={(e) => 0} width="12rem" />
+                                <Filter name="f9" label="F9" onBlur={(e) => 0} width="12rem" /> */}
                             </FilterBox>
                         </div>
                     </div>
