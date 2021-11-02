@@ -1,27 +1,9 @@
-.cur-default {
-    cursor: default;
-}
-
-.theme-bd.theme-light .form-control[readonly],
-.theme-bd.theme-light .form-select[readonly] {
-    background-color: #fff !important;
-}
-
-.form-readonly {
-    opacity: 0.5;
-}
-.disable-ripple .toggle {
-    padding: 0 !important;
-}
-
 @import "node_modules/react-basic-design/dist/index.scss";
 
 @import "./components/forms/form.scss";
 @import "./components/filters/filters.scss";
 @import "./components/basic-form/basic-form.scss";
-//@import "./components/scss/input.scss";
-//@import "./components/scss/table.scss";
-//@import "./components/basic/table/basic-table.scss";
+
 @import "./components/table/table.scss";
 @import "./components/table/table-div.scss";
 @import "./components/tilemenu/tilemenu.scss";
@@ -37,11 +19,6 @@ body,
     Layout
 */
 .theme-light {
-    .header > .appbar-default {
-        box-shadow: none;
-        border-bottom: 1px solid #ddd;
-        //background-color: #f5f5f5;
-    }
     main.content {
         background-color: #f7f8f9;
     }
@@ -52,38 +29,6 @@ body,
 .Toastify__toast {
     font-family: inherit !important;
     direction: inherit !important;
-}
-
-/*
-    Sidebar
-*/
-
-.theme-light {
-    .sidebar {
-        background-color: #242830;
-        background-color: #eaeaea;
-        background-color: #1a1e22;
-        //box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.3);
-        box-shadow: 0 0 3px 1px #ccc;
-        //border: 1px solid #ddd;
-        z-index: 10000;
-
-        .sidebar-content {
-            @include scrollbar(5px, #777);
-        }
-    }
-}
-
-.theme-dark {
-    .sidebar {
-        background-color: #1a1e22;
-        box-shadow: 0 0 5px 1px #333;
-        z-index: 10000;
-
-        .sidebar-content {
-            @include scrollbar(5px, #777);
-        }
-    }
 }
 
 /*
@@ -129,51 +74,4 @@ landing
             }
         }
     }
-}
-
-/*
-Main Tab
-*/
-.main-tab {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-
-    .nav-link {
-        border: none;
-        background-color: transparent !important;
-    }
-
-    .nav-link.active {
-        border-bottom: 3px solid currentColor;
-    }
-}
-
-@mixin main-tab-theme($palette) {
-    $text: map-get($palette, text, main);
-    $bg: map-get($palette, bg, main);
-    $border: rgba($text, 0.17);
-
-    $primary-palette: map-get($palette, primary);
-    $primary: map-get($primary-palette, main);
-    $primary-text: map-get($primary-palette, text);
-
-    .main-tab {
-        background-color: $bg;
-        border-bottom: 1px solid $border;
-        .nav-link {
-            color: $text;
-        }
-        .nav-link.active {
-            color: $primary;
-        }
-    }
-}
-
-.theme-light {
-    @include main-tab-theme(map-get($theme, light));
-}
-
-.theme-dark {
-    @include main-tab-theme(map-get($theme, dark));
 }

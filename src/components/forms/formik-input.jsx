@@ -1,6 +1,6 @@
 import classNames from "classnames";
 import { useField } from "formik";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { FormRow } from "./form-row";
 import * as icons from "../../assets/icons";
 
@@ -23,8 +23,12 @@ export const FormikInput = ({
     width,
     maxWidth,
     style,
+
+    readOnly,
     ...props
 }) => {
+    const isSelect = type === "select";
+    const inputRef = useRef();
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [field, meta, helper] = useField({ ...props, type });
     if (!field.value) field.value = "";
@@ -34,14 +38,14 @@ export const FormikInput = ({
     if (label && id === undefined) id = props.name;
 
     const buttons = [];
-    if (buttonIcon) buttons.push({ icon: buttonIcon, action: buttonOnClick });
-    if (menu) buttons.push({ icon: <icons.ArrowDropDown />, action: onToggleDropDown });
+    if (buttonIcon) buttons.push({ icon: buttonIcon, action: buttonOnClick, isBtn: true });
+    if (menu) buttons.push({ icon: <icons.ArrowDropDown />, action: onToggleDropDown, isBtn: !isSelect });
 
     const cnInput = classNames("form-control", inputClassName, {
         "has-1-icon": buttons.length === 1,
         "has-2-icon": buttons.length === 2,
-        "cur-default": type === "label" || type === "combobox",
-        "form-readonly": type === "label" || props.readOnly,
+        "cur-default": type === "label" || isSelect,
+        "form-readonly": type === "label" || readOnly,
         "bd-border-error": meta.error,
     });
 
@@ -53,6 +57,10 @@ export const FormikInput = ({
 
     const getValue = (item) => (typeof item !== "object" ? item : "id" in item ? item["id"] : "code" in item ? item["code"] : item);
     const getText = (item) => (typeof item !== "object" ? item : "title" in item ? item["title"] : item);
+    const selectItem = (item) => {
+        if (!readOnly) helper.setValue(getValue(item));
+        if (inputRef.current) inputRef.current.focus();
+    };
 
     function buildMenu() {
         if (menu && Array.isArray(menu))
@@ -60,7 +68,7 @@ export const FormikInput = ({
                 React.isValidElement(x) ? (
                     x
                 ) : (
-                    <div key={getValue(x)} className="bd-dropdown-item" onClick={(e) => !props.readOnly && helper.setValue(getValue(x))}>
+                    <div key={getValue(x)} className="bd-dropdown-item" onClick={(e) => selectItem(x)}>
                         {getText(x)}
                     </div>
                 )
@@ -80,22 +88,32 @@ export const FormikInput = ({
 
     if (type === "label") {
         type = "text";
-        props["readOnly"] = true;
+        readOnly = true;
     }
-    if (type === "combobox") {
+    if (isSelect) {
         type = "text";
-        props["readOnly"] = true;
+        field["onClick"] = onToggleDropDown;
     }
 
     var inp = (
         <div className="bd-input">
             {buttons.map((x) => (
-                <span className="icon1 size-md" onClick={x.action}>
+                <span className={"icon1 size-md " + (x.isBtn ? "icon-btn" : "cur-default")} onClick={x.action}>
                     {x.icon}
                 </span>
             ))}
 
-            <input id={id} type={type} className={cnInput} autoComplete={autoComplete} title={meta.error} {...field} {...props} />
+            <input
+                id={id}
+                ref={inputRef}
+                type={type}
+                className={cnInput}
+                autoComplete={autoComplete}
+                title={meta.error}
+                {...field}
+                {...props}
+                readOnly={readOnly || isSelect}
+            />
 
             {isMenuOpen && menu && <div className="bd-dropdown-menu">{buildMenu()}</div>}
         </div>

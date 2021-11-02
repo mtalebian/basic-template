@@ -94,15 +94,15 @@
     $bg: map-get($palette, bg, main);
     $divider: map-get($palette, divider);
 
-    $primary-palette: map-get($palette, primary);
-    $primary: map-get($primary-palette, main);
+    $primary: map-get($palette, primary, main);
+    $primary-dark: map-get($palette, primary, dark);
     $primary-text: map-get($palette, primary, text);
 
-    $error-palette: map-get($palette, error);
-    $error: map-get($error-palette, main);
+    $error: map-get($palette, error, main);
 
     $border: mix($bg, $text, 70%);
-    $icon: mix($text, $primary, 40%);
+    //$icon: mix($text, $primary, 30%);
+    $icon: $primary-dark;
 
     .bd-dropdown-menu {
         border-color: $divider;
@@ -131,7 +131,9 @@
         .icon1,
         .icon2 {
             color: $icon;
+        }
 
+        .icon-btn {
             &:hover {
                 background-color: mix($bg, $primary, 85%);
             }
