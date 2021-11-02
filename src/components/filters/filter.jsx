@@ -1,15 +1,13 @@
 import React from "react";
 import * as icons from "../../assets/icons";
-import * as bd from "react-basic-design";
-import { FormRow } from "../forms/form-row";
-import { FormInput } from "../forms";
+import { FormikInput } from "../forms";
 
 export const Filter = ({ label, labelSize, width, className, onBlur, ...props }) => {
     return (
         // <div className="bd-filter">
-        //     <bd2.FormInput label={label} btnIcon={<icons.OpenInNew />} onBtnClick={() => alert("ccc")} {...props} />
+        //     <bd2.FormInput label={label} btnIcon={<FormikInput.OpenInNew />} onBtnClick={() => alert("ccc")} {...props} />
         // </div>
-        <FormInput
+        <FormikInput
             label={label}
             labelSize={labelSize}
             button1={{

@@ -1,3 +1,32 @@
+/***/
+.bd-dropdown {
+    display: inline-block;
+    position: relative;
+    width: 222px;
+    font-size: 1.6rem;
+    user-select: none;
+}
+
+.bd-dropdown-menu {
+    position: absolute;
+    z-index: 10;
+    width: 100%;
+    max-height: 215px;
+    border: 1px solid rgb(223, 223, 223);
+    border-top: none;
+    border-bottom-left-radius: 3px;
+    border-bottom-right-radius: 3px;
+    font-weight: 700;
+    text-align: left;
+    -webkit-overflow-scrolling: touch;
+}
+
+.bd-dropdown-item {
+    padding: 0.25rem 0.75rem;
+    cursor: default;
+}
+
+/***/
 .bd-input {
     $icon-width: 32px;
 
@@ -25,7 +54,7 @@
     .form-control {
         color: currentColor;
 
-        &.has-icon {
+        &.has-1-icon {
             @include paddingEnd($icon-width);
         }
 
@@ -63,15 +92,34 @@
 @mixin basicForm($palette) {
     $text: map-get($palette, text, main);
     $bg: map-get($palette, bg, main);
+    $divider: map-get($palette, divider);
 
     $primary-palette: map-get($palette, primary);
     $primary: map-get($primary-palette, main);
+    $primary-text: map-get($palette, primary, text);
 
     $error-palette: map-get($palette, error);
     $error: map-get($error-palette, main);
 
     $border: mix($bg, $text, 70%);
     $icon: mix($text, $primary, 40%);
+
+    .bd-dropdown-menu {
+        border-color: $divider;
+        box-shadow: $bd-shadow-3;
+        background-color: $bg;
+    }
+
+    .bd-dropdown-item {
+        &:hover {
+            background-color: rgba($text, 5%);
+        }
+
+        &.selected {
+            background-color: $primary;
+            color: $primary-text;
+        }
+    }
 
     .bd-input {
         border-color: $border;

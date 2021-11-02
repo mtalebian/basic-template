@@ -17,6 +17,7 @@ import HttpApi from "i18next-http-backend";
 import { apiConfig } from "./api/config";
 import settings from "./app/settings";
 import { AccountProvider } from "./app/account-context";
+import { Dropdown } from "./components/forms";
 
 //-----------
 i18n.use(HttpApi)

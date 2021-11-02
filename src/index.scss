@@ -1,3 +1,15 @@
+.cur-default {
+    cursor: default;
+}
+
+.theme-bd.theme-light .form-control[readonly],
+.theme-bd.theme-light .form-select[readonly] {
+    background-color: #fff !important;
+}
+
+.form-readonly {
+    opacity: 0.5;
+}
 .disable-ripple .toggle {
     padding: 0 !important;
 }
