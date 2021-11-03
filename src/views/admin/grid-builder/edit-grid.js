@@ -26,7 +26,6 @@ import { RenderTableDiv } from "../../../components/table/render-table-div";
 import { DefaultEditor } from "../../../components/table/editors";
 import { BasicTextArea } from "../../../components/basic-form/basic-textarea";
 import { Text } from "../../../components/basic/text";
-import { TabContainer } from "react-bootstrap";
 import { msgbox } from "react-basic-design";
 import { BasicSwitch } from "../../../components/basic-form/basic-switch";
 import { EditColumn } from "./edit-column";

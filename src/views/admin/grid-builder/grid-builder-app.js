@@ -10,7 +10,6 @@ import { TableDesignerEditTable } from "./edit-grid";
 import { notify } from "../../../components/basic/notify";
 import { Tile, Tiles } from "../../../components/tilemenu/tiles";
 import * as icons from "../../../assets/icons";
-import { useTranslation } from "react-i18next";
 import { useAccount } from "../../../app/account-context";
 import { Text } from "../../../components/basic/text";
 import { useShell } from "../../shared/use-shell";
@@ -18,7 +17,6 @@ import { useShell } from "../../shared/use-shell";
 //
 export function TableDesignerApp() {
     const account = useAccount();
-    const { t } = useTranslation();
     const [groups, setGroups] = useState(null);
     const [group, setGroup] = useState(null);
     const [table, setGrid] = useState(null);

@@ -1,5 +1,4 @@
 import React, { useRef, useState } from "react";
-import * as yup from "yup";
 import * as bd from "react-basic-design";
 import * as bd2 from "../../components/forms";
 import { Text } from "../../components/basic/text";

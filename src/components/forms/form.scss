@@ -16,7 +16,6 @@
     border-top: none;
     border-bottom-left-radius: 3px;
     border-bottom-right-radius: 3px;
-    font-weight: 700;
     text-align: left;
     -webkit-overflow-scrolling: touch;
 }
@@ -24,6 +23,10 @@
 .bd-dropdown-item {
     padding: 0.25rem 0.75rem;
     cursor: default;
+
+    &.active {
+        //font-weight: 700;
+    }
 }
 
 /***/
@@ -69,6 +72,17 @@
     }
 }
 
+/* 
+*/
+.bd-form {
+    display: flex;
+    flex-wrap: wrap;
+
+    .bd-form-row {
+        @include marginEnd(1rem);
+    }
+}
+
 .bd-form-dense {
     .form-control {
         height: 1.75rem;
@@ -95,6 +109,7 @@
     $divider: map-get($palette, divider);
 
     $primary: map-get($palette, primary, main);
+    $primary-light: map-get($palette, primary, light);
     $primary-dark: map-get($palette, primary, dark);
     $primary-text: map-get($palette, primary, text);
 
@@ -103,6 +118,7 @@
     $border: mix($bg, $text, 70%);
     //$icon: mix($text, $primary, 30%);
     $icon: $primary-dark;
+    $active: mix($bg, $primary, 75%);
 
     .bd-dropdown-menu {
         border-color: $divider;
@@ -115,9 +131,9 @@
             background-color: rgba($text, 5%);
         }
 
-        &.selected {
-            background-color: $primary;
-            color: $primary-text;
+        &.active {
+            //background-color: $active;
+            color: $primary;
         }
     }
 

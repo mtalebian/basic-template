@@ -1,6 +1,4 @@
 import React, { useEffect, useState } from "react";
-import * as bd from "react-basic-design";
-import { useTranslation } from "react-i18next";
 import { useAccount } from "../../../app/account-context";
 import { Tile, Tiles } from "../../../components/tilemenu/tiles";
 import { gridsApi } from "../../../api/grids-api";
@@ -12,7 +10,6 @@ import { useShell } from "../../shared/use-shell";
 
 export function TablesApp() {
     const account = useAccount();
-    const { t } = useTranslation();
     const [groups, setGroups] = useState(null);
     const [loadingTable, setLoadingTable] = useState(null);
     const [table, setTable] = useState(null);
