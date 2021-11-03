@@ -45,8 +45,8 @@ export const FormikInput = ({
     if (menu) buttons.push({ icon: <icons.ArrowDropDown />, action: onToggleDropDown, isBtn: !isSelect });
 
     const cnInput = classNames("form-control", inputClassName, {
-        "has-1-icon": buttons.length === 1,
-        "has-2-icon": buttons.length === 2,
+        "has-1-btn": buttons.length === 1,
+        "has-2-btn": buttons.length === 2,
         "cur-default": type === "label" || isSelect,
         "form-input-label": type === "label",
         "form-readonly": readOnly,
@@ -58,15 +58,20 @@ export const FormikInput = ({
         const LEFT = 37;
         const RIGHT = 39;
         const DOWN = 40;
+        const ENTER = 13;
 
         if (!readOnly && isSelect && Array.isArray(menu)) {
+            if (e.keyCode === ENTER) {
+                onToggleDropDown();
+                return;
+            }
             let delta = e.keyCode === UP ? -1 : e.keyCode === DOWN ? 1 : 0;
             let idx = selectedItemIndex + delta;
             if (idx >= 0 && idx < menu.length) helper.setValue(getValue(menu[idx]));
         }
     }
 
-    function onToggleDropDown(e) {
+    function onToggleDropDown() {
         var is_open = !isMenuOpen;
         if (is_open && onOpeningMenu) onOpeningMenu();
         setIsMenuOpen(is_open);

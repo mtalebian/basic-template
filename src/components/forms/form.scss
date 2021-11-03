@@ -57,11 +57,11 @@
     .form-control {
         color: currentColor;
 
-        &.has-1-icon {
+        &.has-1-btn {
             @include paddingEnd($icon-width);
         }
 
-        &.has-2-icon {
+        &.has-2-btn {
             @include paddingEnd($icon-width * 2);
         }
 
@@ -132,8 +132,8 @@
         }
 
         &.active {
-            //background-color: $active;
-            color: $primary;
+            background-color: $active;
+            //color: $primary;
         }
     }
 

@@ -6,18 +6,53 @@ import * as icons from "../../assets/icons";
 export function FormikTest() {
     console.log("> FormikTest");
     return (
-        <bd2.FormikForm
-            initialValues={{ status: 1, firstName: "", lastName: "", age: 10 }}
-            onSubmit={(values) => alert("submited")}
-            dense
-            className="pt-3 p-s-3"
-        >
-            <Test1 />
-        </bd2.FormikForm>
+        <>
+            <bd2.FormikForm
+                initialValues={{ status: 1, firstName: "Mahdi", lastName: "Talebian", age: 10 }}
+                onSubmit={(values) => alert("submited")}
+                dense
+                className="pt-3 p-s-3"
+            >
+                <GeneralTest />
+            </bd2.FormikForm>
+
+            <hr />
+
+            <bd2.FormikForm
+                initialValues={{ status: 1, firstName: "Mahdi", lastName: "Talebian", age: 10 }}
+                onSubmit={(values) => alert("submited")}
+                dense
+                className="pt-3 p-s-3"
+            >
+                <DropDownTest />
+            </bd2.FormikForm>
+        </>
     );
 }
 
-const Test1 = ({ label, ...props }) => {
+const GeneralTest = () => {
+    return (
+        <>
+            <bd2.FormikInput label="First Name" name="firstName" width="12rem" />
+            <bd2.FormikInput label="Last Name" name="lastName" width="12rem" />
+            <bd2.FormikInput label="Age" name="age" width="12rem" type="number" />
+            <bd2.FormikInput
+                label="Status"
+                name="status"
+                width="12rem"
+                menu={[
+                    { id: 1, title: "SINGLE" },
+                    { id: 2, title: "MARRIED" },
+                ]}
+                type="select"
+            />
+            <bd2.FormikSwitch label="I Agree" name="agree" width="auto" className="p-e-3" dense size="sm" readOnly />
+            <bd2.FormikToggle label="readOnly not works" name="remember" width="auto" size="sm" className="p-e-3" dense readOnly />
+        </>
+    );
+};
+
+const DropDownTest = () => {
     return (
         <>
             <bd2.FormikInput label="text" name="status" width="12rem" />
