@@ -18,7 +18,7 @@ namespace Accounts.Controllers
     [Authorize(AuthenticationSchemes = "Bearer")]
     public class AccountController : ControllerBase
     {
-        private readonly IAuthenticationService<User> service;
+        private readonly IAuthenticationService<User> accountService;
         private readonly IUserManagementService userManagmentService;
         private readonly IConfiguration _Configuration;
         private const string InternalKey = "8gfB50.!#_Aau61n.-$!";
@@ -26,7 +26,7 @@ namespace Accounts.Controllers
 
         public AccountController(IAuthenticationService<User> accountService, IConfiguration configuration, IUserManagementService userService)
         {
-            this.service = accountService;
+            this.accountService = accountService;
             this.userManagmentService = userService;
             _Configuration = configuration;
         }
@@ -47,7 +47,7 @@ namespace Accounts.Controllers
                 }
             }
 
-            var app = await service.GetProjectAsync(projectId);
+            var app = await accountService.GetProjectAsync(projectId);
             if (app == null)
             {
                 return new Response<ForgotPasswordResultDTO>(Messages.InvalidProjectId);
@@ -74,7 +74,7 @@ namespace Accounts.Controllers
         [HttpPost("reset-password/{projectId}")]
         public async Task<Response<ResetPasswordResultDTO>> ResetPassword(string projectId, [FromBody] ResetPasswordDTO model)
         {
-            var app = await service.GetProjectAsync(projectId);
+            var app = await accountService.GetProjectAsync(projectId);
             if (app == null)
             {
                 return new Response<ResetPasswordResultDTO>(Messages.InvalidProjectId);
@@ -131,10 +131,10 @@ namespace Accounts.Controllers
             Response.Cookies.Delete(Settings.RefTokenCookieName);
             Response.Cookies.Delete(Settings.SessionIdCookieName);
 
-            var session = await service.GetSessionByRefreshTokenAsync(sessionId.ToLong(0), ref_token);
+            var session = await accountService.GetSessionByRefreshTokenAsync(sessionId.ToLong(0), ref_token);
             if (session == null) return new Response();
 
-            await service.DeleteSessionAsync(session);
+            await accountService.DeleteSessionAsync(session);
             return new Response();
         }
 
@@ -154,29 +154,29 @@ namespace Accounts.Controllers
                 }
             }
 
-            var app = await service.GetProjectAsync(projectId);
+            var app = await accountService.GetProjectAsync(projectId);
             if (app == null)
             {
                 return new Response<UserInfoDTO>(Messages.InvalidProjectId);
             }
 
             // return new Response<UserInfoDTO>("befor refresh");
-            var user = await service.GetUserByNameAsync(model.UserName);
+            var user = await accountService.GetUserByNameAsync(model.UserName);
             if (user == null)
             {
                 return new Response<UserInfoDTO>(Messages.InvalidUserNameOrPassword);
             }
-            if (!service.VerifyPassword(user, model.Password))
+            if (!accountService.VerifyPassword(user, model.Password))
             {
                 return new Response<UserInfoDTO>(Messages.InvalidUserNameOrPassword);
             }
 
             Request.Cookies.TryGetValue(Settings.SessionIdCookieName, out var sessionId);
             Request.Cookies.TryGetValue(Settings.RefTokenCookieName, out var ref_token);
-            var session = await service.GetSessionByRefreshTokenAsync(sessionId.ToLong(0), ref_token);
+            var session = await accountService.GetSessionByRefreshTokenAsync(sessionId.ToLong(0), ref_token);
             if (session != null && session.UserId != user.Id)
             {
-                await service.DeleteSessionAsync(session);
+                await accountService.DeleteSessionAsync(session);
                 session = null;
             }
 
@@ -186,7 +186,7 @@ namespace Accounts.Controllers
                 DisplayName = $"{user.FirstName} {user.LastName}",
                 Token = ref_result.Token,
                 Expiry = ref_result.Expiry,
-                ProjectTitle = (await service.GetProjectAsync(projectId)).Title,
+                ProjectTitle = (await accountService.GetProjectAsync(projectId)).Title,
             };
             return new Response<UserInfoDTO>(user_info);
         }
@@ -201,26 +201,26 @@ namespace Accounts.Controllers
         public async Task<Response<UserInfoDTO>> GetUserInfo(string projectId)
         {
             //Thread.Sleep(1000);
-            var app = await service.GetProjectAsync(projectId);
+            var app = await accountService.GetProjectAsync(projectId);
             if (app == null)
             {
                 return new Response<UserInfoDTO>(Messages.InvalidProjectId);
             }
             Request.Cookies.TryGetValue(Settings.SessionIdCookieName, out var sessionId);
             Request.Cookies.TryGetValue(Settings.RefTokenCookieName, out var ref_token);
-            var session = await service.GetSessionByRefreshTokenAsync(sessionId.ToLong(0), ref_token);
+            var session = await accountService.GetSessionByRefreshTokenAsync(sessionId.ToLong(0), ref_token);
             if (session == null)
             {
                 return new Response<UserInfoDTO>(Messages.Error401);
             }
-            var user = await service.GetUserByIdAsync(session.UserId);
+            var user = await accountService.GetUserByIdAsync(session.UserId);
             var ref_result = await RefreshAsync(app, user, session);
             var user_info = new UserInfoDTO
             {
                 DisplayName = $"{user.FirstName} {user.LastName}",
                 Token = ref_result.Token,
                 Expiry = ref_result.Expiry,
-                ProjectTitle = (await service.GetProjectAsync(projectId)).Title,
+                ProjectTitle = (await accountService.GetProjectAsync(projectId)).Title,
             };
             return new Response<UserInfoDTO>(user_info);
         }
@@ -229,19 +229,12 @@ namespace Accounts.Controllers
         [HttpGet("profile-info/{projectId}")]
         public async Task<Response<ProfileInfoDTO>> GetProfileInfo(string projectId)
         {
-            var app = await service.GetProjectAsync(projectId);
+            var app = await accountService.GetProjectAsync(projectId);
             if (app == null)
             {
                 return new Response<ProfileInfoDTO>(Messages.InvalidProjectId);
             }
-            Request.Cookies.TryGetValue(Settings.SessionIdCookieName, out var sessionId);
-            Request.Cookies.TryGetValue(Settings.RefTokenCookieName, out var ref_token);
-            var session = await service.GetSessionByRefreshTokenAsync(sessionId.ToLong(0), ref_token);
-            if (session == null)
-            {
-                return new Response<ProfileInfoDTO>(Messages.Error401);
-            }
-            var user = await service.GetUserByIdAsync(session.UserId);
+            var user = await GetUserAsync();
             var user_info = new ProfileInfoDTO
             {
                 UserName = user.UserName,
@@ -315,19 +308,19 @@ namespace Accounts.Controllers
         [HttpPost("refresh/{projectId}")]
         public async Task<Response<RefreshResultDTO>> Refresh(string projectId)
         {
-            var app = await service.GetProjectAsync(projectId);
+            var app = await accountService.GetProjectAsync(projectId);
             if (app == null)
             {
                 return new Response<RefreshResultDTO>(Messages.InvalidProjectId);
             }
             Request.Cookies.TryGetValue(Settings.SessionIdCookieName, out var sessionId);
             Request.Cookies.TryGetValue(Settings.RefTokenCookieName, out var ref_token);
-            var session = await service.GetSessionByRefreshTokenAsync(sessionId.ToLong(0), ref_token);
+            var session = await accountService.GetSessionByRefreshTokenAsync(sessionId.ToLong(0), ref_token);
             if (session == null)
             {
                 return new Response<RefreshResultDTO>(Messages.Error401);
             }
-            var user = await service.GetUserByIdAsync(session.UserId);
+            var user = await accountService.GetUserByIdAsync(session.UserId);
             var result = await RefreshAsync(app, user, session);
             return new Response<RefreshResultDTO>(result);
         }
@@ -338,16 +331,16 @@ namespace Accounts.Controllers
             var ip = Request.HttpContext?.Connection?.RemoteIpAddress?.ToString() ?? "";
             if (session != null)
             {
-                await service.RegenerateRefreshTokenAsync(session, ip);
+                await accountService.RegenerateRefreshTokenAsync(session, ip);
             }
             else
             {
                 var userAgent = Request.Headers["User-Agent"].ToString();
-                session = await service.CreateSessionAsync(app, user, userAgent, ip);
+                session = await accountService.CreateSessionAsync(app, user, userAgent, ip);
             }
 
             var expiry = _Configuration["Jwt:expiry"].ToInt(Settings.DefaultExpiry);
-            var token = service.GetToken(user, expiry);
+            var token = accountService.GetToken(user, expiry);
             Response.Cookies.Append(Settings.RefTokenCookieName, session.RefreshToken, Settings.GetCookieOption());
             Response.Cookies.Append(Settings.SessionIdCookieName, session.Id.ToString(), Settings.GetCookieOption());
 
@@ -356,6 +349,19 @@ namespace Accounts.Controllers
                 Token = token,
                 Expiry = expiry,
             };
+        }
+
+        private async Task<User> GetUserAsync()
+        {
+            Request.Cookies.TryGetValue(Settings.SessionIdCookieName, out var sessionId);
+            Request.Cookies.TryGetValue(Settings.RefTokenCookieName, out var ref_token);
+            var session = await accountService.GetSessionByRefreshTokenAsync(sessionId.ToLong(0), ref_token);
+            if (session == null)
+            {
+                return new User();
+            }
+            var user = await accountService.GetUserByIdAsync(session.UserId);
+            return user;
         }
 
 

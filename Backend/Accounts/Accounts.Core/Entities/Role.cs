@@ -22,5 +22,10 @@ namespace Accounts.Core
         [IgnoreMap]
         public virtual ICollection<UserRole> UserRoles { get; set; }
 
+        public Role()
+        {
+            CreatedAt = DateTime.Now;
+        }
+
     }
 }

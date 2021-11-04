@@ -83,7 +83,7 @@ export { default as Add } from "./Add";
 // export { default as AddLink } from './AddLink'
 // export { default as AddLocation } from './AddLocation'
 // export { default as AddLocationAlt } from './AddLocationAlt'
-// export { default as AddModerator } from './AddModerator'
+export { default as AddModerator } from './AddModerator'
 // export { default as AddPhotoAlternate } from './AddPhotoAlternate'
 // export { default as AddReaction } from './AddReaction'
 // export { default as AddRoad } from './AddRoad'

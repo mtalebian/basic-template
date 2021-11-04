@@ -28,6 +28,9 @@ namespace Accounts.Controllers
         public const string PasswordIsRequired = "مقدار گذرواژه را وارد كنيد";
         public const string InvalidOldPassword = "مقدار گذرواژه قبلي صحيح نيست";
         #endregion
+        #region Authorization
+        public const string DuplicateRole = "اين نقش قبلا ثبت شده است";
+        #endregion
 
     }
 }

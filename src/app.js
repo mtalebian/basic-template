@@ -40,6 +40,7 @@ import { FormDesignerApp } from "./views/admin/form-designer/form-designer-app";
 import { TableDesignerApp } from "./views/admin/table-designer/table-designer-app";
 import { UserSettingsApp } from "./views/account/user-settings-app";
 import { UsersApp } from "./views/admin/users/users-app";
+import { RolesApp } from "./views/admin/roles/roles-app";
 import { UserProfile } from "./views/account/user-profile";
 
 export function App() {
@@ -74,6 +75,8 @@ export function App() {
         <AzRoute exact path="/admin/tables" render={() => <MainLayout component={TablesApp} />} />
 
         <AzRoute exact path="/admin/users" render={() => <MainLayout component={UsersApp} />} />
+        
+        <AzRoute exact path="/admin/roles" render={() => <MainLayout component={RolesApp} />} />
 
         <AzRoute exact path="/home" render={() => <MainLayout component={LunchpadApp} />} />
 

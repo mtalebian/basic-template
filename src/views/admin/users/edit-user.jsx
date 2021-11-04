@@ -12,13 +12,27 @@ import classNames from "classnames";
 
 export const EditUser = ({ userId, onGoBack }) => {
   const { t } = useTranslation();
-  const titlePage = !userId ? "New-Uesr" : "Edit-User";
+  const insertMode = !userId;
+  const titlePage = insertMode ? "New-Uesr" : "Edit-User";
   const [busy, setBusy] = useState(false);
   const [user, setUser] = useState(null);
   const [deleting, setDeleting] = useState(false);
   const [activeTab, setActiveTab] = useState("first");
   const formRef = useRef();
   const [windowsAuth, setAuthType] = useState("true");
+  const initialValue = insertMode
+    ? {
+        firstName: "",
+        lastName: "",
+        userName: "",
+        nationalCode: "",
+        email: "",
+        password: "",
+        repeatePassword: "",
+        phoneNumber: "",
+        windowsAuthenticate: true,
+      }
+    : user;
 
   useEffect(() => {
     if (userId != null && user == null) {
@@ -87,29 +101,53 @@ export const EditUser = ({ userId, onGoBack }) => {
   };
   const UserForm = () => {
     return (
-      <Form>
-        <div className="row">
-          <div className="col-md-12">
-            <Tab.Container defaultActiveKey={activeTab}>
-              <bd.AppBar color="default" shadow="0" color="inherit">
-                <bd.TabStrip shade="primary" indicatorColor="primary">
-                  <bd.TabStripItem eventKey="first">{t("general-info-tab")}</bd.TabStripItem>
-                  {!user && <bd.TabStripItem eventKey="second">{t("authentication-type-tab")}</bd.TabStripItem>}
-                  <bd.TabStripItem eventKey="third">{t("role-manage-tab")}</bd.TabStripItem>
-                </bd.TabStrip>
-              </bd.AppBar>
-              <Tab.Content className="mt-4">
-                <Tab.Pane eventKey="first">
-                  <GeneralUserInfo />
-                </Tab.Pane>
-                <Tab.Pane eventKey="second">
-                  <AuthenticationType />
-                </Tab.Pane>
-              </Tab.Content>
-            </Tab.Container>
-          </div>
-        </div>
-      </Form>
+      <>
+        <Formik
+          initialValues={initialValue}
+          validationSchema={yup.object({
+            firstName: yup.string().required("required"),
+            lastName: yup.string().required("required"),
+            userName: yup.string().required("required"),
+            nationalCode: yup.string().required("required"),
+            email: yup.string().email("email not valid"),
+            password: yup.string().when("windowsAuthenticate", {
+              is: (value) => value == "false",
+              then: yup.string().required("required"),
+            }),
+            repeatePassword: yup.string().when("password", {
+              is: (value) => value && value.length > 0,
+              then: yup.string().required("required"),
+            }),
+            phoneNumber: yup.string().matches(/^[0-9]{11}$/, "Must be exactly 11 digits"),
+          })}
+          onSubmit={onSaveClick}
+          innerRef={formRef}
+        >
+          <Form>
+            <div className="row">
+              <div className="col-md-12">
+                <Tab.Container defaultActiveKey={activeTab}>
+                  <bd.AppBar color="default" shadow="0" color="inherit">
+                    <bd.TabStrip shade="primary" indicatorColor="primary">
+                      <bd.TabStripItem eventKey="first">{t("general-info-tab")}</bd.TabStripItem>
+                      {!user && <bd.TabStripItem eventKey="second">{t("authentication-type-tab")}</bd.TabStripItem>}
+                      <bd.TabStripItem eventKey="third">{t("role-manage-tab")}</bd.TabStripItem>
+                    </bd.TabStrip>
+                  </bd.AppBar>
+                  <Tab.Content className="mt-4">
+                    <Tab.Pane eventKey="first">
+                      <GeneralUserInfo />
+                    </Tab.Pane>
+                    <Tab.Pane eventKey="second">
+                      <AuthenticationType />
+                    </Tab.Pane>
+                  </Tab.Content>
+                </Tab.Container>
+              </div>
+            </div>
+          </Form>
+        </Formik>
+      </>
     );
   };
   const GeneralUserInfo = () => {
@@ -205,66 +243,7 @@ export const EditUser = ({ userId, onGoBack }) => {
       </div>
 
       <div className="container">
-        {user && (
-          <Formik
-            initialValues={user}
-            validationSchema={yup.object({
-              firstName: yup.string().required("required"),
-              lastName: yup.string().required("required"),
-              userName: yup.string().required("required"),
-              nationalCode: yup.string().required("required").nullable(true),
-              email: yup.string().email("email not valid").nullable(true),
-              // password: yup.string().when("windowsAuthenticate", {
-              //   is: (value) => value == "false",
-              //   then: yup.string().required("required"),
-              // }),
-              // repeatePassword: yup.string().when("password", {
-              //   is: (value) => value && value.length > 0,
-              //   then: yup.string().required("required"),
-              // }),
-              phoneNumber: yup.string().matches(/^[0-9]{11}$/, "Must be exactly 11 digits").nullable(true),
-            })}
-            onSubmit={onSaveClick}
-            innerRef={formRef}
-          >
-            <UserForm />
-          </Formik>
-        )}
-        {!user && (
-          <Formik
-            initialValues={{
-              firstName: "",
-              lastName: "",
-              userName: "",
-              nationalCode: "",
-              email: "",
-              password: "",
-              repeatePassword: "",
-              phoneNumber: "",
-              windowsAuthenticate: true,
-            }}
-            validationSchema={yup.object({
-              firstName: yup.string().required("required"),
-              lastName: yup.string().required("required"),
-              userName: yup.string().required("required"),
-              nationalCode: yup.string().required("required"),
-              email: yup.string().email("email not valid"),
-              password: yup.string().when("windowsAuthenticate", {
-                is: (value) => value == "false",
-                then: yup.string().required("required"),
-              }),
-              repeatePassword: yup.string().when("password", {
-                is: (value) => value && value.length > 0,
-                then: yup.string().required("required"),
-              }),
-              phoneNumber: yup.string().matches(/^[0-9]{11}$/, "Must be exactly 11 digits"),
-            })}
-            onSubmit={onSaveClick}
-            innerRef={formRef}
-          >
-            <UserForm />
-          </Formik>
-        )}
+        <UserForm />
       </div>
     </div>
   );

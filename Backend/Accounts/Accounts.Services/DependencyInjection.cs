@@ -24,6 +24,10 @@ namespace Microsoft.Extensions.DependencyInjection
         {
             services.AddScoped<IUserManagementService, UserManagementService>();
         }
+        public static void AddAuthorizationService<TUser>(this IServiceCollection services) where TUser : User
+        {
+            services.AddScoped<IAuthorizationService<TUser>, AuthorizationService<TUser>>();
+        }
 
     }
 }
