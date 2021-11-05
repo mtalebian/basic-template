@@ -1,6 +1,8 @@
 import React from "react";
 import * as bd2 from "./index.js";
+import * as bd from "react-basic-design";
 import * as icons from "../../assets/icons";
+import { FormRow } from "./form-row.jsx";
 //import { useField } from "formik";
 
 export function FormikTest() {
@@ -8,7 +10,7 @@ export function FormikTest() {
     return (
         <>
             <bd2.FormikForm
-                initialValues={{ status: 1, firstName: "Mahdi", lastName: "Talebian", age: 10 }}
+                initialValues={{ status: 1, firstName: "Mahdi", lastName: "Talebian", age: 10, comments: "this is textarea" }}
                 onSubmit={(values) => alert("submited")}
                 dense
                 className="pt-3 p-s-3"
@@ -35,19 +37,82 @@ const GeneralTest = () => {
         <>
             <bd2.FormikInput label="First Name" name="firstName" width="12rem" />
             <bd2.FormikInput label="Last Name" name="lastName" width="12rem" />
-            <bd2.FormikInput label="Age" name="age" width="12rem" type="number" />
+            <bd2.FormikInput label="Age" name="age" width="5rem" type="number" />
             <bd2.FormikInput
                 label="Status"
                 name="status"
-                width="12rem"
-                menu={[
+                width="7rem"
+                items={[
                     { id: 1, title: "SINGLE" },
                     { id: 2, title: "MARRIED" },
                 ]}
                 type="select"
             />
-            <bd2.FormikSwitch label="I Agree" name="agree" width="auto" className="p-e-3" dense size="sm" readOnly />
-            <bd2.FormikToggle label="readOnly not works" name="remember" width="auto" size="sm" className="p-e-3" dense readOnly />
+            <bd2.FormikSwitch label="I Agree" name="agree" width="auto" className="p-e-3" dense size="sm" />
+            <bd2.FormikToggle label="readOnly" name="remember" width="auto" size="sm" className="p-e-0" dense readOnly />
+            <bd2.FormikInput label="type = label" name="firstName" width="9rem" type="label" inputClassName="bg-transparent" />
+            <bd2.FormikTextArea label="comments" name="comments" width="12rem" height="5rem" type="label" inputClassName="bg-transparent" />
+
+            <bd2.FormikInput
+                type="text"
+                label="company"
+                name="company"
+                width="12rem"
+                //menuTitle={<span title="22 more condition exists">+(22)</span>}
+                menuTitle={<icons.Filter3 style={{ fontSize: "1rem" }} />}
+                buttonTitle={<icons.OpenInNew style={{ fontSize: "1rem" }} />}
+                buttonOnClick={() => alert("clicked")}
+                items={[
+                    { id: 110, title: "one" },
+                    { id: 120, title: "two" },
+                    { id: 130, title: "three" },
+                ]}
+                menu={[
+                    { id: 10, title: "value 10" },
+                    { id: 20, title: "value 20" },
+                    { id: 30, title: "value 30" },
+                    { id: 40, title: "value 40" },
+                    { id: 50, title: "value 50" },
+                ].map((x) => (
+                    <div
+                        key={x.id}
+                        className="bd-dropdown-item d-flex "
+                        onClick={(e) => {
+                            alert(x.id);
+                        }}
+                    >
+                        <span className="flex-grow-1">{x.title}</span>
+                        <bd.Button
+                            type="button"
+                            variant="text"
+                            size="sm"
+                            color="primary"
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                alert(`close ${x.id}`);
+                            }}
+                            className="my-n1 m-e-n2"
+                        >
+                            <icons.Close className="size-sm" />
+                        </bd.Button>
+                    </div>
+                ))}
+            />
+
+            <FormRow label="">
+                <div>
+                    <bd.Button color="primary" type="button">
+                        SAVE
+                    </bd.Button>
+                </div>
+            </FormRow>
+            <FormRow label="" className="flex-grow-1 text-end">
+                <div>
+                    <bd.Button variant="outline" color="secondary" type="button">
+                        DELETE
+                    </bd.Button>
+                </div>
+            </FormRow>
         </>
     );
 };
@@ -55,12 +120,10 @@ const GeneralTest = () => {
 const DropDownTest = () => {
     return (
         <>
-            <bd2.FormikInput label="text" name="status" width="12rem" />
-
             <bd2.FormikInput
                 label="array if {id, title}"
                 name="status"
-                menu={[
+                items={[
                     { id: 1, title: "one" },
                     { id: 2, title: "tow" },
                     { id: 3, title: "three" },
@@ -69,15 +132,17 @@ const DropDownTest = () => {
                 ]}
                 width="12rem"
                 type="number"
+                menuTitle="+2"
+                buttonTitle={<icons.MoreHoriz />}
             />
 
-            <bd2.FormikInput label="array of numbers" name="status" menu={[1, 2, 3, 4, 5]} width="12rem" type="number" />
-            <bd2.FormikInput label="array of strings" name="status" menu={["1", "2", "3", "4"]} width="12rem" />
+            <bd2.FormikInput label="array of numbers" name="status" items={[1, 2, 3, 4, 5]} width="12rem" type="number" />
+            <bd2.FormikInput label="array of strings" name="status" items={["1", "2", "3", "4"]} width="12rem" />
 
             <bd2.FormikInput
                 label="readOnly"
                 name="status"
-                menu={[
+                items={[
                     { id: 1, title: "one" },
                     { id: 2, title: "tow" },
                     { id: 3, title: "three" },
@@ -91,7 +156,7 @@ const DropDownTest = () => {
                 type="label"
                 label="type = label"
                 name="status"
-                menu={[
+                items={[
                     { id: 1, title: "one" },
                     { id: 2, title: "tow" },
                     { id: 3, title: "three" },
@@ -103,7 +168,7 @@ const DropDownTest = () => {
                 type="select"
                 label="type = select"
                 name="status"
-                menu={[
+                items={[
                     { id: 1, title: "one" },
                     { id: 2, title: "tow" },
                     { id: 3, title: "three" },
@@ -115,7 +180,7 @@ const DropDownTest = () => {
                 type="select"
                 label="type = select & readOnly"
                 name="status"
-                menu={[
+                items={[
                     { id: 1, title: "one" },
                     { id: 2, title: "tow" },
                     { id: 3, title: "three" },
@@ -128,6 +193,7 @@ const DropDownTest = () => {
             <bd2.FormikInput
                 label="type = select & custom menu"
                 name="status"
+                menuTitle="more"
                 menu={[
                     { id: 10, title: "one" },
                     { id: 20, title: "tow" },
@@ -147,6 +213,7 @@ const DropDownTest = () => {
             <bd2.FormikInput
                 label="type = text & custom menu"
                 name="status"
+                menuTitle="more"
                 menu={[
                     { id: 10, title: "one" },
                     { id: 20, title: "tow" },

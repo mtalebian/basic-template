@@ -14,9 +14,12 @@ export const FormikInput = ({
     inputClassName,
     autoComplete,
 
-    buttonIcon,
+    buttonTitle,
     buttonOnClick,
 
+    items,
+
+    menuTitle,
     menu,
     onOpeningMenu,
 
@@ -26,27 +29,29 @@ export const FormikInput = ({
     style,
 
     readOnly,
+    children,
     ...props
 }) => {
-    const isSelect = type === "select";
+    const isSelect = type === "select" || (!type && items);
     const isLabel = type === "label";
     const inputRef = useRef();
+    const [isListOpen, setIsListOpen] = useState(false);
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     let [field, meta, helper] = useField({ ...props, type });
-
-    //if (!field.value) field.value = "";
 
     if (!type) type = "text";
     if (!autoComplete) autoComplete = "off";
     if (label && id === undefined) id = props.name;
 
     const buttons = [];
-    if (buttonIcon) buttons.push({ icon: buttonIcon, action: buttonOnClick, isBtn: true });
-    if (menu) buttons.push({ icon: <icons.ArrowDropDown />, action: onToggleDropDown, isBtn: !isSelect });
+    if (buttonTitle) buttons.push({ icon: buttonTitle, action: buttonOnClick, isBtn: true });
+    if (menuTitle) buttons.push({ icon: menuTitle, action: onToggleMenu, isBtn: !isSelect });
+    if (items) buttons.push({ icon: <icons.ArrowDropDown />, action: onToggleList, isBtn: !isSelect });
 
     const cnInput = classNames("form-control", inputClassName, {
         "has-1-btn": buttons.length === 1,
         "has-2-btn": buttons.length === 2,
+        "has-3-btn": buttons.length === 3,
         "cur-default": type === "label" || isSelect,
         "form-input-label": type === "label",
         "form-readonly": readOnly,
@@ -55,48 +60,65 @@ export const FormikInput = ({
 
     function onKeyDown(e) {
         const UP = 38;
-        const LEFT = 37;
-        const RIGHT = 39;
         const DOWN = 40;
         const ENTER = 13;
 
-        if (!readOnly && isSelect && Array.isArray(menu)) {
+        if (!readOnly && Array.isArray(items)) {
             if (e.keyCode === ENTER) {
-                onToggleDropDown();
+                onToggleList();
                 return;
             }
             let delta = e.keyCode === UP ? -1 : e.keyCode === DOWN ? 1 : 0;
-            let idx = selectedItemIndex + delta;
-            if (idx >= 0 && idx < menu.length) helper.setValue(getValue(menu[idx]));
+            if (delta !== 0) {
+                let idx = selectedItemIndex + delta;
+                if (idx >= 0 && idx < items.length) selectItem(items[idx]);
+            }
         }
-    }
-
-    function onToggleDropDown() {
-        var is_open = !isMenuOpen;
-        if (is_open && onOpeningMenu) onOpeningMenu();
-        setIsMenuOpen(is_open);
-        if (inputRef.current) inputRef.current.focus();
     }
 
     const getValue = (item) => (typeof item !== "object" ? item : "id" in item ? item["id"] : "code" in item ? item["code"] : item);
     const getText = (item) => (typeof item !== "object" ? item : "title" in item ? item["title"] : item);
-    const selectedItemIndex = !Array.isArray(menu) ? -1 : menu.findIndex((x) => field.value === getValue(x));
+    const selectedItemIndex = !Array.isArray(items) ? -1 : items.findIndex((x) => getValue(x) === field.value);
 
-    if (isSelect && Array.isArray(menu)) {
+    function onToggleList() {
+        if (isMenuOpen) setIsMenuOpen(false);
+        var is_open = !isListOpen;
+        setIsListOpen(is_open);
+        inputRef.current?.focus();
+    }
+
+    function onToggleMenu() {
+        if (isListOpen) setIsListOpen(false);
+        var is_open = !isMenuOpen;
+        if (is_open && onOpeningMenu) onOpeningMenu();
+        setIsMenuOpen(is_open);
+        inputRef.current?.focus();
+    }
+
+    function closeAll() {
+        if (isListOpen) setIsListOpen(false);
+        if (isMenuOpen) setIsMenuOpen(false);
+    }
+
+    if (isSelect && Array.isArray(items)) {
         var value = field.value;
-        var item = menu.find((x) => value === getValue(x));
-        field = { value: !item ? "" : getText(item), onKeyDown };
+        var item = items.find((x) => getValue(x) === value);
+        field = { value: !item ? "" : getText(item) };
+    }
+
+    if (Array.isArray(items)) {
+        field = { ...field, onKeyDown };
     }
 
     const selectItem = (item) => {
         if (!readOnly) helper.setValue(getValue(item));
-        if (inputRef.current) inputRef.current.focus();
+        inputRef.current?.focus();
     };
 
-    function buildMenu() {
+    function buildList() {
         if (readOnly || isLabel) return null;
-        if (menu && Array.isArray(menu) && menu.length > 0 && !React.isValidElement(menu[0]))
-            return menu.map((x, xIndex) => (
+        if (Array.isArray(items))
+            return items.map((x, xIndex) => (
                 <div
                     key={getValue(x)}
                     className={classNames("bd-dropdown-item", { active: xIndex === selectedItemIndex })}
@@ -105,16 +127,14 @@ export const FormikInput = ({
                     {getText(x)}
                 </div>
             ));
-        return menu;
+        return items;
     }
 
-    const close = () => isMenuOpen && setIsMenuOpen(false);
-
     useEffect(() => {
-        if (!isMenuOpen) return;
-        window.addEventListener("click", close);
+        if (!isListOpen && !isMenuOpen) return;
+        window.addEventListener("click", closeAll);
         return () => {
-            window.removeEventListener("click", close);
+            window.removeEventListener("click", closeAll);
         };
     });
 
@@ -125,13 +145,13 @@ export const FormikInput = ({
 
     if (isSelect) {
         type = "text";
-        field["onClick"] = onToggleDropDown;
+        field["onClick"] = onToggleList;
     }
 
     var inp = (
         <div className="bd-input">
             {buttons.map((x, index) => (
-                <span key={index} className={"icon1 size-md " + (x.isBtn ? "icon-btn" : "cur-default")} onClick={x.action}>
+                <span key={index} className={`btn${index + 1} size-md ` + (x.isBtn ? "icon-btn" : "cur-default")} onClick={x.action}>
                     {x.icon}
                 </span>
             ))}
@@ -148,7 +168,8 @@ export const FormikInput = ({
                 readOnly={readOnly || isSelect}
             />
 
-            {isMenuOpen && menu && <div className="bd-dropdown-menu">{buildMenu()}</div>}
+            {isListOpen && items && <div className="bd-dropdown-menu">{buildList()}</div>}
+            {isMenuOpen && menu && <div className="bd-dropdown-menu">{menu}</div>}
         </div>
     );
 
@@ -160,6 +181,7 @@ export const FormikInput = ({
     return (
         <FormRow label={label} labelSize={labelSize} htmlFor={id} className={className} style={{ ...style, maxWidth, width }}>
             {inp}
+            {children}
         </FormRow>
     );
 };

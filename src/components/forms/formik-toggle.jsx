@@ -8,14 +8,16 @@ export const FormikToggle = ({ label, labelSize, id, className, width, maxWidth,
 
     if (label && id === undefined) id = props.name;
 
-    var inp = <bd.Toggle id={id} model={field.value} setModel0={!readOnly && helper.setValue} {...props} color="primary" readOnly />;
+    console.log("props", props);
 
-    console.log(field.value);
+    var inp = (
+        <bd.Toggle id={id} model={!!field.value} setModel={!readOnly && helper.setValue} {...props} color="primary" readOnly={readOnly} />
+    );
 
     if (label === null || label === undefined) return inp;
     return (
         <FormRow label={label} labelSize={labelSize} htmlFor={id} className={className} style={{ ...style, maxWidth, width }}>
-            <div style={{ marginTop: -3 }}>{inp}</div>
+            <div style={{ margin: -3 }}>{inp}</div>
         </FormRow>
     );
 };

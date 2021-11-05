@@ -651,25 +651,25 @@ export { default as Edit } from "./Edit";
 // export { default as FileDownloadOff } from './FileDownloadOff'
 // export { default as FilePresent } from './FilePresent'
 // export { default as FileUpload } from './FileUpload'
-// export { default as Filter } from './Filter'
-// export { default as Filter1 } from './Filter1'
-// export { default as Filter2 } from './Filter2'
-// export { default as Filter3 } from './Filter3'
-// export { default as Filter4 } from './Filter4'
-// export { default as Filter5 } from './Filter5'
-// export { default as Filter6 } from './Filter6'
-// export { default as Filter7 } from './Filter7'
-// export { default as Filter8 } from './Filter8'
-// export { default as Filter9 } from './Filter9'
-// export { default as Filter9Plus } from './Filter9Plus'
+export { default as Filter } from "./Filter";
+export { default as Filter1 } from "./Filter1";
+export { default as Filter2 } from "./Filter2";
+export { default as Filter3 } from "./Filter3";
+export { default as Filter4 } from "./Filter4";
+export { default as Filter5 } from "./Filter5";
+export { default as Filter6 } from "./Filter6";
+export { default as Filter7 } from "./Filter7";
+export { default as Filter8 } from "./Filter8";
+export { default as Filter9 } from "./Filter9";
+export { default as Filter9Plus } from "./Filter9Plus";
 export { default as FilterAlt } from "./FilterAlt";
 // export { default as FilterBAndW } from './FilterBAndW'
 // export { default as FilterCenterFocus } from './FilterCenterFocus'
 // export { default as FilterDrama } from './FilterDrama'
 // export { default as FilterFrames } from './FilterFrames'
 // export { default as FilterHdr } from './FilterHdr'
-// export { default as FilterList } from './FilterList'
-// export { default as FilterNone } from './FilterNone'
+export { default as FilterList } from "./FilterList";
+export { default as FilterNone } from "./FilterNone";
 // export { default as FilterTiltShift } from './FilterTiltShift'
 // export { default as FilterVintage } from './FilterVintage'
 // export { default as FindInPage } from './FindInPage'
@@ -1074,8 +1074,8 @@ export { default as Login } from "./Login";
 // export { default as Mood } from './Mood'
 // export { default as MoodBad } from './MoodBad'
 // export { default as Moped } from './Moped'
-// export { default as More } from './More'
-// export { default as MoreHoriz } from './MoreHoriz'
+export { default as More } from "./More";
+export { default as MoreHoriz } from "./MoreHoriz";
 // export { default as MoreTime } from './MoreTime'
 export { default as MoreVert } from "./MoreVert";
 // export { default as Mosque } from './Mosque'
@@ -1552,7 +1552,7 @@ export { default as Settings } from "./Settings";
 // export { default as Snowshoeing } from './Snowshoeing'
 // export { default as Soap } from './Soap'
 // export { default as SocialDistance } from './SocialDistance'
-// export { default as Sort } from './Sort'
+export { default as Sort } from "./Sort";
 // export { default as SortByAlpha } from './SortByAlpha'
 // export { default as SoupKitchen } from './SoupKitchen'
 // export { default as Source } from './Source'

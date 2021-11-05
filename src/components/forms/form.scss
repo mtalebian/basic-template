@@ -31,12 +31,13 @@
 
 /***/
 .bd-input {
-    $icon-width: 32px;
+    $btn-width: 32px;
 
     position: relative;
 
-    .icon1,
-    .icon2 {
+    .btn1,
+    .btn2,
+    .btn3 {
         position: absolute;
         width: 32px;
         top: 1px;
@@ -44,25 +45,35 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        font-size: 10px;
+        font-size: 0.875rem;
         cursor: pointer;
+        white-space: nowrap;
+        overflow: hidden;
 
         @include positionEnd(1px);
     }
 
-    .icon2 {
-        @include positionEnd($icon-width + 1px);
+    .btn2 {
+        @include positionEnd($btn-width + 1px);
+    }
+
+    .btn3 {
+        @include positionEnd($btn-width * 2 + 1px);
     }
 
     .form-control {
         color: currentColor;
 
         &.has-1-btn {
-            @include paddingEnd($icon-width);
+            @include paddingEnd($btn-width);
         }
 
         &.has-2-btn {
-            @include paddingEnd($icon-width * 2);
+            @include paddingEnd($btn-width * 2);
+        }
+
+        &.has-3-btn {
+            @include paddingEnd($btn-width * 3);
         }
 
         &::placeholder {
@@ -81,12 +92,31 @@
     .bd-form-row {
         @include marginEnd(1rem);
     }
+
+    .bd-form-row {
+        .switch.dense {
+            .switch-thumb:before {
+                left: 8px;
+                right: 8px;
+                top: 8px;
+                bottom: 8px;
+            }
+            & input + span + span {
+                width: 32px;
+                height: 32px;
+            }
+        }
+    }
 }
 
 .bd-form-dense {
     .form-control {
         height: 1.75rem;
         @include paddingStart(8px);
+    }
+
+    & > .btn {
+        height: 1.75rem;
     }
 
     .btn {
@@ -97,10 +127,7 @@
 .form-control.densed {
     height: 1.75rem;
 }
-
-.btn.densed {
-    height: 1.75rem;
-}*/
+*/
 
 /*******************/
 @mixin basicForm($palette) {
@@ -116,7 +143,6 @@
     $error: map-get($palette, error, main);
 
     $border: mix($bg, $text, 70%);
-    //$icon: mix($text, $primary, 30%);
     $icon: $primary-dark;
     $active: mix($bg, $primary, 75%);
 
@@ -127,6 +153,8 @@
     }
 
     .bd-dropdown-item {
+        align-items: center;
+
         &:hover {
             background-color: rgba($text, 5%);
         }
@@ -144,8 +172,9 @@
             border-color: $primary;
         }
 
-        .icon1,
-        .icon2 {
+        .btn1,
+        .btn2,
+        .btn3 {
             color: $icon;
         }
 
