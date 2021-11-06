@@ -21,7 +21,7 @@ export function FormikTest() {
             <hr />
 
             <bd2.FormikForm
-                initialValues={{ name: "Mahdi", age: 10, status: [2] }}
+                initialValues={{ name: "Mahdi", age: 10, status: [2], filter: ["=1", ">2", "<3", "1...2", "*a", "bb*"] }}
                 onSubmit={(values) => alert(JSON.stringify(values, null, 2))}
                 dense
                 className="pt-3 p-s-3"
@@ -46,6 +46,8 @@ export function FormikTest() {
 const FilterDemo = () => {
     return (
         <>
+            <Filter type="text" label="filter" name="filter" width="12rem" />
+
             <bd2.FormikInput label="Name" name="name" width="10rem" />
             <bd2.FormikInput label="Age" name="age" width="10rem" type="number" />
             <bd2.FormikInput
@@ -80,8 +82,6 @@ const FilterDemo = () => {
                     { id: 2001, title: "PLANT 2001" },
                 ]}
             />
-
-            <Filter type="text" label="complex" name="complex" width="12rem" />
 
             <bd2.FormikSwitch label="I Agree" name="agree" width="auto" className="p-e-3" dense size="sm" />
 

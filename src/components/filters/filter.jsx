@@ -43,12 +43,12 @@ export const Filter = ({
     const menu = !Array.isArray(values) ? (
         <></>
     ) : (
-        values.map((x) => (
+        values.map((x, xIndex) => (
             <div
                 key={x}
                 className="bd-dropdown-item d-flex "
                 onClick={(e) => {
-                    alert(x.id);
+                    setNameIndex(xIndex);
                 }}
             >
                 <span className="flex-grow-1">{x}</span>
