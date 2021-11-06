@@ -10,23 +10,32 @@
 .bd-dropdown-menu {
     position: absolute;
     z-index: 10;
-    width: 100%;
-    max-height: 215px;
+    min-width: 100%;
+    max-height: 250px;
     border: 1px solid rgb(223, 223, 223);
     border-top: none;
     border-bottom-left-radius: 3px;
     border-bottom-right-radius: 3px;
-    text-align: left;
+
     -webkit-overflow-scrolling: touch;
+    overflow-y: auto;
+
+    .form-control {
+        position: sticky;
+        top: 0;
+        border-radius: 0;
+        border-top: none;
+        border-left: none;
+        border-right: none;
+        z-index: 1;
+    }
 }
 
 .bd-dropdown-item {
-    padding: 0.25rem 0.75rem;
+    padding: 0.25rem 0.5rem;
     cursor: default;
-
-    &.active {
-        //font-weight: 700;
-    }
+    white-space: nowrap;
+    overflow: hidden;
 }
 
 /***/
@@ -35,9 +44,7 @@
 
     position: relative;
 
-    .btn1,
-    .btn2,
-    .btn3 {
+    .icon-btn {
         position: absolute;
         width: 32px;
         top: 1px;
@@ -49,7 +56,10 @@
         cursor: pointer;
         white-space: nowrap;
         overflow: hidden;
+        border-radius: 3px;
+    }
 
+    .btn1 {
         @include positionEnd(1px);
     }
 
@@ -150,6 +160,10 @@
         border-color: $divider;
         box-shadow: $bd-shadow-3;
         background-color: $bg;
+
+        .form-control {
+            background-color: $bg;
+        }
     }
 
     .bd-dropdown-item {

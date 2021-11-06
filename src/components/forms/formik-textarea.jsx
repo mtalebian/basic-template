@@ -16,11 +16,13 @@ export const FormikTextArea = ({
     height,
     maxWidth,
     style,
+    autoComplete,
+    spellCheck,
 
     readOnly,
     ...props
 }) => {
-    let [field, meta, helper] = useField({ ...props });
+    let [field, meta] = useField({ ...props });
 
     if (label && id === undefined) id = props.name;
 
@@ -28,6 +30,9 @@ export const FormikTextArea = ({
         "form-readonly": readOnly,
         "bd-border-error": meta.error,
     });
+
+    if (!autoComplete) autoComplete = "off";
+    if (!spellCheck) spellCheck = "false";
 
     var inp = (
         <textarea
@@ -38,6 +43,8 @@ export const FormikTextArea = ({
             {...props}
             readOnly={readOnly}
             style={{ ...inputStyle, height }}
+            spellCheck={spellCheck}
+            autoComplete={autoComplete}
         ></textarea>
     );
 

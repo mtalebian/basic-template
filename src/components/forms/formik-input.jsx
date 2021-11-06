@@ -2,6 +2,7 @@ import classNames from "classnames";
 import { useField } from "formik";
 import React, { useEffect, useRef, useState } from "react";
 import { FormRow } from "./form-row";
+import * as bd from "react-basic-design";
 import * as icons from "../../assets/icons";
 
 export const FormikInput = ({
@@ -18,6 +19,10 @@ export const FormikInput = ({
     buttonOnClick,
 
     items,
+    multiSelect,
+    showValues,
+    filterable,
+    autoGrow,
 
     menuTitle,
     menu,
@@ -29,15 +34,16 @@ export const FormikInput = ({
     style,
 
     readOnly,
-    children,
     ...props
 }) => {
     const isSelect = type === "select" || (!type && items);
     const isLabel = type === "label";
     const inputRef = useRef();
+    const [filter, setFilter] = useState();
     const [isListOpen, setIsListOpen] = useState(false);
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     let [field, meta, helper] = useField({ ...props, type });
+    let displayValue = field.value;
 
     if (!type) type = "text";
     if (!autoComplete) autoComplete = "off";
@@ -46,7 +52,7 @@ export const FormikInput = ({
     const buttons = [];
     if (buttonTitle) buttons.push({ icon: buttonTitle, action: buttonOnClick, isBtn: true });
     if (menuTitle) buttons.push({ icon: menuTitle, action: onToggleMenu, isBtn: !isSelect });
-    if (items) buttons.push({ icon: <icons.ArrowDropDown />, action: onToggleList, isBtn: !isSelect });
+    if (items) buttons.push({ icon: <icons.ArrowDropDown />, action: onToggleSelect, isBtn: !isSelect });
 
     const cnInput = classNames("form-control", inputClassName, {
         "has-1-btn": buttons.length === 1,
@@ -63,9 +69,9 @@ export const FormikInput = ({
         const DOWN = 40;
         const ENTER = 13;
 
-        if (!readOnly && Array.isArray(items)) {
+        if (!multiSelect && !readOnly && Array.isArray(items)) {
             if (e.keyCode === ENTER) {
-                onToggleList();
+                onToggleSelect();
                 return;
             }
             let delta = e.keyCode === UP ? -1 : e.keyCode === DOWN ? 1 : 0;
@@ -78,12 +84,14 @@ export const FormikInput = ({
 
     const getValue = (item) => (typeof item !== "object" ? item : "id" in item ? item["id"] : "code" in item ? item["code"] : item);
     const getText = (item) => (typeof item !== "object" ? item : "title" in item ? item["title"] : item);
-    const selectedItemIndex = !Array.isArray(items) ? -1 : items.findIndex((x) => getValue(x) === field.value);
+    const getDisplayText = (item) => (showValues ? getValue(item) : getText(item));
+    const selectedItemIndex = multiSelect || !Array.isArray(items) ? -1 : items.findIndex((x) => getValue(x) === field.value);
 
-    function onToggleList() {
+    function onToggleSelect() {
         if (isMenuOpen) setIsMenuOpen(false);
         var is_open = !isListOpen;
         setIsListOpen(is_open);
+        setFilter("");
         inputRef.current?.focus();
     }
 
@@ -103,7 +111,18 @@ export const FormikInput = ({
     if (isSelect && Array.isArray(items)) {
         var value = field.value;
         var item = items.find((x) => getValue(x) === value);
-        field = { value: !item ? "" : getText(item) };
+        if (!multiSelect) displayValue = !item ? "" : getDisplayText(item);
+        else {
+            displayValue = "";
+            for (let i = 0; i < items.length; i++) {
+                const item = items[i];
+                var idx = getIndexOf(item);
+                if (idx >= 0) {
+                    if (displayValue) displayValue += ", ";
+                    displayValue += getDisplayText(item);
+                }
+            }
+        }
     }
 
     if (Array.isArray(items)) {
@@ -111,23 +130,59 @@ export const FormikInput = ({
     }
 
     const selectItem = (item) => {
-        if (!readOnly) helper.setValue(getValue(item));
+        var v = getValue(item);
+        if (!readOnly) {
+            if (!multiSelect) helper.setValue(v);
+            else {
+                var i = getIndexOf(item);
+                var values = Array.isArray(field.value) ? [...field.value] : [];
+                if (i === -1) values.push(v);
+                else values.splice(i, 1);
+                helper.setValue(values);
+                return;
+            }
+        }
         inputRef.current?.focus();
     };
 
+    function getIndexOf(item) {
+        var v = getValue(item);
+        if (!multiSelect) return getValue(field.value) === v ? 0 : -1;
+        if (!Array.isArray(field.value)) return -1;
+        for (let i = 0; i < field.value.length; i++) {
+            if (getValue(field.value[i]) === v) return i;
+        }
+        return -1;
+    }
+
     function buildList() {
         if (readOnly || isLabel) return null;
-        if (Array.isArray(items))
-            return items.map((x, xIndex) => (
+        if (!Array.isArray(items)) return items;
+        var _filter = filter?.toLowerCase();
+        return items
+            .filter(
+                (x) => !filter || (getValue(x) + "").toLowerCase().indexOf(_filter) >= 0 || getText(x)?.toLowerCase().indexOf(_filter) >= 0
+            )
+            .map((x, xIndex) => (
                 <div
                     key={getValue(x)}
-                    className={classNames("bd-dropdown-item", { active: xIndex === selectedItemIndex })}
-                    onClick={(e) => selectItem(x)}
+                    className={classNames("bd-dropdown-item d-flex flex-align-center", { active: getIndexOf(x) >= 0 })}
+                    onClick={(e) => {
+                        if (multiSelect) e.stopPropagation();
+                        selectItem(x);
+                    }}
                 >
-                    {getText(x)}
+                    {multiSelect &&
+                        (getIndexOf(x) === -1 ? (
+                            <icons.CheckBoxOutlineBlank className="text-secondary-text size-md" />
+                        ) : (
+                            <icons.CheckBox className="text-secondary-text size-md" />
+                        ))}
+                    <span className="m-s-1">
+                        {showValues && getValue(x) + " - "} {getText(x)}
+                    </span>
                 </div>
             ));
-        return items;
     }
 
     useEffect(() => {
@@ -145,13 +200,13 @@ export const FormikInput = ({
 
     if (isSelect) {
         type = "text";
-        field["onClick"] = onToggleList;
+        field["onClick"] = onToggleSelect;
     }
 
     var inp = (
         <div className="bd-input">
             {buttons.map((x, index) => (
-                <span key={index} className={`btn${index + 1} size-md ` + (x.isBtn ? "icon-btn" : "cur-default")} onClick={x.action}>
+                <span key={index} className={`btn${index + 1} size-md icon-btn`} onClick={x.action}>
                     {x.icon}
                 </span>
             ))}
@@ -165,23 +220,34 @@ export const FormikInput = ({
                 title={meta.error}
                 {...field}
                 {...props}
+                value={displayValue || ""}
                 readOnly={readOnly || isSelect}
             />
 
-            {isListOpen && items && <div className="bd-dropdown-menu">{buildList()}</div>}
+            {isListOpen && items && (
+                <div
+                    className={classNames("bd-dropdown-menu nano-scroll", { "w-100": !autoGrow, "border rounded": autoGrow })}
+                    style={{ marginTop: 1 }}
+                >
+                    {filterable && (
+                        <input
+                            value={filter || ""}
+                            onChange={(e) => setFilter(e.target.value)}
+                            onClick={(e) => e.stopPropagation()}
+                            className="form-control"
+                        />
+                    )}
+                    {buildList()}
+                </div>
+            )}
             {isMenuOpen && menu && <div className="bd-dropdown-menu">{menu}</div>}
         </div>
     );
-
-    if (trace) {
-        //console.log("> FormikInput > i:", selectedItemIndex, "v:", field.value);
-    }
 
     if (label === null || label === undefined) return inp;
     return (
         <FormRow label={label} labelSize={labelSize} htmlFor={id} className={className} style={{ ...style, maxWidth, width }}>
             {inp}
-            {children}
         </FormRow>
     );
 };

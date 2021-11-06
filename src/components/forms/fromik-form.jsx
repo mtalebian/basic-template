@@ -3,11 +3,6 @@ import classNames from "classnames";
 import { Form, Formik } from "formik";
 
 export const FormikForm = ({ initialValues, validationSchema, onSubmit, innerRef, validate, className, dense, children }) => {
-    function logger() {
-        console.log("> FormikForm > Formik");
-        return null;
-    }
-
     return (
         <Formik
             initialValues={initialValues}
@@ -21,7 +16,6 @@ export const FormikForm = ({ initialValues, validationSchema, onSubmit, innerRef
                     "bd-form-dense": dense,
                 })}
             >
-                {logger()}
                 {children}
             </Form>
         </Formik>

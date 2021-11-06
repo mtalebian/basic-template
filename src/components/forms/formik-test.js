@@ -3,19 +3,30 @@ import * as bd2 from "./index.js";
 import * as bd from "react-basic-design";
 import * as icons from "../../assets/icons";
 import { FormRow } from "./form-row.jsx";
+import { Filter } from "../filters/filter.jsx";
 //import { useField } from "formik";
 
 export function FormikTest() {
-    console.log("> FormikTest");
     return (
         <>
             <bd2.FormikForm
                 initialValues={{ status: 1, firstName: "Mahdi", lastName: "Talebian", age: 10, comments: "this is textarea" }}
-                onSubmit={(values) => alert("submited")}
+                onSubmit={(values) => alert(JSON.stringify(values, null, 2))}
                 dense
                 className="pt-3 p-s-3"
             >
-                <GeneralTest />
+                <FormDemo />
+            </bd2.FormikForm>
+
+            <hr />
+
+            <bd2.FormikForm
+                initialValues={{ name: "Mahdi", age: 10, status: [2] }}
+                onSubmit={(values) => alert(JSON.stringify(values, null, 2))}
+                dense
+                className="pt-3 p-s-3"
+            >
+                <FilterDemo />
             </bd2.FormikForm>
 
             <hr />
@@ -32,13 +43,71 @@ export function FormikTest() {
     );
 }
 
-const GeneralTest = () => {
+const FilterDemo = () => {
+    return (
+        <>
+            <bd2.FormikInput label="Name" name="name" width="10rem" />
+            <bd2.FormikInput label="Age" name="age" width="10rem" type="number" />
+            <bd2.FormikInput
+                label="Status"
+                name="status"
+                width="10rem"
+                items={[
+                    { id: 1, title: "SINGLE" },
+                    { id: 2, title: "MARRIED" },
+                ]}
+                type="select"
+            />
+
+            <bd2.FormikInput
+                type="select"
+                multiSelect
+                showValues
+                filterable
+                //autoGrow
+                label="plants"
+                name="plants"
+                width="12rem"
+                items={[
+                    { id: 1101, title: "IKCO Tehran, KM 14 Karaj" },
+                    { id: 1201, title: "IKCO Tondar" },
+                    { id: 1401, title: "PLANT 1401" },
+                    { id: 1501, title: "PLANT 1501" },
+                    { id: 1601, title: "PLANT 1601" },
+                    { id: 1701, title: "PLANT 1701" },
+                    { id: 1801, title: "PLANT 1801" },
+                    { id: 1901, title: "PLANT 1901" },
+                    { id: 2001, title: "PLANT 2001" },
+                ]}
+            />
+
+            <Filter type="text" label="complex" name="complex" width="12rem" />
+
+            <bd2.FormikSwitch label="I Agree" name="agree" width="auto" className="p-e-3" dense size="sm" />
+
+            <FormRow label="" className="flex-grow-1 text-end">
+                <div>
+                    <bd.Button color="primary" type="submit">
+                        GO
+                    </bd.Button>
+
+                    <bd.Button variant="text" color="primary" type="button">
+                        Filters (1)
+                    </bd.Button>
+                </div>
+            </FormRow>
+        </>
+    );
+};
+
+const FormDemo = () => {
     return (
         <>
             <bd2.FormikInput label="First Name" name="firstName" width="12rem" />
             <bd2.FormikInput label="Last Name" name="lastName" width="12rem" />
             <bd2.FormikInput label="Age" name="age" width="5rem" type="number" />
             <bd2.FormikInput
+                trace
                 label="Status"
                 name="status"
                 width="7rem"
@@ -51,7 +120,7 @@ const GeneralTest = () => {
             <bd2.FormikSwitch label="I Agree" name="agree" width="auto" className="p-e-3" dense size="sm" />
             <bd2.FormikToggle label="readOnly" name="remember" width="auto" size="sm" className="p-e-0" dense readOnly />
             <bd2.FormikInput label="type = label" name="firstName" width="9rem" type="label" inputClassName="bg-transparent" />
-            <bd2.FormikTextArea label="comments" name="comments" width="12rem" height="5rem" type="label" inputClassName="bg-transparent" />
+            <bd2.FormikTextArea label="comments" name="comments" width="12rem" height="5rem" type="label" />
 
             <bd2.FormikInput
                 type="text"
@@ -59,8 +128,8 @@ const GeneralTest = () => {
                 name="company"
                 width="12rem"
                 //menuTitle={<span title="22 more condition exists">+(22)</span>}
-                menuTitle={<icons.Filter3 style={{ fontSize: "1rem" }} />}
-                buttonTitle={<icons.OpenInNew style={{ fontSize: "1rem" }} />}
+                menuTitle={<FilterX count={5} style={{ fontSize: "1.125rem" }} />}
+                buttonTitle={<icons.OpenInNew style={{ fontSize: "1.125rem" }} />}
                 buttonOnClick={() => alert("clicked")}
                 items={[
                     { id: 110, title: "one" },
@@ -247,26 +316,31 @@ const DropDownTest = () => {
         </>
     );
 };
-/*
-const Test2 = ({ label, ...props }) => {
-    return (
-        <>
-            <MyTextInput label="First Name" name="firstName" type="text" placeholder="Jane" />
-            <MyTextInput label="Last Name" name="lastName" type="text" placeholder="Doe" />
-            <MyTextInput label="Age" name="age" type="number" />
-        </>
-    );
-};
 
-const MyTextInput = ({ label, ...props }) => {
-    const [field, meta] = useField(props);
-    if (label === "Age") console.log("- MyTextInput", label);
-    return (
-        <>
-            <label htmlFor={props.id || props.name}>{label}</label>
-            <input className="text-input" {...field} {...props} />
-            {meta.touched && meta.error ? <div className="error">{meta.error}</div> : null}
-        </>
-    );
+export const FilterX = ({ count, ...props }) => {
+    switch (count) {
+        case 0:
+            return <icons.FilterNone {...props} />;
+        case 1:
+            return <icons.Filter1 {...props} />;
+        case 2:
+            return <icons.Filter2 {...props} />;
+        case 3:
+            return <icons.Filter3 {...props} />;
+        case 4:
+            return <icons.Filter4 {...props} />;
+        case 5:
+            return <icons.Filter5 {...props} />;
+        case 6:
+            return <icons.Filter6 {...props} />;
+        case 7:
+            return <icons.Filter7 {...props} />;
+        case 8:
+            return <icons.Filter8 {...props} />;
+        case 9:
+            return <icons.Filter9 {...props} />;
+
+        default:
+            return <icons.Filter9Plus {...props} />;
+    }
 };
-*/

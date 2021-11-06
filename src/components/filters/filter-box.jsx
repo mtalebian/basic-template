@@ -29,12 +29,10 @@ export const FilterBox = ({
 
     const onSubmitHandler = (e) => {
         var filters = formRef.current.values;
-        console.log("onSubmit:", filters);
         onExecute(filters);
     };
 
     const onVariantChangedHandler = (variant) => {
-        console.log("onVariantChanged:", variant);
         if (onVariantChanged) onVariantChanged(variant);
         setCurentVariant(variant);
     };

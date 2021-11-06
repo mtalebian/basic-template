@@ -63,6 +63,7 @@
 // export { default as AccessTimeFilled } from './AccessTimeFilled'
 // export { default as AccountBalance } from './AccountBalance'
 // export { default as AccountBalanceWallet } from './AccountBalanceWallet'
+
 // export { default as AccountBox } from './AccountBox'
 export { default as AccountCircle } from "./AccountCircle";
 // export { default as AccountTree } from './AccountTree'
@@ -87,7 +88,7 @@ export { default as Add } from "./Add";
 // export { default as AddPhotoAlternate } from './AddPhotoAlternate'
 // export { default as AddReaction } from './AddReaction'
 // export { default as AddRoad } from './AddRoad'
-// export { default as AddShoppingCart } from './AddShoppingCart'
+export { default as AddShoppingCart } from "./AddShoppingCart";
 // export { default as AddTask } from './AddTask'
 // export { default as AddToDrive } from './AddToDrive'
 // export { default as AddToHomeScreen } from './AddToHomeScreen'
@@ -350,11 +351,11 @@ export { default as ArrowUpward } from "./ArrowUpward";
 // export { default as Chat } from './Chat'
 // export { default as ChatBubble } from './ChatBubble'
 // export { default as ChatBubbleOutline } from './ChatBubbleOutline'
-// export { default as Check } from './Check'
-// export { default as Checklist } from './Checklist'
+export { default as Check } from "./Check";
+export { default as Checklist } from "./Checklist";
 // export { default as ChecklistRtl } from './ChecklistRtl'
 // export { default as Checkroom } from './Checkroom'
-// export { default as CheckBox } from './CheckBox'
+export { default as CheckBox } from "./CheckBox";
 export { default as CheckBoxOutlineBlank } from "./CheckBoxOutlineBlank";
 // export { default as CheckCircle } from './CheckCircle'
 // export { default as CheckCircleOutline } from './CheckCircleOutline'
@@ -384,7 +385,7 @@ export { default as Close } from "./Close";
 // export { default as CloudQueue } from './CloudQueue'
 // export { default as CloudUpload } from './CloudUpload'
 // export { default as Co2 } from './Co2'
-// export { default as Code } from './Code'
+export { default as Code } from "./Code";
 // export { default as CodeOff } from './CodeOff'
 // export { default as Coffee } from './Coffee'
 // export { default as CoffeeMaker } from './CoffeeMaker'
@@ -431,7 +432,7 @@ export { default as Close } from "./Close";
 // export { default as Countertops } from './Countertops'
 // export { default as Create } from './Create'
 // export { default as CreateNewFolder } from './CreateNewFolder'
-// export { default as CreditCard } from './CreditCard'
+export { default as CreditCard } from "./CreditCard";
 // export { default as CreditCardOff } from './CreditCardOff'
 // export { default as CreditScore } from './CreditScore'
 // export { default as Crib } from './Crib'
@@ -540,7 +541,7 @@ export { default as DoneAll } from "./DoneAll";
 // export { default as DoNotDisturbOnTotalSilence } from './DoNotDisturbOnTotalSilence'
 // export { default as DoNotStep } from './DoNotStep'
 // export { default as DoNotTouch } from './DoNotTouch'
-// export { default as Drafts } from './Drafts'
+export { default as Drafts } from "./Drafts";
 // export { default as DragHandle } from './DragHandle'
 // export { default as DragIndicator } from './DragIndicator'
 // export { default as Draw } from './Draw'
@@ -823,7 +824,7 @@ export { default as Functions } from "./Functions";
 // export { default as HighlightOff } from './HighlightOff'
 // export { default as HighQuality } from './HighQuality'
 // export { default as Hiking } from './Hiking'
-// export { default as History } from './History'
+export { default as History } from "./History";
 // export { default as HistoryEdu } from './HistoryEdu'
 // export { default as HistoryToggleOff } from './HistoryToggleOff'
 // export { default as Hive } from './Hive'
@@ -970,7 +971,7 @@ export { default as LastPage } from "./LastPage";
 // export { default as LocalLibrary } from './LocalLibrary'
 // export { default as LocalMall } from './LocalMall'
 // export { default as LocalMovies } from './LocalMovies'
-// export { default as LocalOffer } from './LocalOffer'
+export { default as LocalOffer } from "./LocalOffer";
 // export { default as LocalParking } from './LocalParking'
 // export { default as LocalPharmacy } from './LocalPharmacy'
 // export { default as LocalPhone } from './LocalPhone'
@@ -980,14 +981,14 @@ export { default as LastPage } from "./LastPage";
 // export { default as LocalPostOffice } from './LocalPostOffice'
 // export { default as LocalPrintshop } from './LocalPrintshop'
 // export { default as LocalSee } from './LocalSee'
-// export { default as LocalShipping } from './LocalShipping'
+export { default as LocalShipping } from "./LocalShipping";
 // export { default as LocalTaxi } from './LocalTaxi'
 // export { default as LocationCity } from './LocationCity'
 // export { default as LocationDisabled } from './LocationDisabled'
 // export { default as LocationOff } from './LocationOff'
 // export { default as LocationOn } from './LocationOn'
 // export { default as LocationSearching } from './LocationSearching'
-// export { default as Lock } from './Lock'
+export { default as Lock } from "./Lock";
 // export { default as LockClock } from './LockClock'
 // export { default as LockOpen } from './LockOpen'
 export { default as Login } from "./Login";
@@ -1200,8 +1201,8 @@ export { default as OpenInNew } from "./OpenInNew";
 // export { default as PauseCircleFilled } from './PauseCircleFilled'
 // export { default as PauseCircleOutline } from './PauseCircleOutline'
 // export { default as PausePresentation } from './PausePresentation'
-// export { default as Payment } from './Payment'
-// export { default as Payments } from './Payments'
+export { default as Payment } from "./Payment";
+export { default as Payments } from "./Payments";
 // export { default as Paypal } from './Paypal'
 // export { default as PedalBike } from './PedalBike'
 // export { default as Pending } from './Pending'
@@ -1311,7 +1312,7 @@ export { default as PersonAddAlt } from "./PersonAddAlt";
 // export { default as Preview } from './Preview'
 // export { default as PriceChange } from './PriceChange'
 // export { default as PriceCheck } from './PriceCheck'
-// export { default as Print } from './Print'
+export { default as Print } from "./Print";
 // export { default as PrintDisabled } from './PrintDisabled'
 // export { default as PriorityHigh } from './PriorityHigh'
 // export { default as PrivacyTip } from './PrivacyTip'
@@ -1338,8 +1339,8 @@ export { default as PersonAddAlt } from "./PersonAddAlt";
 // export { default as Quora } from './Quora'
 // export { default as Radar } from './Radar'
 // export { default as Radio } from './Radio'
-// export { default as RadioButtonChecked } from './RadioButtonChecked'
-// export { default as RadioButtonUnchecked } from './RadioButtonUnchecked'
+export { default as RadioButtonChecked } from "./RadioButtonChecked";
+export { default as RadioButtonUnchecked } from "./RadioButtonUnchecked";
 // export { default as RailwayAlert } from './RailwayAlert'
 // export { default as RamenDining } from './RamenDining'
 // export { default as RateReview } from './RateReview'
@@ -1377,8 +1378,8 @@ export { default as PersonAddAlt } from "./PersonAddAlt";
 // export { default as Replay30 } from './Replay30'
 // export { default as Replay5 } from './Replay5'
 // export { default as ReplayCircleFilled } from './ReplayCircleFilled'
-// export { default as Reply } from './Reply'
-// export { default as ReplyAll } from './ReplyAll'
+export { default as Reply } from "./Reply";
+export { default as ReplyAll } from "./ReplyAll";
 // export { default as Report } from './Report'
 // export { default as ReportGmailerrorred } from './ReportGmailerrorred'
 // export { default as ReportOff } from './ReportOff'
@@ -1410,7 +1411,7 @@ export { default as PersonAddAlt } from "./PersonAddAlt";
 // export { default as RssFeed } from './RssFeed'
 // export { default as Rsvp } from './Rsvp'
 // export { default as Rtt } from './Rtt'
-// export { default as Rule } from './Rule'
+export { default as Rule } from "./Rule";
 // export { default as RuleFolder } from './RuleFolder'
 // export { default as RunningWithErrors } from './RunningWithErrors'
 // export { default as RunCircle } from './RunCircle'
@@ -1452,8 +1453,8 @@ export { default as Search } from "./Search";
 // export { default as Segment } from './Segment'
 // export { default as SelectAll } from './SelectAll'
 // export { default as SelfImprovement } from './SelfImprovement'
-// export { default as Sell } from './Sell'
-// export { default as Send } from './Send'
+export { default as Sell } from "./Sell";
+// export { default as Send } from "./Send";
 // export { default as SendAndArchive } from './SendAndArchive'
 // export { default as SendToMobile } from './SendToMobile'
 // export { default as Sensors } from './Sensors'
@@ -1493,9 +1494,9 @@ export { default as Settings } from "./Settings";
 // export { default as ShieldMoon } from './ShieldMoon'
 // export { default as Shop } from './Shop'
 // export { default as Shopify } from './Shopify'
-// export { default as ShoppingBag } from './ShoppingBag'
+export { default as ShoppingBag } from "./ShoppingBag";
 // export { default as ShoppingBasket } from './ShoppingBasket'
-// export { default as ShoppingCart } from './ShoppingCart'
+export { default as ShoppingCart } from "./ShoppingCart";
 // export { default as Shop2 } from './Shop2'
 // export { default as ShopTwo } from './ShopTwo'
 // export { default as Shortcut } from './Shortcut'
@@ -1611,8 +1612,8 @@ export { default as Sort } from "./Sort";
 // export { default as StopCircle } from './StopCircle'
 // export { default as StopScreenShare } from './StopScreenShare'
 // export { default as Storage } from './Storage'
-// export { default as Store } from './Store'
-// export { default as Storefront } from './Storefront'
+export { default as Store } from "./Store";
+export { default as Storefront } from "./Storefront";
 // export { default as StoreMallDirectory } from './StoreMallDirectory'
 // export { default as Storm } from './Storm'
 // export { default as Straighten } from './Straighten'
@@ -1739,7 +1740,7 @@ export { default as TableView } from "./TableView";
 // export { default as TravelExplore } from './TravelExplore'
 // export { default as TrendingDown } from './TrendingDown'
 // export { default as TrendingFlat } from './TrendingFlat'
-// export { default as TrendingUp } from './TrendingUp'
+export { default as TrendingUp } from "./TrendingUp";
 // export { default as TripOrigin } from './TripOrigin'
 // export { default as Try } from './Try'
 // export { default as Tty } from './Tty'
