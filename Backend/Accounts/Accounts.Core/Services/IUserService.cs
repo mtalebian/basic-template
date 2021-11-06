@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 
 namespace Accounts.Core
 {
-    public interface IUserManagementService
+    public interface IUserService
     {
         IList<User> GetUsers();
         User GetUser(string nationalCode);

@@ -4,7 +4,7 @@ import * as bd from "react-basic-design";
 import * as icons from "../../../assets/icons";
 import { TableTitlebar } from "../../../components/table";
 import { useAccount } from "../../../app/account-context";
-import { authorizationApi } from "../../../api/authorization-api";
+import { roleApi } from "../../../api/role-api";
 import { notify } from "../../../components/basic/notify";
 import { RenderTableDiv } from "../../../components/table/render-table-div";
 import { DefaultEditor } from "../../../components/table/editors";
@@ -24,7 +24,7 @@ import {
   useResizeColumns,
 } from "react-table";
 
-export const RolesApp = () => {
+export const RoleApp = () => {
   const [roles, setRoles] = useState(null);
   const [selectedRole, setSelectedRole] = useState(null);
   const [editMode, setEditMode] = useState(false);
@@ -36,7 +36,7 @@ export const RolesApp = () => {
 
   useEffect(() => {
     if (!roles && account.isConnected()) {
-      authorizationApi
+      roleApi
         .getRoles()
         .then((x) => {
           setRoles(x);
@@ -175,6 +175,6 @@ export const RolesApp = () => {
     </>
   );
 };
-RolesApp.Appbar = {
+RoleApp.Appbar = {
   title: "roles",
 };

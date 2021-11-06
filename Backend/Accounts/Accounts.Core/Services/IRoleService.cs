@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 
 namespace Accounts.Core
 {
-    public interface IAuthorizationService<TUser> where TUser : User
+    public interface IRoleService<TUser> where TUser : User
     {
         IList<Role> GetAllRoles(string projectId);
         Role GetRoleById(string projectId, string id);

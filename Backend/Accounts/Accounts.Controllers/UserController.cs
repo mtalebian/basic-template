@@ -15,13 +15,13 @@ namespace Accounts.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class UserManagmentController : ControllerBase
+    public class UserController :ControllerBase
     {
-        private readonly IUserManagementService userService;
+        private readonly IUserService userService;
 
-        public UserManagmentController(IUserManagementService userManagment)
+        public UserController(IUserService userService)
         {
-            this.userService = userManagment;
+            this.userService = userService;
         }
 
 

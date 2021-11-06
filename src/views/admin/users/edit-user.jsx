@@ -6,7 +6,7 @@ import * as yup from "yup";
 import { notify } from "../../../components/basic/notify";
 import { Form, Formik } from "formik";
 import { BasicInput } from "../../../components/basic-form/basic-input";
-import { userManagmentApi } from "../../../api/user-managment-api";
+import { userApi } from "../../../api/user-api";
 import { Tab } from "react-bootstrap";
 import classNames from "classnames";
 
@@ -36,7 +36,7 @@ export const EditUser = ({ userId, onGoBack }) => {
 
   useEffect(() => {
     if (userId != null && user == null) {
-      userManagmentApi
+      userApi
         .getUser(userId)
         .then((x) => {
           if (!x.windowsAuthenticate) {
@@ -57,7 +57,7 @@ export const EditUser = ({ userId, onGoBack }) => {
     values.windowsAuthenticate = windowsAuth == "true" ? true : false;
     setBusy(true);
     var insertMode = !userId;
-    userManagmentApi
+    userApi
       .saveUser(insertMode, values)
       .then((x) => {
         setBusy(false);
@@ -86,7 +86,7 @@ export const EditUser = ({ userId, onGoBack }) => {
   };
   const onDeleteClick = (hide) => {
     setDeleting(true);
-    userManagmentApi
+    userApi
       .deleteUser(userId)
       .then((x) => {
         setDeleting(false);

@@ -8,7 +8,7 @@ import { Form, Formik } from "formik";
 import { BasicInput } from "../../../components/basic-form/basic-input";
 import { RenderTableDiv } from "../../../components/table/render-table-div";
 import { Modal, Tab } from "react-bootstrap";
-import { authorizationApi } from "../../../api/authorization-api";
+import { roleApi } from "../../../api/role-api";
 import { msgbox } from "react-basic-design";
 import { DefaultEditor } from "../../../components/table/editors";
 import { TableTitlebar } from "../../../components/table";
@@ -66,7 +66,7 @@ export const EditRole = ({ roleId, onGoBack }) => {
 
   useEffect(() => {
     if (!insertMode && role == null) {
-      authorizationApi
+      roleApi
         .getRole(roleId)
         .then((x) => {
           setRole(x);
@@ -89,7 +89,7 @@ export const EditRole = ({ roleId, onGoBack }) => {
 
   const onDeleteRoleClick = (hide) => {
     setDeleting(true);
-    authorizationApi
+    roleApi
       .deleteRole(roleId)
       .then((x) => {
         setDeleting(false);

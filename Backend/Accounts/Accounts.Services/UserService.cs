@@ -8,11 +8,11 @@ using System.Threading.Tasks;
 
 namespace Accounts.Services
 {
-    internal class UserManagementService : IUserManagementService
+    internal class UserService : IUserService
     {
         private protected IAccountUnitOfWork<User> db { get; }
         private readonly AccountsConfig _AccountsConfig;
-        public UserManagementService(IOptions<AccountsConfig> accountsConfig, IAccountUnitOfWork<User> db)
+        public UserService(IOptions<AccountsConfig> accountsConfig, IAccountUnitOfWork<User> db)
         {
             this.db = db;
             this._AccountsConfig = accountsConfig.Value;

@@ -19,12 +19,12 @@ namespace Accounts.Controllers
     public class AccountController : ControllerBase
     {
         private readonly IAuthenticationService<User> accountService;
-        private readonly IUserManagementService userManagmentService;
+        private readonly IUserService userManagmentService;
         private readonly IConfiguration _Configuration;
         private const string InternalKey = "8gfB50.!#_Aau61n.-$!";
         internal const string SecurityKeyCookieName = "x-security-key";
 
-        public AccountController(IAuthenticationService<User> accountService, IConfiguration configuration, IUserManagementService userService)
+        public AccountController(IAuthenticationService<User> accountService, IConfiguration configuration, IUserService userService)
         {
             this.accountService = accountService;
             this.userManagmentService = userService;

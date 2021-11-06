@@ -11,14 +11,14 @@ namespace Accounts.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class AuthorizationController : ControllerBase
+    public class RoleController : ControllerBase
     {
         private readonly IAuthenticationService<User> accountService;
-        private readonly IAuthorizationService<User> roleMangerService;
+        private readonly IRoleService<User> roleMangerService;
 
-        public AuthorizationController(IAuthenticationService<User> accountService, IAuthorizationService<User> authorizationService)
+        public RoleController(IAuthenticationService<User> accountService, IRoleService<User> roleService)
         {
-            this.roleMangerService = authorizationService;
+            this.roleMangerService = roleService;
             this.accountService = accountService;
         }
 

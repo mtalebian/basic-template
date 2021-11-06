@@ -39,8 +39,8 @@ import { TablesApp } from "./views/admin/tables/tables-app";
 import { FormDesignerApp } from "./views/admin/form-designer/form-designer-app";
 import { TableDesignerApp } from "./views/admin/table-designer/table-designer-app";
 import { UserSettingsApp } from "./views/account/user-settings-app";
-import { UsersApp } from "./views/admin/users/users-app";
-import { RolesApp } from "./views/admin/roles/roles-app";
+import { UserApp } from "./views/admin/users/user-app";
+import { RoleApp } from "./views/admin/roles/role-app";
 import { UserProfile } from "./views/account/user-profile";
 
 export function App() {
@@ -64,7 +64,6 @@ export function App() {
         <AzRoute exact path="/user/settings" render={() => <MainLayout component={UserSettingsApp} />} />
 
         <AzRoute exact path="/account/user-profile" render={() => <MainLayout component={UserProfile} />} />
-    
 
         <AzRoute exact path="/admin/menu" render={() => <MainLayout component={MenuApp} />} />
 
@@ -74,9 +73,9 @@ export function App() {
 
         <AzRoute exact path="/admin/tables" render={() => <MainLayout component={TablesApp} />} />
 
-        <AzRoute exact path="/admin/users" render={() => <MainLayout component={UsersApp} />} />
-        
-        <AzRoute exact path="/admin/roles" render={() => <MainLayout component={RolesApp} />} />
+        <AzRoute exact path="/admin/users" render={() => <MainLayout component={UserApp} />} />
+
+        <AzRoute exact path="/admin/roles" render={() => <MainLayout component={RoleApp} />} />
 
         <AzRoute exact path="/home" render={() => <MainLayout component={LunchpadApp} />} />
 

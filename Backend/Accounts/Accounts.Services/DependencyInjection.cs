@@ -22,11 +22,11 @@ namespace Microsoft.Extensions.DependencyInjection
 
         public static void AddUserManagmentService(this IServiceCollection services)
         {
-            services.AddScoped<IUserManagementService, UserManagementService>();
+            services.AddScoped<IUserService, UserService>();
         }
         public static void AddAuthorizationService<TUser>(this IServiceCollection services) where TUser : User
         {
-            services.AddScoped<IAuthorizationService<TUser>, AuthorizationService<TUser>>();
+            services.AddScoped<IRoleService<TUser>, RoleService<TUser>>();
         }
 
     }

@@ -8,10 +8,10 @@ using System.Threading.Tasks;
 
 namespace Accounts.Services
 {
-    internal class AuthorizationService<TUser> : IAuthorizationService<TUser> where TUser : User
+    internal class RoleService<TUser> : IRoleService<TUser> where TUser : User
     {
         private protected IAccountUnitOfWork<User> db { get; }
-        public AuthorizationService(IAccountUnitOfWork<User> db)
+        public RoleService(IAccountUnitOfWork<User> db)
         {
             this.db = db;
         }

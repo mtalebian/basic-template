@@ -5,7 +5,7 @@ import * as icons from "../../../assets/icons";
 import { TableTitlebar } from "../../../components/table";
 import { EditUser } from "./edit-user";
 import { useAccount } from "../../../app/account-context";
-import { userManagmentApi } from "../../../api/user-managment-api";
+import { userApi } from "../../../api/user-api";
 import { notify } from "../../../components/basic/notify";
 import { RenderTableDiv } from "../../../components/table/render-table-div";
 import { DefaultEditor } from "../../../components/table/editors";
@@ -24,7 +24,7 @@ import {
   useResizeColumns,
 } from "react-table";
 
-export const UsersApp = () => {
+export const UserApp = () => {
   const { t } = useTranslation();
   const [editMode, setEditMode] = useState(false);
   const account = useAccount();
@@ -41,7 +41,7 @@ export const UsersApp = () => {
 
   useEffect(() => {
     if (!users && account.isConnected()) {
-      userManagmentApi
+      userApi
         .getUsers()
         .then((x) => {
           setUsers(x);
@@ -145,7 +145,7 @@ export const UsersApp = () => {
               className="border0 nano-scroll"
               //style={{ minHeight: 400 }}
               hover
-             // striped
+              // striped
               hasWhitespace
               stickyFooter
             />
@@ -178,6 +178,6 @@ export const UsersApp = () => {
   );
 };
 
-UsersApp.Appbar = {
+UserApp.Appbar = {
   title: "users",
 };
