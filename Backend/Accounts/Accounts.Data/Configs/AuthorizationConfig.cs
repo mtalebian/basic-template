@@ -15,7 +15,6 @@ namespace Accounts.Data
             helper.DefineProjectId(x => x.ProjectId);
             helper.DefineObjectId(x => x.ObjectId);
             helper.DefineRoleId(x => x.RoleId);
-            helper.DefineTitle(x => x.Title);
         }
     }
 }

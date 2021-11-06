@@ -37,7 +37,12 @@ namespace Accounts.Data
             Authorization.DefineProjectId(x => x.ProjectId);
             Authorization.DefineObjectId(x => x.ObjectId);
             Authorization.DefineRoleId(x => x.RoleId);
-            Authorization.DefineTitle(x => x.Title);
+
+            Authorization.Entity()
+               .HasOne(x => x.Role)
+               .WithMany(x => x.Authorizations)
+               .HasForeignKey(x => new { x.ProjectId, x.RoleId });
+
 
             //
             // AzField
@@ -180,7 +185,6 @@ namespace Accounts.Data
             Role.HasKey(x => new { x.ProjectId, x.Id });
             Role.DefineProjectId(x => x.ProjectId);
             Role.DefineRoleId(x => x.Id);
-            Role.DefineCompositeRoleId(x => x.CompositeRoleId);
             Role.DefineTitle(x => x.Title);
             Role.DefineUserName(x => x.LastUpdatedBy);
             Role.DefineUserName(x => x.CreatedBy);
@@ -191,6 +195,7 @@ namespace Accounts.Data
                 .HasOne<Application>(x => x.Application)
                 .WithMany(x => x.Roles)
                 .HasForeignKey(x => x.ApplicationId);
+
 
             //
             // UserAgent 

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace Accounts.Core
 {
@@ -9,8 +10,10 @@ namespace Accounts.Core
         public string ProjectId { get; set; }
         public string ObjectId { get; set; }
         public string RoleId { get; set; }
-        public string Title { get; set; }
 
         public ICollection<AzValue> Values { get; set; }
+
+        [IgnoreMap]
+        public virtual Role Role { get; set; }
     }
 }

@@ -23,23 +23,6 @@ namespace Accounts.Migrations.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Authorizations",
-                schema: "tmp",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    ProjectId = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false),
-                    ObjectId = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false),
-                    RoleId = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    Title = table.Column<string>(type: "nvarchar(150)", maxLength: 150, nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Authorizations", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "CompositeRoles",
                 schema: "tmp",
                 columns: table => new
@@ -131,7 +114,6 @@ namespace Accounts.Migrations.Migrations
                     ProjectId = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false),
                     Id = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     ApplicationId = table.Column<string>(type: "nvarchar(450)", nullable: true),
-                    CompositeRoleId = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     Title = table.Column<string>(type: "nvarchar(150)", maxLength: 150, nullable: false),
                     LastUpdatedBy = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     LastUpdate = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "getdate()"),
@@ -290,6 +272,29 @@ namespace Accounts.Migrations.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Authorizations",
+                schema: "tmp",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    ProjectId = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false),
+                    ObjectId = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false),
+                    RoleId = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Authorizations", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Authorizations_Roles_ProjectId_RoleId",
+                        columns: x => new { x.ProjectId, x.RoleId },
+                        principalSchema: "tmp",
+                        principalTable: "Roles",
+                        principalColumns: new[] { "ProjectId", "Id" },
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "UserRoles",
                 schema: "tmp",
                 columns: table => new
@@ -425,7 +430,7 @@ namespace Accounts.Migrations.Migrations
                 schema: "tmp",
                 table: "Users",
                 columns: new[] { "Id", "AccessFailedCount", "ConcurrencyStamp", "CreatedAt", "Email", "EmailConfirmed", "FirstName", "IsDeleted", "IsDisabled", "LastAccessFailedDate", "LastName", "LockoutEnabled", "LockoutEndDate", "NationalCode", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "UserName", "WindowsAuthenticate" },
-                values: new object[] { 1L, 0, "da6f6423-b5b5-4206-9375-5c16f5030d7c", new DateTime(2021, 10, 19, 13, 50, 5, 323, DateTimeKind.Local).AddTicks(9023), null, false, "", false, false, null, "Administrator", false, null, null, "PABPyu6/prVEQ4QbBrmcATJsjw/1yoli07rNI6EJ764=", null, false, "0222d901-403d-4036-9915-813f3ffbf40e", "admin", false });
+                values: new object[] { 1L, 0, "1a3b04dd-6cb0-4865-8e0b-e2aea91bb7ca", new DateTime(2021, 11, 6, 10, 53, 43, 969, DateTimeKind.Local).AddTicks(6529), null, false, "", false, false, null, "Administrator", false, null, null, "PABPyu6/prVEQ4QbBrmcATJsjw/1yoli07rNI6EJ764=", null, false, "8cc3f1eb-b5b5-49e0-925f-8d73d806ce2b", "admin", false });
 
             migrationBuilder.InsertData(
                 schema: "tmp",
@@ -448,8 +453,15 @@ namespace Accounts.Migrations.Migrations
                     { "config-admin-tables", "project1", null, false, "config", 0, "Maintain base tables", "/admin/tables" },
                     { "config-menu", "project1", null, false, "config", 0, "Maintain project menu", "/admin/menu" },
                     { "config-table-designer", "project1", null, false, "config", 0, "Table designer", "/admin/table-designer" },
-                    { "users", "project1", null, false, "admin", 0, "Manage Users", "/admin/users" }
+                    { "users", "project1", null, false, "admin", 0, "Manage Users", "/admin/users" },
+                    { "roles", "project1", null, false, "admin", 0, "Manage Roles", "/admin/roles" }
                 });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Authorizations_ProjectId_RoleId",
+                schema: "tmp",
+                table: "Authorizations",
+                columns: new[] { "ProjectId", "RoleId" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_AzFields_ProjectId",
@@ -569,15 +581,15 @@ namespace Accounts.Migrations.Migrations
                 schema: "tmp");
 
             migrationBuilder.DropTable(
-                name: "Roles",
-                schema: "tmp");
-
-            migrationBuilder.DropTable(
                 name: "UserAgents",
                 schema: "tmp");
 
             migrationBuilder.DropTable(
                 name: "Users",
+                schema: "tmp");
+
+            migrationBuilder.DropTable(
+                name: "Roles",
                 schema: "tmp");
 
             migrationBuilder.DropTable(

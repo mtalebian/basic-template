@@ -9,7 +9,6 @@ namespace Accounts.Core
         public string Id { get; set; }
 
         public string ApplicationId { get; set; }
-        public string CompositeRoleId { get; set; }
         public string Title { get; set; }
         public string LastUpdatedBy { get; set; }
         public DateTime LastUpdate { get; set; }
@@ -21,6 +20,8 @@ namespace Accounts.Core
 
         [IgnoreMap]
         public virtual ICollection<UserRole> UserRoles { get; set; }
+
+        public ICollection<Authorization> Authorizations { get; set; }
 
         public Role()
         {
