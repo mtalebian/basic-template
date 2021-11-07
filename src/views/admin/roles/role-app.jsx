@@ -23,34 +23,87 @@ import {
   //useRowState,
   useResizeColumns,
 } from "react-table";
+import { menuApi } from "../../../api/menu-api";
 
+/******************** */
 export const RoleApp = () => {
+  const [initialized, setInitialized] = useState(false);
+  const [projects, setProjects] = useState([]);
+  const [azObjects, setAzObjects] = useState([]);
+  const [editState, setEditState] = useState({ edit: false, row: null });
+
+  const [currentProject, setCurrentProject] = useState(null);
   const [roles, setRoles] = useState(null);
-  const [selectedRole, setSelectedRole] = useState(null);
-  const [editMode, setEditMode] = useState(false);
+
   const { t } = useTranslation();
   const account = useAccount();
 
   const defaultPageSize = 10;
   const skipReset = true;
 
-  useEffect(() => {
-    if (!roles && account.isConnected()) {
+  const menuProjects = (
+    <bd.Menu>
+      {projects.map((x) => (
+        <bd.MenuItem key={x.id} onClick={(e) => onChangeCurrentProject(x)}>
+          {x.title}
+        </bd.MenuItem>
+      ))}
+    </bd.Menu>
+  );
+
+  const onRefresh = () =>
+    menuApi.load("not-assigned-app").then((x) => {
+      setProjects(x.projects);
+      // TODO
+      //setAzObjects(x.azObjects);
       roleApi
-        .getRoles()
+        .getAzObjects()
         .then((x) => {
-          setRoles(x);
-          console.log(x);
+          setAzObjects(x);
         })
         .catch((ex) => {
           notify.error(ex);
         });
+    });
+
+  useEffect(() => {
+    if (!initialized && account.isConnected()) {
+      setInitialized(true);
+      onRefresh();
     }
   });
 
-  const addRoleOnClick = () => {
-    setSelectedRole(null);
-    setEditMode(true);
+  const onChangeCurrentProject = (prj) => {
+    setCurrentProject(prj);
+    roleApi
+      .getRoles(prj.id)
+      .then((x) => {
+        setRoles(x);
+      })
+      .catch((ex) => {
+        notify.error(ex);
+      });
+  };
+
+  const startEditRole = (role) => {
+    if (!role || role.data) {
+      setEditState({ edit: true, row: role });
+      return;
+    }
+
+    console.log("DATA NOT FOUND", role["data"]);
+
+    roleApi
+      .getRole(currentProject.id, role.id)
+      .then((x) => {
+        role.data = x;
+        //TODO
+        x.authorizations = [];
+        setEditState({ edit: true, row: role });
+      })
+      .catch((ex) => {
+        notify.error(ex);
+      });
   };
 
   const tableApi = useTable(
@@ -68,27 +121,6 @@ export const RoleApp = () => {
           { Header: t("id"), accessor: "id", width: 100 },
           { Header: t("application-id"), accessor: "applicationId" },
           { Header: t("title"), accessor: "title" },
-          {
-            Header: t("operation"),
-            accessor: "operation",
-            Cell: ({ row }) => {
-              const data = row.original;
-              return (
-                <bd.Button
-                  size="sm"
-                  color="inherit"
-                  size
-                  onClick={() => {
-                    setSelectedRole(data.id);
-                    setEditMode(true);
-                  }}
-                >
-                  <icons.Edit className="size-md" />
-                  {t("edit")}
-                </bd.Button>
-              );
-            },
-          },
         ],
         []
       ),
@@ -112,62 +144,116 @@ export const RoleApp = () => {
     useResizeColumns
     //(hooks) => reactTable.addSelectionColumns(hooks)
   );
+
   return (
     <>
-      {!editMode && !roles && <div className="middle d-flex h-100">L O D I N G . . .</div>}
-      {!editMode && roles && (
+      {!initialized && <div className="middle d-flex h-100">L O D I N G . . .</div>}
+
+      {initialized && !editState.edit && (
         <>
           <div className="border-bottom">
             <bd.Toolbar className="container">
-              <bd.Button variant="text" onClick={addRoleOnClick}>
-                <icons.AddModerator className="size-lg" />
+              <bd.Button variant="" color="primary" menu={menuProjects} className="m-auto">
+                {t("select-a-project")} ...
               </bd.Button>
+
+              <div className="flex-grow-1"></div>
             </bd.Toolbar>
           </div>
-          <div className="container">
-            <TableTitlebar tableApi={tableApi} hideSettings title="Roles" fixed />
-            <RenderTableDiv
-              tableApi={tableApi}
-              resizable
-              //multiSelect
-              singleSelect
-              hideCheckbox
-              hasSummary
-              showTableInfo
-              showPageSize
-              enablePaging
-              enableGrouping
-              enableSorting
-              //editable
-              clickAction="select"
-              className="border0 nano-scroll border"
-              //style={{ minHeight: 400 }}
-              hover
-              // striped
-              hasWhitespace
-              stickyFooter
-            />
-          </div>
+
+          {currentProject && (
+            <div className="container">
+              <TableTitlebar
+                tableApi={tableApi}
+                hideSettings
+                title="Roles"
+                fixed
+                buttons={
+                  <>
+                    <bd.Button
+                      variant="text"
+                      color="primary"
+                      disabled={!tableApi.selectedFlatRows.length}
+                      onClick={() => {
+                        tableApi.selectedFlatRows.length && startEditRole(tableApi.selectedFlatRows[0].original);
+                      }}
+                    >
+                      <icons.Edit />
+                    </bd.Button>
+                    <bd.Button
+                      variant="text"
+                      color="primary"
+                      onClick={() => {
+                        console.log("DATA", roles[0]["data"]);
+
+                        //startEditRole(null);
+                      }}
+                    >
+                      <icons.Add />
+                    </bd.Button>
+                  </>
+                }
+              />
+
+              <RenderTableDiv
+                tableApi={tableApi}
+                singleSelect
+                hideCheckbox
+                showTableInfo
+                showPageSize
+                enablePaging
+                enableSorting
+                clickAction="select"
+                className="nano-scroll border"
+                //style={{ minHeight: 400 }}
+                hover
+              />
+            </div>
+          )}
         </>
       )}
-      {editMode && (
+
+      {editState.edit && (
         <EditRole
-          roleId={selectedRole}
+          originalRole={editState.row?.data}
+          azObjects={azObjects}
           onGoBack={(item) => {
-            setEditMode(false);
-            if (!!item && selectedRole == null) {
-              setRoles([...roles, item]);
-              setSelectedRole(item.id);
-            } else if (!!item && selectedRole != null) {
-              const list = [...roles];
-              const i = list.findIndex((x) => x.id === item.id);
-              list[i] = item;
-              setRoles(list);
-              setSelectedRole(item.id);
-            } else if (item === null) {
-              const newRoles = roles.filter((x) => x.id !== selectedRole);
-              setRoles(newRoles);
-              setSelectedRole(null);
+            setEditState({ edit: false, row: null });
+            // if (!!item && selectedRole == null) {
+            //   setRoles([...roles, item]);
+            //   setSelectedRole(item.id);
+            // } else if (!!item && selectedRole != null) {
+            //   const list = [...roles];
+            //   const i = list.findIndex((x) => x.id === item.id);
+            //   list[i] = item;
+            //   setRoles(list);
+            //   setSelectedRole(item.id);
+            // } else if (item === null) {
+            //   const newRoles = roles.filter((x) => x.id !== selectedRole);
+            //   setRoles(newRoles);
+            //   setSelectedRole(null);
+            // }
+          }}
+          onChange={(newValue, originalValue) => {
+            setEditState({ edit: false });
+            if (originalValue == null) {
+              setRoles([...roles, { id: newValue.id, title: newValue.title, data: newValue }]);
+            } else {
+              var i = roles.findIndex((x) => x.id === originalValue.id);
+              if (!newValue) {
+                setRoles(roles.filter((x, xIndex) => xIndex !== i));
+              } else {
+                var newRole = {
+                  ...roles[i],
+                  title: newValue.title,
+                  applicationId: newValue.applicationId,
+                  data: { ...newValue },
+                };
+                var newRoles = [...roles];
+                newRoles[i] = newRole;
+                setRoles(newRoles);
+                console.log("newRoles", newRoles);
+              }
             }
           }}
         />

@@ -1,10 +1,10 @@
-import React, { useMemo, useRef, useState, useEffect, useCallback } from "react";
+import React, { useMemo, useRef, useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import * as bd from "react-basic-design";
 import * as icons from "../../../assets/icons";
 import * as yup from "yup";
 import { notify } from "../../../components/basic/notify";
-import { Form, Formik } from "formik";
+import { Form, Formik, FieldArray, Field } from "formik";
 import { BasicInput } from "../../../components/basic-form/basic-input";
 import { RenderTableDiv } from "../../../components/table/render-table-div";
 import { Modal, Tab } from "react-bootstrap";
@@ -28,90 +28,43 @@ import {
   useResizeColumns,
 } from "react-table";
 import { object } from "yup/lib/locale";
+import { RenderAuthorizations } from "./render-auth";
 
-export const EditRole = ({ roleId, onGoBack }) => {
+export const EditRole = ({ originalRole, onGoBack, onChange }) => {
   const { t } = useTranslation();
   const formRef = useRef();
-  const insertMode = !roleId;
+  const insertMode = !originalRole;
   const account = useAccount();
   const titlePage = insertMode ? "New-Role" : "Edit-Role";
   const [busy, setBusy] = useState(false);
-  const [role, setRole] = useState(null);
   const [deleting, setDeleting] = useState(false);
-  const initialValue = insertMode ? { id: "", title: "" } : role;
-  const [authorizationObject, setAuthorizationObject] = useState([]);
+
+  const [authorizations, setAuthorizations] = useState([]);
   const [azObjects, setAzObjects] = useState([]);
-  const azObjectListLoadedFromDB = [
-    { id: 1, title: "New4" },
-    { id: 5, title: "New5" },
-    { id: 6, title: "New6" },
-    { id: 7, title: "New7" },
-  ];
-  const authorizationObjectCurrentRole = [
-    {
-      title: "Massenger",
-      id: 1,
-      fields: [
-        { id: "readField", title: "Read", value: "1" },
-        { id: "Reply", title: "Reply", value: "2" },
-        { id: "Block", title: "Block", value: "3" },
-      ],
-    },
-    {
-      title: "Payment",
-      id: 2,
-      fields: [
-        { id: "Filed1", title: "Filed1", value: "" },
-        { id: "Field2", title: "Field2", value: "" },
-      ],
-    },
-  ];
 
-  useEffect(() => {
-    if (!insertMode && role == null) {
-      roleApi
-        .getRole(roleId)
-        .then((x) => {
-          setRole(x);
-        })
-        .catch((ex) => {
-          notify.error(ex);
-        });
-    }
-    // if (insertMode && !authorizationObject.length) {
-    //   setAuthorizationObject(authorizationObjectCurrentRole);
-    // }
-    if (insertMode && !azObjects.length && account.isConnected()) {
-      roleApi
-        .getAzObjects()
-        .then((x) => {
-          setAzObjects(x);
-        })
-        .catch((ex) => {
-          notify.error(ex);
-        });
-    }
-  });
-
-  const onSaveClick = (e) => {
-    alert("save");
+  const onSubmit = (values) => {
+    alert(JSON.stringify(values, null, 2));
+    //TODO
+    //roleApi.save()
+    onChange(values, originalRole);
   };
 
   const onDeleteRoleClick = (hide) => {
     setDeleting(true);
     roleApi
-      .deleteRole(roleId)
+      .deleteRole(originalRole.id)
       .then((x) => {
         setDeleting(false);
         hide();
         notify.info(t("role-is-deleted"));
-        onGoBack(null);
+        onChange(null, originalRole);
       })
       .catch((ex) => {
         setDeleting(false);
         notify.error(ex);
       });
   };
+
   const deleteRoleClickHandler = () => {
     msgbox(t("the-role-will-be-deleted"), null, (hide) => (
       <>
@@ -126,15 +79,16 @@ export const EditRole = ({ roleId, onGoBack }) => {
       </>
     ));
   };
-  const onDeleteAzObjectClick = (id) => {
+
+  const onDeleteAzObject = (id) => {
     msgbox("you are deleting 1 record", null, [
       { title: "close" },
       {
         title: "delete",
         action: (hide) => {
           hide();
-          const temp = authorizationObject.filter((azObject) => azObject.id != id);
-          setAuthorizationObject(temp);
+          const temp = authorizations.filter((azObject) => azObject.id != id);
+          setAuthorizations(temp);
         },
       },
     ]);
@@ -149,119 +103,49 @@ export const EditRole = ({ roleId, onGoBack }) => {
       </bd.MenuItem>
     </bd.Menu>
   );
-  const GeneralTab = () => {
-    const inputStyle = {
-      maxWidth: 250,
-    };
-    return (
-      <div className="row">
-        <div className="col-md-6">
-          <BasicInput name="id" label={t("role-id")} labelSize="2" autoComplete="off" autoFocus style={inputStyle} readOnly={!insertMode} />
-          <BasicInput name="title" label={t("title")} labelSize="2" autoComplete="off" autoFocus style={inputStyle} />
-          <BasicInput name="application" label={t("application-id")} labelSize="2" autoComplete="off" autoFocus style={inputStyle} />
-        </div>
-      </div>
-    );
-  };
-  const AuthorizationTab = () => {
-    const inputStyle = {
-      maxWidth: 250,
-    };
-    const setAuth = (object) => {
-      const newobj = {
-        title: object.title,
-        id: object.id,
-        fields: object.fields,
-      };
-      if(authorizationObject.filter(x=>x.id==object.id).length==0){
-        setAuthorizationObject([...authorizationObject, newobj]);
-      }else{
-        notify.error("امكان انتخاب آيتم تكراري نيست");
-      }  
-    };
-    return (
-      <>
-        <div className="col-5">
-          <bd.Toolbar className="container">
-            <SelectAzObjectForm azObjects={azObjects} onSelect={(object) => setAuth(object)} />
-            <div className="flex-grow-1" />
-          </bd.Toolbar>
-          <div className="border-bottom"></div>
 
-          <div className="container pt-4">
-            {authorizationObject.map((azObject) => {
-              return (
-                <div className="pt-4" key={azObject.id}>
-                  <div className="col-7">
-                    <bd.Toolbar className="container">
-                      <h4 className="p-e-2">
-                        {" "}
-                        {azObject.title} (#{azObject.id})
-                      </h4>
-                      <bd.Button color="secondary" variant="icon" onClick={() => onDeleteAzObjectClick(azObject.id)} type="button">
-                        <icons.Delete className="size-md" />
-                      </bd.Button>
-                    </bd.Toolbar>
-                  </div>
-                  <dl className="pt-4">
-                    {azObject.fields.map((azFiled) => {
-                      return (
-                        <dd key={azFiled.id}>
-                          {" "}
-                          <BasicInput
-                            name="value"
-                            label={azFiled.title}
-                            placeholder="Value"
-                            value={azFiled.value}
-                            labelSize="2"
-                            autoComplete="off"
-                            style={inputStyle}
-                          />
-                        </dd>
-                      );
-                    })}
-                  </dl>
-                </div>
-              );
-            })}
-          </div>
-        </div>
-      </>
-    );
-  };
   const TabContainer = () => {
     return (
       <>
         <Formik
-          initialValues={initialValue}
+          initialValues={originalRole ?? { authorizations: [] }}
           validationSchema={yup.object({
             id: yup.string().required("required"),
             title: yup.string().required("required"),
           })}
-          onSubmit={onSaveClick}
+          onSubmit={onSubmit}
           innerRef={formRef}
         >
-          <Form className="pt-2">
-            <div className="row">
-              <div className="col-md-12">
-                <Tab.Content className="mt-4">
-                  <Tab.Pane eventKey="home">
-                    <h5 className="pb-2 pt-2 ">{t("general-tab")}</h5>
-                    <GeneralTab />
-                    <div className="col-8 border-bottom"></div>
-                    <h5 className="pb-2 pt-5 ">{t("authorization-tab")}</h5>
-                    <AuthorizationTab />
-                  </Tab.Pane>
-                  <Tab.Pane eventKey="general">
-                    <GeneralTab />
-                  </Tab.Pane>
-                  <Tab.Pane eventKey="authorization">
-                    <AuthorizationTab />
-                  </Tab.Pane>
-                </Tab.Content>
-              </div>
-            </div>
-          </Form>
+          {({ values }) => (
+            <Form className="pt-2">
+              <Tab.Content className="mt-4">
+                <Tab.Pane eventKey="home">
+                  <GeneralTab insertMode={insertMode} />
+
+                  {/* RENDER-AUTH --- BEGIN*/}
+
+                  <div className="border-bottom">
+                    <bd.Toolbar className="container">
+                      <h5 className="flex-grow-1">{t("authorization-tab")}</h5>
+                      <SelectAzObjectForm
+                        azObjects={azObjects}
+                        onSelect={(object) => {
+                          values.authorizations.push({ ...object });
+                          //addObjectToList(object, values);
+                        }}
+                      />
+                      <div className="flex-grow-1" />
+                    </bd.Toolbar>
+                  </div>
+                  <RenderAuthorizations role={values} onDeleteAzObject={onDeleteAzObject} />
+
+                  {/* RENDER-AUTH -- END */}
+                </Tab.Pane>
+                <Tab.Pane eventKey="general">{/* <GeneralTab /> */}</Tab.Pane>
+                <Tab.Pane eventKey="authorization">{/* <AuthorizationTab /> */}</Tab.Pane>
+              </Tab.Content>
+            </Form>
+          )}
         </Formik>
       </>
     );
@@ -302,6 +186,7 @@ export const EditRole = ({ roleId, onGoBack }) => {
   );
 };
 
+//
 //
 const SelectAzObjectForm = ({ azObjects, onSelect }) => {
   const { t } = useTranslation();
@@ -363,6 +248,7 @@ const SelectAzObjectForm = ({ azObjects, onSelect }) => {
     useFlexLayout,
     useResizeColumns
   );
+
   const addNewAzObjectClick = (row) => {
     roleApi
       .getAzObjectFields(row.id)
@@ -373,6 +259,7 @@ const SelectAzObjectForm = ({ azObjects, onSelect }) => {
         notify.error(ex);
       });
   };
+
   return (
     <>
       <bd.Button color="primary" variant="icon" type="button" onClick={handleShow}>
@@ -414,5 +301,22 @@ const SelectAzObjectForm = ({ azObjects, onSelect }) => {
         </Modal.Footer>
       </Modal>
     </>
+  );
+};
+
+/**
+ *
+ *
+ */
+const GeneralTab = ({ insertMode }) => {
+  const { t } = useTranslation();
+  return (
+    <div className="row">
+      <div className="col-md-6" style={{ maxWidth: 400 }}>
+        <BasicInput name="id" label={t("role-id")} labelSize="4" autoComplete="off" autoFocus readOnly={!insertMode} />
+        <BasicInput name="title" label={t("title")} labelSize="4" autoComplete="off" autoFocus />
+        <BasicInput name="applicationId" label={t("application-id")} labelSize="4" autoComplete="off" autoFocus />
+      </div>
+    </div>
   );
 };

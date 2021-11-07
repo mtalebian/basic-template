@@ -3,14 +3,13 @@ import { api } from "./api";
 import { apiConfig } from "./config";
 
 export const roleApi = {
-  getRoles: () => api.directCall("get", apiConfig.roleUrl + "/roles/" + settings.projectId),
+  getRoles: (projectId) => api.directCall("get", apiConfig.roleUrl + "/roles/" + projectId),
 
-  getRole: (id) => api.call("get", apiConfig.roleUrl + `/role-by-id/${settings.projectId}/${id}`, null),
+  getRole: (projectId, id) => api.call("get", apiConfig.roleUrl + `/role-by-id/${projectId}/${id}`, null),
 
-  deleteRole: (id) => api.call("delete", apiConfig.roleUrl + `/delete-role/${settings.projectId}/${id}`, null),
+  deleteRole: (projectId, id) => api.call("delete", apiConfig.roleUrl + `/delete-role/${projectId}/${id}`, null),
 
-  getAzObjects:() => api.directCall("get", apiConfig.roleUrl + "/azObjects/" + settings.projectId),
+  getAzObjects: (projectId) => api.directCall("get", apiConfig.roleUrl + "/azObjects/" + projectId),
 
-  getAzObjectFields:(objectId)=>api.directCall("post", apiConfig.roleUrl + `/azObjectFields/${settings.projectId}/${objectId}`),
-  
+  getAzObjectFields: (projectId, objectId) => api.directCall("post", apiConfig.roleUrl + `/azObjectFields/${projectId}/${objectId}`),
 };
