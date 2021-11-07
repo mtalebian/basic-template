@@ -165,7 +165,7 @@ export const BrowseTable = ({ table, onGoBack }) => {
                                         size="md"
                                         disabled={!tableApi.selectedFlatRows.length}
                                         onClick={(e) => {
-                                            setEditState({ edit: true, row: tableApi.selectedFlatRows[0].values });
+                                            setEditState({ edit: true, row: tableApi.selectedFlatRows[0].original });
                                         }}
                                     >
                                         {/* <icons.Add /> */}

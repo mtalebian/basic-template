@@ -87,7 +87,8 @@ export const FormikInput = ({
     const getDisplayText = (item) => (showValues ? getValue(item) : getText(item));
     const selectedItemIndex = multiSelect || !Array.isArray(items) ? -1 : items.findIndex((x) => getValue(x) === field.value);
 
-    function onToggleSelect() {
+    function onToggleSelect(e) {
+        stopEvent(e);
         if (isMenuOpen) setIsMenuOpen(false);
         var is_open = !isListOpen;
         setIsListOpen(is_open);
@@ -95,7 +96,8 @@ export const FormikInput = ({
         inputRef.current?.focus();
     }
 
-    function onToggleMenu() {
+    function onToggleMenu(e) {
+        stopEvent(e);
         if (isListOpen) setIsListOpen(false);
         var is_open = !isMenuOpen;
         if (is_open && onOpeningMenu) onOpeningMenu();
@@ -168,7 +170,7 @@ export const FormikInput = ({
                     key={getValue(x)}
                     className={classNames("bd-dropdown-item d-flex flex-align-center", { active: getIndexOf(x) >= 0 })}
                     onClick={(e) => {
-                        if (multiSelect) e.stopPropagation();
+                        if (multiSelect) stopEvent(e);
                         selectItem(x);
                     }}
                 >
@@ -233,7 +235,7 @@ export const FormikInput = ({
                         <input
                             value={filter || ""}
                             onChange={(e) => setFilter(e.target.value)}
-                            onClick={(e) => e.stopPropagation()}
+                            onClick={(e) => stopEvent(e)}
                             className="form-control"
                         />
                     )}
@@ -251,3 +253,8 @@ export const FormikInput = ({
         </FormRow>
     );
 };
+
+function stopEvent(e) {
+    if (e?.stopPropagation) e.stopPropagation(e);
+    if (e?.preventDefault) e.preventDefault(e);
+}

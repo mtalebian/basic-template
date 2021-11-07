@@ -3,6 +3,8 @@ import React, { useState } from "react";
 import * as bd from "react-basic-design";
 import * as icons from "../../assets/icons";
 import { FormikInput } from "../forms";
+import { FilterLookup } from "./filter-lookup";
+import { FilterX } from "./filter-x";
 
 export const Filter = ({
     trace,
@@ -14,18 +16,10 @@ export const Filter = ({
     inputClassName,
     autoComplete,
 
-    //buttonTitle,
-    //buttonOnClick,
-
     items,
     multiSelect,
     showValues,
-    filterable,
     autoGrow,
-
-    //menuTitle,
-    //menu,
-    //onOpeningMenu,
 
     className,
     width,
@@ -34,11 +28,21 @@ export const Filter = ({
 
     readOnly,
     name,
+    simple,
     ...props
 }) => {
-    let [field, meta, helper] = useField({ ...props, name, type });
-    const values = field.value ? field.value : [];
+    const [lookupIsOpen, setLookupIsOpen] = useState(false);
+    const [field, meta, helper] = useField({ ...props, name, type });
+    const values = field.value ? field.value : simple ? null : [];
     const [nameIndex, setNameIndex] = useState(0);
+
+    const removeFilter = (e, xIndex) => {
+        if (Array.isArray(values)) {
+            values.splice(xIndex, 1);
+            helper.setValue(values);
+            if (values.length >= 1) e.stopPropagation();
+        }
+    };
 
     const menu = !Array.isArray(values) ? (
         <></>
@@ -57,10 +61,7 @@ export const Filter = ({
                     variant="text"
                     size="sm"
                     color="primary"
-                    onClick={(e) => {
-                        e.stopPropagation();
-                        alert(`close ${x}`);
-                    }}
+                    onClick={(e) => removeFilter(e, xIndex)}
                     className="my-n1 m-e-n2"
                 >
                     <icons.Close className="size-sm" />
@@ -70,78 +71,45 @@ export const Filter = ({
     );
 
     return (
-        <FormikInput
-            button1={{
-                icon: <icons.OpenInNew />,
-                action: () => alert("ccc"),
-            }}
-            button2={{
-                icon: <icons.ArrowDropDown />,
-                action: () => alert("ccc"),
-            }}
-            //
-            trace={trace}
-            label={label}
-            labelSize={labelSize}
-            //
-            id={id}
-            type={type}
-            inputClassName={inputClassName}
-            autoComplete={autoComplete}
-            //
-            buttonTitle={<icons.OpenInNew style={{ fontSize: "1.125rem" }} />}
-            buttonOnClick={() => {
-                alert("ccc");
-            }}
-            //
-            items={items}
-            multiSelect={multiSelect}
-            showValues={showValues}
-            filterable={filterable}
-            autoGrow={autoGrow}
-            //
-            //menuTitle={menuTitle}
-            //menu={menu}
-            //onOpeningMenu={onOpeningMenu}
+        <>
+            <FormikInput
+                trace={true}
+                label={label}
+                //labelSize={labelSize}
 
-            menuTitle={values.length && <FilterX count={values.length} style={{ fontSize: "1.125rem" }} />}
-            menu={menu}
-            //
-            className={className}
-            width={width}
-            maxWidth={maxWidth}
-            style={style}
-            readOnly={readOnly}
-            {...props}
-            name={`${name}[${nameIndex}]`}
-        />
+                id={id}
+                type={type}
+                inputClassName={inputClassName}
+                autoComplete={autoComplete}
+                //
+
+                buttonTitle={!simple && <icons.OpenInNew style={{ fontSize: "1.125rem" }} />}
+                buttonOnClick={(e) => {
+                    //e.stopPropagation();
+                    setLookupIsOpen(true);
+                }}
+                //
+
+                items={items}
+                multiSelect={multiSelect}
+                showValues={showValues}
+                //filterable={Array.isArray(items) && items.length > 10}
+                autoGrow={autoGrow}
+                //
+
+                menuTitle={values.length > 1 && <FilterX count={values.length} style={{ fontSize: "1.125rem" }} />}
+                menu={menu}
+                //
+
+                className={className}
+                width={width}
+                maxWidth={maxWidth}
+                style={style}
+                readOnly={readOnly}
+                {...props}
+                name={simple ? name : `${name}[${nameIndex}]`}
+            />
+            <FilterLookup name={name} show={lookupIsOpen} setShow={setLookupIsOpen} title={label} />
+        </>
     );
-};
-
-export const FilterX = ({ count, ...props }) => {
-    switch (count) {
-        case 0:
-            return <icons.FilterNone {...props} />;
-        case 1:
-            return <icons.Filter1 {...props} />;
-        case 2:
-            return <icons.Filter2 {...props} />;
-        case 3:
-            return <icons.Filter3 {...props} />;
-        case 4:
-            return <icons.Filter4 {...props} />;
-        case 5:
-            return <icons.Filter5 {...props} />;
-        case 6:
-            return <icons.Filter6 {...props} />;
-        case 7:
-            return <icons.Filter7 {...props} />;
-        case 8:
-            return <icons.Filter8 {...props} />;
-        case 9:
-            return <icons.Filter9 {...props} />;
-
-        default:
-            return <icons.Filter9Plus {...props} />;
-    }
 };

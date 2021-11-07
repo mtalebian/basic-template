@@ -2,7 +2,7 @@ import React from "react";
 import classNames from "classnames";
 import { Form, Formik } from "formik";
 
-export const FormikForm = ({ initialValues, validationSchema, onSubmit, innerRef, validate, className, dense, children }) => {
+export const FormikForm = ({ initialValues, validationSchema, onSubmit, innerRef, validate, className, flex, dense, children }) => {
     return (
         <Formik
             initialValues={initialValues}
@@ -13,6 +13,7 @@ export const FormikForm = ({ initialValues, validationSchema, onSubmit, innerRef
         >
             <Form
                 className={classNames(className, "bd-form", {
+                    "bd-form-flex": flex,
                     "bd-form-dense": dense,
                 })}
             >

@@ -96,9 +96,6 @@
 /* 
 */
 .bd-form {
-    display: flex;
-    flex-wrap: wrap;
-
     .bd-form-row {
         @include marginEnd(1rem);
     }
@@ -117,6 +114,11 @@
             }
         }
     }
+}
+
+.bd-form-flex {
+    display: flex;
+    flex-wrap: wrap;
 }
 
 .bd-form-dense {
@@ -138,6 +140,10 @@
     height: 1.75rem;
 }
 */
+
+.btn-compact {
+    height: 1.75rem;
+}
 
 /*******************/
 @mixin basicForm($palette) {

@@ -4,6 +4,7 @@ import * as bd from "react-basic-design";
 import * as icons from "../../assets/icons";
 import { FormRow } from "./form-row.jsx";
 import { Filter } from "../filters/filter.jsx";
+import { FilterX } from "../filters/filter-x.jsx";
 //import { useField } from "formik";
 
 export function FormikTest() {
@@ -12,6 +13,7 @@ export function FormikTest() {
             <bd2.FormikForm
                 initialValues={{ status: 1, firstName: "Mahdi", lastName: "Talebian", age: 10, comments: "this is textarea" }}
                 onSubmit={(values) => alert(JSON.stringify(values, null, 2))}
+                flex
                 dense
                 className="pt-3 p-s-3"
             >
@@ -23,6 +25,7 @@ export function FormikTest() {
             <bd2.FormikForm
                 initialValues={{ name: "Mahdi", age: 10, status: [2], filter: ["=1", ">2", "<3", "1...2", "*a", "bb*"] }}
                 onSubmit={(values) => alert(JSON.stringify(values, null, 2))}
+                flex
                 dense
                 className="pt-3 p-s-3"
             >
@@ -34,6 +37,7 @@ export function FormikTest() {
             <bd2.FormikForm
                 initialValues={{ status: 1, firstName: "Mahdi", lastName: "Talebian", age: 10 }}
                 onSubmit={(values) => alert("submited")}
+                flex
                 dense
                 className="pt-3 p-s-3"
             >
@@ -315,32 +319,4 @@ const DropDownTest = () => {
             </select>
         </>
     );
-};
-
-export const FilterX = ({ count, ...props }) => {
-    switch (count) {
-        case 0:
-            return <icons.FilterNone {...props} />;
-        case 1:
-            return <icons.Filter1 {...props} />;
-        case 2:
-            return <icons.Filter2 {...props} />;
-        case 3:
-            return <icons.Filter3 {...props} />;
-        case 4:
-            return <icons.Filter4 {...props} />;
-        case 5:
-            return <icons.Filter5 {...props} />;
-        case 6:
-            return <icons.Filter6 {...props} />;
-        case 7:
-            return <icons.Filter7 {...props} />;
-        case 8:
-            return <icons.Filter8 {...props} />;
-        case 9:
-            return <icons.Filter9 {...props} />;
-
-        default:
-            return <icons.Filter9Plus {...props} />;
-    }
 };
