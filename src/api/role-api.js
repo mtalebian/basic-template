@@ -8,4 +8,9 @@ export const roleApi = {
   getRole: (id) => api.call("get", apiConfig.roleUrl + `/role-by-id/${settings.projectId}/${id}`, null),
 
   deleteRole: (id) => api.call("delete", apiConfig.roleUrl + `/delete-role/${settings.projectId}/${id}`, null),
+
+  getAzObjects:() => api.directCall("get", apiConfig.roleUrl + "/azObjects/" + settings.projectId),
+
+  getAzObjectFields:(objectId)=>api.directCall("post", apiConfig.roleUrl + `/azObjectFields/${settings.projectId}/${objectId}`),
+  
 };

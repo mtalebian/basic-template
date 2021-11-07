@@ -9,6 +9,7 @@ import { BasicInput } from "../../../components/basic-form/basic-input";
 import { RenderTableDiv } from "../../../components/table/render-table-div";
 import { Modal, Tab } from "react-bootstrap";
 import { roleApi } from "../../../api/role-api";
+import { useAccount } from "../../../app/account-context";
 import { msgbox } from "react-basic-design";
 import { DefaultEditor } from "../../../components/table/editors";
 import { TableTitlebar } from "../../../components/table";
@@ -26,11 +27,13 @@ import {
   //useRowState,
   useResizeColumns,
 } from "react-table";
+import { object } from "yup/lib/locale";
 
 export const EditRole = ({ roleId, onGoBack }) => {
   const { t } = useTranslation();
   const formRef = useRef();
   const insertMode = !roleId;
+  const account = useAccount();
   const titlePage = insertMode ? "New-Role" : "Edit-Role";
   const [busy, setBusy] = useState(false);
   const [role, setRole] = useState(null);
@@ -48,7 +51,7 @@ export const EditRole = ({ roleId, onGoBack }) => {
     {
       title: "Massenger",
       id: 1,
-      Fields: [
+      fields: [
         { id: "readField", title: "Read", value: "1" },
         { id: "Reply", title: "Reply", value: "2" },
         { id: "Block", title: "Block", value: "3" },
@@ -57,7 +60,7 @@ export const EditRole = ({ roleId, onGoBack }) => {
     {
       title: "Payment",
       id: 2,
-      Fields: [
+      fields: [
         { id: "Filed1", title: "Filed1", value: "" },
         { id: "Field2", title: "Field2", value: "" },
       ],
@@ -75,11 +78,18 @@ export const EditRole = ({ roleId, onGoBack }) => {
           notify.error(ex);
         });
     }
-    if (!insertMode && !authorizationObject.length) {
-      setAuthorizationObject(authorizationObjectCurrentRole);
-    }
-    if (!azObjects.length) {
-      setAzObjects(azObjectListLoadedFromDB);
+    // if (insertMode && !authorizationObject.length) {
+    //   setAuthorizationObject(authorizationObjectCurrentRole);
+    // }
+    if (insertMode && !azObjects.length && account.isConnected()) {
+      roleApi
+        .getAzObjects()
+        .then((x) => {
+          setAzObjects(x);
+        })
+        .catch((ex) => {
+          notify.error(ex);
+        });
     }
   });
 
@@ -157,11 +167,23 @@ export const EditRole = ({ roleId, onGoBack }) => {
     const inputStyle = {
       maxWidth: 250,
     };
+    const setAuth = (object) => {
+      const newobj = {
+        title: object.title,
+        id: object.id,
+        fields: object.fields,
+      };
+      if(authorizationObject.filter(x=>x.id==object.id).length==0){
+        setAuthorizationObject([...authorizationObject, newobj]);
+      }else{
+        notify.error("امكان انتخاب آيتم تكراري نيست");
+      }  
+    };
     return (
       <>
         <div className="col-5">
           <bd.Toolbar className="container">
-            <SelectAzObjectForm azObjects={azObjects} onSelect={(object) => setAuthorizationObject([...authorizationObject, object])} />
+            <SelectAzObjectForm azObjects={azObjects} onSelect={(object) => setAuth(object)} />
             <div className="flex-grow-1" />
           </bd.Toolbar>
           <div className="border-bottom"></div>
@@ -182,7 +204,7 @@ export const EditRole = ({ roleId, onGoBack }) => {
                     </bd.Toolbar>
                   </div>
                   <dl className="pt-4">
-                    {azObject.Fields.map((azFiled) => {
+                    {azObject.fields.map((azFiled) => {
                       return (
                         <dd key={azFiled.id}>
                           {" "}
@@ -342,12 +364,14 @@ const SelectAzObjectForm = ({ azObjects, onSelect }) => {
     useResizeColumns
   );
   const addNewAzObjectClick = (row) => {
-    const newAzObject = {
-      title: "NewObject",
-      id: 3,
-      Fields: [{ id: "fff", title: "fff", value: "8" }],
-    };
-    onSelect(newAzObject);
+    roleApi
+      .getAzObjectFields(row.id)
+      .then((x) => {
+        onSelect(x);
+      })
+      .catch((ex) => {
+        notify.error(ex);
+      });
   };
   return (
     <>
