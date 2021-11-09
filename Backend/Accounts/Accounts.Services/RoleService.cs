@@ -10,20 +10,21 @@ namespace Accounts.Services
 {
     internal class RoleService<TUser> : IRoleService<TUser> where TUser : User
     {
+
         private protected IAccountUnitOfWork<User> db { get; }
         public RoleService(IAccountUnitOfWork<User> db)
         {
             this.db = db;
-        }
 
+        }
         public IList<Role> GetAllRoles(string projectId)
         {
-            return db.Roles.Where(item => item.ProjectId == projectId);
+            return db.Roles.GetAll(projectId);
         }
 
         public Role GetRoleById(string projectId, string id)
         {
-            return db.Roles.FirstOrDefault(x => x.Id == id && x.ProjectId == projectId);
+            return db.Roles.GetRoleById(projectId, id);
         }
 
         public void InsertRole(Role item)

@@ -5,7 +5,7 @@ namespace Accounts.Core
 {
     public interface IAzFieldService
     {
+        AzField GetAzField(string id);
         IList<AzField> GetAzFieldsByObjectId(string projectId,string objectId);
-     
     }
 }

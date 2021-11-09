@@ -17,10 +17,13 @@ namespace Accounts.Services
             this.db = db;
             this._AccountsConfig = accountsConfig.Value;
         }
-
         public IList<AzField> GetAzFieldsByObjectId(string projectId,string objectId)
         {
             return db.AzFields.Where(x => x.Project.Id == projectId && x.AzObjectFields.Any(x=>x.ObjectId==objectId)).ToList();
+        }
+        public AzField GetAzField(string id)
+        {
+            return db.AzFields.FirstOrDefault(x => x.Id == id);
         }
     }
 }

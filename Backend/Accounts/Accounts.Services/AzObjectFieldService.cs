@@ -17,7 +17,6 @@ namespace Accounts.Services
             this.db = db;
             this._AccountsConfig = accountsConfig.Value;
         }
-
         public IList<AzObjectField> GetAll(string projectId)
         {
             return db.AzObjectFields.GetAll(projectId);

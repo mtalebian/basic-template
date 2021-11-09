@@ -56,14 +56,14 @@ export const RoleApp = () => {
       setProjects(x.projects);
       // TODO
       //setAzObjects(x.azObjects);
-      roleApi
-        .getAzObjects()
-        .then((x) => {
-          setAzObjects(x);
-        })
-        .catch((ex) => {
-          notify.error(ex);
-        });
+      // roleApi
+      //   .getAzObjects()
+      //   .then((x) => {
+      //     setAzObjects(x);
+      //   })
+      //   .catch((ex) => {
+      //     notify.error(ex);
+      //   });
     });
 
   useEffect(() => {
@@ -78,7 +78,8 @@ export const RoleApp = () => {
     roleApi
       .getRoles(prj.id)
       .then((x) => {
-        setRoles(x);
+        setRoles(x.roles);
+        setAzObjects(x.azObjects);
       })
       .catch((ex) => {
         notify.error(ex);
@@ -90,15 +91,10 @@ export const RoleApp = () => {
       setEditState({ edit: true, row: role });
       return;
     }
-
-    console.log("DATA NOT FOUND", role["data"]);
-
     roleApi
       .getRole(currentProject.id, role.id)
       .then((x) => {
         role.data = x;
-        //TODO
-        x.authorizations = [];
         setEditState({ edit: true, row: role });
       })
       .catch((ex) => {
@@ -117,9 +113,8 @@ export const RoleApp = () => {
       },
       columns: useMemo(
         () => [
-          { Header: t("project-id"), accessor: "projectId", width: 50 },
           { Header: t("id"), accessor: "id", width: 100 },
-          { Header: t("application-id"), accessor: "applicationId" },
+          { Header: t("application-title"), accessor: "applicationTitle" },
           { Header: t("title"), accessor: "title" },
         ],
         []
@@ -184,9 +179,7 @@ export const RoleApp = () => {
                       variant="text"
                       color="primary"
                       onClick={() => {
-                        console.log("DATA", roles[0]["data"]);
-
-                        //startEditRole(null);
+                        startEditRole(null);
                       }}
                     >
                       <icons.Add />
@@ -215,6 +208,7 @@ export const RoleApp = () => {
 
       {editState.edit && (
         <EditRole
+          currentProjectId={currentProject.id}
           originalRole={editState.row?.data}
           azObjects={azObjects}
           onGoBack={(item) => {
@@ -237,7 +231,7 @@ export const RoleApp = () => {
           onChange={(newValue, originalValue) => {
             setEditState({ edit: false });
             if (originalValue == null) {
-              setRoles([...roles, { id: newValue.id, title: newValue.title, data: newValue }]);
+              setRoles([...roles, { id: newValue.id, applicationTitle: newValue.applicationTitle, title: newValue.title, data: newValue }]);
             } else {
               var i = roles.findIndex((x) => x.id === originalValue.id);
               if (!newValue) {
@@ -246,13 +240,12 @@ export const RoleApp = () => {
                 var newRole = {
                   ...roles[i],
                   title: newValue.title,
-                  applicationId: newValue.applicationId,
+                  applicationTitle: newValue.applicationTitle,
                   data: { ...newValue },
                 };
                 var newRoles = [...roles];
                 newRoles[i] = newRole;
                 setRoles(newRoles);
-                console.log("newRoles", newRoles);
               }
             }
           }}

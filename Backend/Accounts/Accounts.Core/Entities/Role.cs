@@ -25,7 +25,7 @@ namespace Accounts.Core
 
         public Role()
         {
-            CreatedAt = DateTime.Now;
+            LastUpdate = DateTime.Now;
         }
 
     }

@@ -24,7 +24,7 @@ namespace Accounts.Services
         }
         public User GetUser(string nationalCode)
         {
-            return db.Users.FirstOrDefault(x => x.NationalCode == nationalCode);
+            return db.Users.Where(x => x.NationalCode == nationalCode).FirstOrDefault();
         }
         public User GetUser(long UserId)
         {
@@ -32,9 +32,8 @@ namespace Accounts.Services
         }
         public User GetUserByUserName(string userName)
         {
-            return db.Users.FirstOrDefault(x => x.UserName == userName);
+            return db.Users.Where(x => x.UserName == userName).FirstOrDefault();
         }
-
         public void Insert(User user)
         {
             db.Users.Add(user);

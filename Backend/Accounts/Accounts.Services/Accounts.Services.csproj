@@ -16,4 +16,8 @@
     <ProjectReference Include="..\Accounts.Core\Accounts.Core.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="DTO\" />
+  </ItemGroup>
+
 </Project>

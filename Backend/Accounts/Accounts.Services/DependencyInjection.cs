@@ -27,18 +27,12 @@ namespace Microsoft.Extensions.DependencyInjection
         public static void AddAuthorizationService<TUser>(this IServiceCollection services) where TUser : User
         {
             services.AddScoped<IRoleService<TUser>, RoleService<TUser>>();
-        }
-        public static void AddAzObjectFieldService(this IServiceCollection services)
-        {
             services.AddScoped<IAzObjectFieldService, AzObjectFieldService>();
-        }
-        public static void AddAzObjectService(this IServiceCollection services)
-        {
             services.AddScoped<IAzObjectService, AzObjectService>();
-        }
-        public static void AddAzFieldService(this IServiceCollection services)
-        {
             services.AddScoped<IAzFieldService, AzFieldService>();
+            services.AddScoped<IAuthorizationService, AuthorizationService>();
+            services.AddScoped<IAzValueService, AzValueService>();
+            services.AddScoped<IApplicationService, ApplicationService>();
         }
 
     }

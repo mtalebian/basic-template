@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Accounts.Controllers
 {
-    public class AzAuthorizationDTO
+    public class AuthorizationDTO
     {
         public string Id { get; set; }
         public string Title { get; set; }

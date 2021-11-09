@@ -30,6 +30,7 @@ namespace Accounts.Controllers
         #endregion
         #region Authorization
         public const string DuplicateRole = "اين نقش قبلا ثبت شده است";
+        public const string InvalidApplication = "كد برنامه وارد شده نامعتبر است";
         #endregion
 
     }

@@ -18,9 +18,6 @@ namespace Microsoft.Extensions.DependencyInjection
             services.AddMenuService();
             services.AddUserManagmentService();
             services.AddAuthorizationService<TUser>();
-            services.AddAzObjectFieldService();
-            services.AddAzObjectService();
-            services.AddAzFieldService();
         }
     }
 }

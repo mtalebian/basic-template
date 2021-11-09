@@ -3,10 +3,12 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Accounts.Controllers
 {
-    public class RoleDTO
+    public class RoleDetailsDTO
     {
-        public string Id { get; set; }
 
+        public List<AuthorizationDTO> Authorizations { get; set; }
+
+        public string Id { get; set; }
         public string ApplicationTitle { get; set; }
         public string Title { get; set; }
     }
