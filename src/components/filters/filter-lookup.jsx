@@ -1,3 +1,4 @@
+import classNames from "classnames";
 import { useField } from "formik";
 import React, { useEffect, useState } from "react";
 import * as bd from "react-basic-design";
@@ -19,7 +20,7 @@ const ROPs = [
 ];
 
 /********/
-export const FilterLookup = ({ name, title, show, setShow, isNumber, ...props }) => {
+export const FilterLookup = ({ name, title, show, setShow, isNumber, checkTable, ...props }) => {
     const [values, setValues] = useState(null);
     const [field, meta, helper] = useField({ name });
 
@@ -48,24 +49,39 @@ export const FilterLookup = ({ name, title, show, setShow, isNumber, ...props })
         }
     };
     const okClick = () => {
-        helper.setValue(values);
+        const list = [];
+        for (let i = 0; i < values.length; i++) {
+            const v = values[i];
+            if (v.rop === "x...y") list.push(`${v.x}...${v.y}`);
+            else list.push(v.rop.replace("x", v.x));
+        }
+        helper.setValue(list);
         hide();
+    };
+
+    const onChangeROP = (e, i) => {
+        const list = [...values];
+        list[i].rop = e.target.value;
+        setValues(list);
     };
 
     return (
         <Modal show={show} onHide={hide} dialogClassName="modal-1024 px-md-4" centered fullscreen="md-down" backdrop="static">
             <bd.Panel title={title} style={{ height: 40 }}></bd.Panel>
-            <bd.TabStrip className="border-bottom p-s-2" size="sm" style={{ height: 44 }}>
-                <bd.TabStripItem>
-                    <Text>search-and-select</Text>
-                </bd.TabStripItem>
 
-                <bd.TabStripItem>
-                    <Text>define-conditions</Text>
-                </bd.TabStripItem>
-            </bd.TabStrip>
+            {checkTable && (
+                <bd.TabStrip className="border-bottom p-s-2" size="sm" style={{ height: 44 }}>
+                    <bd.TabStripItem>
+                        <Text>search-and-select</Text>
+                    </bd.TabStripItem>
 
-            <Modal.Body className="p-0" style={{ height }}>
+                    <bd.TabStripItem>
+                        <Text>define-conditions</Text>
+                    </bd.TabStripItem>
+                </bd.TabStrip>
+            )}
+
+            <Modal.Body className={classNames("p-0 border-top bg-shade-3", { "mt-3": !checkTable })} style={{ height }}>
                 <div className="h-100 d-flex flex-column overflow-auto nano-scroll">
                     <div className="p-3 flex-grow-1">
                         {values &&
@@ -73,7 +89,12 @@ export const FilterLookup = ({ name, title, show, setShow, isNumber, ...props })
                                 <div key={itemIndex} className="container-flluid">
                                     <div className="row mb-2 gx-2">
                                         <div className="mb-2 col-12 col-sm-2">
-                                            <select className="form-select compact" style={{ lineHeight: 1 }}>
+                                            <select
+                                                className="form-select compact"
+                                                style={{ lineHeight: 1 }}
+                                                value={item.rop}
+                                                onChange={(e) => onChangeROP(e, itemIndex)}
+                                            >
                                                 <TOptGroup labelCode="include">
                                                     {ROPs.map(
                                                         (r) =>
@@ -95,6 +116,7 @@ export const FilterLookup = ({ name, title, show, setShow, isNumber, ...props })
                                                     )}
                                                 </TOptGroup>
                                             </select>
+                                            {item.rop}
                                         </div>
                                         <div className="mb-2 col-12 col-sm-9">
                                             <div className="d-flex">
@@ -104,11 +126,13 @@ export const FilterLookup = ({ name, title, show, setShow, isNumber, ...props })
                                                     onChange={(e) => setValue(e, itemIndex)}
                                                 />
 
-                                                <input
-                                                    className="form-control compact m-s-2"
-                                                    value={item.y || ""}
-                                                    onChange={(e) => setValue(e, itemIndex)}
-                                                />
+                                                {(item.rop === "x...y" || item.rop === "!x...y") && (
+                                                    <input
+                                                        className="form-control compact m-s-2"
+                                                        value={item.y || ""}
+                                                        onChange={(e) => setValue(e, itemIndex)}
+                                                    />
+                                                )}
                                             </div>
                                         </div>
                                         <div className="mb-2 col-12 col-sm-1">
@@ -134,7 +158,7 @@ export const FilterLookup = ({ name, title, show, setShow, isNumber, ...props })
                 </div>
             </Modal.Body>
 
-            <Modal.Footer className="py-2 px-4 border-top text-secondary-text0 d-flex">
+            <Modal.Footer className="py-2 px-4 border-top text-secondary-text d-flex">
                 <T count={values ? values.length : 1}>@count filter(s)</T>
                 <div className="flex-grow-1"></div>
                 <bd.Button color="secondary" onClick={okClick} className0="compact">

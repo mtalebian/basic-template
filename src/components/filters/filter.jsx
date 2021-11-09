@@ -10,7 +10,6 @@ import { FilterX } from "./filter-x";
 export const Filter = ({
     trace,
     label,
-    labelSize,
 
     id,
     type,
@@ -30,6 +29,9 @@ export const Filter = ({
     readOnly,
     name,
     simple,
+    checkTable,
+    rowValues,
+    isNumber,
     ...props
 }) => {
     const [lookupIsOpen, setLookupIsOpen] = useState(false);
@@ -58,31 +60,30 @@ export const Filter = ({
         setNameIndex(values.length);
     };
 
-    const menu = !Array.isArray(values) ? (
-        <></>
-    ) : (
-        values.map((x, xIndex) => (
-            <div
-                key={xIndex}
-                className={classNames("bd-dropdown-item d-flex", { active: nameIndex === xIndex })}
-                onClick={(e) => {
-                    setNameIndex(xIndex);
-                }}
-            >
-                <span className="flex-grow-1">{x}</span>
-                <bd.Button
-                    type="button"
-                    variant="text"
-                    size="sm"
-                    color="primary"
-                    onClick={(e) => removeFilter(e, xIndex)}
-                    className="my-n1 m-e-n2"
-                >
-                    <icons.Close className="size-sm" />
-                </bd.Button>
-            </div>
-        ))
-    );
+    const menu =
+        simple || !Array.isArray(values)
+            ? null
+            : values.map((x, xIndex) => (
+                  <div
+                      key={xIndex}
+                      className={classNames("bd-dropdown-item d-flex", { active: nameIndex === xIndex })}
+                      onClick={(e) => {
+                          setNameIndex(xIndex);
+                      }}
+                  >
+                      <span className="flex-grow-1">{x}</span>
+                      <bd.Button
+                          type="button"
+                          variant="text"
+                          size="sm"
+                          color="primary"
+                          onClick={(e) => removeFilter(e, xIndex)}
+                          className="my-n1 m-e-n2"
+                      >
+                          <icons.Close className="size-sm" />
+                      </bd.Button>
+                  </div>
+              ));
 
     useEffect(() => {
         var i = nameIndex;
@@ -94,21 +95,31 @@ export const Filter = ({
         }
     }, [nameIndex, values]);
 
+    function openLookup() {
+        if (!simple) setLookupIsOpen(true);
+    }
+
     function onKeyDown(e, isMenuOpen) {
         const UP = 38;
         const DOWN = 40;
         const ENTER = 13;
         const INSERT = 45;
         const DELETE = 46;
+        const F4 = 115;
+        let i;
 
         switch (e.keyCode) {
+            case F4:
+                openLookup();
+                break;
+
             case UP:
-                var i = nameIndex - 1;
+                i = nameIndex - 1;
                 if (i >= 0) setNameIndex(i);
                 break;
 
             case DOWN:
-                var i = nameIndex + 1;
+                i = nameIndex + 1;
                 if (i < values.length) setNameIndex(i);
                 break;
 
@@ -139,8 +150,6 @@ export const Filter = ({
             <FormikInput
                 trace={true}
                 label={label}
-                //labelSize={labelSize}
-
                 id={id}
                 type={type}
                 inputClassName={inputClassName}
@@ -148,10 +157,7 @@ export const Filter = ({
                 //
 
                 buttonTitle={!simple && <icons.OpenInNew style={{ fontSize: "1.125rem" }} />}
-                buttonOnClick={(e) => {
-                    //e.stopPropagation();
-                    setLookupIsOpen(true);
-                }}
+                buttonOnClick={(e) => openLookup()}
                 //
 
                 items={items}
@@ -161,7 +167,7 @@ export const Filter = ({
                 autoGrow={autoGrow}
                 //
 
-                menuTitle={values.length > 1 && <FilterX count={values.length} style={{ fontSize: "1.125rem" }} />}
+                menuTitle={simple ? null : values.length > 1 && <FilterX count={values.length} style={{ fontSize: "1.125rem" }} />}
                 menu={menu}
                 //
 
@@ -175,7 +181,18 @@ export const Filter = ({
                 //onKeyDown={(a, b) => onKeyDown(a, b)}
                 onKeyDown={onKeyDown}
             />
-            {lookupIsOpen && <FilterLookup name={name} show={lookupIsOpen} setShow={setLookupIsOpen} title={label} isNumber={true} />}
+
+            {lookupIsOpen && (
+                <FilterLookup
+                    name={name}
+                    show={lookupIsOpen}
+                    setShow={setLookupIsOpen}
+                    title={label}
+                    isNumber={isNumber}
+                    checkTable={checkTable}
+                    rowValues={rowValues}
+                />
+            )}
         </>
     );
 };
