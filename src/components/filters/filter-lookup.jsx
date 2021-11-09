@@ -2,7 +2,7 @@ import classNames from "classnames";
 import { useField } from "formik";
 import React, { useEffect, useState } from "react";
 import * as bd from "react-basic-design";
-import { Modal } from "react-bootstrap";
+import { Modal, Tab } from "react-bootstrap";
 import * as icons from "../../assets/icons";
 import { T, Text, TOptGroup, TOption } from "../basic/text";
 
@@ -67,96 +67,103 @@ export const FilterLookup = ({ name, title, show, setShow, isNumber, checkTable,
 
     return (
         <Modal show={show} onHide={hide} dialogClassName="modal-1024 px-md-4" centered fullscreen="md-down" backdrop="static">
-            <bd.Panel title={title} style={{ height: 40 }}></bd.Panel>
+            <bd.Toolbar className="p-s-4" size="sm">
+                <h5>{title}</h5>
+            </bd.Toolbar>
 
-            {checkTable && (
-                <bd.TabStrip className="border-bottom p-s-2" size="sm" style={{ height: 44 }}>
-                    <bd.TabStripItem>
+            <Tab.Container defaultActiveKey="conditions">
+                <bd.TabStrip indicatorColor="primary" textColor="primary" className="lookup-tab p-s-2" size="sm">
+                    <bd.TabStripItem eventKey="check-table">
                         <Text>search-and-select</Text>
                     </bd.TabStripItem>
 
-                    <bd.TabStripItem>
+                    <bd.TabStripItem eventKey="conditions">
                         <Text>define-conditions</Text>
                     </bd.TabStripItem>
                 </bd.TabStrip>
-            )}
 
-            <Modal.Body className={classNames("p-0 border-top bg-shade-3", { "mt-3": !checkTable })} style={{ height }}>
-                <div className="h-100 d-flex flex-column overflow-auto nano-scroll">
-                    <div className="p-3 flex-grow-1">
-                        {values &&
-                            values.map((item, itemIndex) => (
-                                <div key={itemIndex} className="container-flluid">
-                                    <div className="row mb-2 gx-2">
-                                        <div className="mb-2 col-12 col-sm-2">
-                                            <select
-                                                className="form-select compact"
-                                                style={{ lineHeight: 1 }}
-                                                value={item.rop}
-                                                onChange={(e) => onChangeROP(e, itemIndex)}
-                                            >
-                                                <TOptGroup labelCode="include">
-                                                    {ROPs.map(
-                                                        (r) =>
-                                                            (!isNumber || !r.ignoreNumbers) && (
-                                                                <TOption key={r.id} value={r.id}>
-                                                                    {r.title}
-                                                                </TOption>
-                                                            )
-                                                    )}
-                                                </TOptGroup>
-                                                <TOptGroup labelCode="exclude">
-                                                    {ROPs.map(
-                                                        (r) =>
-                                                            (!isNumber || !r.ignoreNumbers) && (
-                                                                <TOption key={"!" + r.id} value={"!" + r.id}>
-                                                                    {r.title}
-                                                                </TOption>
-                                                            )
-                                                    )}
-                                                </TOptGroup>
-                                            </select>
-                                            {item.rop}
-                                        </div>
-                                        <div className="mb-2 col-12 col-sm-9">
-                                            <div className="d-flex">
-                                                <input
-                                                    className="form-control compact"
-                                                    value={item.x || ""}
-                                                    onChange={(e) => setValue(e, itemIndex)}
-                                                />
+                <Modal.Body className={classNames("p-0 border-top bg-shade-3", { "mt-3": !checkTable })} style={{ height }}>
+                    <Tab.Content>
+                        <Tab.Pane eventKey="check-table">000</Tab.Pane>
+                        <Tab.Pane eventKey="conditions">
+                            <div className="h-100 d-flex flex-column overflow-auto nano-scroll">
+                                <div className="p-3 flex-grow-1">
+                                    {values &&
+                                        values.map((item, itemIndex) => (
+                                            <div key={itemIndex} className="container-flluid">
+                                                <div className="row mb-2 gx-2">
+                                                    <div className="mb-2 col-12 col-sm-2">
+                                                        <select
+                                                            className="form-select compact"
+                                                            style={{ lineHeight: 1 }}
+                                                            value={item.rop}
+                                                            onChange={(e) => onChangeROP(e, itemIndex)}
+                                                        >
+                                                            <TOptGroup labelCode="include">
+                                                                {ROPs.map(
+                                                                    (r) =>
+                                                                        (!isNumber || !r.ignoreNumbers) && (
+                                                                            <TOption key={r.id} value={r.id}>
+                                                                                {r.title}
+                                                                            </TOption>
+                                                                        )
+                                                                )}
+                                                            </TOptGroup>
+                                                            <TOptGroup labelCode="exclude">
+                                                                {ROPs.map(
+                                                                    (r) =>
+                                                                        (!isNumber || !r.ignoreNumbers) && (
+                                                                            <TOption key={"!" + r.id} value={"!" + r.id}>
+                                                                                {r.title}
+                                                                            </TOption>
+                                                                        )
+                                                                )}
+                                                            </TOptGroup>
+                                                        </select>
+                                                    </div>
 
-                                                {(item.rop === "x...y" || item.rop === "!x...y") && (
-                                                    <input
-                                                        className="form-control compact m-s-2"
-                                                        value={item.y || ""}
-                                                        onChange={(e) => setValue(e, itemIndex)}
-                                                    />
-                                                )}
+                                                    <div className="mb-2 col-12 col-sm-9">
+                                                        <div className="d-flex">
+                                                            <input
+                                                                className="form-control compact"
+                                                                value={item.x || ""}
+                                                                onChange={(e) => setValue(e, itemIndex)}
+                                                            />
+
+                                                            {(item.rop === "x...y" || item.rop === "!x...y") && (
+                                                                <input
+                                                                    className="form-control compact m-s-2"
+                                                                    value={item.y || ""}
+                                                                    onChange={(e) => setValue(e, itemIndex)}
+                                                                />
+                                                            )}
+                                                        </div>
+                                                    </div>
+                                                    <div className="mb-2 col-12 col-sm-1">
+                                                        <bd.Button
+                                                            variant="text"
+                                                            color="primary"
+                                                            className="compact"
+                                                            size="sm"
+                                                            onClick={() => deleteFilter(itemIndex)}
+                                                        >
+                                                            <icons.Close />
+                                                        </bd.Button>
+                                                    </div>
+                                                </div>
                                             </div>
-                                        </div>
-                                        <div className="mb-2 col-12 col-sm-1">
-                                            <bd.Button
-                                                variant="text"
-                                                color="primary"
-                                                className="compact"
-                                                size="sm"
-                                                onClick={() => deleteFilter(itemIndex)}
-                                            >
-                                                <icons.Close />
-                                            </bd.Button>
-                                        </div>
+                                        ))}
+                                    <div className="text-end mx-3">
+                                        <bd.Button color="primary" className="compact" onClick={() => setValues([...values, ""])}>
+                                            <Text>add</Text>
+                                        </bd.Button>
                                     </div>
                                 </div>
-                            ))}
-                        <div className="text-end mx-3">
-                            <bd.Button color="primary" className="compact" onClick={() => setValues([...values, ""])}>
-                                <Text>add</Text>
-                            </bd.Button>
-                        </div>
-                    </div>
-                </div>
-            </Modal.Body>
+                            </div>
+                        </Tab.Pane>
+                    </Tab.Content>
+                </Modal.Body>
+            </Tab.Container>
 
             <Modal.Footer className="py-2 px-4 border-top text-secondary-text d-flex">
                 <T count={values ? values.length : 1}>@count filter(s)</T>

@@ -52,7 +52,7 @@ export function FormikTest() {
 const FilterDemo = () => {
     return (
         <>
-            <Filter type="text" label="filter" name="filter" width="12rem" simple={false} checkTable0="tmp.Projects" isNumber={false} />
+            <Filter type="text" label="filter" name="filter" width="12rem" simple={false} checkTable="tmp.Projects" isNumber={false} />
 
             <bd2.FormikInput label="Name" name="name" width="10rem" />
             <bd2.FormikInput label="Age" name="age" width="10rem" type="number" />

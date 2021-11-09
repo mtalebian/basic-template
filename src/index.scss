@@ -17,6 +17,19 @@
 @import "./components/tilemenu/tilemenu.scss";
 @import "./components/scss/utils.scss";
 
+.lookup-tab.tabstrip {
+    @include paddingStart(1rem !important);
+
+    .nav {
+        min-height: 44px !important;
+
+        .nav-link {
+            padding: 0 0.25rem !important;
+            @include marginEnd(1.5rem !important);
+        }
+    }
+}
+
 html,
 body,
 #root {
