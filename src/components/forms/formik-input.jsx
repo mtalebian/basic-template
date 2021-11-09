@@ -32,6 +32,8 @@ export const FormikInput = ({
     width,
     maxWidth,
     style,
+    onKeyDown,
+    onClick,
 
     readOnly,
     ...props
@@ -64,21 +66,43 @@ export const FormikInput = ({
         "bd-border-error": meta.error,
     });
 
-    function onKeyDown(e) {
+    function onClickHandler(e) {
+        if (onClick) onClick(e);
+        if (isSelect) onToggleSelect(e);
+    }
+
+    function onKeyDownHandler(e) {
+        const ESC = 27;
         const UP = 38;
         const DOWN = 40;
         const ENTER = 13;
 
-        if (!multiSelect && !readOnly && Array.isArray(items)) {
-            if (e.keyCode === ENTER) {
-                onToggleSelect();
+        if (onKeyDown && onKeyDown(e, isMenuOpen) === false) return;
+        if (readOnly || (!items && !menu)) return;
+
+        switch (e.keyCode) {
+            case ESC:
+                closeAll();
                 return;
-            }
-            let delta = e.keyCode === UP ? -1 : e.keyCode === DOWN ? 1 : 0;
-            if (delta !== 0) {
-                let idx = selectedItemIndex + delta;
-                if (idx >= 0 && idx < items.length) selectItem(items[idx]);
-            }
+
+            case ENTER:
+                if (!e?.shiftKey && !e?.ctrlKey) {
+                    if (items) onToggleSelect();
+                    else if (menu) onToggleMenu();
+                }
+                return;
+
+            case UP:
+            case DOWN:
+                if (!multiSelect && Array.isArray(items)) {
+                    let delta = e.keyCode === UP ? -1 : 1;
+                    let idx = selectedItemIndex + delta;
+                    if (idx >= 0 && idx < items.length) selectItem(items[idx]);
+                }
+                break;
+
+            default:
+                break;
         }
     }
 
@@ -88,21 +112,24 @@ export const FormikInput = ({
     const selectedItemIndex = multiSelect || !Array.isArray(items) ? -1 : items.findIndex((x) => getValue(x) === field.value);
 
     function onToggleSelect(e) {
-        stopEvent(e);
-        if (isMenuOpen) setIsMenuOpen(false);
-        var is_open = !isListOpen;
-        setIsListOpen(is_open);
-        setFilter("");
-        inputRef.current?.focus();
+        //stopEvent(e);
+        //if (isMenuOpen) setIsMenuOpen(false);
+        setTimeout(() => {
+            setIsListOpen(!isListOpen);
+            setFilter("");
+            inputRef.current?.focus();
+        }, 0);
     }
 
     function onToggleMenu(e) {
-        stopEvent(e);
-        if (isListOpen) setIsListOpen(false);
-        var is_open = !isMenuOpen;
-        if (is_open && onOpeningMenu) onOpeningMenu();
-        setIsMenuOpen(is_open);
-        inputRef.current?.focus();
+        //stopEvent(e);
+        //if (isListOpen) setIsListOpen(false);
+        setTimeout(() => {
+            var is_open = !isMenuOpen;
+            if (is_open && onOpeningMenu) onOpeningMenu();
+            setIsMenuOpen(is_open);
+            inputRef.current?.focus();
+        }, 0);
     }
 
     function closeAll() {
@@ -125,10 +152,6 @@ export const FormikInput = ({
                 }
             }
         }
-    }
-
-    if (Array.isArray(items)) {
-        field = { ...field, onKeyDown };
     }
 
     const selectItem = (item) => {
@@ -202,7 +225,6 @@ export const FormikInput = ({
 
     if (isSelect) {
         type = "text";
-        field["onClick"] = onToggleSelect;
     }
 
     var inp = (
@@ -224,6 +246,8 @@ export const FormikInput = ({
                 {...props}
                 value={displayValue || ""}
                 readOnly={readOnly || isSelect}
+                onKeyDown={onKeyDownHandler}
+                onClick={onClickHandler}
             />
 
             {isListOpen && items && (
@@ -232,12 +256,14 @@ export const FormikInput = ({
                     style={{ marginTop: 1 }}
                 >
                     {filterable && (
-                        <input
-                            value={filter || ""}
-                            onChange={(e) => setFilter(e.target.value)}
-                            onClick={(e) => stopEvent(e)}
-                            className="form-control"
-                        />
+                        <div class="bd-dropdown-filter">
+                            <input
+                                value={filter || ""}
+                                onChange={(e) => setFilter(e.target.value)}
+                                onClick={(e) => stopEvent(e)}
+                                className="form-control"
+                            />
+                        </div>
                     )}
                     {buildList()}
                 </div>

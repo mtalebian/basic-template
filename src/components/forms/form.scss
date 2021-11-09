@@ -19,14 +19,17 @@
 
     -webkit-overflow-scrolling: touch;
     overflow-y: auto;
+}
+
+.bd-dropdown-filter {
+    padding: 0.25rem 0.5rem;
+    cursor: default;
+    white-space: nowrap;
+    overflow: hidden;
 
     .form-control {
         position: sticky;
         top: 0;
-        border-radius: 0;
-        border-top: none;
-        border-left: none;
-        border-right: none;
         z-index: 1;
     }
 }

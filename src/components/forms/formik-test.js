@@ -7,6 +7,8 @@ import { Filter } from "../filters/filter.jsx";
 import { FilterX } from "../filters/filter-x.jsx";
 //import { useField } from "formik";
 
+function alert() {}
+
 export function FormikTest() {
     return (
         <>

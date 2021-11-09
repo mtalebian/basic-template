@@ -3,15 +3,25 @@ import React, { useEffect, useState } from "react";
 import * as bd from "react-basic-design";
 import { Modal } from "react-bootstrap";
 import * as icons from "../../assets/icons";
-import { Text } from "../basic/text";
-import { FormikInput } from "../forms";
+import { T, Text, TOptGroup, TOption } from "../basic/text";
 
-export const FilterLookup = ({ name, title, show, setShow, ...props }) => {
+const ROPs = [
+    { id: "*x*", title: "contains", ignoreNumbers: true },
+    { id: "=x", title: "equal-to" },
+    { id: "x...y", title: "between" },
+    { id: "x*", title: "starts-with", ignoreNumbers: true },
+    { id: "*x", title: "ends-with", ignoreNumbers: true },
+    { id: "<x", title: "less-than" },
+    { id: "<=x", title: "less-than-or-equal" },
+    { id: ">x", title: "greater-than" },
+    { id: ">=x", title: "greater-than-or-equal" },
+    { id: "<EMPTY>", title: "empty", ignoreNumbers: true },
+];
+
+/********/
+export const FilterLookup = ({ name, title, show, setShow, isNumber, ...props }) => {
     const [values, setValues] = useState(null);
     const [field, meta, helper] = useField({ name });
-    const setValue = (e, i) => {
-        setValues([...values.filter((z, zIndex) => zIndex < i), e.target.value, ...values.filter((z, zIndex) => zIndex > i)]);
-    };
 
     const hide = () => setShow(false);
     let height = window.innerHeight - 200;
@@ -20,11 +30,30 @@ export const FilterLookup = ({ name, title, show, setShow, ...props }) => {
     if (window.innerWidth < 768) height = undefined;
 
     useEffect(() => {
-        if (!values) setValues(!Array.isArray(field.value) ? [] : field.value);
+        if (!values) setValues(convertFieldValueToList(field.value));
     }, [values, field.value]);
 
+    const setValue = (e, i) => {
+        var newValues = [...values];
+        newValues[i].x = e.target.value;
+        setValues(newValues);
+    };
+
+    const deleteFilter = (xIndex) => {
+        if (values.length <= 1) setValues([null]);
+        else {
+            var newValues = [...values];
+            newValues.splice(xIndex, 1);
+            setValues(newValues);
+        }
+    };
+    const okClick = () => {
+        helper.setValue(values);
+        hide();
+    };
+
     return (
-        <Modal show={show} onHide={hide} dialogClassName="modal-1024 px-md-4" centered fullscreen="md-down">
+        <Modal show={show} onHide={hide} dialogClassName="modal-1024 px-md-4" centered fullscreen="md-down" backdrop="static">
             <bd.Panel title={title} style={{ height: 40 }}></bd.Panel>
             <bd.TabStrip className="border-bottom p-s-2" size="sm" style={{ height: 44 }}>
                 <bd.TabStripItem>
@@ -40,20 +69,47 @@ export const FilterLookup = ({ name, title, show, setShow, ...props }) => {
                 <div className="h-100 d-flex flex-column overflow-auto nano-scroll">
                     <div className="p-3 flex-grow-1">
                         {values &&
-                            values.map((x, xIndex) => (
-                                <div key={xIndex} className="container-flluid">
-                                    <div className="row mb-2 gx-30">
-                                        <div className="mb-2 col-12 col-sm-3">
-                                            <select className="form-select compact">
-                                                {["=", ">=", "<="].map((op) => (
-                                                    <option key={op} value={op}>
-                                                        {op}
-                                                    </option>
-                                                ))}
+                            values.map((item, itemIndex) => (
+                                <div key={itemIndex} className="container-flluid">
+                                    <div className="row mb-2 gx-2">
+                                        <div className="mb-2 col-12 col-sm-2">
+                                            <select className="form-select compact" style={{ lineHeight: 1 }}>
+                                                <TOptGroup labelCode="include">
+                                                    {ROPs.map(
+                                                        (r) =>
+                                                            (!isNumber || !r.ignoreNumbers) && (
+                                                                <TOption key={r.id} value={r.id}>
+                                                                    {r.title}
+                                                                </TOption>
+                                                            )
+                                                    )}
+                                                </TOptGroup>
+                                                <TOptGroup labelCode="exclude">
+                                                    {ROPs.map(
+                                                        (r) =>
+                                                            (!isNumber || !r.ignoreNumbers) && (
+                                                                <TOption key={"!" + r.id} value={"!" + r.id}>
+                                                                    {r.title}
+                                                                </TOption>
+                                                            )
+                                                    )}
+                                                </TOptGroup>
                                             </select>
                                         </div>
-                                        <div className="mb-2 col-12 col-sm-8">
-                                            <input className="form-control compact" value={x || ""} onChange={(e) => setValue(e, xIndex)} />
+                                        <div className="mb-2 col-12 col-sm-9">
+                                            <div className="d-flex">
+                                                <input
+                                                    className="form-control compact"
+                                                    value={item.x || ""}
+                                                    onChange={(e) => setValue(e, itemIndex)}
+                                                />
+
+                                                <input
+                                                    className="form-control compact m-s-2"
+                                                    value={item.y || ""}
+                                                    onChange={(e) => setValue(e, itemIndex)}
+                                                />
+                                            </div>
                                         </div>
                                         <div className="mb-2 col-12 col-sm-1">
                                             <bd.Button
@@ -61,12 +117,7 @@ export const FilterLookup = ({ name, title, show, setShow, ...props }) => {
                                                 color="primary"
                                                 className="compact"
                                                 size="sm"
-                                                onClick={() =>
-                                                    setValues([
-                                                        ...values.filter((z, zIndex) => zIndex < xIndex),
-                                                        ...values.filter((z, zIndex) => zIndex > xIndex),
-                                                    ])
-                                                }
+                                                onClick={() => deleteFilter(itemIndex)}
                                             >
                                                 <icons.Close />
                                             </bd.Button>
@@ -80,43 +131,84 @@ export const FilterLookup = ({ name, title, show, setShow, ...props }) => {
                             </bd.Button>
                         </div>
                     </div>
-
-                    <div>
-                        <div className="mx-4 mb-1">
-                            <Text>selected-items-and-conditions</Text>
-                        </div>
-                        <div className="form-control mx-4 mb-3 px-2 pt-1 pb-0 d-flex flex-wrap w-auto">
-                            {values &&
-                                values.map((x, xIndex) => (
-                                    <div
-                                        key={xIndex}
-                                        className="border rounded px-2 m-e-2 mb-1 d-flex align-items-center cur-pointer hover-shade-5"
-                                    >
-                                        {x}
-                                        <icons.Close className="size-sm m-s-2" style={{ fontSize: 14 }} />
-                                    </div>
-                                ))}
-                        </div>
-                    </div>
                 </div>
             </Modal.Body>
 
-            <Modal.Footer className="py-2 px-4 border-top text-end">
-                <bd.Button color="secondary" onClick={hide} className="compact">
+            <Modal.Footer className="py-2 px-4 border-top text-secondary-text0 d-flex">
+                <T count={values ? values.length : 1}>@count filter(s)</T>
+                <div className="flex-grow-1"></div>
+                <bd.Button color="secondary" onClick={okClick} className0="compact">
                     <Text>ok</Text>
                 </bd.Button>
 
-                <bd.Button variant="text" onClick={hide} className="compact">
+                <bd.Button variant="text" onClick={hide} className0="compact">
                     <Text>cancel</Text>
                 </bd.Button>
             </Modal.Footer>
-
-            {/* 
-
-            <div className="bg-shade-3 d-flex flex-column overflow-auto" style={{ minHeight: minHeight }}>
-                
-            </div>
-*/}
         </Modal>
     );
 };
+
+function convertFieldValueToList(items) {
+    console.log("items", items);
+    if (!Array.isArray(items)) items = [];
+    var list = [];
+    for (let i = 0; i < items.length; i++) {
+        const item = items[i]?.trim();
+        const v = { rop: "", x: "", y: "" };
+        list.push(v);
+
+        if (item?.toUpperCase() === "<EMPTY>") {
+            v.rop = "<EMPTY>";
+        } else if (typeof item === "string") {
+            var c0 = charAt(item, 0);
+            switch (c0) {
+                case "*":
+                    if (charAt(item, -1) === "*") {
+                        v.rop = "*x*";
+                        v.x = item.substr(1, item.length - 2);
+                    } else {
+                        v.rop = "*x";
+                        v.x = item.substr(1);
+                    }
+                    break;
+
+                case "=":
+                    v.rop = "=x";
+                    v.x = item.substr(1);
+                    break;
+
+                case "<":
+                case ">":
+                    if (charAt(item, 1) === "=") {
+                        v.rop = c0 + "=x";
+                        v.x = item.substr(2);
+                    } else {
+                        v.rop = c0 + "x";
+                        v.x = item.substr(1);
+                    }
+                    break;
+
+                default:
+                    if (charAt(item, -1) === "*") {
+                        v.rop = "x*";
+                        v.x = item.substr(0, item.length - 1);
+                    } else {
+                        const idx = item.indexOf("...");
+                        if (idx >= 0) {
+                            v.rop = "x...y";
+                            v.x = item.substr(0, idx);
+                            v.y = item.substr(idx + 3);
+                        } else v.x = item;
+                    }
+                    break;
+            }
+        }
+    }
+    return list;
+}
+
+function charAt(s, i) {
+    if (i < 0) i += s.length;
+    return i >= 0 && i < s.length ? s[i] : null;
+}

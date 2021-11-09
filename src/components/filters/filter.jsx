@@ -1,5 +1,6 @@
+import classNames from "classnames";
 import { useField } from "formik";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import * as bd from "react-basic-design";
 import * as icons from "../../assets/icons";
 import { FormikInput } from "../forms";
@@ -40,8 +41,21 @@ export const Filter = ({
         if (Array.isArray(values)) {
             values.splice(xIndex, 1);
             helper.setValue(values);
+            if (nameIndex >= values.length) setNameIndex(Math.max(0, values.length - 1));
             if (values.length >= 1) e.stopPropagation();
         }
+    };
+
+    const addFilter = () => {
+        if (!Array.isArray(values)) return;
+        for (let i = 0; i < values.length; i++) {
+            if (!values[i]) {
+                setNameIndex(i);
+                return;
+            }
+        }
+        helper.setValue([...values, ""]);
+        setNameIndex(values.length);
     };
 
     const menu = !Array.isArray(values) ? (
@@ -49,8 +63,8 @@ export const Filter = ({
     ) : (
         values.map((x, xIndex) => (
             <div
-                key={x}
-                className="bd-dropdown-item d-flex "
+                key={xIndex}
+                className={classNames("bd-dropdown-item d-flex", { active: nameIndex === xIndex })}
                 onClick={(e) => {
                     setNameIndex(xIndex);
                 }}
@@ -69,6 +83,56 @@ export const Filter = ({
             </div>
         ))
     );
+
+    useEffect(() => {
+        var i = nameIndex;
+        if (i >= values.length) {
+            i = Math.max(0, values.length - 1);
+            if (i !== nameIndex) {
+                setNameIndex(i);
+            }
+        }
+    }, [nameIndex, values]);
+
+    function onKeyDown(e, isMenuOpen) {
+        const UP = 38;
+        const DOWN = 40;
+        const ENTER = 13;
+        const INSERT = 45;
+        const DELETE = 46;
+
+        switch (e.keyCode) {
+            case UP:
+                var i = nameIndex - 1;
+                if (i >= 0) setNameIndex(i);
+                break;
+
+            case DOWN:
+                var i = nameIndex + 1;
+                if (i < values.length) setNameIndex(i);
+                break;
+
+            case DELETE:
+                if (!isMenuOpen) break;
+                removeFilter(e, nameIndex);
+                e.stopPropagation();
+                return false;
+
+            case ENTER:
+                if (e?.shiftKey) addFilter();
+                break;
+
+            case INSERT:
+                console.log("isMenuOpen", isMenuOpen);
+                if (!isMenuOpen) break;
+                addFilter();
+                e.stopPropagation();
+                return false;
+
+            default:
+                break;
+        }
+    }
 
     return (
         <>
@@ -108,8 +172,10 @@ export const Filter = ({
                 readOnly={readOnly}
                 {...props}
                 name={simple ? name : `${name}[${nameIndex}]`}
+                //onKeyDown={(a, b) => onKeyDown(a, b)}
+                onKeyDown={onKeyDown}
             />
-            {lookupIsOpen && <FilterLookup name={name} show={lookupIsOpen} setShow={setLookupIsOpen} title={label} />}
+            {lookupIsOpen && <FilterLookup name={name} show={lookupIsOpen} setShow={setLookupIsOpen} title={label} isNumber={true} />}
         </>
     );
 };
