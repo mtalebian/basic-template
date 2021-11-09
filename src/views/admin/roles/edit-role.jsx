@@ -88,22 +88,6 @@ export const EditRole = ({ currentProjectId, originalRole, azObjects, onGoBack, 
     ));
   };
 
-  const onDeleteAzObject = (id) => {
-    console.log(authorizations);
-    msgbox("you are deleting 1 record", null, [
-      { title: "close" },
-      {
-        title: "delete",
-        action: (hide) => {
-          hide();
-          const temp = authorizations.filter((azObject) => azObject.id != id);
-          setAuthorizations(temp);
-        },
-      },
-    ]);
-    return;
-  };
-
   const moreMenu = (
     <bd.Menu>
       <bd.MenuItem disabled={insertMode | busy || deleting} onClick={deleteRoleClickHandler}>
@@ -147,7 +131,7 @@ export const EditRole = ({ currentProjectId, originalRole, azObjects, onGoBack, 
                       <div className="flex-grow-1" />
                     </bd.Toolbar>
                   </div>
-                  <RenderAuthorizations role={values} onDeleteAzObject={onDeleteAzObject} />
+                  <RenderAuthorizations role={values} />
 
                   {/* RENDER-AUTH -- END */}
                 </Tab.Pane>

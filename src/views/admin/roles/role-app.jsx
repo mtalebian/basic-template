@@ -54,16 +54,6 @@ export const RoleApp = () => {
   const onRefresh = () =>
     menuApi.load("not-assigned-app").then((x) => {
       setProjects(x.projects);
-      // TODO
-      //setAzObjects(x.azObjects);
-      // roleApi
-      //   .getAzObjects()
-      //   .then((x) => {
-      //     setAzObjects(x);
-      //   })
-      //   .catch((ex) => {
-      //     notify.error(ex);
-      //   });
     });
 
   useEffect(() => {
@@ -213,20 +203,6 @@ export const RoleApp = () => {
           azObjects={azObjects}
           onGoBack={(item) => {
             setEditState({ edit: false, row: null });
-            // if (!!item && selectedRole == null) {
-            //   setRoles([...roles, item]);
-            //   setSelectedRole(item.id);
-            // } else if (!!item && selectedRole != null) {
-            //   const list = [...roles];
-            //   const i = list.findIndex((x) => x.id === item.id);
-            //   list[i] = item;
-            //   setRoles(list);
-            //   setSelectedRole(item.id);
-            // } else if (item === null) {
-            //   const newRoles = roles.filter((x) => x.id !== selectedRole);
-            //   setRoles(newRoles);
-            //   setSelectedRole(null);
-            // }
           }}
           onChange={(newValue, originalValue) => {
             setEditState({ edit: false });
