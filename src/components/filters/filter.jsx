@@ -109,7 +109,7 @@ export const Filter = ({
                 {...props}
                 name={simple ? name : `${name}[${nameIndex}]`}
             />
-            <FilterLookup name={name} show={lookupIsOpen} setShow={setLookupIsOpen} title={label} />
+            {lookupIsOpen && <FilterLookup name={name} show={lookupIsOpen} setShow={setLookupIsOpen} title={label} />}
         </>
     );
 };
