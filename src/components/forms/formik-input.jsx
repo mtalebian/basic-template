@@ -6,6 +6,7 @@ import * as bd from "react-basic-design";
 import * as icons from "../../assets/icons";
 
 export const FormikInput = ({
+    inputApi,
     trace,
     label,
     labelSize,
@@ -40,10 +41,11 @@ export const FormikInput = ({
 }) => {
     const isSelect = type === "select" || (!type && items);
     const isLabel = type === "label";
-    const inputRef = useRef();
+    const inpRef = useRef();
     const [filter, setFilter] = useState();
     const [isListOpen, setIsListOpen] = useState(false);
     const [isMenuOpen, setIsMenuOpen] = useState(false);
+    if (inputApi) inputApi.current = { focus: () => inpRef.current?.focus(), getRef: () => inpRef.current };
     let [field, meta, helper] = useField({ ...props, type });
     let displayValue = field.value;
 
@@ -117,7 +119,7 @@ export const FormikInput = ({
         setTimeout(() => {
             setIsListOpen(!isListOpen);
             setFilter("");
-            inputRef.current?.focus();
+            inpRef.current?.focus();
         }, 0);
     }
 
@@ -128,7 +130,7 @@ export const FormikInput = ({
             var is_open = !isMenuOpen;
             if (is_open && onOpeningMenu) onOpeningMenu();
             setIsMenuOpen(is_open);
-            inputRef.current?.focus();
+            inpRef.current?.focus();
         }, 0);
     }
 
@@ -167,7 +169,7 @@ export const FormikInput = ({
                 return;
             }
         }
-        inputRef.current?.focus();
+        inpRef.current?.focus();
     };
 
     function getIndexOf(item) {
@@ -237,7 +239,7 @@ export const FormikInput = ({
 
             <input
                 id={id}
-                ref={inputRef}
+                ref={inpRef}
                 type={type}
                 className={cnInput}
                 autoComplete={autoComplete}

@@ -1,6 +1,6 @@
 import classNames from "classnames";
 import { useField } from "formik";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import * as bd from "react-basic-design";
 import * as icons from "../../assets/icons";
 import { FormikInput } from "../forms";
@@ -34,6 +34,7 @@ export const Filter = ({
     isNumber,
     ...props
 }) => {
+    const inputApi = useRef();
     const [lookupIsOpen, setLookupIsOpen] = useState(false);
     const [field, meta, helper] = useField({ ...props, name, type });
     const values = field.value ? field.value : simple ? null : [];
@@ -148,6 +149,7 @@ export const Filter = ({
     return (
         <>
             <FormikInput
+                inputApi={inputApi}
                 trace={true}
                 label={label}
                 id={id}
@@ -186,7 +188,10 @@ export const Filter = ({
                 <FilterLookup
                     name={name}
                     show={lookupIsOpen}
-                    setShow={setLookupIsOpen}
+                    setShow={(visible) => {
+                        setLookupIsOpen(visible);
+                        if (!visible) setTimeout(() => inputApi.current?.getRef()?.focus(), 0);
+                    }}
                     title={label}
                     isNumber={isNumber}
                     checkTable={checkTable}

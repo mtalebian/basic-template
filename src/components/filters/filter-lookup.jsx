@@ -23,6 +23,7 @@ const ROPs = [
 export const FilterLookup = ({ name, title, show, setShow, isNumber, checkTable, ...props }) => {
     const [values, setValues] = useState(null);
     const [field, meta, helper] = useField({ name });
+    const newRow = () => ({ rop: ROPs[0].id, x: null, y: null });
 
     const hide = () => setShow(false);
     let height = window.innerHeight - 200;
@@ -34,14 +35,21 @@ export const FilterLookup = ({ name, title, show, setShow, isNumber, checkTable,
         if (!values) setValues(convertFieldValueToList(field.value));
     }, [values, field.value]);
 
-    const setValue = (e, i) => {
+    const setValue = (e, i, seconValue) => {
         var newValues = [...values];
-        newValues[i].x = e.target.value;
+        if (!seconValue) newValues[i].x = e.target.value;
+        else newValues[i].y = e.target.value;
         setValues(newValues);
     };
 
+    const onChangeROP = (e, i) => {
+        const list = [...values];
+        list[i].rop = e.target.value;
+        setValues(list);
+    };
+
     const deleteFilter = (xIndex) => {
-        if (values.length <= 1) setValues([null]);
+        if (values.length <= 1) setValues([newRow()]);
         else {
             var newValues = [...values];
             newValues.splice(xIndex, 1);
@@ -52,17 +60,16 @@ export const FilterLookup = ({ name, title, show, setShow, isNumber, checkTable,
         const list = [];
         for (let i = 0; i < values.length; i++) {
             const v = values[i];
-            if (v.rop === "x...y") list.push(`${v.x}...${v.y}`);
-            else list.push(v.rop.replace("x", v.x));
+            const x = v.x ? v.x : "";
+            const y = v.y ? v.y : "";
+            if (v.rop === "x...y") {
+                if (x && y) list.push(`${x}...${y}`);
+            } else {
+                if (x) list.push(v.rop.replace("x", x));
+            }
         }
         helper.setValue(list);
         hide();
-    };
-
-    const onChangeROP = (e, i) => {
-        const list = [...values];
-        list[i].rop = e.target.value;
-        setValues(list);
     };
 
     return (
@@ -134,7 +141,7 @@ export const FilterLookup = ({ name, title, show, setShow, isNumber, checkTable,
                                                                 <input
                                                                     className="form-control compact m-s-2"
                                                                     value={item.y || ""}
-                                                                    onChange={(e) => setValue(e, itemIndex)}
+                                                                    onChange={(e) => setValue(e, itemIndex, true)}
                                                                 />
                                                             )}
                                                         </div>
@@ -154,7 +161,7 @@ export const FilterLookup = ({ name, title, show, setShow, isNumber, checkTable,
                                             </div>
                                         ))}
                                     <div className="text-end mx-3">
-                                        <bd.Button color="primary" className="compact" onClick={() => setValues([...values, ""])}>
+                                        <bd.Button color="primary" className="compact" onClick={() => setValues([...values, newRow()])}>
                                             <Text>add</Text>
                                         </bd.Button>
                                     </div>
