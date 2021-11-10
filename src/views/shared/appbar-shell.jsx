@@ -13,7 +13,10 @@ export const shellFullWidthSubject = new Subject(false);
 let g_timer_handler = null;
 export let g_shell_set_app = null;
 
+let last_id = 0;
+
 export function AppbarShell({ setAppRef }) {
+    const [id, setId] = useState(++last_id);
     const [appData, setAppData] = useState({ title: "", goBack: null, buttons: null });
     const [fullWidth, setFullWidth] = useState(shellFullWidthSubject.value);
     const { t } = useTranslation();
@@ -40,15 +43,15 @@ export function AppbarShell({ setAppRef }) {
         </bd.Menu>
     );
 
+    const changeFullWidth = (value) => value !== fullWidth && setFullWidth(value);
+
     let isMounted = true;
     useEffect(() => () => (isMounted = false), []);
 
     useEffect(() => {
-        var binding = shellFullWidthSubject.subscribe((value) => {
-            if (value !== fullWidth) setFullWidth(value);
-        });
+        var binding = shellFullWidthSubject.subscribe(changeFullWidth);
         return binding.remove;
-    }, []);
+    }, [changeFullWidth]);
 
     g_shell_set_app = (title, goBack, buttons) => {
         if (g_timer_handler) {
@@ -103,7 +106,7 @@ export function AppbarShell({ setAppRef }) {
                     </bd.Badge>
                 </bd.Button>
 
-                <bd.Button variant="icon" color="default" menu={menuUser} edge="end" className="d-none d-sm-block">
+                <bd.Button variant="icon" color="default" menu={menuUser} className="d-none d-sm-block">
                     <icons.AccountCircle />
                 </bd.Button>
             </bd.Toolbar>
