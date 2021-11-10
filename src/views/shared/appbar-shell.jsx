@@ -6,17 +6,16 @@ import settings from "../../app/settings";
 import * as icons from "../../assets/icons";
 import { useAccount } from "../../app/account-context";
 import classNames from "classnames";
+import { Subject } from "react-basic-design";
+
+export const shellFullWidthSubject = new Subject(false);
 
 let g_timer_handler = null;
-export let g_shell_is_full_width = false;
-export let g_shell_full_width = () => {
-    g_shell_is_full_width = true;
-};
 export let g_shell_set_app = null;
 
 export function AppbarShell({ setAppRef }) {
     const [appData, setAppData] = useState({ title: "", goBack: null, buttons: null });
-    const [fullWidth, setFullWidth] = useState(g_shell_is_full_width);
+    const [fullWidth, setFullWidth] = useState(shellFullWidthSubject.value);
     const { t } = useTranslation();
     const account = useAccount();
     //const logo_url = settings.getLanguageCode() === "fa" ? "/images/logo/header-logo.png" : "/images/logo/header-logo-en.png";
@@ -44,7 +43,12 @@ export function AppbarShell({ setAppRef }) {
     let isMounted = true;
     useEffect(() => () => (isMounted = false), []);
 
-    g_shell_full_width = () => !fullWidth && setFullWidth(true);
+    useEffect(() => {
+        var binding = shellFullWidthSubject.subscribe((value) => {
+            if (value !== fullWidth) setFullWidth(value);
+        });
+        return binding.remove;
+    }, []);
 
     g_shell_set_app = (title, goBack, buttons) => {
         if (g_timer_handler) {

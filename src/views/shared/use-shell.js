@@ -1,4 +1,4 @@
-import { g_shell_full_width, g_shell_set_app } from "./appbar-shell";
+import { g_shell_set_app, shellFullWidthSubject } from "./appbar-shell";
 
 console.log("useShell");
 
@@ -9,21 +9,7 @@ export const useShell = () => {
         },
 
         fullWidth: () => {
-            g_shell_full_width();
-            return;
-            debugger;
-            console.log("g_shell_full_width", g_shell_full_width);
-            var t = typeof g_shell_full_width;
-
-            console.log("g_shell_full_width: type = ", t);
-
-            if (t === "function") {
-                g_shell_full_width();
-            } else {
-                g_shell_full_width = true;
-            }
-
-            console.log("> g_shell_full_width", g_shell_full_width);
+            shellFullWidthSubject.next(true);
         },
 
         setBusyMode: (value) => {},
