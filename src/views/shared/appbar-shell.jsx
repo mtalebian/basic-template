@@ -5,12 +5,18 @@ import * as bd from "react-basic-design";
 import settings from "../../app/settings";
 import * as icons from "../../assets/icons";
 import { useAccount } from "../../app/account-context";
+import classNames from "classnames";
 
 let g_timer_handler = null;
+export let g_shell_is_full_width = false;
+export let g_shell_full_width = () => {
+    g_shell_is_full_width = true;
+};
 export let g_shell_set_app = null;
 
 export function AppbarShell({ setAppRef }) {
     const [appData, setAppData] = useState({ title: "", goBack: null, buttons: null });
+    const [fullWidth, setFullWidth] = useState(g_shell_is_full_width);
     const { t } = useTranslation();
     const account = useAccount();
     //const logo_url = settings.getLanguageCode() === "fa" ? "/images/logo/header-logo.png" : "/images/logo/header-logo-en.png";
@@ -38,6 +44,8 @@ export function AppbarShell({ setAppRef }) {
     let isMounted = true;
     useEffect(() => () => (isMounted = false), []);
 
+    g_shell_full_width = () => !fullWidth && setFullWidth(true);
+
     g_shell_set_app = (title, goBack, buttons) => {
         if (g_timer_handler) {
             clearTimeout(g_timer_handler);
@@ -55,7 +63,7 @@ export function AppbarShell({ setAppRef }) {
 
     return (
         <bd.AppBar color="shell">
-            <bd.Toolbar size="md" className="container">
+            <bd.Toolbar size="md" className={classNames({ container: !fullWidth, "container-fluid": fullWidth })}>
                 {/* {useRef.current?.getAppTitle()} */}
                 {appData.goBack && (
                     <bd.Button variant="icon" color="default" onClick={() => appData.goBack()}>
