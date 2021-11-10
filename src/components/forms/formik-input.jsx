@@ -2,7 +2,6 @@ import classNames from "classnames";
 import { useField } from "formik";
 import React, { useEffect, useRef, useState } from "react";
 import { FormRow } from "./form-row";
-import * as bd from "react-basic-design";
 import * as icons from "../../assets/icons";
 
 export const FormikInput = ({

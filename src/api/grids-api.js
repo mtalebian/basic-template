@@ -7,6 +7,8 @@ export const gridsApi = {
 
     browseGrid: (id, filters) => api.call("post", `${apiConfig.gridsUrl}/browse-grid?projectId=${settings.projectId}&id=${id}`, filters),
 
+    getSchema: (id) => api.call("post", `${apiConfig.gridsUrl}/get-schema?projectId=${settings.projectId}&id=${id}`, null),
+
     save: (gridId, values, insertMode) => {
         var dto = { action: insertMode ? "insert" : "update", gridId, values };
         return api.call("post", `${apiConfig.gridsUrl}/exec-grid-action?projectId=${settings.projectId}`, dto);

@@ -38,6 +38,19 @@ namespace Forms.Controllers
             return new Response<GroupInfoDTO[]>(result.ToArray());
         }
 
+        [HttpPost("get-schema")]
+        public Response<GridDTO> GetSchema(string projectId, string id)
+        {
+            var grid = service.GetGrid(projectId, id);
+            var columns = service.GetGridColumns(grid.ProjectId, grid.Id);
+            var variants = service.GetGridVariants(grid.ProjectId, grid.Id);
+
+            var result= grid.MapTo<GridDTO>();
+            result.DataColumns = columns.MapTo<GridColumnDTO>();
+            result.Variants = variants.MapTo<GridVariantDTO>();
+            return new Response<GridDTO>(result);
+        }
+
         [HttpPost("browse-grid")]
         public Response<BrowseGridDTO> BrowseGrid(string projectId, string id)
         {

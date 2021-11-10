@@ -1,6 +1,6 @@
 import classNames from "classnames";
 import { useField } from "formik";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import * as bd from "react-basic-design";
 import * as icons from "../../assets/icons";
 import { FormikInput } from "../forms";
@@ -36,8 +36,10 @@ export const Filter = ({
 }) => {
     const inputApi = useRef();
     const [lookupIsOpen, setLookupIsOpen] = useState(false);
-    const [field, meta, helper] = useField({ ...props, name, type });
-    const values = field.value ? field.value : simple ? null : [];
+    const [field, , helper] = useField({ ...props, name, type });
+
+    const calcValues = () => (field.value ? field.value : simple ? null : []);
+    const values = useMemo(calcValues, [calcValues]);
     const [nameIndex, setNameIndex] = useState(0);
 
     const removeFilter = (e, xIndex) => {

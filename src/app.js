@@ -39,12 +39,14 @@ import { TableDesignerApp } from "./views/admin/grid-builder/grid-builder-app";
 import { UserSettingsApp } from "./views/account/user-settings-app";
 import { UsersApp } from "./views/admin/users/users-app";
 import { FormikTest } from "./components/forms/formik-test";
+import { GridTest } from "./components/grid/grid-test";
 
 export function App() {
     return (
         <ThemeProvider>
             <Switch>
-                <Route exact path="/test" render={() => <MainLayout component={FormikTest} />} />
+                <Route exact path="/test-form" render={() => <MainLayout component={FormikTest} />} />
+                <AzRoute exact path="/test-grid" render={() => <MainLayout component={GridTest} />} />
 
                 <Route exact path="/" render={() => <StartupApp />} />
 

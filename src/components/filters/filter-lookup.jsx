@@ -22,7 +22,7 @@ const ROPs = [
 /********/
 export const FilterLookup = ({ name, title, show, setShow, isNumber, checkTable, ...props }) => {
     const [values, setValues] = useState(null);
-    const [field, meta, helper] = useField({ name });
+    const [field, , helper] = useField({ name });
     const newRow = () => ({ rop: ROPs[0].id, x: null, y: null });
 
     const hide = () => setShow(false);
