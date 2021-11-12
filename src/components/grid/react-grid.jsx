@@ -2,13 +2,9 @@ import React, { useState } from "react";
 import { Filter } from "../filters/filter";
 import { FilterBox } from "../filters/filter-box";
 import { useReactTable } from "../table/use-react-table";
-import * as bd from "react-basic-design";
 import { RenderTableDiv } from "../table/render-table-div";
-import { TableTitlebar } from "../table";
-import { Text } from "../basic/text";
-import { msgbox } from "react-basic-design";
 
-export const ReactGrid = ({ title, columns, rows, flexLayout, onExecuteFilter }) => {
+export const ReactGrid = ({ title, columns, data: rows, flexLayout, onExecuteFilter }) => {
     const [data, setData] = useState(rows);
     const [editState, setEditState] = useState({ edit: false, row: null });
 
@@ -37,6 +33,8 @@ export const ReactGrid = ({ title, columns, rows, flexLayout, onExecuteFilter })
                 notify.error(ex);
             });
     };*/
+
+    console.log("columns", columns);
 
     return (
         <>

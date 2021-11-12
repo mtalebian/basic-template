@@ -13,10 +13,7 @@ export const shellFullWidthSubject = new Subject(false);
 let g_timer_handler = null;
 export let g_shell_set_app = null;
 
-let last_id = 0;
-
 export function AppbarShell({ setAppRef }) {
-    const [id, setId] = useState(++last_id);
     const [appData, setAppData] = useState({ title: "", goBack: null, buttons: null });
     const [fullWidth, setFullWidth] = useState(shellFullWidthSubject.value);
     const { t } = useTranslation();

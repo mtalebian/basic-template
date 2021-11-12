@@ -2,8 +2,6 @@ import React, { useRef, useState } from "react";
 import * as bd from "react-basic-design";
 import * as bd2 from "../../components/forms";
 import { Text } from "../../components/basic/text";
-import { Form, Formik } from "formik";
-import classNames from "classnames";
 import { Collapse } from "react-bootstrap";
 import { FormRow } from "../forms/form-row";
 
@@ -82,31 +80,27 @@ export const FilterBox = ({
 
             <Collapse in={isExpanded}>
                 <div>
-                    <Formik
+                    <bd2.FormikForm
                         initialValues={initialFilters}
-                        // validationSchema={yup.object({
-                        //     f1: yup.string().required(),
-                        //     f2: yup.string().required(),
-                        // })}
+                        validationSchema={validationSchema}
                         onSubmit={onSubmitHandler}
                         innerRef={formRef}
                         validate={(values) => {
                             var keys = Object.keys(values ?? {}).filter((x) => !!values[x]);
                             setFiltersCount(keys.length);
                         }}
+                        flex
+                        dense
+                        className="mt-2"
                     >
-                        <Form>
-                            <bd2.Form dense className={classNames("mx-2 mt-2")}>
-                                {children}
-                                {!variants && (
-                                    <FormRow label="" className="flex-grow-1 text-end" style={{ width: "auto" }}>
-                                        <ApplyButton busy={systemIsBusy} formRef={formRef} />
-                                        <SettingsButton visible={showSettings} count={filtersCount} onClick={onOpenSettings} />
-                                    </FormRow>
-                                )}
-                            </bd2.Form>
-                        </Form>
-                    </Formik>
+                        {children}
+                        {!variants && (
+                            <FormRow label="" className="flex-grow-1 text-end" style={{ width: "auto" }}>
+                                <ApplyButton busy={systemIsBusy} formRef={formRef} />
+                                <SettingsButton visible={showSettings} count={filtersCount} onClick={onOpenSettings} />
+                            </FormRow>
+                        )}
+                    </bd2.FormikForm>
                 </div>
             </Collapse>
         </div>

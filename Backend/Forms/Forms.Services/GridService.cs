@@ -18,7 +18,6 @@ namespace Forms.Services
             this.db = db;
         }
 
-
         public IList<Group> GetAllGroups(string projectId)
         {
             return db.Groups.Where(x => x.ProjectId == projectId);
@@ -39,16 +38,28 @@ namespace Forms.Services
             return db.GridColumns.Where(x => x.ProjectId == projectId && x.GridId == gridId).OrderBy(x => x.OrdinalPosition).ToList();
         }
 
-        public DataTable ExecuteSelect(Grid grid, IList<GridColumn> columns, Dictionary<string, object[]> filters)
+        public DataTable ExecuteSelect(Grid grid, IList<GridColumn> columns, Dictionary<string, object> filters, Dictionary<string, object> parameters)
         {
             var fields = columns.Select(x => x.Name).ToArray();
-            var where = new List<string>();
             var sql = $"select {string.Join(",", fields)} from {grid.TableName}";
-            db.GetDataTable(sql);
+            var where = new List<string>();
             if (filters != null)
             {
-                foreach (var filter in filters.Where(x => x.Value != null && x.Value.Length > 1))
+                foreach (var filter in filters.Where(x => x.Value != null))
                 {
+                    if(filter.Value is string)
+                    {
+
+                    }
+                    else if (filter.Value is int)
+                    {
+
+                    }
+                    else if (filter.Value is double)
+                    {
+
+                    }
+                    /*
                     var c = columns.FirstOrDefault(x => x.Name == filter.Key);
                     if (c != null && !string.IsNullOrEmpty(c.Filter))
                     {
@@ -82,6 +93,7 @@ namespace Forms.Services
                                 break;
                         }
                     }
+                    */
                 }
             }
             if (where.Count > 0) sql += " where" + string.Join(" AND ", where);
@@ -242,7 +254,7 @@ namespace Forms.Services
             var list = db.GridVariants.Where(x => x.ProjectId == projectId && x.GridId == gridId);
             if (list.Count == 0)
             {
-                var v = new GridVariant { ProjectId =projectId, GridId=gridId, Title="" };
+                var v = new GridVariant { ProjectId = projectId, GridId = gridId, Title = "" };
             }
             return list;
         }
@@ -255,7 +267,7 @@ namespace Forms.Services
             }
             else
             {
-                var v = db.GridVariants.FirstOrDefault(x=>x.Serial==variant.Serial);
+                var v = db.GridVariants.FirstOrDefault(x => x.Serial == variant.Serial);
                 variant.MapTo(v);
                 db.GridVariants.Add(variant);
             }

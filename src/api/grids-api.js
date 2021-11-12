@@ -7,7 +7,14 @@ export const gridsApi = {
 
     browseGrid: (id, filters) => api.call("post", `${apiConfig.gridsUrl}/browse-grid?projectId=${settings.projectId}&id=${id}`, filters),
 
-    getSchema: (id) => api.call("post", `${apiConfig.gridsUrl}/get-schema?projectId=${settings.projectId}&id=${id}`, null),
+    getGrid: (id) => {
+        return api.call("post", `${apiConfig.gridsUrl}/get-grid?projectId=${settings.projectId}&id=${id}`, null);
+    },
+
+    getGridData: (id, filters, parameters) => {
+        var dto = { filters, parameters };
+        return api.call("post", `${apiConfig.gridsUrl}/get-grid-data?projectId=${settings.projectId}&id=${id}`, dto);
+    },
 
     save: (gridId, values, insertMode) => {
         var dto = { action: insertMode ? "insert" : "update", gridId, values };

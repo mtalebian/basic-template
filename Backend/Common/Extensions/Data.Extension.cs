@@ -335,6 +335,7 @@ namespace System
 
         public static IList<Dictionary<string, object>> ToJSON(this DataTable dt, string fields)
         {
+            if (dt == null) return null;
             var table = new List<Dictionary<string, object>>();
             foreach (DataRow dr in dt.Rows)
                 table.Add(dr.ToJSON(fields));
@@ -396,6 +397,7 @@ namespace System
 
         public static DataTable ToTable<T>(this IEnumerable<T> list)
         {
+            if (list == null) return null;
             var type = typeof(T);
             var properties = type.GetProperties();
             var dataTable = new DataTable(typeof(T).Name);
@@ -418,6 +420,7 @@ namespace System
 
         public static List<T> MapTo<T>(this DataTable tb) where T : class, new()
         {
+            if (tb == null) return null;
             var properties = typeof(T).GetProperties();
             var list = new List<T>();
             foreach (DataRow row in tb.Rows)
@@ -432,6 +435,7 @@ namespace System
 
         public static T MapTo<T>(this DataRow row) where T : class, new()
         {
+            if (row == null) return null;
             var obj = new T();
             Map(row, obj, typeof(T).GetProperties());
             return obj;
@@ -471,8 +475,8 @@ namespace System
 
         public static IList<T> MapTo<T>(this IEnumerable src) where T : class, new()
         {
+            if (src == null) return null;
             var list = new List<T>();
-            if (src == null) return list;
             var properties = typeof(T).GetProperties();
             foreach (var item in src)
             {
@@ -485,6 +489,7 @@ namespace System
 
         public static T MapTo<T>(this object src) where T : class, new()
         {
+            if (src == null) return null;
             var obj = new T();
             MapObject(src, obj, typeof(T).GetProperties());
             return obj;
@@ -492,6 +497,7 @@ namespace System
 
         public static T MapTo<T>(this object src, T targetObj) where T : class
         {
+            if (src == null) return null;
             MapObject(src, targetObj, typeof(T).GetProperties());
             return targetObj;
         }

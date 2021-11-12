@@ -14,7 +14,7 @@ namespace Forms.Core
         void SaveGridVariant(GridVariant variant);
         void DeleteGridVariant(GridVariant variant);
 
-        DataTable ExecuteSelect(Grid table, IList<GridColumn> columns, Dictionary<string, object[]> filters);
+        DataTable ExecuteSelect(Grid table, IList<GridColumn> columns, Dictionary<string, object> filters, Dictionary<string, object> parameters);
         void ExecuteInsert(string projectId, string tableName, Dictionary<string, object> values);
         void ExecuteDelete(string projectId, string tableName, Dictionary<string, object> values);
         void ExecuteUpdate(string projectId, string tableName, Dictionary<string, object> values);

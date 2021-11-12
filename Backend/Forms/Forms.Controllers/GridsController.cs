@@ -38,26 +38,36 @@ namespace Forms.Controllers
             return new Response<GroupInfoDTO[]>(result.ToArray());
         }
 
-        [HttpPost("get-schema")]
-        public Response<GridDTO> GetSchema(string projectId, string id)
+        [HttpPost("get-grid")]
+        public Response<GridDTO> GetGrid(string projectId, string id)
         {
             var grid = service.GetGrid(projectId, id);
             var columns = service.GetGridColumns(grid.ProjectId, grid.Id);
             var variants = service.GetGridVariants(grid.ProjectId, grid.Id);
 
-            var result= grid.MapTo<GridDTO>();
+            var result = grid.MapTo<GridDTO>();
             result.DataColumns = columns.MapTo<GridColumnDTO>();
             result.Variants = variants.MapTo<GridVariantDTO>();
             return new Response<GridDTO>(result);
         }
 
+        [HttpPost("get-grid-data")]
+        public Response<IList<Dictionary<string, object>>> GetGridData(string projectId, string id, [FromBody] GridFilterDTO request)
+        {
+            var grid = service.GetGrid(projectId, id);
+            var columns = service.GetGridColumns(grid.ProjectId, grid.Id);
+            var data = service.ExecuteSelect(grid, columns, request.Filters, request.Parameters);
+
+            return new Response<IList<Dictionary<string, object>>>(data.ToJSON());
+        }
+
         [HttpPost("browse-grid")]
         public Response<BrowseGridDTO> BrowseGrid(string projectId, string id)
         {
-            var filters = (Dictionary<string, object[]>)null;
+            var filters = (Dictionary<string, object>)null;
             var grid = service.GetGrid(projectId, id);
             var columns = service.GetGridColumns(grid.ProjectId, grid.Id);
-            var data = service.ExecuteSelect(grid, columns, filters);
+            var data = service.ExecuteSelect(grid, columns, filters, null);
 
             var result = new BrowseGridDTO();
             result.Schema = grid.MapTo<GridDTO>();

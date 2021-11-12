@@ -175,11 +175,11 @@ export const FilterLookup = ({ name, title, show, setShow, isNumber, checkTable,
             <Modal.Footer className="py-2 px-4 border-top text-secondary-text d-flex">
                 <T count={values ? values.length : 1}>@count filter(s)</T>
                 <div className="flex-grow-1"></div>
-                <bd.Button color="secondary" onClick={okClick} className0="compact">
+                <bd.Button color="secondary" onClick={okClick} className="compact">
                     <Text>ok</Text>
                 </bd.Button>
 
-                <bd.Button variant="text" onClick={hide} className0="compact">
+                <bd.Button variant="text" onClick={hide} className="compact">
                     <Text>cancel</Text>
                 </bd.Button>
             </Modal.Footer>

@@ -150,7 +150,6 @@ export function RenderTableDiv({
     };
 
     function getTableProps() {
-        console.log(tableApi.getTableProps());
         return tableApi.getTableProps();
     }
 
