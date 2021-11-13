@@ -20,6 +20,9 @@ namespace Forms.Core
         public string UpdateSql { get; set; }
         public string DeleteSql { get; set; }
 
+        public bool Filterable { get; set; } = true;
+        public bool HasFilterVariant { get; set; } = false;
+
         public virtual Group Group { get; set; }
         public virtual ICollection<GridColumn> Columns { get; set; }
         public virtual ICollection<GridVariant> Variants { get; set; }

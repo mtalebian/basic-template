@@ -124,20 +124,6 @@
     flex-wrap: wrap;
 }
 
-.bd-form-dense {
-    .form-control {
-        height: 1.75rem;
-        @include paddingStart(8px);
-    }
-
-    & > .btn {
-        height: 1.75rem;
-    }
-
-    .btn {
-        height: 1.75rem;
-    }
-}
 /*
 .form-control.densed {
     height: 1.75rem;
@@ -146,6 +132,19 @@
 
 .compact {
     height: 1.75rem;
+}
+
+.bd-form-compact {
+    .form-control,
+    .form-select {
+        padding-left: 8px;
+        padding-right: 8px;
+        height: 1.75rem;
+    }
+
+    .btn {
+        height: 1.75rem;
+    }
 }
 
 /*******************/

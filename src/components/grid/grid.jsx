@@ -37,25 +37,25 @@ export const Grid = ({ grid, loadData, onExecuteFilter, ...props }) => {
         <>
             {!editState.edit && (
                 <>
-                    <div className="border-bottom bg-default">
-                        <div className="container">
-                            <FilterBox
-                                initialFilters={{ f1: 1, f2: "tow", f3: true }}
-                                expanded
-                                showSettings
-                                //variants={[{ title: "standard" }]}
-                                variants={null}
-                                systemIsBusy={false}
-                                onExecute={(filters) => onExecuteFilter(filters, tableApi)}
-                            >
-                                <Filter name="f1" label="F1" onBlur={(e) => 0} width="12rem" />
-                                <Filter name="f2" label="F2" onBlur={(e) => 0} width="12rem" />
-                                <Filter name="f3" label="F3" onBlur={(e) => 0} width="12rem" />
-                                <Filter name="f4" label="F4" onBlur={(e) => 0} width="12rem" />
-                                <Filter name="f5" label="F5" onBlur={(e) => 0} width="12rem" />
-                            </FilterBox>
+                    {grid.filterable && (
+                        <div className="border-bottom bg-default">
+                            <div className="container">
+                                <FilterBox
+                                    initialFilters={{}}
+                                    expanded
+                                    showSettings
+                                    //variants={[{ title: "standard" }]}
+                                    variants={grid.hasFilterVariant ? grid.variants : null}
+                                    systemIsBusy={false}
+                                    onExecute={(filters) => onExecuteFilter(filters, tableApi)}
+                                >
+                                    {grid.dataColumns.map((x) => (
+                                        <Filter name={setEditState.name} label={x.title} />
+                                    ))}
+                                </FilterBox>
+                            </div>
                         </div>
-                    </div>
+                    )}
 
                     <div className="container mt-2" style={{ marginBottom: 70 }}>
                         {/* <TableTitlebar

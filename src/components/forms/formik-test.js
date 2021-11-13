@@ -16,7 +16,7 @@ export function FormikTest() {
                 initialValues={{ status: 1, firstName: "Mahdi", lastName: "Talebian", age: 10, comments: "this is textarea" }}
                 onSubmit={(values) => alert(JSON.stringify(values, null, 2))}
                 flex
-                dense
+                compact
                 className="pt-3 p-s-3"
             >
                 <FormDemo />
@@ -28,7 +28,7 @@ export function FormikTest() {
                 initialValues={{ name: "Mahdi", age: 10, status: [2], filter: ["=1", ">2", "<3", "1...2", "*a", "bb*"] }}
                 onSubmit={(values) => alert(JSON.stringify(values, null, 2))}
                 flex
-                dense
+                compact
                 className="pt-3 p-s-3"
             >
                 <FilterDemo />
@@ -40,7 +40,7 @@ export function FormikTest() {
                 initialValues={{ status: 1, firstName: "Mahdi", lastName: "Talebian", age: 10 }}
                 onSubmit={(values) => alert("submited")}
                 flex
-                dense
+                compact
                 className="pt-3 p-s-3"
             >
                 <DropDownTest />
@@ -89,7 +89,7 @@ const FilterDemo = () => {
                 ]}
             />
 
-            <bd2.FormikSwitch label="I Agree" name="agree" width="auto" className="p-e-3" dense size="sm" />
+            <bd2.FormikSwitch label="I Agree" name="agree" width="auto" className="p-e-3" compact size="sm" />
 
             <FormRow label="" className="flex-grow-1 text-end">
                 <div>
@@ -123,8 +123,8 @@ const FormDemo = () => {
                 ]}
                 type="select"
             />
-            <bd2.FormikSwitch label="I Agree" name="agree" width="auto" className="p-e-3" dense size="sm" />
-            <bd2.FormikToggle label="readOnly" name="remember" width="auto" size="sm" className="p-e-0" dense readOnly />
+            <bd2.FormikSwitch label="I Agree" name="agree" width="auto" className="p-e-3" compact size="sm" />
+            <bd2.FormikToggle label="readOnly" name="remember" width="auto" size="sm" className="p-e-0" compact readOnly />
             <bd2.FormikInput label="type = label" name="firstName" width="9rem" type="label" inputClassName="bg-transparent" />
             <bd2.FormikTextArea label="comments" name="comments" width="12rem" height="5rem" type="label" />
 

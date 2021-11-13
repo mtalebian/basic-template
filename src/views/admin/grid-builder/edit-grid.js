@@ -295,6 +295,8 @@ export function TableDesignerEditTable({ table, group, onChanged, onGoBack }) {
                                         <BasicInput name="id" label={<Text>grid-id</Text>} labelSize="4" readOnly={!insertMode} autoFocus />
                                         <BasicInput name="title" label={<Text>title</Text>} labelSize="4" />
                                         <BasicSwitch name="flexLayout" label={<Text>flex-layout</Text>} labelSize="4" />
+                                        <BasicSwitch name="filterable" label={<Text>filterable</Text>} labelSize="4" />
+                                        <BasicSwitch name="hasFilterVariant" label={<Text>filter-variant</Text>} labelSize="4" />
                                     </div>
                                     <div className="col-md-6">
                                         <BasicTextArea name="description" label={<Text>description</Text>} className="h-100" />
