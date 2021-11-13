@@ -95,16 +95,27 @@ namespace Accounts.Controllers
                     {
                         int authorizationId = _authorizationList[i].Id;
                         var azValues = azValueService.GetAzValueByAuthorizationId(authorizationId);
-                        if (azValues.Count != 0)
+                        var objectId = _authorizationList[i].ObjectId;
+                        var selectedObject = azObjectService.GetAzObjectById(projectId, objectId);
+                        if (selectedObject is null)
+                        {
+                            return new Response<RoleDetailsDTO>(Messages.InvalidInfo);
+                        }
+                        if (azValues.Count == 0)
+                        {
+                            var _azFields = azFieldService.GetAzFieldsByObjectId(projectId, objectId);
+                            for (int j = 0; j < _azFields.Count; j++)
+                            {
+                                AzFieldsList.Add(new AzFieldDTO() { Id = _azFields[j].Id, Title = _azFields[j].Title, Value = "" });
+                            }
+                            AuthorizationList.Add(new AuthorizationDTO { Fields = AzFieldsList, Id = objectId, Title = selectedObject.Title });
+                            AzFieldsList = new List<AzFieldDTO>();
+                        }
+                        else
                         {
                             for (int j = 0; j < azValues.Count; j++)
                             {
-                                var selectedObject = azObjectService.GetAzObjectById(projectId, azValues[j].ObjectId);
                                 var _azField = azFieldService.GetAzField(azValues[j].FieldId);
-                                if (_azField is null || selectedObject is null)
-                                {
-                                    return new Response<RoleDetailsDTO>(Messages.InvalidInfo);
-                                }
                                 var fieldMultiValue = AzFieldsList.FirstOrDefault(x => x.Id == _azField.Id);
                                 if (fieldMultiValue != null)
                                 {
@@ -241,24 +252,21 @@ namespace Accounts.Controllers
                 //..............................
                 for (int i = 0; i < model.Authorizations.Count; i++)
                 {
-                    var authorization = new Authorization { RoleId = roleId, ProjectId = model.ProjectId, ObjectId = model.Authorizations[i].Id };
-                    authorizationService.InsertAuthorization(authorization);
-                    var authorizationId = authorization.Id;
-                    for (int j = 0; j < model.Authorizations[i].Fields.Count; j++)
+                    var authorizationModel = new Authorization { RoleId = role.Id, ProjectId = model.ProjectId, ObjectId = model.Authorizations[i].Id };
+                    authorizationService.InsertAuthorization(authorizationModel);
+                    var authorizationId = authorizationModel.Id;
+                    var authorization = model.Authorizations[i];
+                    var fields = authorization.Fields;
+                    for (int j = 0; j < fields.Count; j++)
                     {
-                        var fieldValues = model.Authorizations[i].Fields[j].Value?.Split(',');
-                        if (fieldValues != null)
+                        if (!string.IsNullOrEmpty(fields[j].Value))
                         {
+                            var fieldValues = fields[j].Value?.Split(',');
                             for (int k = 0; k < fieldValues.Length; k++)
                             {
-                                var azValue = new AzValue { AuthorizationId = authorizationId, ObjectId = model.Authorizations[i].Id, FieldId = model.Authorizations[i].Fields[j].Id, Value = fieldValues[k] };
+                                var azValue = new AzValue { AuthorizationId = authorizationId, ObjectId = authorization.Id, FieldId = fields[j].Id, Value = fieldValues[k] };
                                 azValueService.InsertAzValue(azValue);
                             }
-                        }
-                        else
-                        {
-                            var azValue = new AzValue { AuthorizationId = authorizationId, ObjectId = model.Authorizations[i].Id, FieldId = model.Authorizations[i].Fields[j].Id, Value = "" };
-                            azValueService.InsertAzValue(azValue);
                         }
                     }
                 }
@@ -307,9 +315,9 @@ namespace Accounts.Controllers
                 role.Title = model.Title;
                 role.LastUpdate = DateTime.Now;
                 role.LastUpdatedBy = currentUser.UserName;
-                roleService.UpdateRole(role);
+                
                 //..............................remove Authorization
-                var _authorizations = authorizationService.GetAuthorizationsByRoleId(model.ProjectId,model.Id);
+                var _authorizations = authorizationService.GetAuthorizationsByRoleId(model.ProjectId, model.Id);
                 if (_authorizations.Count != 0)
                 {
                     for (int i = 0; i < _authorizations.Count; i++)
@@ -326,27 +334,26 @@ namespace Accounts.Controllers
                 //....................................add Authorization
                 for (int i = 0; i < model.Authorizations.Count; i++)
                 {
-                    var authorization = new Authorization { RoleId = model.Id, ProjectId = model.ProjectId, ObjectId = model.Authorizations[i].Id };
-                    authorizationService.InsertAuthorization(authorization);
-                    var authorizationId = authorization.Id;
-                    for (int j = 0; j < model.Authorizations[i].Fields.Count; j++)
+                    var authorizationModel = new Authorization { RoleId = role.Id, ProjectId = model.ProjectId, ObjectId = model.Authorizations[i].Id };
+                    authorizationService.InsertAuthorization(authorizationModel);
+                    var authorizationId = authorizationModel.Id;
+                    var authorization = model.Authorizations[i];
+                    var fields = authorization.Fields;
+                    for (int j = 0; j < fields.Count; j++)
                     {
-                        var fieldValues = model.Authorizations[i].Fields[j].Value?.Split(',');
-                        if(fieldValues != null)
+                        if (!string.IsNullOrEmpty(fields[j].Value))
                         {
+                            var fieldValues = fields[j].Value?.Split(',');
                             for (int k = 0; k < fieldValues.Length; k++)
                             {
-                                var azValue = new AzValue { AuthorizationId = authorizationId, ObjectId = model.Authorizations[i].Id, FieldId = model.Authorizations[i].Fields[j].Id, Value = fieldValues[k] };
+                                var azValue = new AzValue { AuthorizationId = authorizationId, ObjectId = authorization.Id, FieldId = fields[j].Id, Value = fieldValues[k] };
                                 azValueService.InsertAzValue(azValue);
                             }
                         }
-                        else
-                        {
-                            var azValue = new AzValue { AuthorizationId = authorizationId, ObjectId = model.Authorizations[i].Id, FieldId = model.Authorizations[i].Fields[j].Id, Value = "" };
-                            azValueService.InsertAzValue(azValue);
-                        }
                     }
                 }
+
+                roleService.UpdateRole(role);
                 var result = new RoleDTO() { Id = role.Id, ApplicationTitle = role.ApplicationId != null ? role.Application.Title : "", Title = role.Title };
                 return new Response<RoleDTO>(result);
             }
