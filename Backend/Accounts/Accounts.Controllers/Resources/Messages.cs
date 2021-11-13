@@ -32,6 +32,9 @@ namespace Accounts.Controllers
         public const string DuplicateRole = "اين نقش قبلا ثبت شده است";
         public const string InvalidApplication = "كد برنامه وارد شده نامعتبر است";
         #endregion
+        #region Composite Role
+        public const string DuplicateCompositeRole = "اين ComposirRole قبلا ثبت شده است";
+        #endregion
 
     }
 }

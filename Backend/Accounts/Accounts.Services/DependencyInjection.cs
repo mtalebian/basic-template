@@ -33,6 +33,7 @@ namespace Microsoft.Extensions.DependencyInjection
             services.AddScoped<IAuthorizationService, AuthorizationService>();
             services.AddScoped<IAzValueService, AzValueService>();
             services.AddScoped<IApplicationService, ApplicationService>();
+            services.AddScoped<ICompositeRoleService, CompositeRoleService>();
         }
 
     }

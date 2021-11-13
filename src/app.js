@@ -41,6 +41,7 @@ import { TableDesignerApp } from "./views/admin/table-designer/table-designer-ap
 import { UserSettingsApp } from "./views/account/user-settings-app";
 import { UserApp } from "./views/admin/users/user-app";
 import { RoleApp } from "./views/admin/roles/role-app";
+import { CompositeRoleApp } from "./views/admin/composite-roles/composite-role-app";
 import { UserProfile } from "./views/account/user-profile";
 
 export function App() {
@@ -76,6 +77,8 @@ export function App() {
         <AzRoute exact path="/admin/users" render={() => <MainLayout component={UserApp} />} />
 
         <AzRoute exact path="/admin/roles" render={() => <MainLayout component={RoleApp} />} />
+
+        <AzRoute exact path="/admin/composite-roles" render={() => <MainLayout component={CompositeRoleApp} />} />
 
         <AzRoute exact path="/home" render={() => <MainLayout component={LunchpadApp} />} />
 

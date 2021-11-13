@@ -1,4 +1,4 @@
-import React, { useRef, useState, useEffect } from "react";
+import { useRef, useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import * as bd from "react-basic-design";
 import * as icons from "../../../assets/icons";
@@ -84,8 +84,10 @@ export const EditUser = ({ userId, onGoBack }) => {
       </>
     ));
   };
+
   const onDeleteClick = (hide) => {
     setDeleting(true);
+    setBusy(true);
     userApi
       .deleteUser(userId)
       .then((x) => {
@@ -93,10 +95,12 @@ export const EditUser = ({ userId, onGoBack }) => {
         hide();
         notify.info(t("row-is-deleted"));
         onGoBack(null);
+        setBusy(false);
       })
       .catch((ex) => {
         setDeleting(false);
         notify.error(ex);
+        setBusy(false);
       });
   };
   const UserForm = () => {
@@ -221,12 +225,10 @@ export const EditUser = ({ userId, onGoBack }) => {
           </bd.Button>
           <h5>{t(titlePage)}</h5>
           <div className="flex-grow-1" />
-
           <bd.Button color="primary" disabled={busy} onClick={() => formRef.current.submitForm()}>
             {busy && <div className="m-e-2 spinner-border spinner-border-sm"></div>}
             <span>{t("save-changes")}</span>
           </bd.Button>
-
           <bd.Button
             className={classNames("m-s-2 edge-end", {
               "d-none": !userId,
@@ -241,7 +243,6 @@ export const EditUser = ({ userId, onGoBack }) => {
           </bd.Button>
         </bd.Toolbar>
       </div>
-
       <div className="container">
         <UserForm />
       </div>

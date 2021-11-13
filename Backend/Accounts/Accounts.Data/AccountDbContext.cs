@@ -175,7 +175,8 @@ namespace Accounts.Data
                     new Menu { ProjectId = "project1", Id = "config-menu", ParentId = "config", Title = "Maintain project menu", Url = "/admin/menu" },
                     new Menu { ProjectId = "project1", Id = "config-table-designer", ParentId = "config", Title = "Table designer", Url = "/admin/table-designer" },
                     new Menu { ProjectId = "project1", Id = "users", ParentId = "admin", Title = "Manage Users", Url = "/admin/users" },
-                     new Menu { ProjectId = "project1", Id = "roles", ParentId = "admin", Title = "Manage Roles", Url = "/admin/roles" }
+                     new Menu { ProjectId = "project1", Id = "roles", ParentId = "admin", Title = "Manage Roles", Url = "/admin/roles" },
+                     new Menu { ProjectId = "project1", Id = "composite-roles", ParentId = "admin", Title = "Manage Composite Role", Url = "/admin/composite-roles" }
                 );
 
             //
