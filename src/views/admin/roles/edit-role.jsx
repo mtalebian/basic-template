@@ -37,27 +37,30 @@ export const EditRole = ({ currentProjectId, originalRole, azObjects, onGoBack, 
   const titlePage = insertMode ? "New-Role" : "Edit-Role";
   const [busy, setBusy] = useState(false);
   const [deleting, setDeleting] = useState(false);
-  const [authorizations, setAuthorizations] = useState([]);
 
   const onSubmit = (values) => {
     // alert(JSON.stringify(values, null, 2));
     values.projectId = currentProjectId;
     const insertMode = !originalRole;
     if (account.isConnected()) {
+      setBusy(true);
       roleApi
         .saveRole(insertMode, values)
         .then((x) => {
           notify.info(t("role-is-saved"));
           onChange(values, originalRole);
+          setBusy(false);
         })
         .catch((ex) => {
           notify.error(ex);
+          setBusy(false);
         });
     }
   };
 
   const onDeleteRoleClick = (hide) => {
     if (account.isConnected()) {
+      setBusy(true);
       roleApi
         .deleteRole(currentProjectId, originalRole.id)
         .then((x) => {
@@ -65,10 +68,12 @@ export const EditRole = ({ currentProjectId, originalRole, azObjects, onGoBack, 
           hide();
           notify.info(t("role-is-deleted"));
           onChange(null, originalRole);
+          setBusy(false);
         })
         .catch((ex) => {
           setDeleting(false);
           notify.error(ex);
+          setBusy(false);
         });
     }
   };

@@ -127,7 +127,7 @@ namespace Accounts.Controllers
                 var result = compositeRole.MapTo<CompositeRolesDTO>();
                 return new Response<CompositeRolesDTO>(result);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 throw;
             }
@@ -151,7 +151,7 @@ namespace Accounts.Controllers
                 compositeRoleService.DeleteCompositeRole(projectId, id);
                 return new Response();
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 throw;
             }

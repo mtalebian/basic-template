@@ -61,7 +61,7 @@ namespace Accounts.Controllers
                 };
                 return new Response<RolesInfoDTO>(result);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 throw;
             }
@@ -144,7 +144,7 @@ namespace Accounts.Controllers
                 };
                 return new Response<RoleDetailsDTO>(result);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 throw;
             }
@@ -199,7 +199,7 @@ namespace Accounts.Controllers
                 var result = new AuthorizationDTO() { Fields = Fields, Id = selectedObject.Id, Title = selectedObject.Title };
                 return new Response<AuthorizationDTO>(result);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 throw;
             }
@@ -274,7 +274,7 @@ namespace Accounts.Controllers
                 var result = new RoleDTO() { Id = role.Id, ApplicationTitle = role.ApplicationId != null ? role.Application.Title : "", Title = role.Title };
                 return new Response<RoleDTO>(result);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 throw;
             }
@@ -357,7 +357,7 @@ namespace Accounts.Controllers
                 var result = new RoleDTO() { Id = role.Id, ApplicationTitle = role.ApplicationId != null ? role.Application.Title : "", Title = role.Title };
                 return new Response<RoleDTO>(result);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 throw;
             }
@@ -396,7 +396,7 @@ namespace Accounts.Controllers
                 roleService.DeleteRole(projectId, id);
                 return new Response();
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 throw;
             }

@@ -17,7 +17,7 @@ export const EditUser = ({ userId, onGoBack }) => {
   const [busy, setBusy] = useState(false);
   const [user, setUser] = useState(null);
   const [deleting, setDeleting] = useState(false);
-  const [activeTab, setActiveTab] = useState("first");
+  const [defaultActiveTab, setDefaultActiveTab] = useState("general");
   const formRef = useRef();
   const [windowsAuth, setAuthType] = useState("true");
   const initialValue = insertMode
@@ -104,6 +104,15 @@ export const EditUser = ({ userId, onGoBack }) => {
       });
   };
   const UserForm = () => {
+    const ChangeActiveTab = (value) => {
+      if (defaultActiveTab != null && defaultActiveTab == "all") {
+        alert(10);
+        for (var item of document.getElementsByClassName("tab-pane")) {
+          item.classList.remove("active");
+        }
+      }
+      setDefaultActiveTab(value);
+    };
     return (
       <>
         <Formik
@@ -130,19 +139,27 @@ export const EditUser = ({ userId, onGoBack }) => {
           <Form>
             <div className="row">
               <div className="col-md-12">
-                <Tab.Container defaultActiveKey={activeTab}>
+                <Tab.Container defaultActiveKey={defaultActiveTab}>
                   <bd.AppBar color="default" shadow="0" color="inherit">
                     <bd.TabStrip shade="primary" indicatorColor="primary">
-                      <bd.TabStripItem eventKey="first">{t("general-info-tab")}</bd.TabStripItem>
-                      {!user && <bd.TabStripItem eventKey="second">{t("authentication-type-tab")}</bd.TabStripItem>}
-                      <bd.TabStripItem eventKey="third">{t("role-manage-tab")}</bd.TabStripItem>
+                      <bd.TabStripItem data-toggle="tab" eventKey="general">
+                        {t("general-info-tab")}
+                      </bd.TabStripItem>
+                      {!user && (
+                        <bd.TabStripItem data-toggle="tab" eventKey="authentication">
+                          {t("authentication-type-tab")}
+                        </bd.TabStripItem>
+                      )}
+                      <bd.TabStripItem eventKey="third" data-toggle="tab">
+                        {t("role-manage-tab")}
+                      </bd.TabStripItem>
                     </bd.TabStrip>
                   </bd.AppBar>
                   <Tab.Content className="mt-4">
-                    <Tab.Pane eventKey="first">
+                    <Tab.Pane eventKey="general">
                       <GeneralUserInfo />
                     </Tab.Pane>
-                    <Tab.Pane eventKey="second">
+                    <Tab.Pane eventKey="authentication">
                       <AuthenticationType />
                     </Tab.Pane>
                   </Tab.Content>
@@ -191,7 +208,7 @@ export const EditUser = ({ userId, onGoBack }) => {
             labelClassName="m-e-2"
             model={windowsAuth}
             setModel={setAuthType}
-            onClick={() => setActiveTab("second")}
+            onClick={() => setDefaultActiveTab("authentication")}
           />
           <bd.Toggle
             color="primary"
@@ -203,7 +220,7 @@ export const EditUser = ({ userId, onGoBack }) => {
             label={t("form")}
             model={windowsAuth}
             setModel={setAuthType}
-            onClick={() => setActiveTab("second")}
+            onClick={() => setDefaultActiveTab("authentication")}
           />
           {windowsAuth === "false" && (
             <div className="mt-4">
