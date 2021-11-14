@@ -34,8 +34,6 @@ export const ReactGrid = ({ title, columns, data: rows, flexLayout, onExecuteFil
             });
     };*/
 
-    console.log("columns", columns);
-
     return (
         <>
             {!editState.edit && (

@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { Filter } from "../filters/filter";
 import { FilterBox } from "../filters/filter-box";
 import { RenderTableDiv } from "../table/render-table-div";
 import { useReactTable } from "../table/use-react-table";
@@ -48,11 +47,7 @@ export const Grid = ({ grid, loadData, onExecuteFilter, ...props }) => {
                                     variants={grid.hasFilterVariant ? grid.variants : null}
                                     systemIsBusy={false}
                                     onExecute={(filters) => onExecuteFilter(filters, tableApi)}
-                                >
-                                    {grid.dataColumns.map((x) => (
-                                        <Filter key={x.name} name={x.name} label={x.title} />
-                                    ))}
-                                </FilterBox>
+                                ></FilterBox>
                             </div>
                         </div>
                     )}

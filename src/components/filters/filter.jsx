@@ -89,6 +89,7 @@ export const Filter = ({
               ));
 
     useEffect(() => {
+        if (simple || !Array.isArray(values)) return;
         var i = nameIndex;
         if (i >= values.length) {
             i = Math.max(0, values.length - 1);
@@ -96,7 +97,7 @@ export const Filter = ({
                 setNameIndex(i);
             }
         }
-    }, [nameIndex, values]);
+    }, [simple, nameIndex, values]);
 
     function openLookup() {
         if (!simple) setLookupIsOpen(true);
@@ -137,7 +138,6 @@ export const Filter = ({
                 break;
 
             case INSERT:
-                console.log("isMenuOpen", isMenuOpen);
                 if (!isMenuOpen) break;
                 addFilter();
                 e.stopPropagation();

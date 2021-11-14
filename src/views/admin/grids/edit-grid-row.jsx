@@ -19,7 +19,6 @@ export const EditTableRow = ({ table, row, onGoBack, onChanged }) => {
 
     const onSaveClick = () => {
         var values = formRef.current.values;
-        console.log(values);
         setSaving(true);
         gridsApi
             .save(table.id, values, insertMode)

@@ -188,7 +188,6 @@ export const FilterLookup = ({ name, title, show, setShow, isNumber, checkTable,
 };
 
 function convertFieldValueToList(items) {
-    console.log("items", items);
     if (!Array.isArray(items)) items = [];
     var list = [];
     for (let i = 0; i < items.length; i++) {

@@ -42,7 +42,6 @@ export const useGrid = (id, data) => {
     //----------
     useEffect(() => {
         if (!id) return;
-        console.log("useEffect");
         const g = cache.current[id];
         if (g) {
             if (data) g.data = data;
