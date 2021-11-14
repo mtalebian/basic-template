@@ -25,4 +25,23 @@ export const gridsApi = {
         var dto = { action: "delete", gridId, values };
         return api.call("post", `${apiConfig.gridsUrl}/exec-grid-action?projectId=${settings.projectId}`, dto);
     },
+
+    saveVaraint: (gridId, variant) => {
+        return api.call("post", `${apiConfig.gridsUrl}/grid-variant-save?projectId=${settings.projectId}&gridId=${gridId}`, variant);
+    },
+
+    updateVaraints: (gridId, variants) => {
+        var dto = variants.map((x) => ({
+            serial: x.serial,
+            title: x.title,
+            isDefault: x.isDefault,
+            isPublic: x.isPublic,
+            autoApply: x.autoApply,
+        }));
+        return api.call("post", `${apiConfig.gridsUrl}/grid-variants-update?projectId=${settings.projectId}&gridId=${gridId}`, dto);
+    },
+
+    deleteVariant: (serial) => {
+        return api.call("post", `${apiConfig.gridsUrl}/grid-variant-delete?serial=${serial}`, null);
+    },
 };

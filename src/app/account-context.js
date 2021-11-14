@@ -45,8 +45,8 @@ export const AccountProvider = (props) => {
         getStatus: () => data.status,
         setStatus: (value) => setData({ ...data, status: value }),
 
-        getName: () => data.name,
-        setName: (value) => setData({ ...data, name: value }),
+        userName: data.userName,
+        displayName: data.displayName,
 
         isConnecting: () => account.getStatus() === accountStatuses.Connecting,
         isConnectionFailed: () => account.getStatus() === accountStatuses.ConnectionFailed,
@@ -66,7 +66,8 @@ export const AccountProvider = (props) => {
                     api.expiry = result.expiry;
                     var x = {
                         status: accountStatuses.Connected,
-                        name: result.displayName,
+                        userName: result.userName,
+                        displayName: result.displayName,
                     };
                     setData(x);
                     return x;
@@ -84,7 +85,8 @@ export const AccountProvider = (props) => {
                 api.expiry = result.expiry;
                 var x = {
                     status: accountStatuses.LoggedIn,
-                    name: result.displayName,
+                    userName: result.userName,
+                    displayName: result.displayName,
                 };
                 setData(x);
                 return result;

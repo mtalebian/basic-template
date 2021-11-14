@@ -11,14 +11,16 @@ export const FormikForm = ({ initialValues, validationSchema, onSubmit, innerRef
             innerRef={innerRef}
             validate={validate}
         >
-            <Form
-                className={classNames(className, "bd-form", {
-                    "bd-form-flex": flex,
-                    "bd-form-compact": compact,
-                })}
-            >
-                {children}
-            </Form>
+            {(props) => (
+                <Form
+                    className={classNames(className, "bd-form", {
+                        "bd-form-flex": flex,
+                        "bd-form-compact": compact,
+                    })}
+                >
+                    {typeof children === "function" ? children(props) : children}
+                </Form>
+            )}
         </Formik>
     );
 };

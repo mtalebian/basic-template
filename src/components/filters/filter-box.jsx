@@ -1,17 +1,21 @@
 import React, { useRef, useState } from "react";
 import * as bd from "react-basic-design";
 import * as bd2 from "../../components/forms";
+import * as icons from "../../assets/icons";
 import { Text } from "../../components/basic/text";
 import { Collapse, Modal } from "react-bootstrap";
 import { FormRow } from "../forms/form-row";
-import { useReactTable } from "../table/use-react-table";
+import { gridsApi } from "../../api/grids-api";
+import { notify } from "../basic/notify";
+import classNames from "classnames";
+import { useAccount } from "../../app/account-context";
 
 export const FilterBox = ({
+    grid,
     initialFilters,
     fixed,
     expanded,
     showSettings,
-    variants,
     systemIsBusy,
     validationSchema,
     onVariantChanged,
@@ -21,14 +25,24 @@ export const FilterBox = ({
     ...props
 }) => {
     const formRef = useRef();
+    const account = useAccount();
     const [isExpanded, setIsExpanded] = useState(expanded);
     const [filtersCount, setFiltersCount] = useState(Object.keys(initialFilters ?? {}).length);
-    const [currentVariant, setCurrentVariant] = useState(variants && variants.length > 0 ? variants[0] : { title: "test" });
+    const [currentVariant, setCurrentVariant] = useState(grid.getDefaultVariant());
     const [showSaveAs, setShowSaveAs] = useState(false);
     const [showManage, setShowManage] = useState(false);
-    const [editVariant, setEditVariant] = useState(null);
 
-    const isChanged = !currentVariant || currentVariant.filters !== "";
+    const isChanged = currentVariant && currentVariant.createdBy === account.userName;
+
+    const closeAllDropdowns = () => {
+        var elems = document.querySelectorAll(".dropdown.show");
+        [].forEach.call(elems, function (el) {
+            el.classList.remove("show");
+        });
+        [].forEach.call(document.querySelectorAll(".dropdown-menu.show"), function (el) {
+            el.classList.remove("show");
+        });
+    };
 
     const onSubmitHandler = (e) => {
         var filters = formRef.current.values;
@@ -38,47 +52,79 @@ export const FilterBox = ({
     const onVariantChangedHandler = (variant) => {
         if (onVariantChanged) onVariantChanged(variant);
         setCurrentVariant(variant);
+        let filters = variant?.filtersData ?? "{}";
+        filters = JSON.parse(filters);
+        formRef.current.setValues(filters);
+    };
+
+    const onSaveAs = (variant) => {
+        var filters = formRef.current.values;
+        variant.filtersData = JSON.stringify(filters);
+        gridsApi
+            .saveVaraint(grid.id, variant)
+            .then((x) => {
+                grid.variants.push(x);
+                setShowSaveAs(false);
+                notify.success(<Text>saved</Text>);
+            })
+            .catch(notify.error);
     };
 
     const onSave = (variant) => {
-        console.log("onsave", variant);
-        var s = JSON.stringify(variant, null, 2);
-        alert(s);
+        var filters = formRef.current.values;
+        variant.filtersData = JSON.stringify(filters);
+        gridsApi
+            .saveVaraint(grid.id, variant)
+            .then((x) => {
+                setShowSaveAs(false);
+                notify.success(<Text>saved</Text>);
+            })
+            .catch(notify.error);
     };
-
-    const onManageSave = (variant) => {
-        console.log("onsave", variant);
-        var s = JSON.stringify(variant, null, 2);
-        alert(s);
-    };
-
-    const onMnageDelete = (variant) => {
-        console.log("onsave", variant);
-        var s = JSON.stringify(variant, null, 2);
-        alert(s);
-    };
-
-    const manageVariants = () => {};
 
     const variantsMenu = () => (
         <bd.Menu>
             <div style={{ minWidth: 320 }}>
                 <div style={{ minHeight: 180 }}>
-                    {variants.map((x) => (
-                        <bd.MenuItem key={x.title} onClick={() => onVariantChangedHandler(x)}>
+                    {grid.variants.map((x) => (
+                        <bd.MenuItem
+                            key={x.title}
+                            onClick={() => onVariantChangedHandler(x)}
+                            className={classNames({ active: x.serial === currentVariant?.serial })}
+                        >
                             {x.title}
                         </bd.MenuItem>
                     ))}
                 </div>
                 <div className="px-2 pt-2 border-top mt-2 d-flex justify-content-end gap-x-2 bd-form-compact">
-                    <bd.Button color="primary" variant="text" onClick={() => setShowManage(true)}>
+                    <bd.Button
+                        color="primary"
+                        variant="text"
+                        onClick={() => {
+                            closeAllDropdowns();
+                            setShowManage(true);
+                        }}
+                    >
                         <Text>manage</Text>
                     </bd.Button>
-                    <bd.Button color="primary" variant={isChanged ? "text" : null} onClick={(e) => setShowSaveAs(true)}>
+                    <bd.Button
+                        color="primary"
+                        variant={isChanged ? "text" : null}
+                        onClick={(e) => {
+                            closeAllDropdowns();
+                            setShowSaveAs(true);
+                        }}
+                    >
                         <Text>save-as</Text>
                     </bd.Button>
                     {isChanged && (
-                        <bd.Button color="primary" onClick={(e) => onSave(currentVariant)}>
+                        <bd.Button
+                            color="primary"
+                            onClick={(e) => {
+                                closeAllDropdowns();
+                                onSave(currentVariant);
+                            }}
+                        >
                             <Text>save</Text>
                         </bd.Button>
                     )}
@@ -87,9 +133,10 @@ export const FilterBox = ({
         </bd.Menu>
     );
 
+    /****************************/
     return (
         <div className="">
-            {variants && (
+            {grid.variants && (
                 <bd.Toolbar>
                     <bd.Button
                         variant="text"
@@ -98,7 +145,7 @@ export const FilterBox = ({
                         menu={variantsMenu()}
                         disableRipple
                     >
-                        {currentVariant?.title}
+                        {grid.variants.find((x) => x.serial === currentVariant?.serial)?.title}
                     </bd.Button>
 
                     <div className="flex-grow-1"></div>
@@ -125,7 +172,7 @@ export const FilterBox = ({
                         className="mt-2"
                     >
                         {children}
-                        {!variants && (
+                        {!grid.variants && (
                             <FormRow label="" className="flex-grow-1 text-end" style={{ width: "auto" }}>
                                 <ApplyButton busy={systemIsBusy} formRef={formRef} />
                                 <SettingsButton visible={showSettings} count={filtersCount} onClick={onOpenSettings} />
@@ -135,8 +182,8 @@ export const FilterBox = ({
                 </div>
             </Collapse>
 
-            <SaveAsForm currentVariant={currentVariant} show={showSaveAs} setShow={setShowSaveAs} onSave={onSave} />
-            <ManageForm variants={variants} show={showManage} setShow={setShowManage} onSave={onManageSave} onDelete={onMnageDelete} />
+            <SaveAsForm currentVariant={currentVariant} show={showSaveAs} setShow={setShowSaveAs} onSave={onSaveAs} />
+            <ManageForm grid={grid} show={showManage} setShow={setShowManage} />
         </div>
     );
 };
@@ -167,7 +214,7 @@ const SettingsButton = ({ visible, count, onClick }) =>
 const SaveAsForm = ({ currentVariant, show, setShow, onSave }) => {
     return (
         <Modal show={show} fullscreen="md-down" onHide={() => setShow(false)} className="bd-form-compact" dialogClassName="shadow-5">
-            <bd2.FormikForm initialValues={currentVariant} onSubmit={onSave}>
+            <bd2.FormikForm initialValues={{ ...(currentVariant ?? {}), serial: 0 }} onSubmit={onSave}>
                 <Modal.Header>
                     <Modal.Title>
                         <Text>save-view</Text>
@@ -175,6 +222,7 @@ const SaveAsForm = ({ currentVariant, show, setShow, onSave }) => {
                 </Modal.Header>
                 <Modal.Body>
                     <bd2.FormikInput name="title" label={<Text>view</Text>} autoFocus />
+                    <bd2.FormikToggle size="sm" name="isDefault" toggleLabel={<Text>default</Text>} className="d-block" />
                     <bd2.FormikToggle size="sm" name="isPublic" toggleLabel={<Text>public</Text>} className="d-block" />
                     <bd2.FormikToggle size="sm" name="autoApply" toggleLabel={<Text>apply-automatically</Text>} />
                 </Modal.Body>
@@ -191,15 +239,34 @@ const SaveAsForm = ({ currentVariant, show, setShow, onSave }) => {
     );
 };
 
-const ManageForm = ({ variants, show, setShow, onSave, onDelete }) => {
-    const [data, setData] = useState(variants);
-    const columns = [];
+const ManageForm = ({ grid, show, setShow }) => {
+    const formRef = useRef();
+    const account = useAccount();
 
-    const updateData = (rowIndex, columnId, value) => {
-        const new_row = { ...data[rowIndex], [columnId]: value };
-        setData(data.map((row, index) => (index === rowIndex ? new_row : row)));
+    const canChange = (x) => account.userName === x.createdBy; // || account.userName === "admin";
+
+    const onDelete = (variant) => {
+        gridsApi
+            .deleteVariant(variant.serial)
+            .then(() => {
+                const list = formRef.current.values.variants.filter((x) => x.serial !== variant.serial);
+                grid.variants = list;
+                formRef.current.setFieldValue("variants", list);
+                notify.dark(<Text>variant-is-deleted</Text>);
+            })
+            .catch(notify.error);
     };
-    const tableApi = useReactTable({ columns: [], data: [], updateData, flexLayout: true });
+
+    const onSave = (values) => {
+        gridsApi
+            .updateVaraints(grid.id, values.variants)
+            .then(() => {
+                grid.variants = values.variants;
+                setShow(false);
+                notify.success(<Text>variant-is-updated</Text>);
+            })
+            .catch(notify.error);
+    };
 
     return (
         <Modal
@@ -215,9 +282,103 @@ const ManageForm = ({ variants, show, setShow, onSave, onDelete }) => {
                     <Text>manage-views</Text>
                 </Modal.Title>
             </Modal.Header>
-            <Modal.Body></Modal.Body>
-            <Modal.Footer className="d-flex justify-content-end gap-x-2 bd-form-compact">
-                <bd.Button color="primary" type="submit">
+            <Modal.Body className="pt-0 bd-table-border-row">
+                <bd2.FormikForm initialValues={{ variants: grid.variants }} onSubmit={onSave} innerRef={formRef}>
+                    {({ values }) => (
+                        <table className="bd-table w-100">
+                            <thead>
+                                <tr>
+                                    <th>
+                                        <Text>default</Text>
+                                    </th>
+                                    <th className="w-50">
+                                        <Text>title</Text>
+                                    </th>
+                                    <th>
+                                        <Text>public</Text>
+                                    </th>
+                                    <th>
+                                        <Text>auto-apply</Text>
+                                    </th>
+                                    <th>
+                                        <Text>created-by</Text>
+                                    </th>
+
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {values.variants.map((x, xIndex) => (
+                                    <React.Fragment key={x.serial}>
+                                        {canChange(x) && (
+                                            <tr style={{ verticalAlign: "middle" }}>
+                                                <td>
+                                                    <bd2.FormikToggle
+                                                        name={`variants[${xIndex}].isDefault`}
+                                                        color="primary"
+                                                        size="sm"
+                                                        disableRipple
+                                                    />
+                                                </td>
+                                                <td className="p-1">
+                                                    <bd2.FormikInput name={`variants[${xIndex}].title`} />
+                                                </td>
+                                                <td>
+                                                    <bd2.FormikToggle
+                                                        name={`variants[${xIndex}].isPublic`}
+                                                        color="primary"
+                                                        size="sm"
+                                                        disableRipple
+                                                    />
+                                                </td>
+                                                <td>
+                                                    <bd2.FormikToggle
+                                                        name={`variants[${xIndex}].autoApply`}
+                                                        color="primary"
+                                                        size="sm"
+                                                        disableRipple
+                                                    />
+                                                </td>
+                                                <td>{x.createdBy.toUpperCase()}</td>
+                                                <td className="p-1">
+                                                    <bd.Button
+                                                        variant="icon"
+                                                        type="button"
+                                                        size="md"
+                                                        color="primary"
+                                                        onClick={() => onDelete(x)}
+                                                    >
+                                                        <icons.Delete />
+                                                    </bd.Button>
+                                                </td>
+                                            </tr>
+                                        )}
+                                        {!canChange(x) && (
+                                            <tr>
+                                                <td>
+                                                    <bd.Toggle model={x.isDefault} size="sm" disableRipple disabled />
+                                                </td>
+                                                <td>{x.title}</td>
+                                                <td>
+                                                    <bd.Toggle model={x.isPublic} size="sm" disableRipple disabled />
+                                                </td>
+                                                <td>
+                                                    <bd.Toggle model={x.autoApply} size="sm" disableRipple disabled />
+                                                </td>
+                                                <td className="text-secondary-text">{x.createdBy.toUpperCase()}</td>
+                                                <td></td>
+                                            </tr>
+                                        )}
+                                    </React.Fragment>
+                                ))}
+                            </tbody>
+                        </table>
+                    )}
+                </bd2.FormikForm>
+            </Modal.Body>
+
+            <Modal.Footer className="border-0 d-flex justify-content-end gap-x-2 bd-form-compact">
+                <bd.Button color="primary" onClick={() => formRef.current.submitForm()}>
                     <Text>save</Text>
                 </bd.Button>
                 <bd.Button color="primary" type="button" variant="text" onClick={(e) => setShow(false)}>

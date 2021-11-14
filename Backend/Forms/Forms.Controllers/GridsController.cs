@@ -117,5 +117,38 @@ namespace Forms.Controllers
 
 
 
+
+        [HttpPost("grid-variant-save")]
+        public Response<GridVariantDTO> SaveGridVariant(string projectId, string gridId, [FromBody] GridVariantDTO dto)
+        {
+            var variant = dto.MapTo<GridVariant>();
+            variant.ProjectId = projectId;
+            variant.GridId = gridId;
+            var entity = service.SaveGridVariant(variant);
+            var result = entity.MapTo<GridVariantDTO>();
+            return new Response<GridVariantDTO>(result);
+        }
+
+        [HttpPost("grid-variants-update")]
+        public Response UpdateVaraints(string projectId, string gridId, [FromBody] IList<UpdateVariantDTO> dto)
+        {
+            var variants = dto.MapTo<GridVariant>();
+            foreach (var v in variants)
+            {
+                v.ProjectId = projectId;
+                v.GridId = gridId;
+            }
+            service.UpdateGridVaraints(variants);
+            return new Response();
+        }
+
+        [HttpPost("grid-variant-delete")]
+        public Response DeleteGridVariant(int serial)
+        {
+            service.DeleteGridVariant(serial);
+            return new Response();
+        }
+
+
     }
 }

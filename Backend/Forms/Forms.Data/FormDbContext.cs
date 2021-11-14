@@ -117,11 +117,13 @@ namespace Forms.Data
             GridVariant.DefineProjectId(x => x.ProjectId);
             GridVariant.DefineName(x => x.GridId);
             GridVariant.DefineTitle(x => x.Title);
+            GridVariant.DefaultValue(x => x.IsDefault, 0, true);
             GridVariant.DefaultValue(x => x.IsPublic, 0, true);
             GridVariant.DefaultValue(x => x.AutoApply, 0, true);
             GridVariant.NVarChar(x => x.FiltersData, 2000, false);
             GridVariant.NVarChar(x => x.ColumnsData, 500, false);
             GridVariant.NVarChar(x => x.SortsData, 500, false);
+            
             GridVariant.DefineUserName(x => x.CreatedBy, "");
             GridVariant.DefineUserName(x => x.ModifiedBy, "");
             GridVariant.DefineCreatedAt(x => x.CreatedAt, "");

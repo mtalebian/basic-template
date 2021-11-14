@@ -1,9 +1,8 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Filter } from "../filters/filter";
 import { FilterBox } from "../filters/filter-box";
 import { RenderTableDiv } from "../table/render-table-div";
 import { useReactTable } from "../table/use-react-table";
-import { useGrid } from "./use-grid";
 
 export const Grid = ({ grid, loadData, onExecuteFilter, ...props }) => {
     const [editState, setEditState] = useState({ edit: false, row: null });
@@ -41,6 +40,7 @@ export const Grid = ({ grid, loadData, onExecuteFilter, ...props }) => {
                         <div className="border-bottom bg-default">
                             <div className="container">
                                 <FilterBox
+                                    grid={grid}
                                     initialFilters={{}}
                                     expanded
                                     showSettings
@@ -50,7 +50,7 @@ export const Grid = ({ grid, loadData, onExecuteFilter, ...props }) => {
                                     onExecute={(filters) => onExecuteFilter(filters, tableApi)}
                                 >
                                     {grid.dataColumns.map((x) => (
-                                        <Filter name={setEditState.name} label={x.title} />
+                                        <Filter key={x.name} name={x.name} label={x.title} />
                                     ))}
                                 </FilterBox>
                             </div>

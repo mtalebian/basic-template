@@ -1,4 +1,5 @@
-﻿using Forms.Core;
+﻿using Common.Security;
+using Forms.Core;
 using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
@@ -11,11 +12,12 @@ namespace Forms.Services
     internal class GridService : IGridService
     {
         private readonly IFormUnitOfWork db;
+        private readonly ICurrentUserNameService CurrentUserService;
 
-
-        public GridService(IFormUnitOfWork db)
+        public GridService(IFormUnitOfWork db, ICurrentUserNameService currentUserService)
         {
             this.db = db;
+            CurrentUserService = currentUserService;
         }
 
         public IList<Group> GetAllGroups(string projectId)
@@ -47,7 +49,7 @@ namespace Forms.Services
             {
                 foreach (var filter in filters.Where(x => x.Value != null))
                 {
-                    if(filter.Value is string)
+                    if (filter.Value is string)
                     {
 
                     }
@@ -259,24 +261,51 @@ namespace Forms.Services
             return list;
         }
 
-        public void SaveGridVariant(GridVariant variant)
+        public GridVariant SaveGridVariant(GridVariant variant)
         {
-            if (variant.Serial < 1)
+            var entity = variant;
+            if (entity.Serial < 1)
             {
-                db.GridVariants.Add(variant);
+                db.GridVariants.Add(entity);
             }
             else
             {
-                var v = db.GridVariants.FirstOrDefault(x => x.Serial == variant.Serial);
-                variant.MapTo(v);
-                db.GridVariants.Add(variant);
+                entity = db.GridVariants.FirstOrDefault(x => x.Serial == variant.Serial);
+                if (entity != null && entity.CreatedBy == CurrentUserService.UserName)
+                {
+                    variant.MapTo(entity);
+                    db.GridVariants.Update(entity);
+                }
+            }
+            db.SaveChanges();
+            return entity;
+        }
+
+        public void DeleteGridVariant(int serial)
+        {
+            var variant = db.GridVariants.FirstOrDefault(x => x.Serial == serial);
+            if (variant == null || variant.CreatedBy != CurrentUserService.UserName) return;
+            //    throw new Exception(Messages.RecordNotFoundOrYouDontHaveEnoughPermission);
+            db.GridVariants.Remove(variant);
+            db.SaveChanges();
+        }
+
+        public void UpdateGridVaraints(IList<GridVariant> variants)
+        {
+            foreach (var v in variants)
+            {
+                var entity = db.GridVariants.FirstOrDefault(x => x.Serial == v.Serial);
+                if (entity != null && entity.CreatedBy == CurrentUserService.UserName)
+                {
+                    entity.Title = v.Title;
+                    entity.IsDefault = v.IsDefault;
+                    entity.IsPublic = v.IsPublic;
+                    entity.AutoApply = v.AutoApply;
+                    db.GridVariants.Update(entity);
+                }
             }
             db.SaveChanges();
         }
 
-        public void DeleteGridVariant(GridVariant variant)
-        {
-            throw new NotImplementedException();
-        }
     }
 }

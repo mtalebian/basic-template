@@ -7,7 +7,6 @@ export const useShell = () => {
         },
 
         fullWidth: (value) => {
-            console.log(`fullWidth(${value})`);
             shellFullWidthSubject.next(value);
         },
 

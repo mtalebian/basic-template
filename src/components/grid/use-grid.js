@@ -57,6 +57,7 @@ export const useGrid = (id, data) => {
             .then((x) => {
                 x.data = data;
                 x["columns"] = getColumns(x);
+                x["getDefaultVariant"] = defaultVariantThunk(x);
                 cache.current[id] = x;
                 if (!cancelRequest) setGrid(x);
             })
@@ -78,4 +79,16 @@ export const useGrid = (id, data) => {
     };
 
     return [grid, loadData];
+};
+
+////////////////////
+const defaultVariantThunk = (grid) => {
+    return () => {
+        if (!grid.variants) return null;
+        for (let i = 0; i < grid.variants.length; i++) {
+            const v = grid.variants[i];
+            if (v.isDefault) return v;
+        }
+        return null;
+    };
 };
