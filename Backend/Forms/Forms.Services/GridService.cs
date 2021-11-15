@@ -49,18 +49,7 @@ namespace Forms.Services
             {
                 foreach (var filter in filters.Where(x => x.Value != null))
                 {
-                    if (filter.Value is string)
-                    {
-
-                    }
-                    else if (filter.Value is int)
-                    {
-
-                    }
-                    else if (filter.Value is double)
-                    {
-
-                    }
+                    AddFilter(where, filter.Key, (JsonElement)filter.Value);
                     /*
                     var c = columns.FirstOrDefault(x => x.Name == filter.Key);
                     if (c != null && !string.IsNullOrEmpty(c.Filter))
@@ -100,6 +89,73 @@ namespace Forms.Services
             }
             if (where.Count > 0) sql += " where" + string.Join(" AND ", where);
             return db.GetDataTable(sql);
+        }
+
+        private void AddFilter(List<string> where, string name, JsonElement elem)
+        {
+            switch (elem.ValueKind)
+            {
+                case JsonValueKind.Array:
+                    break;
+
+                case JsonValueKind.String:
+                    //ParseFilter(where, name, elem.GetString());
+                    break;
+
+                case JsonValueKind.Number:
+                    where.Add($"{name}={elem.GetDouble()}");
+                    break;
+
+                case JsonValueKind.True:
+                    where.Add($"{name}=1"); 
+                    break;
+
+                case JsonValueKind.False:
+                    where.Add($"{name}=0");
+                    break;
+
+                default:
+                    return;
+            }
+        }
+
+        
+        private static object GetJsonValue(JsonElement elem, out string type)
+        {
+            switch (elem.ValueKind)
+            {
+                case JsonValueKind.Null:
+                case JsonValueKind.Undefined:
+                    type = null;
+                    return null;
+
+                case JsonValueKind.Array:
+                    var list = new List<JsonElement>();
+                    var n = elem.GetArrayLength();
+                    for (int i = 0; i < n; i++) list.Add(elem[i]);
+                    type = "array";
+                    return list.ToArray();
+
+                case JsonValueKind.String:
+                    type = "string";
+                    return elem.GetString();
+
+                case JsonValueKind.Number:
+                    type = "number";
+                    return elem.GetDouble();
+
+                case JsonValueKind.True:
+                    type = "boolean";
+                    return true;
+
+                case JsonValueKind.False:
+                    type = "boolean";
+                    return false;
+
+                //case JsonValueKind.Object:
+                default:
+                    throw new Exception($"Unexpected value '{elem.ValueKind}'");
+            }
         }
 
         private string ToDbCondition(GridColumn c, string rop, object v)
