@@ -17,7 +17,7 @@ export const EditUser = ({ userId, onGoBack }) => {
   const [busy, setBusy] = useState(false);
   const [user, setUser] = useState(null);
   const [deleting, setDeleting] = useState(false);
-  const [defaultActiveTab, setDefaultActiveTab] = useState("general");
+  const [defaultActiveTab, setDefaultActiveTab] = useState("all");
   const formRef = useRef();
   const [windowsAuth, setAuthType] = useState("true");
   const initialValue = insertMode
@@ -104,15 +104,6 @@ export const EditUser = ({ userId, onGoBack }) => {
       });
   };
   const UserForm = () => {
-    const ChangeActiveTab = (value) => {
-      if (defaultActiveTab != null && defaultActiveTab == "all") {
-        alert(10);
-        for (var item of document.getElementsByClassName("tab-pane")) {
-          item.classList.remove("active");
-        }
-      }
-      setDefaultActiveTab(value);
-    };
     return (
       <>
         <Formik
@@ -142,11 +133,11 @@ export const EditUser = ({ userId, onGoBack }) => {
                 <Tab.Container defaultActiveKey={defaultActiveTab}>
                   <bd.AppBar color="default" shadow="0" color="inherit">
                     <bd.TabStrip shade="primary" indicatorColor="primary">
-                      <bd.TabStripItem data-toggle="tab" eventKey="general">
+                      <bd.TabStripItem data-toggle="tab" eventKey="general" onClick={() => setDefaultActiveTab("general")}>
                         {t("general-info-tab")}
                       </bd.TabStripItem>
                       {!user && (
-                        <bd.TabStripItem data-toggle="tab" eventKey="authentication">
+                        <bd.TabStripItem data-toggle="tab" eventKey="authentication" onClick={() => setDefaultActiveTab("general")}>
                           {t("authentication-type-tab")}
                         </bd.TabStripItem>
                       )}
@@ -156,10 +147,10 @@ export const EditUser = ({ userId, onGoBack }) => {
                     </bd.TabStrip>
                   </bd.AppBar>
                   <Tab.Content className="mt-4">
-                    <Tab.Pane eventKey="general">
+                    <Tab.Pane eventKey="general" className={defaultActiveTab === "all" ? " active show" : ""}>
                       <GeneralUserInfo />
                     </Tab.Pane>
-                    <Tab.Pane eventKey="authentication">
+                    <Tab.Pane eventKey="authentication" className={defaultActiveTab === "all" ? "active show" : ""}>
                       <AuthenticationType />
                     </Tab.Pane>
                   </Tab.Content>
