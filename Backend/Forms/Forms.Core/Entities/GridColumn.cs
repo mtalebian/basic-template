@@ -18,7 +18,7 @@ namespace Forms.Core
         public int? Width { get; set; }
         
         public string Filter { get; set; }
-        public bool UseInVariant { get; set; }
+        public bool FilterRequired { get; set; }
         
         public string CheckGrid { get; set; }
         public string CheckField { get; set; }

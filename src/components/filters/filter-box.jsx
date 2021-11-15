@@ -1,7 +1,8 @@
-import React, { useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import * as bd from "react-basic-design";
 import * as bd2 from "../../components/forms";
-import { Text } from "../../components/basic/text";
+import * as icons from "../../assets/icons";
+import { Text, translate } from "../../components/basic/text";
 import { Collapse } from "react-bootstrap";
 import { FormRow } from "../forms/form-row";
 import { gridsApi } from "../../api/grids-api";
@@ -29,7 +30,7 @@ export const FilterBox = ({
     const account = useAccount();
     const [isExpanded, setIsExpanded] = useState(expanded);
     const [filtersCount, setFiltersCount] = useState(0);
-    const [currentVariant, setCurrentVariant] = useState(grid.getDefaultVariant());
+    const [currentVariant, setCurrentVariant] = useState();
     const [showSaveAs, setShowSaveAs] = useState(false);
     const [showManage, setShowManage] = useState(false);
 
@@ -60,13 +61,26 @@ export const FilterBox = ({
         onExecute(filters);
     };
 
-    const onVariantChangedHandler = (variant) => {
-        if (onVariantChanged) onVariantChanged(variant);
-        setCurrentVariant(variant);
-        let filters = variant?.filtersData ?? "{}";
-        filters = JSON.parse(filters);
-        formRef.current.setValues(filters);
-    };
+    const onVariantChangedHandler = useCallback(
+        (variant) => {
+            setCurrentVariant(variant);
+            let filters = variant?.filtersData ?? "{}";
+            filters = JSON.parse(filters);
+            formRef.current.setValues(filters);
+            if (variant.autoApply) {
+                setTimeout(() => formRef.current.submitForm(), 0);
+            }
+            if (onVariantChanged) onVariantChanged(variant);
+        },
+        [onVariantChanged]
+    );
+
+    useEffect(() => {
+        if (!!currentVariant) return;
+        var v = grid.getDefaultVariant();
+        if (!v) return;
+        onVariantChangedHandler(v);
+    }, [currentVariant, grid, onVariantChangedHandler]);
 
     const onSave = (variant) => {
         closeAllDropdowns();
@@ -89,9 +103,13 @@ export const FilterBox = ({
                         <bd.MenuItem
                             key={x.serial}
                             onClick={() => onVariantChangedHandler(x)}
-                            className={classNames({ active: x.serial === currentVariant?.serial })}
+                            className={classNames("d-flex justify-content-between", {
+                                active: x.serial === currentVariant?.serial,
+                                "fw-bold": x.isDefault,
+                            })}
                         >
                             {x.title}
+                            {x.autoApply && <icons.Refresh className="m-s-3 size-md" style={{ opacity: 0.75 }} />}
                         </bd.MenuItem>
                     ))}
                 </div>
@@ -115,12 +133,8 @@ export const FilterBox = ({
     );
 
     function getInitialFilter() {
-        try {
-            return JSON.parse(currentVariant?.filtersData ?? "{}") ?? {};
-        } catch (ex) {
-            console.log(ex);
-            console.log(currentVariant);
-        }
+        var f = currentVariant?.filtersData;
+        return !f ? {} : JSON.parse(f);
     }
 
     function hasFilter(v) {
@@ -134,11 +148,16 @@ export const FilterBox = ({
         return v !== undefined && v !== null;
     }
 
+    function isString(col) {
+        var d = col.display;
+        return !d || d === "text" || d === "email" || d === "url" || d === "textarea";
+    }
+
     /****************************/
     return (
-        <div className="bd-form-compact p-0">
-            {grid.variants && (
-                <bd.Toolbar className="px-0">
+        <div className="bd-form-compact pt-2">
+            {grid.hasFilterVariant && (
+                <bd.Toolbar className="px-0" size="sm">
                     <bd.Button variant="text" className="btn-lg p-s-0 bg-transparent" color="primary" menu={variantsMenu()} disableRipple>
                         {grid.variants.find((x) => x.serial === currentVariant?.serial)?.title}
                     </bd.Button>
@@ -159,8 +178,19 @@ export const FilterBox = ({
                         onSubmit={onSubmitHandler}
                         innerRef={formRef}
                         validate={(values) => {
-                            var keys = Object.keys(values ?? {}).filter((x) => hasFilter(values[x]));
+                            var keys = Object.keys(values).filter((x) => hasFilter(values[x]));
                             setFiltersCount(keys.length);
+                            //---
+                            let errors = {};
+                            let filterColumns = grid.dataColumns.filter((x) => x.filter && x.filterRequired);
+                            for (let i = 0; i < filterColumns.length; i++) {
+                                const col = filterColumns[i];
+                                if (!hasFilter(values[col.name])) {
+                                    var err_required = translate("required");
+                                    errors[col.name] = col.filter === "simple" ? err_required : [err_required];
+                                }
+                            }
+                            return errors;
                         }}
                         flex
                         compact
@@ -168,10 +198,17 @@ export const FilterBox = ({
                         {grid.dataColumns
                             .filter((x) => x.filter)
                             .map((x) => (
-                                <Filter key={x.name} name={x.name} label={x.title} width="12rem" simple={x.filter === "simple"} />
+                                <Filter
+                                    key={x.name}
+                                    name={x.name}
+                                    label={x.title}
+                                    width="12rem"
+                                    simple={x.filter === "simple"}
+                                    isString={isString(x)}
+                                />
                             ))}
                         {children}
-                        {!grid.variants && (
+                        {!grid.hasFilterVariant && (
                             <FormRow label="" className="flex-grow-1 text-end" style={{ width: "auto" }}>
                                 <ApplyButton busy={systemIsBusy} formRef={formRef} />
                                 <SettingsButton visible={showSettings} count={filtersCount} onClick={onOpenSettings} />

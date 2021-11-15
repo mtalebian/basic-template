@@ -11,8 +11,13 @@
         public string DataType { get; set; }
         public int? MaxLen { get; set; }
         public string DefaultValue { get; set; }
-        public string Filter { get; set; }
         public int? Width { get; set; }
+
+        public string Filter { get; set; }
+        public bool FilterRequired { get; set; }
+
+        public string CheckGrid { get; set; }
+        public string CheckField { get; set; }
 
         public bool IsReadOnly { get; set; }
         public bool ShowInList { get; set; }

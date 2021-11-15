@@ -1,9 +1,16 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import * as bd from "react-basic-design";
+import { api } from "../../api/api";
+import { gridsApi } from "../../api/grids-api";
+import { notify } from "../basic/notify";
+import { T } from "../basic/text";
 import { FilterBox } from "../filters/filter-box";
+import { TableTitlebar } from "../table";
 import { RenderTableDiv } from "../table/render-table-div";
 import { useReactTable } from "../table/use-react-table";
 
-export const Grid = ({ grid, loadData, onExecuteFilter, ...props }) => {
+export const Grid = ({ grid, loadData, parameters, ...props }) => {
+    const [data, setData] = useState(grid.data ?? []);
     const [editState, setEditState] = useState({ edit: false, row: null });
 
     const updateData = (rowIndex, columnId, value) => {
@@ -11,7 +18,7 @@ export const Grid = ({ grid, loadData, onExecuteFilter, ...props }) => {
         grid.data = grid.data.map((row, index) => (index === rowIndex ? new_row : row));
     };
 
-    const tableApi = useReactTable({ columns: grid.columns, data: grid.data, updateData, flexLayout: grid.flexLayout });
+    const tableApi = useReactTable({ columns: grid.columns, data, updateData, flexLayout: grid.flexLayout });
 
     /*
     const deleteTableRow = (row) => {
@@ -23,13 +30,24 @@ export const Grid = ({ grid, loadData, onExecuteFilter, ...props }) => {
                 var i = findIndex(row.values, data, table.schema.dataColumns);
                 setData(data.filter((x, index) => index !== i));
                 tableApi.state.selectedRowIds = {};
-                notify.dark(<Text>record-is-deleted</Text>);
+                notify.dark(<T>record-is-deleted</T>);
             })
             .catch((ex) => {
                 shell.setBusyMode(false);
                 notify.error(ex);
             });
     };*/
+
+    useEffect(() => {
+        if (grid.data || grid.filterable) return;
+        grid.data = [];
+        loadData(null, parameters)
+            .then((x) => {
+                tableApi.state.selectedRowIds = {};
+                setData(x);
+            })
+            .catch(notify);
+    }, [grid, loadData, parameters, tableApi]);
 
     return (
         <>
@@ -43,22 +61,27 @@ export const Grid = ({ grid, loadData, onExecuteFilter, ...props }) => {
                                     initialFilters={{}}
                                     expanded
                                     showSettings
-                                    //variants={[{ title: "standard" }]}
-                                    variants={grid.hasFilterVariant ? grid.variants : null}
                                     systemIsBusy={false}
-                                    onExecute={(filters) => onExecuteFilter(filters, tableApi)}
+                                    onExecute={(filters) => {
+                                        loadData(filters, parameters)
+                                            .then((x) => {
+                                                tableApi.state.selectedRowIds = {};
+                                                setData(x);
+                                            })
+                                            .catch(notify);
+                                    }}
                                 ></FilterBox>
                             </div>
                         </div>
                     )}
 
                     <div className="container mt-2" style={{ marginBottom: 70 }}>
-                        {/* <TableTitlebar
-                            title={title}
+                        <TableTitlebar
+                            title={grid.title}
                             tableApi={tableApi}
                             //hideSearch
                             //hideSettings
-                            //title={<Text>filters</Text>}
+                            //title={<T>filters</T>}
                             expanded
                             fixed
                             buttons={
@@ -70,11 +93,11 @@ export const Grid = ({ grid, loadData, onExecuteFilter, ...props }) => {
                                         onClick={(e) => {
                                             //     var r = newRow();
                                             //     setData([...data, r]);
-                                            tableApi.state.selectedRowIds = { [data.length]: true };
+                                            tableApi.state.selectedRowIds = { [grid.data.length]: true };
                                             setEditState({ edit: true, row: null });
                                         }}
                                     >
-                                        <Text>add</Text>
+                                        <T>add</T>
                                     </bd.Button>
                                     <bd.Button
                                         variant="text"
@@ -85,7 +108,7 @@ export const Grid = ({ grid, loadData, onExecuteFilter, ...props }) => {
                                             setEditState({ edit: true, row: tableApi.selectedFlatRows[0].original });
                                         }}
                                     >
-                                        <Text>edit</Text>
+                                        <T>edit</T>
                                     </bd.Button>
                                     <bd.Button
                                         variant="text"
@@ -94,24 +117,24 @@ export const Grid = ({ grid, loadData, onExecuteFilter, ...props }) => {
                                         disabled={!tableApi.selectedFlatRows.length}
                                         className="m-e-1"
                                         onClick={(e) => {
-                                            if (tableApi.selectedFlatRows.length !== 1) return;
-                                            msgbox(<Text>deleting-selected-row</Text>, null, [
-                                                {
-                                                    title: "delete",
-                                                    action: (hide) => {
-                                                        hide();
-                                                        deleteTableRow(tableApi.selectedFlatRows[0]);
-                                                    },
-                                                },
-                                                { title: "cancel" },
-                                            ]);
+                                            // if (tableApi.selectedFlatRows.length !== 1) return;
+                                            // msgbox(<T>deleting-selected-row</T>, null, [
+                                            //     {
+                                            //         title: "delete",
+                                            //         action: (hide) => {
+                                            //             hide();
+                                            //             deleteTableRow(tableApi.selectedFlatRows[0]);
+                                            //         },
+                                            //     },
+                                            //     { title: "cancel" },
+                                            // ]);
                                         }}
                                     >
-                                        <Text>delete</Text>
+                                        <T>delete</T>
                                     </bd.Button>
                                 </>
                             }
-                        /> */}
+                        />
 
                         <RenderTableDiv
                             tableApi={tableApi}

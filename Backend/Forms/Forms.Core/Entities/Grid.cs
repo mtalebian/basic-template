@@ -22,6 +22,7 @@ namespace Forms.Core
 
         public bool Filterable { get; set; } = true;
         public bool HasFilterVariant { get; set; } = false;
+        public string DefaultFilter { get; set; }
 
         public virtual Group Group { get; set; }
         public virtual ICollection<GridColumn> Columns { get; set; }

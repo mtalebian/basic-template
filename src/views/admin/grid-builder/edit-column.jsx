@@ -91,7 +91,7 @@ export const EditColumn = ({ column, onGoBack, onChanged }) => {
                                         <option value="simple">Simple</option>
                                         <option value="complex">Complex</option>
                                     </BasicSelect>
-                                    <BasicSwitch name="useInVariant" label={<Text>use-in-variant</Text>} labelSize="4" />
+                                    <BasicSwitch name="filterRequired" label={<Text>filter-required</Text>} labelSize="4" />
                                 </>
                             )}
 

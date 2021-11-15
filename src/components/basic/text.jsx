@@ -1,9 +1,15 @@
 import i18next from "i18next";
 import React from "react";
 
-export const T = ({ children, ...props }) => {
+export const T = ({ as, children, ...props }) => {
     const text = translate(children, props);
-    return <span data-code={children}>{text}</span>;
+    if (!as) as = "span";
+    return React.createElement(as, { ...props, "data-code": children }, text);
+    // return (
+    //     <span {...props} data-code={children}>
+    //         {text}
+    //     </span>
+    // );
 };
 
 function findEndOfParameter(s, pos) {

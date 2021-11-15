@@ -156,7 +156,7 @@ export { default as ArrowBackIos } from "./ArrowBackIos";
 // export { default as ArrowBackIosNew } from './ArrowBackIosNew'
 // export { default as ArrowCircleDown } from './ArrowCircleDown'
 // export { default as ArrowCircleLeft } from './ArrowCircleLeft'
-// export { default as ArrowCircleRight } from './ArrowCircleRight'
+export { default as ArrowCircleRight } from "./ArrowCircleRight";
 // export { default as ArrowCircleUp } from './ArrowCircleUp'
 export { default as ArrowDownward } from "./ArrowDownward";
 export { default as ArrowDropDown } from "./ArrowDropDown";
@@ -165,8 +165,8 @@ export { default as ArrowDropUp } from "./ArrowDropUp";
 export { default as ArrowForward } from "./ArrowForward";
 // export { default as ArrowForwardIos } from './ArrowForwardIos'
 // export { default as ArrowLeft } from './ArrowLeft'
-// export { default as ArrowRight } from './ArrowRight'
-// export { default as ArrowRightAlt } from './ArrowRightAlt'
+export { default as ArrowRight } from "./ArrowRight";
+export { default as ArrowRightAlt } from "./ArrowRightAlt";
 export { default as ArrowUpward } from "./ArrowUpward";
 // export { default as Article } from './Article'
 // export { default as ArtTrack } from './ArtTrack'
@@ -357,7 +357,7 @@ export { default as Checklist } from "./Checklist";
 // export { default as Checkroom } from './Checkroom'
 export { default as CheckBox } from "./CheckBox";
 export { default as CheckBoxOutlineBlank } from "./CheckBoxOutlineBlank";
-// export { default as CheckCircle } from './CheckCircle'
+export { default as CheckCircle } from "./CheckCircle";
 // export { default as CheckCircleOutline } from './CheckCircleOutline'
 export { default as ChevronLeft } from "./ChevronLeft";
 export { default as ChevronRight } from "./ChevronRight";
@@ -416,7 +416,7 @@ export { default as Code } from "./Code";
 // export { default as ContactSupport } from './ContactSupport'
 // export { default as ContentCopy } from './ContentCopy'
 // export { default as ContentCut } from './ContentCut'
-// export { default as ContentPaste } from './ContentPaste'
+export { default as ContentPaste } from "./ContentPaste";
 // export { default as ContentPasteGo } from './ContentPasteGo'
 // export { default as ContentPasteOff } from './ContentPasteOff'
 // export { default as ContentPasteSearch } from './ContentPasteSearch'
@@ -629,7 +629,7 @@ export { default as Edit } from "./Edit";
 // export { default as FactCheck } from './FactCheck'
 // export { default as FamilyRestroom } from './FamilyRestroom'
 // export { default as Fastfood } from './Fastfood'
-// export { default as FastForward } from './FastForward'
+export { default as FastForward } from "./FastForward";
 // export { default as FastRewind } from './FastRewind'
 // export { default as Favorite } from './Favorite'
 // export { default as FavoriteBorder } from './FavoriteBorder'
@@ -1358,7 +1358,7 @@ export { default as RadioButtonUnchecked } from "./RadioButtonUnchecked";
 // export { default as Redeem } from './Redeem'
 // export { default as Redo } from './Redo'
 // export { default as ReduceCapacity } from './ReduceCapacity'
-// export { default as Refresh } from './Refresh'
+export { default as Refresh } from "./Refresh";
 // export { default as RememberMe } from './RememberMe'
 // export { default as Remove } from './Remove'
 // export { default as RemoveCircle } from './RemoveCircle'
@@ -1759,7 +1759,7 @@ export { default as TrendingUp } from "./TrendingUp";
 // export { default as Unpublished } from './Unpublished'
 // export { default as Unsubscribe } from './Unsubscribe'
 // export { default as Upcoming } from './Upcoming'
-// export { default as Update } from './Update'
+export { default as Update } from "./Update";
 // export { default as UpdateDisabled } from './UpdateDisabled'
 // export { default as Upgrade } from './Upgrade'
 // export { default as Upload } from './Upload'

@@ -31,7 +31,7 @@ export const Filter = ({
     simple,
     checkTable,
     rowValues,
-    isNumber,
+    isString,
     ...props
 }) => {
     const inputApi = useRef();
@@ -195,7 +195,7 @@ export const Filter = ({
                         if (!visible) setTimeout(() => inputApi.current?.getRef()?.focus(), 0);
                     }}
                     title={label}
-                    isNumber={isNumber}
+                    isString={isString}
                     checkTable={checkTable}
                     rowValues={rowValues}
                 />

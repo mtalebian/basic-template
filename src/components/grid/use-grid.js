@@ -66,15 +66,12 @@ export const useGrid = (id, data) => {
     }, [id, data]);
 
     //----------
-    const loadData = ({ filters, parameters }) => {
-        gridsApi
-            .getGridData(id, filters, parameters)
-            .then((x) => {
-                var g = cache.current[id];
-                g.data = x;
-                setGrid(g);
-            })
-            .catch(notify.error);
+    const loadData = (filters, parameters) => {
+        return gridsApi.getGridData(id, filters, parameters).then((x) => {
+            var g = cache.current[id];
+            g.data = x;
+            return x;
+        });
     };
 
     return [grid, loadData];

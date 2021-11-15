@@ -50,6 +50,7 @@ namespace Forms.Data
             Grid.NVarChar(x => x.InsertSql, 1000, false);
             Grid.NVarChar(x => x.UpdateSql, 1000, false);
             Grid.NVarChar(x => x.DeleteSql, 1000, false);
+            Grid.NVarChar(x => x.DefaultFilter, 1000, false);
             Grid.DefineUserName(x => x.CreatedBy, "");
             Grid.DefineUserName(x => x.ModifiedBy, "");
             Grid.DefineCreatedAt(x => x.CreatedAt, "");
@@ -87,6 +88,7 @@ namespace Forms.Data
             Column.IsRequired(x => x.MaxLen, false);
             Column.NVarChar(x => x.DefaultValue, 500, false);
             Column.NVarChar(x => x.Filter, 20, false);
+            Column.DefaultValue(x => x.FilterRequired, 0, true);
             Column.IsRequired(x => x.Width, false);
 
             Column.DefaultValue(x => x.IsReadOnly, 0, true);
