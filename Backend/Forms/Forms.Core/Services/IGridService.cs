@@ -10,16 +10,18 @@ namespace Forms.Core
         Grid GetGrid(string projectId, string id);
         IList<GridColumn> GetGridColumns(string projectId, string gridId);
         IList<GridVariant> GetGridVariants(string projectId, string gridId);
-        
-        
-        DataTable ExecuteSelect(Grid table, IList<GridColumn> columns, Dictionary<string, object> filters, Dictionary<string, object> parameters);
-        void ExecuteInsert(string projectId, string tableName, Dictionary<string, object> values);
-        void ExecuteDelete(string projectId, string tableName, Dictionary<string, object> values);
-        void ExecuteUpdate(string projectId, string tableName, Dictionary<string, object> values);
+
+
+        DataTable ExecuteSelect(Grid grid, IList<GridColumn> columns, Dictionary<string, object> filters, Dictionary<string, object> parameters);
+        void ExecuteInsert(Grid grid, Dictionary<string, object> values);
+        void ExecuteDelete(Grid grid, Dictionary<string, object> values);
+        void ExecuteUpdate(Grid grid, Dictionary<string, object> values);
 
         GridVariant SaveGridVariant(GridVariant variant);
         void UpdateGridVaraints(IList<GridVariant> variants);
         void DeleteGridVariant(int serial);
 
+
+        bool HasPermission(string azText, string userName, Dictionary<string, object> parameters);
     }
 }

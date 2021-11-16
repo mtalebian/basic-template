@@ -9,8 +9,8 @@ const genericeResponseHandler = (response) => {
     var data = response.data;
     if (!data) throw new Error("invalid response!");
     if (!data.isSuccess) {
-        if (data.errorMessage === "401") throw newError(messages.Error401, "401");
-        if (data.errorMessage === "403") throw newError(messages.Error403, "403");
+        if (data.errorMessage === "401" || data.errorCode === "401") throw newError(messages.Error401, "401");
+        if (data.errorMessage === "403" || data.errorCode === "403") throw newError(messages.Error403, "403");
         throw newError(data.errorMessage, "error");
     }
     return data.result;
@@ -41,7 +41,8 @@ function translateError(ex) {
     var stack = ex.stack;
 
     if (message === "Network Error") throw newError(messages.NetworkError, "NetworkError", stack);
-    if (message.startsWith("Failed to execute 'open' on 'XMLHttpRequest': Invalid URL")) throw newError(messages.InvalidUrl, "InvalidUrl", stack);
+    if (message.startsWith("Failed to execute 'open' on 'XMLHttpRequest': Invalid URL"))
+        throw newError(messages.InvalidUrl, "InvalidUrl", stack);
     throw newError(message, "Error");
 }
 

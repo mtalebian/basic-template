@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { gridsApi } from "../../api/grids-api";
 import { notify } from "../basic/notify";
 
-export const useGrid = (id, data) => {
+export const useGrid = ({ id, data, onUnauthorized }) => {
     const cache = useRef({});
     const [grid, setGrid] = useState({ data, columns: [] });
 
@@ -60,7 +60,9 @@ export const useGrid = (id, data) => {
                 cache.current[id] = x;
                 if (!cancelRequest) setGrid(x);
             })
-            .catch(notify.error);
+            .catch((ex) => {
+                notify.error(ex);
+            });
 
         return () => (cancelRequest = true);
     }, [id, data]);

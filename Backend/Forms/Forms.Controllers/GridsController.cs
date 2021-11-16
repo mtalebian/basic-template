@@ -42,10 +42,17 @@ namespace Forms.Controllers
         public Response<GridViewDTO> GetGrid(string projectId, string id)
         {
             var grid = service.GetGrid(projectId, id);
+
+            if (!service.HasPermission(grid.AzGrid, User.Identity.Name, null))
+                return new Response<GridViewDTO>(Messages.Forbidden, "403");
+
             var columns = service.GetGridColumns(grid.ProjectId, grid.Id);
             var variants = service.GetGridVariants(grid.ProjectId, grid.Id);
 
             var result = grid.MapTo<GridViewDTO>();
+            result.CanInsert = string.IsNullOrEmpty(grid.AzInsert);
+            result.CanUpdate = string.IsNullOrEmpty(grid.AzUpdate);
+            result.CanDelete = string.IsNullOrEmpty(grid.AzDelete);
             result.DataColumns = columns.MapTo<GridColumnDTO>();
             result.Variants = variants.MapTo<GridVariantDTO>();
             return new Response<GridViewDTO>(result);
@@ -56,31 +63,42 @@ namespace Forms.Controllers
         {
             var grid = service.GetGrid(projectId, id);
             var columns = service.GetGridColumns(grid.ProjectId, grid.Id);
-            var data = service.ExecuteSelect(grid, columns, request.Filters, request.Parameters);
 
+            if (!service.HasPermission(grid.AzSelect, User.Identity.Name, null))
+                return new Response<IList<Dictionary<string, object>>>(Messages.Forbidden);
+
+            var data = service.ExecuteSelect(grid, columns, request.Filters, request.Parameters);
             return new Response<IList<Dictionary<string, object>>>(data.ToJSON());
         }
 
 
-        [HttpPost("exec-grid-action")]
-        public Response ExecGridAction(string projectId, [FromBody] GridActionDTO dto)
+        [HttpPost("grid-insert")]
+        public Response ExecGridInsert(string projectId, string id, [FromBody] Dictionary<string, object> values)
         {
-            switch (dto.Action)
-            {
-                case "insert":
-                    service.ExecuteInsert(projectId, dto.GridId, dto.Values);
-                    break;
+            var grid = service.GetGrid(projectId, id);
+            if (!service.HasPermission(grid.AzInsert, User.Identity.Name, values))
+                return new Response(Messages.Forbidden);
+            service.ExecuteInsert(grid, values);
+            return new Response();
+        }
 
-                case "update":
-                    service.ExecuteUpdate(projectId, dto.GridId, dto.Values);
-                    break;
+        [HttpPost("grid-update")]
+        public Response ExecGridUpdate(string projectId, string id, [FromBody] Dictionary<string, object> values)
+        {
+            var grid = service.GetGrid(projectId, id);
+            if (!service.HasPermission(grid.AzUpdate, User.Identity.Name, values))
+                return new Response(Messages.Forbidden);
+            service.ExecuteUpdate(grid, values);
+            return new Response();
+        }
 
-                case "delete":
-                    service.ExecuteDelete(projectId, dto.GridId, dto.Values);
-                    break;
-
-                default: return new Response("Invalid action!");
-            }
+        [HttpPost("grid-delete")]
+        public Response ExecGridDelete(string projectId, string id, [FromBody] Dictionary<string, object> values)
+        {
+            var grid = service.GetGrid(projectId, id);
+            if (!service.HasPermission(grid.AzDelete, User.Identity.Name, values))
+                return new Response(Messages.Forbidden);
+            service.ExecuteDelete(grid, values);
             return new Response();
         }
 

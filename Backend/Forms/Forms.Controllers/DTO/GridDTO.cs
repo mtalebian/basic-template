@@ -11,7 +11,7 @@ namespace Forms.Controllers
         public string Description { get; set; }
         public bool Filterable { get; set; }
         public bool HasFilterVariant { get; set; }
-        
+
         public string TableName { get; set; }
         public bool FlexLayout { get; set; }
         public string SelectSql { get; set; }
@@ -19,8 +19,8 @@ namespace Forms.Controllers
         public string UpdateSql { get; set; }
         public string DeleteSql { get; set; }
 
+        public string AzGrid { get; set; }
         public string AzSelect { get; set; }
-        public string AzEdit { get; set; }
         public string AzInsert { get; set; }
         public string AzUpdate { get; set; }
         public string AzDelete { get; set; }

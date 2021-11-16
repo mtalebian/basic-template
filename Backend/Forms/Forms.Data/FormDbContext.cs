@@ -51,6 +51,13 @@ namespace Forms.Data
             Grid.NVarChar(x => x.UpdateSql, 1000, false);
             Grid.NVarChar(x => x.DeleteSql, 1000, false);
             Grid.NVarChar(x => x.DefaultFilter, 1000, false);
+
+            Grid.NVarChar(x => x.AzGrid, 1000, false);
+            Grid.NVarChar(x => x.AzSelect, 1000, false);
+            Grid.NVarChar(x => x.AzInsert, 1000, false);
+            Grid.NVarChar(x => x.AzUpdate, 1000, false);
+            Grid.NVarChar(x => x.AzDelete, 1000, false);
+
             Grid.DefineUserName(x => x.CreatedBy, "");
             Grid.DefineUserName(x => x.ModifiedBy, "");
             Grid.DefineCreatedAt(x => x.CreatedAt, "");

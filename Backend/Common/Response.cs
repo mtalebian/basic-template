@@ -4,6 +4,7 @@
     {
         public bool IsSuccess { get; set; }
         public string ErrorMessage { get; set; }
+        public string ErrorCode { get; set; }
         public object Result { get; set; }
 
 
@@ -19,10 +20,11 @@
             Result = result;
         }
 
-        public Response(string errorMessage)
+        public Response(string errorMessage, string errorCode = null)
         {
             IsSuccess = false;
             ErrorMessage = errorMessage;
+            ErrorCode = errorCode;
         }
     }
 
@@ -31,15 +33,18 @@
     {
         public bool IsSuccess { get; set; }
         public string ErrorMessage { get; set; }
+        public string ErrorCode { get; set; }
         public T Result { get; set; }
 
 
-        public Response(string errorMessage)
+        public Response(string errorMessage, string errorCode = null)
         {
             IsSuccess = false;
             Result = default;
             ErrorMessage = errorMessage;
+            ErrorCode = errorCode;
         }
+
         public Response(bool isSuccess, T result = default, string errorMessage = "")
         {
             IsSuccess = isSuccess;

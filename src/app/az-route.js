@@ -107,7 +107,7 @@ export const AzRoute = ({ component: Component, login: Login, render, ...rest })
                                         <br />
                                         شما مجاز به مشاهده اين صفحه نمي باشيد
                                     </div>
-                                    <bd.Button variant="text" href="/">
+                                    <bd.Button variant="text" href="/home">
                                         <icons.Home />
                                         <span className="p-s-2">انتقال به صفحه اصلي</span>
                                     </bd.Button>

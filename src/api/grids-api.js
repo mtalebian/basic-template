@@ -16,14 +16,13 @@ export const gridsApi = {
         return api.call("post", `${apiConfig.gridsUrl}/get-grid-data?projectId=${settings.projectId}&id=${id}`, dto);
     },
 
-    save: (gridId, values, insertMode) => {
-        var dto = { action: insertMode ? "insert" : "update", gridId, values };
-        return api.call("post", `${apiConfig.gridsUrl}/exec-grid-action?projectId=${settings.projectId}`, dto);
+    save: (id, values, insertMode) => {
+        var action = insertMode ? "insert" : "update";
+        return api.call("post", `${apiConfig.gridsUrl}/grid-${action}?projectId=${settings.projectId}&id=${id}`, values);
     },
 
-    delete: (gridId, values) => {
-        var dto = { action: "delete", gridId, values };
-        return api.call("post", `${apiConfig.gridsUrl}/exec-grid-action?projectId=${settings.projectId}`, dto);
+    delete: (id, values) => {
+        return api.call("post", `${apiConfig.gridsUrl}/grid-delete?projectId=${settings.projectId}&id=${id}`, values);
     },
 
     saveVaraint: (gridId, variant) => {

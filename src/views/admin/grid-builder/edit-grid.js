@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next";
 import { Formik } from "formik";
 import * as yup from "yup";
 import * as bd from "react-basic-design";
+import * as bd2 from "../../../components/forms";
 import * as icons from "../../../assets/icons";
 import { gridBuilderApi } from "../../../api/grid-builder-api";
 import { notify } from "../../../components/basic/notify";
@@ -25,7 +26,7 @@ import {
 import { RenderTableDiv } from "../../../components/table/render-table-div";
 import { DefaultEditor } from "../../../components/table/editors";
 import { BasicTextArea } from "../../../components/basic-form/basic-textarea";
-import { Text } from "../../../components/basic/text";
+import { T, Text } from "../../../components/basic/text";
 import { msgbox } from "react-basic-design";
 import { BasicSwitch } from "../../../components/basic-form/basic-switch";
 import { EditColumn } from "./edit-column";
@@ -231,7 +232,7 @@ export function TableDesignerEditTable({ table, group, onChanged, onGoBack }) {
 
     return (
         <>
-            <div className="border-bottom bg-gray-5 mb-3">
+            <div className="border-bottom bg-default">
                 <div className="container">
                     <bd.Toolbar>
                         <bd.Button variant="icon" onClick={onGoBack} size="md" edge="start" className="m-e-2">
@@ -263,13 +264,19 @@ export function TableDesignerEditTable({ table, group, onChanged, onGoBack }) {
                     </div>
 
                     <bd.TabStrip textColor="primary" indicatorColor="primary">
-                        <bd.TabStripItem eventKey="general" onClick={(e) => setTab("general")}>
+                        <bd.TabStripItem eventKey="general" onClick={(e) => setTab(tab === "general" ? null : "general")}>
                             <Text>general</Text>
                         </bd.TabStripItem>
-                        <bd.TabStripItem eventKey="data" onClick={(e) => setTab("data")}>
+                        <bd.TabStripItem eventKey="filter" onClick={(e) => setTab(tab === "filter" ? null : "filter")}>
+                            <Text>filter</Text>
+                        </bd.TabStripItem>
+                        <bd.TabStripItem eventKey="data" onClick={(e) => setTab(tab === "data" ? null : "data")}>
                             <Text>data</Text>
                         </bd.TabStripItem>
-                        <bd.TabStripItem eventKey="columns" onClick={(e) => setTab("columns")}>
+                        <bd.TabStripItem eventKey="authorization" onClick={(e) => setTab(tab === "authorization" ? null : "authorization")}>
+                            <Text>authorization</Text>
+                        </bd.TabStripItem>
+                        <bd.TabStripItem eventKey="columns" onClick={(e) => setTab(tab === "columns" ? null : "columns")}>
                             <Text>columns</Text>
                         </bd.TabStripItem>
                     </bd.TabStrip>
@@ -277,8 +284,9 @@ export function TableDesignerEditTable({ table, group, onChanged, onGoBack }) {
             </div>
 
             <div className="container" style={{ marginBottom: 70 }}>
-                <div className="mt-4" style={{ maxWidth: 1000 }}>
-                    <Formik
+                <div>
+                    <bd2.FormikForm
+                        compact
                         initialValues={table}
                         validationSchema={yup.object({
                             id: yup.string().max(50).required("Required"),
@@ -288,33 +296,105 @@ export function TableDesignerEditTable({ table, group, onChanged, onGoBack }) {
                         onSubmit={onSaveClick}
                         innerRef={formRef}
                     >
-                        <form>
-                            {canShowTab("general") && (
-                                <div className="row mb-3">
-                                    <div className="col-md-6">
-                                        <BasicInput name="id" label={<Text>grid-id</Text>} labelSize="4" readOnly={!insertMode} autoFocus />
-                                        <BasicInput name="title" label={<Text>title</Text>} labelSize="4" />
-                                        <BasicSwitch name="flexLayout" label={<Text>flex-layout</Text>} labelSize="4" />
-                                        <BasicSwitch name="filterable" label={<Text>filterable</Text>} labelSize="4" />
-                                        <BasicSwitch name="hasFilterVariant" label={<Text>filter-variant</Text>} labelSize="4" />
-                                    </div>
-                                    <div className="col-md-6">
-                                        <BasicTextArea name="description" label={<Text>description</Text>} className="h-100" />
+                        {canShowTab("general") && (
+                            <div className="p-s-3 pt-3">
+                                <h5>
+                                    <T>general</T>
+                                </h5>
+                                <div className="bd-form-flex">
+                                    <bd2.FormikInput
+                                        name="id"
+                                        label={<Text>grid-id</Text>}
+                                        readOnly={!insertMode}
+                                        width="12rem"
+                                        autoFocus
+                                    />
+
+                                    <bd2.FormikInput name="title" label={<Text>title</Text>} width="12rem" />
+                                    <bd2.FormikSwitch name="flexLayout" label={<Text>flex-layout</Text>} width="6rem" />
+                                    <bd2.FormikTextArea
+                                        name="description"
+                                        label={<Text>description</Text>}
+                                        height="4rem"
+                                        style={{ minWidth: 300 }}
+                                        className="flex-grow-1"
+                                    />
+                                </div>
+                            </div>
+                        )}
+
+                        {canShowTab("filter") && (
+                            <div className="p-s-3 pt-3">
+                                <h5>
+                                    <T>filter</T>
+                                </h5>
+                                <div className="bd-form-flex">
+                                    <bd2.FormikSwitch name="filterable" label={<Text>filterable</Text>} width="6rem" />
+                                    <bd2.FormikSwitch name="hasFilterVariant" label={<Text>filter-variant</Text>} width="6rem" />
+                                    <bd2.FormikInput
+                                        name="defaultFilter"
+                                        label={<Text>default-filter</Text>}
+                                        width="12rem"
+                                        className="flex-grow-1"
+                                    />
+                                </div>
+                            </div>
+                        )}
+
+                        {canShowTab("data") && (
+                            <div className="p-s-3 pt-3">
+                                <h5>
+                                    <T>data</T>
+                                </h5>
+                                <div>
+                                    <bd2.FormikInput name="tableName" label={<Text>table-name</Text>} width="15rem" />
+                                </div>
+                                <div className="bd-form-flex">
+                                    <div className="row g-0 w-100">
+                                        <div className="col-12 col-md-6">
+                                            <bd2.FormikTextArea name="selectQuery" label={t("select-query")} height="4rem" />
+                                        </div>
+                                        <div className="col-12 col-md-6">
+                                            <bd2.FormikTextArea name="insertQuery" label={t("insert-query")} height="4rem" />
+                                        </div>
+                                        <div className="col-12 col-md-6">
+                                            <bd2.FormikTextArea name="updateQuery" label={t("update-query")} height="4rem" />
+                                        </div>
+                                        <div className="col-12 col-md-6">
+                                            <bd2.FormikTextArea name="deleteQuery" label={t("delete-query")} height="4rem" />
+                                        </div>
                                     </div>
                                 </div>
-                            )}
+                            </div>
+                        )}
 
-                            {canShowTab("data") && (
-                                <bd.Panel title={<Text>data</Text>} expanded fixed>
-                                    <BasicInput name="tableName" label={<Text>table-name</Text>} labelSize="2" style={{ maxWidth: 300 }} />
-                                    <BasicTextArea name="selectQuery" label={t("select-query")} labelSize="2" />
-                                    <BasicTextArea name="insertQuery" label={t("insert-query")} labelSize="2" />
-                                    <BasicTextArea name="updateQuery" label={t("update-query")} labelSize="2" />
-                                    <BasicTextArea name="deleteQuery" label={t("delete-query")} labelSize="2" />
-                                </bd.Panel>
-                            )}
-                        </form>
-                    </Formik>
+                        {canShowTab("authorization") && (
+                            <div className="p-s-3 pt-3">
+                                <h5>
+                                    <T>authorization</T>
+                                </h5>
+                                <div className="bd-form-flex">
+                                    <div className="row g-0 w-100">
+                                        <div className="col-12 col-md-6">
+                                            <bd2.FormikInput name="azGrid" label={t("azGrid")} />
+                                        </div>
+                                        <div className="col-12 col-md-6">
+                                            <bd2.FormikInput name="azSelect" label={t("azSelect")} />
+                                        </div>
+                                        <div className="col-12 col-md-6">
+                                            <bd2.FormikInput name="azInsert" label={t("azInsert")} />
+                                        </div>
+                                        <div className="col-12 col-md-6">
+                                            <bd2.FormikInput name="azUpdate" label={t("azUpdate")} />
+                                        </div>
+                                        <div className="col-12 col-md-6">
+                                            <bd2.FormikInput name="azDelete" label={t("azDelete")} />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        )}
+                    </bd2.FormikForm>
                 </div>
 
                 {canShowTab("columns") && (

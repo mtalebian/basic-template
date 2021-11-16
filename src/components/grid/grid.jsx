@@ -46,7 +46,7 @@ export const Grid = ({ grid, loadData, parameters, ...props }) => {
                 tableApi.state.selectedRowIds = {};
                 setData(x);
             })
-            .catch(notify);
+            .catch(notify.error);
     }, [grid, loadData, parameters, tableApi]);
 
     return (
@@ -68,7 +68,7 @@ export const Grid = ({ grid, loadData, parameters, ...props }) => {
                                                 tableApi.state.selectedRowIds = {};
                                                 setData(x);
                                             })
-                                            .catch(notify);
+                                            .catch(notify.error);
                                     }}
                                 ></FilterBox>
                             </div>

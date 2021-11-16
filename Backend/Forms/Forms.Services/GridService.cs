@@ -41,28 +41,6 @@ namespace Forms.Services
         }
 
 
-        public bool CanSelect(Grid grid, string userName)
-        {
-
-        }
-
-        public bool CanInsert(Grid grid, string userName)
-        {
-
-        }
-
-        public bool CanUpdate(Grid grid, string userName)
-        {
-
-        }
-        
-        public bool CanDelete(Grid grid, string userName)
-        {
-            return grid.AzDelete == "*";
-        }
-
-
-
         public DataTable ExecuteSelect(Grid grid, IList<GridColumn> columns, Dictionary<string, object> filters, Dictionary<string, object> parameters)
         {
             var fields = columns.Select(x => x.Name).ToArray();
@@ -75,13 +53,11 @@ namespace Forms.Services
             return db.GetDataTable(sql);
         }
 
-        public void ExecuteInsert(string projectId, string gridId, Dictionary<string, object> values)
+        public void ExecuteInsert(Grid grid, Dictionary<string, object> values)
         {
-            var gr = db.Grids.FirstOrDefault(x => x.ProjectId == projectId && x.Id == gridId);
-            if (gr == null) throw new Exception($"Table '{gr.TableName}' not found!");
             var fields = new List<string>();
             var fields_value = new List<string>();
-            var columns = db.GridColumns.Where(x => x.ProjectId == gr.ProjectId && x.GridId == gr.Id);
+            var columns = db.GridColumns.Where(x => x.ProjectId == grid.ProjectId && x.GridId == grid.Id);
             foreach (var c in columns)
             {
                 var v = values.ContainsKey(c.Name) ? values[c.Name] : null;
@@ -100,15 +76,13 @@ namespace Forms.Services
             }
             var qFields = string.Join(", ", fields);
             var qValues = string.Join(", ", fields_value);
-            db.ExecuteSql($"insert {gridId} ({qFields}) values({qValues})");
+            db.ExecuteSql($"insert {grid.Id} ({qFields}) values({qValues})");
         }
 
-        public void ExecuteUpdate(string projectId, string gridId, Dictionary<string, object> values)
+        public void ExecuteUpdate(Grid grid, Dictionary<string, object> values)
         {
-            var gr = db.Grids.FirstOrDefault(x => x.ProjectId == projectId && x.Id == gridId);
-            if (gr == null) throw new Exception($"Table '{gr.TableName}' not found!");
             var list = new List<string>();
-            var columns = db.GridColumns.Where(x => x.ProjectId == gr.ProjectId && x.GridId == gr.Id);
+            var columns = db.GridColumns.Where(x => x.ProjectId == grid.ProjectId && x.GridId == grid.Id);
             foreach (var c in columns)
             {
                 if (!c.IsPK && values.ContainsKey(c.Name))
@@ -117,9 +91,37 @@ namespace Forms.Services
                 }
             }
             var qSet = string.Join(", ", list);
-            var qWhere = GetWhereClause(gr, values, true);
-            var sql = $"update {gridId} set {qSet} {qWhere}";
+            var qWhere = GetWhereClause(grid, values, true);
+            var sql = $"update {grid.Id} set {qSet} {qWhere}";
             db.ExecuteSql(sql);
+        }
+
+        public void ExecuteDelete(Grid grid, Dictionary<string, object> values)
+        {
+            var qWhere = GetWhereClause(grid, values, true);
+            var sql = $"delete {grid.TableName} {qWhere}";
+            db.ExecuteSql(sql);
+        }
+
+        private string GetWhereClause(Grid grid, Dictionary<string, object> values, bool pkOnky)
+        {
+            var where = new List<string>();
+            var columns = db.GridColumns.Where(x => x.ProjectId == grid.ProjectId && x.GridId == grid.Id);
+            foreach (var c in columns)
+            {
+                if (pkOnky && (!values.ContainsKey(c.Name) || values[c.Name] == null))
+                {
+                    throw new Exception($"Value of column '{c.Name}' is empty!");
+                }
+
+                if (!pkOnky || c.IsPK)
+                {
+                    where.Add($"{c.Name} = " + GetDbValue(c, values));
+                }
+            }
+            FilterParser.AddFilter(where, columns, grid.GetDefaultFilter());
+            if (where.Count < 1) throw new Exception("Where clause is empty!");
+            return "where " + string.Join(" and ", where);
         }
 
         private string GetDbValue(GridColumn c, Dictionary<string, object> values)
@@ -180,36 +182,6 @@ namespace Forms.Services
             return v.ToString().Replace("'", "");
         }
 
-        public void ExecuteDelete(string projectId, string gridId, Dictionary<string, object> values)
-        {
-            var gr = db.Grids.FirstOrDefault(x => x.ProjectId == projectId && x.Id == gridId);
-            if (gr == null) throw new Exception($"The grid '{gridId}' not found!");
-            var qWhere = GetWhereClause(gr, values, true);
-            var sql = $"delete {gr.TableName} {qWhere}";
-            db.ExecuteSql(sql);
-        }
-
-        private string GetWhereClause(Grid grid, Dictionary<string, object> values, bool pkOnky)
-        {
-            var where = new List<string>();
-            var columns = db.GridColumns.Where(x => x.ProjectId == grid.ProjectId && x.GridId == grid.Id);
-            foreach (var c in columns)
-            {
-                if (pkOnky && (!values.ContainsKey(c.Name) || values[c.Name] == null))
-                {
-                    throw new Exception($"Value of column '{c.Name}' is empty!");
-                }
-
-                if (!pkOnky || c.IsPK)
-                {
-                    where.Add($"{c.Name} = " + GetDbValue(c, values));
-                }
-            }
-            FilterParser.AddFilter(where, columns, grid.GetDefaultFilter());
-            if (where.Count < 1) throw new Exception("Where clause is empty!");
-            return "where " + string.Join(" and ", where);
-        }
-
 
         public IList<GridVariant> GetGridVariants(string projectId, string gridId)
         {
@@ -265,6 +237,13 @@ namespace Forms.Services
                 }
             }
             db.SaveChanges();
+        }
+
+
+
+        public bool HasPermission(string azText, string userName, Dictionary<string, object> parameters)
+        {
+            return azText == "*";
         }
 
     }
