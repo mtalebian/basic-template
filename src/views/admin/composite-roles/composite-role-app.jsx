@@ -138,7 +138,7 @@ export const CompositeRoleApp = () => {
               <TableTitlebar
                 tableApi={tableApi}
                 hideSettings
-                title="Roles"
+                title="Composite  Roles"
                 fixed
                 buttons={
                   <>

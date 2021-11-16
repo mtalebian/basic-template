@@ -135,7 +135,7 @@ export const UserApp = () => {
               enableGrouping
               enableSorting
               clickAction="select"
-              className="border0 nano-scroll"
+              className="nano-scroll border"
               hover
               hasWhitespace
               stickyFooter

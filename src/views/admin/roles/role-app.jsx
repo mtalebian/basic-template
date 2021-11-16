@@ -1,4 +1,4 @@
-import React, { useMemo, useEffect, useState } from "react";
+import { useMemo, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import * as bd from "react-basic-design";
 import * as icons from "../../../assets/icons";

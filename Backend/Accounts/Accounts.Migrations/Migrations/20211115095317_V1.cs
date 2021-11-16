@@ -212,7 +212,9 @@ namespace Accounts.Migrations.Migrations
                 {
                     ProjectId = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false),
                     CompositeRoleId = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    UserId = table.Column<long>(type: "bigint", nullable: false)
+                    UserId = table.Column<long>(type: "bigint", nullable: false),
+                    CreatedBy = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "getdate()")
                 },
                 constraints: table =>
                 {
@@ -301,7 +303,9 @@ namespace Accounts.Migrations.Migrations
                 {
                     ProjectId = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false),
                     RoleId = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    UserId = table.Column<long>(type: "bigint", nullable: false)
+                    UserId = table.Column<long>(type: "bigint", nullable: false),
+                    CreatedBy = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "getdate()")
                 },
                 constraints: table =>
                 {
@@ -430,7 +434,7 @@ namespace Accounts.Migrations.Migrations
                 schema: "tmp",
                 table: "Users",
                 columns: new[] { "Id", "AccessFailedCount", "ConcurrencyStamp", "CreatedAt", "Email", "EmailConfirmed", "FirstName", "IsDeleted", "IsDisabled", "LastAccessFailedDate", "LastName", "LockoutEnabled", "LockoutEndDate", "NationalCode", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "UserName", "WindowsAuthenticate" },
-                values: new object[] { 1L, 0, "1a3b04dd-6cb0-4865-8e0b-e2aea91bb7ca", new DateTime(2021, 11, 6, 10, 53, 43, 969, DateTimeKind.Local).AddTicks(6529), null, false, "", false, false, null, "Administrator", false, null, null, "PABPyu6/prVEQ4QbBrmcATJsjw/1yoli07rNI6EJ764=", null, false, "8cc3f1eb-b5b5-49e0-925f-8d73d806ce2b", "admin", false });
+                values: new object[] { 1L, 0, "a189ccbf-f407-4ea3-b3d0-888b4846b294", new DateTime(2021, 11, 15, 13, 23, 17, 483, DateTimeKind.Local).AddTicks(1130), null, false, "", false, false, null, "Administrator", false, null, null, "PABPyu6/prVEQ4QbBrmcATJsjw/1yoli07rNI6EJ764=", null, false, "d932b541-194c-4daa-b4d2-24f4aed1e1d2", "admin", false });
 
             migrationBuilder.InsertData(
                 schema: "tmp",
@@ -454,7 +458,8 @@ namespace Accounts.Migrations.Migrations
                     { "config-menu", "project1", null, false, "config", 0, "Maintain project menu", "/admin/menu" },
                     { "config-table-designer", "project1", null, false, "config", 0, "Table designer", "/admin/table-designer" },
                     { "users", "project1", null, false, "admin", 0, "Manage Users", "/admin/users" },
-                    { "roles", "project1", null, false, "admin", 0, "Manage Roles", "/admin/roles" }
+                    { "roles", "project1", null, false, "admin", 0, "Manage Roles", "/admin/roles" },
+                    { "composite-roles", "project1", null, false, "admin", 0, "Manage Composite Role", "/admin/composite-roles" }
                 });
 
             migrationBuilder.CreateIndex(

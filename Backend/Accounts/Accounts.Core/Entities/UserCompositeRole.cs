@@ -8,6 +8,9 @@ namespace Accounts.Core
         public string CompositeRoleId { get; set; }
         public long UserId { get; set; }
 
+        public string CreatedBy { get; set; }
+        public DateTime CreatedAt { get; set; }
+
         [IgnoreMap]
         public virtual User User { get; set; }
 

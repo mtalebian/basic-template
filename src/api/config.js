@@ -10,4 +10,5 @@ export const apiConfig = {
   userUrl: host + "/User",
   roleUrl: host + "/Role",
   compositeRoleUrl: host + "/CompositeRole",
+  assignUserRoleUrl: host + "/AssignUserRole",
 };

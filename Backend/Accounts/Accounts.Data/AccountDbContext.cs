@@ -219,6 +219,8 @@ namespace Accounts.Data
             UserCompositeRole.HasKey(x => new { x.UserId, x.ProjectId, x.CompositeRoleId });
             UserCompositeRole.DefineProjectId(x => x.ProjectId);
             UserCompositeRole.DefineCompositeRoleId(x => x.CompositeRoleId);
+            UserCompositeRole.DefineUserName(x => x.CreatedBy);
+            UserCompositeRole.DefaultGetDate(x => x.CreatedAt);
 
             UserCompositeRole.Entity()
                 .HasOne<User>(x => x.User)
@@ -238,6 +240,8 @@ namespace Accounts.Data
             UserRole.HasKey(x => new { x.UserId, x.ProjectId, x.RoleId });
             UserRole.DefineProjectId(x => x.ProjectId);
             UserRole.DefineRoleId(x => x.RoleId);
+            UserRole.DefineUserName(x => x.CreatedBy);
+            UserRole.DefaultGetDate(x => x.CreatedAt);
 
             UserRole.Entity()
                 .HasOne<User>(x => x.User)

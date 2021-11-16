@@ -298,6 +298,17 @@ namespace Accounts.Migrations.Migrations
                             SortOrder = 0,
                             Title = "Manage Roles",
                             Url = "/admin/roles"
+                        },
+                        new
+                        {
+                            ProjectId = "project1",
+                            Id = "composite-roles",
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            OpenInNewTab = false,
+                            ParentId = "admin",
+                            SortOrder = 0,
+                            Title = "Manage Composite Role",
+                            Url = "/admin/composite-roles"
                         });
                 });
 
@@ -504,8 +515,8 @@ namespace Accounts.Migrations.Migrations
                         {
                             Id = 1L,
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "1a3b04dd-6cb0-4865-8e0b-e2aea91bb7ca",
-                            CreatedAt = new DateTime(2021, 11, 6, 10, 53, 43, 969, DateTimeKind.Local).AddTicks(6529),
+                            ConcurrencyStamp = "a189ccbf-f407-4ea3-b3d0-888b4846b294",
+                            CreatedAt = new DateTime(2021, 11, 15, 13, 23, 17, 483, DateTimeKind.Local).AddTicks(1130),
                             EmailConfirmed = false,
                             FirstName = "",
                             IsDeleted = false,
@@ -515,7 +526,7 @@ namespace Accounts.Migrations.Migrations
                             LockoutEnabled = false,
                             PasswordHash = "PABPyu6/prVEQ4QbBrmcATJsjw/1yoli07rNI6EJ764=",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "8cc3f1eb-b5b5-49e0-925f-8d73d806ce2b",
+                            SecurityStamp = "d932b541-194c-4daa-b4d2-24f4aed1e1d2",
                             UserName = "admin",
                             WindowsAuthenticate = false
                         });
@@ -580,6 +591,16 @@ namespace Accounts.Migrations.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
+                    b.Property<DateTime>("CreatedAt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("getdate()");
+
+                    b.Property<string>("CreatedBy")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
                     b.HasKey("UserId", "ProjectId", "CompositeRoleId");
 
                     b.HasIndex("ProjectId", "CompositeRoleId");
@@ -599,6 +620,16 @@ namespace Accounts.Migrations.Migrations
                     b.Property<string>("RoleId")
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("getdate()");
+
+                    b.Property<string>("CreatedBy")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.HasKey("UserId", "ProjectId", "RoleId");
 

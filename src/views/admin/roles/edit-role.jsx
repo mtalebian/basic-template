@@ -73,7 +73,6 @@ export const EditRole = ({ currentProjectId, originalRole, azObjects, onGoBack, 
         .catch((ex) => {
           setDeleting(false);
           notify.error(ex);
-          setBusy(false);
         });
     }
   };
