@@ -99,6 +99,7 @@ namespace Forms.Services
         public void ExecuteDelete(Grid grid, Dictionary<string, object> values)
         {
             var qWhere = GetWhereClause(grid, values, true);
+            if (string.IsNullOrEmpty(qWhere)) throw new Exception("Error in DELETE script!");
             var sql = $"delete {grid.TableName} {qWhere}";
             db.ExecuteSql(sql);
         }

@@ -232,37 +232,40 @@ export function TableDesignerEditTable({ table, group, onChanged, onGoBack }) {
 
     return (
         <>
-            <div className="border-bottom bg-default">
+            <div className="border-bottom bg-default" style={{ position: "sticky", top: -100, zIndex: 1 }}>
+                <div className="bg-default" style={{ position: "sticky", top: 0, zIndex: 1 }}>
+                    <div className="container">
+                        <bd.Toolbar>
+                            <bd.Button variant="icon" onClick={onGoBack} size="md" edge="start" className="m-e-2">
+                                <icons.ArrowBackIos className="rtl-rotate-180" />
+                            </bd.Button>
+
+                            <h5>{insertMode ? t("insert-grid") : t("edit-grid")}</h5>
+
+                            <div className="flex-grow-1" />
+
+                            <bd.Button color="primary" disabled={saving || deleting} onClick={() => formRef.current.submitForm()}>
+                                {saving && <div className="m-e-2 spinner-border spinner-border-sm"></div>}
+                                <span>{t("save-changes")}</span>
+                            </bd.Button>
+
+                            <bd.Button variant="icon" menu={moreMenu} edge="end" className="m-s-1">
+                                <icons.MoreVert />
+                            </bd.Button>
+                        </bd.Toolbar>
+                    </div>
+                </div>
+
                 <div className="container">
-                    <bd.Toolbar>
-                        <bd.Button variant="icon" onClick={onGoBack} size="md" edge="start" className="m-e-2">
-                            <icons.ArrowBackIos className="rtl-rotate-180" />
-                        </bd.Button>
-
-                        <h5>{insertMode ? t("insert-grid") : t("edit-grid")}</h5>
-
-                        <div className="flex-grow-1" />
-
-                        <bd.Button color="primary" disabled={saving || deleting} onClick={() => formRef.current.submitForm()}>
-                            {saving && <div className="m-e-2 spinner-border spinner-border-sm"></div>}
-                            <span>{t("save-changes")}</span>
-                        </bd.Button>
-
-                        <bd.Button variant="icon" menu={moreMenu} edge="end" className="m-s-1">
-                            <icons.MoreVert />
-                        </bd.Button>
-                    </bd.Toolbar>
-
                     <div className="m-s-4 mb-2 d-flex align-items-center">
                         <i>
                             <icons.TableView style={{ fontSize: 32 }} />
                         </i>
                         <div className="m-s-3 size-sm" style={{ lineHeight: 1.75 }}>
-                            <div>{table.id}</div>
+                            <b>{table.id}</b>
                             <div>Created by: {table.createdBy}</div>
                         </div>
                     </div>
-
                     <bd.TabStrip textColor="primary" indicatorColor="primary">
                         <bd.TabStripItem eventKey="general" onClick={(e) => setTab(tab === "general" ? null : "general")}>
                             <Text>general</Text>
@@ -298,9 +301,6 @@ export function TableDesignerEditTable({ table, group, onChanged, onGoBack }) {
                     >
                         {canShowTab("general") && (
                             <div className="p-s-3 pt-3">
-                                <h5>
-                                    <T>general</T>
-                                </h5>
                                 <div className="bd-form-flex">
                                     <bd2.FormikInput
                                         name="id"
@@ -324,11 +324,8 @@ export function TableDesignerEditTable({ table, group, onChanged, onGoBack }) {
                         )}
 
                         {canShowTab("filter") && (
-                            <div className="p-s-3 pt-3">
-                                <h5>
-                                    <T>filter</T>
-                                </h5>
-                                <div className="bd-form-flex">
+                            <bd.Panel title={<T>filter</T>} size="md">
+                                <div className="bd-form-flex p-s-3">
                                     <bd2.FormikSwitch name="filterable" label={<Text>filterable</Text>} width="6rem" />
                                     <bd2.FormikSwitch name="hasFilterVariant" label={<Text>filter-variant</Text>} width="6rem" />
                                     <bd2.FormikInput
@@ -338,61 +335,54 @@ export function TableDesignerEditTable({ table, group, onChanged, onGoBack }) {
                                         className="flex-grow-1"
                                     />
                                 </div>
-                            </div>
+                            </bd.Panel>
                         )}
-
                         {canShowTab("data") && (
-                            <div className="p-s-3 pt-3">
-                                <h5>
-                                    <T>data</T>
-                                </h5>
-                                <div>
+                            <bd.Panel title={<T>data</T>} size="md">
+                                <div className="p-s-3">
                                     <bd2.FormikInput name="tableName" label={<Text>table-name</Text>} width="15rem" />
-                                </div>
-                                <div className="bd-form-flex">
-                                    <div className="row g-0 w-100">
-                                        <div className="col-12 col-md-6">
-                                            <bd2.FormikTextArea name="selectQuery" label={t("select-query")} height="4rem" />
-                                        </div>
-                                        <div className="col-12 col-md-6">
-                                            <bd2.FormikTextArea name="insertQuery" label={t("insert-query")} height="4rem" />
-                                        </div>
-                                        <div className="col-12 col-md-6">
-                                            <bd2.FormikTextArea name="updateQuery" label={t("update-query")} height="4rem" />
-                                        </div>
-                                        <div className="col-12 col-md-6">
-                                            <bd2.FormikTextArea name="deleteQuery" label={t("delete-query")} height="4rem" />
+                                    <div className="bd-form-flex">
+                                        <div className="row g-0 w-100">
+                                            <div className="col-12 col-md-6 col-lg-3">
+                                                <bd2.FormikTextArea name="selectQuery" label={t("select-query")} height="4rem" />
+                                            </div>
+                                            <div className="col-12 col-md-6 col-lg-3">
+                                                <bd2.FormikTextArea name="insertQuery" label={t("insert-query")} height="4rem" />
+                                            </div>
+                                            <div className="col-12 col-md-6 col-lg-3">
+                                                <bd2.FormikTextArea name="updateQuery" label={t("update-query")} height="4rem" />
+                                            </div>
+                                            <div className="col-12 col-md-6 col-lg-3">
+                                                <bd2.FormikTextArea name="deleteQuery" label={t("delete-query")} height="4rem" />
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
+                            </bd.Panel>
                         )}
 
                         {canShowTab("authorization") && (
-                            <div className="p-s-3 pt-3">
-                                <h5>
-                                    <T>authorization</T>
-                                </h5>
-                                <div className="bd-form-flex">
+                            <bd.Panel title={<T>authorization</T>} size="md">
+                                <div className="bd-form-flex p-s-3">
                                     <div className="row g-0 w-100">
-                                        <div className="col-12 col-md-6">
+                                        <div className="col-12 col-md-6 col-lg-4">
                                             <bd2.FormikInput name="azGrid" label={t("azGrid")} />
                                         </div>
-                                        <div className="col-12 col-md-6">
+                                        <div className="col-12 col-md-6 col-lg-4">
                                             <bd2.FormikInput name="azSelect" label={t("azSelect")} />
                                         </div>
-                                        <div className="col-12 col-md-6">
+                                        <div className="col-12 col-md-6 col-lg-4">
                                             <bd2.FormikInput name="azInsert" label={t("azInsert")} />
                                         </div>
-                                        <div className="col-12 col-md-6">
+                                        <div className="col-12 col-md-6 col-lg-4">
                                             <bd2.FormikInput name="azUpdate" label={t("azUpdate")} />
                                         </div>
-                                        <div className="col-12 col-md-6">
+                                        <div className="col-12 col-md-6 col-lg-4">
                                             <bd2.FormikInput name="azDelete" label={t("azDelete")} />
                                         </div>
                                     </div>
                                 </div>
-                            </div>
+                            </bd.Panel>
                         )}
                     </bd2.FormikForm>
                 </div>
