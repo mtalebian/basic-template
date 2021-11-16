@@ -366,7 +366,7 @@ export function TableDesignerEditTable({ table, group, onChanged, onGoBack }) {
                                         size="md"
                                         disabled={!tableApi.selectedFlatRows.length}
                                         onClick={(e) => {
-                                            setColumn(tableApi.selectedFlatRows[0].values);
+                                            setColumn(tableApi.selectedFlatRows[0].original);
                                         }}
                                     >
                                         <icons.Edit />

@@ -65,7 +65,7 @@ export const FilterLookup = ({ name, title, show, setShow, isString, checkTable,
             const y = v.y ? v.y : "";
             if (v.rop === "x...y") {
                 if (x && y) list.push(`${x}...${y}`);
-            } else if (v.rop === "<EMPTY>") {
+            } else if (v.rop === "<EMPTY>" || v.rop === "!<EMPTY>") {
                 list.push(v.rop);
             } else {
                 if (x) list.push(v.rop.replace("x", x));
@@ -138,7 +138,7 @@ export const FilterLookup = ({ name, title, show, setShow, isString, checkTable,
 
                                                         <div className="mb-2 col-12 col-sm-9">
                                                             <div className="d-flex">
-                                                                {item.rop !== "<EMPTY>" && (
+                                                                {item.rop !== "<EMPTY>" && item.rop !== "!<EMPTY>" && (
                                                                     <input
                                                                         className="form-control compact"
                                                                         value={item.x || ""}
@@ -261,6 +261,8 @@ function convertFieldValueToList(items, isString) {
 
         if (item?.toUpperCase() === "<EMPTY>") {
             v.rop = "<EMPTY>";
+        } else if (item?.toUpperCase() === "!<EMPTY>") {
+            v.rop = "!<EMPTY>";
         } else if (typeof item === "string") {
             var c0 = charAt(item, 0);
             switch (c0) {

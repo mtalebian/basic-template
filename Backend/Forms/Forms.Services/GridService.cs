@@ -40,137 +40,39 @@ namespace Forms.Services
             return db.GridColumns.Where(x => x.ProjectId == projectId && x.GridId == gridId).OrderBy(x => x.OrdinalPosition).ToList();
         }
 
+
+        public bool CanSelect(Grid grid, string userName)
+        {
+
+        }
+
+        public bool CanInsert(Grid grid, string userName)
+        {
+
+        }
+
+        public bool CanUpdate(Grid grid, string userName)
+        {
+
+        }
+        
+        public bool CanDelete(Grid grid, string userName)
+        {
+            return grid.AzDelete == "*";
+        }
+
+
+
         public DataTable ExecuteSelect(Grid grid, IList<GridColumn> columns, Dictionary<string, object> filters, Dictionary<string, object> parameters)
         {
             var fields = columns.Select(x => x.Name).ToArray();
             var sql = $"select {string.Join(",", fields)} from {grid.TableName}";
             var where = new List<string>();
-            if (filters != null)
-            {
-                foreach (var filter in filters.Where(x => x.Value != null))
-                {
-                    AddFilter(where, filter.Key, (JsonElement)filter.Value);
-                    /*
-                    var c = columns.FirstOrDefault(x => x.Name == filter.Key);
-                    if (c != null && !string.IsNullOrEmpty(c.Filter))
-                    {
-                        var rop = filter.Value[0] as string;
-                        var values = filter.Value.Skip(1).ToArray();
-                        switch (rop)
-                        {
-                            case "=":
-                            case "<>":
-                                where.Add("(" + string.Join(" OR ", values.Select(x => ToDbCondition(c, rop, x))) + ")");
-                                break;
+            FilterParser.AddFilter(where, columns, filters);
+            FilterParser.AddFilter(where, columns, grid.GetDefaultFilter());
 
-                            case "<":
-                            case "<=":
-                            case ">":
-                            case ">=":
-                                where.Add(ToDbCondition(c, rop, values[0]));
-                                break;
-
-                            case "in":
-                                where.Add(ToDbCondition(c, ">=", values[0]));
-                                where.Add(ToDbCondition(c, "<=", values[1]));
-                                break;
-
-                            case "!in":
-                                where.Add(ToDbCondition(c, "<=", values[0]));
-                                where.Add(ToDbCondition(c, ">=", values[1]));
-                                break;
-
-                            default:
-                                break;
-                        }
-                    }
-                    */
-                }
-            }
-            if (where.Count > 0) sql += " where" + string.Join(" AND ", where);
+            if (where.Count > 0) sql += " where " + string.Join(" AND ", where);
             return db.GetDataTable(sql);
-        }
-
-        private void AddFilter(List<string> where, string name, JsonElement elem)
-        {
-            switch (elem.ValueKind)
-            {
-                case JsonValueKind.Array:
-                    break;
-
-                case JsonValueKind.String:
-                    //ParseFilter(where, name, elem.GetString());
-                    break;
-
-                case JsonValueKind.Number:
-                    where.Add($"{name}={elem.GetDouble()}");
-                    break;
-
-                case JsonValueKind.True:
-                    where.Add($"{name}=1"); 
-                    break;
-
-                case JsonValueKind.False:
-                    where.Add($"{name}=0");
-                    break;
-
-                default:
-                    return;
-            }
-        }
-
-        
-        private static object GetJsonValue(JsonElement elem, out string type)
-        {
-            switch (elem.ValueKind)
-            {
-                case JsonValueKind.Null:
-                case JsonValueKind.Undefined:
-                    type = null;
-                    return null;
-
-                case JsonValueKind.Array:
-                    var list = new List<JsonElement>();
-                    var n = elem.GetArrayLength();
-                    for (int i = 0; i < n; i++) list.Add(elem[i]);
-                    type = "array";
-                    return list.ToArray();
-
-                case JsonValueKind.String:
-                    type = "string";
-                    return elem.GetString();
-
-                case JsonValueKind.Number:
-                    type = "number";
-                    return elem.GetDouble();
-
-                case JsonValueKind.True:
-                    type = "boolean";
-                    return true;
-
-                case JsonValueKind.False:
-                    type = "boolean";
-                    return false;
-
-                //case JsonValueKind.Object:
-                default:
-                    throw new Exception($"Unexpected value '{elem.ValueKind}'");
-            }
-        }
-
-        private string ToDbCondition(GridColumn c, string rop, object v)
-        {
-            if (v == null)
-            {
-                if (rop == "=") return $"{c.Name} is null";
-                if (rop == "<>") return $"{c.Name} is not null";
-            }
-            var s = $"{v}";
-            if (c.DataType == "varchar" || c.DataType == "nvarchar")
-            {
-                s = s.Replace("'", "''");
-            }
-            return $"{c.Name} {rop} '{s}";
         }
 
         public void ExecuteInsert(string projectId, string gridId, Dictionary<string, object> values)
@@ -287,10 +189,10 @@ namespace Forms.Services
             db.ExecuteSql(sql);
         }
 
-        private string GetWhereClause(Grid tb, Dictionary<string, object> values, bool pkOnky)
+        private string GetWhereClause(Grid grid, Dictionary<string, object> values, bool pkOnky)
         {
-            var w = new List<string>();
-            var columns = db.GridColumns.Where(x => x.ProjectId == tb.ProjectId && x.GridId == tb.Id);
+            var where = new List<string>();
+            var columns = db.GridColumns.Where(x => x.ProjectId == grid.ProjectId && x.GridId == grid.Id);
             foreach (var c in columns)
             {
                 if (pkOnky && (!values.ContainsKey(c.Name) || values[c.Name] == null))
@@ -300,12 +202,14 @@ namespace Forms.Services
 
                 if (!pkOnky || c.IsPK)
                 {
-                    w.Add($"{c.Name} = " + GetDbValue(c, values));
+                    where.Add($"{c.Name} = " + GetDbValue(c, values));
                 }
             }
-            if (w.Count < 1) throw new Exception("Where clause is empty!");
-            return "where " + string.Join(" and ", w);
+            FilterParser.AddFilter(where, columns, grid.GetDefaultFilter());
+            if (where.Count < 1) throw new Exception("Where clause is empty!");
+            return "where " + string.Join(" and ", where);
         }
+
 
         public IList<GridVariant> GetGridVariants(string projectId, string gridId)
         {

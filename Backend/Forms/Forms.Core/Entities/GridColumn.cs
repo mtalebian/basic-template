@@ -16,10 +16,10 @@ namespace Forms.Core
         public int? MaxLen { get; set; }
         public string DefaultValue { get; set; }
         public int? Width { get; set; }
-        
+
         public string Filter { get; set; }
         public bool FilterRequired { get; set; }
-        
+
         public string CheckGrid { get; set; }
         public string CheckField { get; set; }
 
@@ -37,5 +37,8 @@ namespace Forms.Core
 
         [IgnoreMap]
         public virtual Grid Table { get; set; }
+
+        public bool IsString { get { return string.IsNullOrEmpty(DataType) || DataType.Contains("char"); } }
+        public bool IsUnicode { get { return !string.IsNullOrEmpty(DataType) && DataType.Contains("char") && DataType.StartsWith("n"); } }
     }
 }

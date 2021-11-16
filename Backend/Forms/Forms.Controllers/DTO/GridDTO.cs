@@ -19,7 +19,12 @@ namespace Forms.Controllers
         public string UpdateSql { get; set; }
         public string DeleteSql { get; set; }
 
-        
+        public string AzSelect { get; set; }
+        public string AzEdit { get; set; }
+        public string AzInsert { get; set; }
+        public string AzUpdate { get; set; }
+        public string AzDelete { get; set; }
+
 
         [IgnoreSourceMap]
         public string CreatedBy { get; set; }
