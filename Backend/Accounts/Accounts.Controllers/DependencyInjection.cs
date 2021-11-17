@@ -17,6 +17,7 @@ namespace Microsoft.Extensions.DependencyInjection
             }
             services.AddMenuService();
             services.AddUserManagmentService();
+            services.AddAuthorizationService<TUser>();
         }
     }
 }

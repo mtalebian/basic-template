@@ -1,0 +1,15 @@
+{
+    "app.title": "IKCO Purchsing",
+
+    "header-logo": "/images/logo/header-logo-en.png",
+    "welcome": "Welcome",
+    "dark_mode": "Dark Mode",
+    "language": "Language",
+    "settings": "User Settings",
+
+    "edit-group": "Edit Group",
+    "group-titles": "Group Titles",
+    "table-designer-table-name": "Table Name",
+    "table-designer-table-title": "Title",
+    "table-designer-singular": "Singular Title"
+}

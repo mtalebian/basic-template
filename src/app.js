@@ -26,6 +26,7 @@ import { AzRoute } from "./app/az-route";
 import { MenuApp } from "./views/admin/menu/menu-app";
 
 import { LoginForm } from "./views/account/login-form";
+import { ForgotPassword } from "./views/account/forgot-password";
 import NotFound from "./views/shared/not-found";
 
 import { DashboardApp } from "./views/home/dashboard/dashboard-app.js";
@@ -37,45 +38,60 @@ import { MainLayout } from "./views/shared/main-layout2";
 import { TablesApp } from "./views/admin/grids/grids-app";
 import { TableDesignerApp } from "./views/admin/grid-builder/grid-builder-app";
 import { UserSettingsApp } from "./views/account/user-settings-app";
-import { UsersApp } from "./views/admin/users/users-app";
+import { UserApp } from "./views/admin/users/user-app";
+import { RoleApp } from "./views/admin/roles/role-app";
+import { CompositeRoleApp } from "./views/admin/composite-roles/composite-role-app";
+import { UserProfile } from "./views/account/user-profile";
 import { FormikTest } from "./components/forms/formik-test";
 import { GridTest } from "./components/grid/grid-test";
 
 export function App() {
-    return (
-        <ThemeProvider>
-            <Switch>
-                <Route exact path="/test-form" render={() => <MainLayout component={FormikTest} />} />
-                <AzRoute exact path="/test-grid" render={() => <MainLayout component={GridTest} />} />
+  return (
+    <ThemeProvider>
+      <Switch>
+        <Route exact path="/test-form" render={() => <MainLayout component={FormikTest} />} />
+        <AzRoute exact path="/test-grid" render={() => <MainLayout component={GridTest} />} />
 
-                <Route exact path="/" render={() => <StartupApp />} />
+        <Route exact path="/" render={() => <StartupApp />} />
 
-                <Route exact path="/login">
-                    <main className="content h-100 middle text-secondary-text">
-                        <LoginForm />
-                    </main>
-                </Route>
+        <Route exact path="/login">
+          <main className="content h-100 middle text-secondary-text">
+            <LoginForm />
+          </main>
+        </Route>
 
-                <AzRoute exact path="/user/settings" render={() => <MainLayout component={UserSettingsApp} />} />
+        <Route exact path="/account/forgot-password">
+          <main className="content h-100 middle text-secondary-text">
+            <ForgotPassword />
+          </main>
+        </Route>
 
-                <AzRoute exact path="/admin/menu" render={() => <MainLayout component={MenuApp} />} />
+        <AzRoute exact path="/user/settings" render={() => <MainLayout component={UserSettingsApp} />} />
 
-                <AzRoute exact path="/admin/table-designer" render={() => <MainLayout component={TableDesignerApp} />} />
+        <AzRoute exact path="/account/user-profile" render={() => <MainLayout component={UserProfile} />} />
 
-                <AzRoute exact path="/admin/tables" render={() => <MainLayout component={TablesApp} />} />
+        <AzRoute exact path="/admin/menu" render={() => <MainLayout component={MenuApp} />} />
 
-                <AzRoute exact path="/admin/users" render={() => <MainLayout component={UsersApp} />} />
+        <AzRoute exact path="/admin/table-designer" render={() => <MainLayout component={TableDesignerApp} />} />
 
-                <AzRoute exact path="/home" render={() => <MainLayout component={LunchpadApp} />} />
+        <AzRoute exact path="/admin/tables" render={() => <MainLayout component={TablesApp} />} />
 
-                <AzRoute exact path="/dashboard" render={() => <MainLayout component={DashboardApp} />} />
+        <AzRoute exact path="/admin/users" render={() => <MainLayout component={UserApp} />} />
 
-                <AzRoute exact path="/inbox" render={() => <MainLayout component={InboxApp} />} />
+        <AzRoute exact path="/admin/roles" render={() => <MainLayout component={RoleApp} />} />
 
-                <AzRoute render={() => <MainLayout component={NotFound} />} />
-            </Switch>
-        </ThemeProvider>
-    );
+        <AzRoute exact path="/admin/composite-roles" render={() => <MainLayout component={CompositeRoleApp} />} />
+
+        <AzRoute exact path="/home" render={() => <MainLayout component={LunchpadApp} />} />
+
+        <AzRoute exact path="/dashboard" render={() => <MainLayout component={DashboardApp} />} />
+
+        <AzRoute exact path="/inbox" render={() => <MainLayout component={InboxApp} />} />
+
+        <AzRoute render={() => <MainLayout component={NotFound} />} />
+      </Switch>
+    </ThemeProvider>
+  );
 }
 
 /*

@@ -20,5 +20,8 @@ namespace Accounts.Core
         IUserCompositeRoleRepository UserCompositeRoles { get; }
         IUserRoleRepository UserRoles { get; }
         IUserSessionRepository UserSessions { get; }
+        IApplicationRepository Applications { get; }
+
+        
     }
 }
