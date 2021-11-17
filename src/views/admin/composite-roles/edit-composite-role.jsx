@@ -8,7 +8,7 @@ import { Form, Formik } from "formik";
 import { BasicInput } from "../../../components/basic-form/basic-input";
 import { useAccount } from "../../../app/account-context";
 import { msgbox } from "react-basic-design";
-import { compositeRoleApi } from "../../../api/composite-role-api";
+import { roleApi } from "../../../api/role-api";
 
 export const EditCompositeRole = ({ currentProjectId, originalCompositeRole, onGoBack, onChange }) => {
   const { t } = useTranslation();
@@ -28,7 +28,7 @@ export const EditCompositeRole = ({ currentProjectId, originalCompositeRole, onG
   const onDeleteCompositeRoleClick = (hide) => {
     if (account.isConnected()) {
       setBusy(true);
-      compositeRoleApi
+      roleApi
         .deleteCompositeRole(currentProjectId, originalCompositeRole.id)
         .then((x) => {
           setDeleting(false);
@@ -74,7 +74,7 @@ export const EditCompositeRole = ({ currentProjectId, originalCompositeRole, onG
     const insertMode = !originalCompositeRole;
     if (account.isConnected()) {
       setBusy(true);
-      compositeRoleApi
+      roleApi
         .saveCompositeRole(insertMode, values)
         .then((x) => {
           notify.info(t("composite-role-is-saved"));

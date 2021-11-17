@@ -5,6 +5,6 @@ namespace Accounts.Core
 {
     public interface IAzObjectFieldRepository : IRepository<AzObjectField, string, string>
     {
-        IList<AzObjectField> GetAll(string projectId);
+        IList<AzObjectField> GetAllAzObjectField(string projectId);
     }
 }

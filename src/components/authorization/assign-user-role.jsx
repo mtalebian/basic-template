@@ -9,7 +9,7 @@ import { useAccount } from "../../app/account-context";
 import { msgbox } from "react-basic-design";
 import { RenderUserRole } from "./render-user-role";
 import { RenderUserCompositeRole } from "./render-composit-role";
-import { assignUserRoleApi } from "../../api/assign-user-role-api";
+import { roleApi } from "../../api/role-api";
 import { Tab } from "react-bootstrap";
 import { notify } from "../../components/basic/notify";
 
@@ -35,7 +35,7 @@ export const AssignUserRole = ({ projectId, userId, roleId, compositeRoleId, onG
   useEffect(() => {
     if (!initialized && account.isConnected()) {
       if (roleId) {
-        assignUserRoleApi
+        roleApi
           .getUserRoles("role", projectId, userId)
           .then((x) => {
             setUserRoles(x);
@@ -45,7 +45,7 @@ export const AssignUserRole = ({ projectId, userId, roleId, compositeRoleId, onG
           });
       }
       if (compositeRoleId) {
-        assignUserRoleApi
+        roleApi
           .getUserRoles("compositeRole", projectId, userId)
           .then((x) => {
             setUserCompositeRoles(x);
@@ -62,7 +62,7 @@ export const AssignUserRole = ({ projectId, userId, roleId, compositeRoleId, onG
     if (account.isConnected()) {
       var values = formRef.current.values;
       setBusy(true);
-      assignUserRoleApi
+      roleApi
         .assignRole(assignType, values)
         .then((newItem) => {
           if (assignType == "role") {
@@ -97,7 +97,7 @@ export const AssignUserRole = ({ projectId, userId, roleId, compositeRoleId, onG
     if (account.isConnected()) {
       setDeleting(true);
       const roleId = assignType == "role" ? selectItem.roleId : selectItem.compositeRoleId;
-      assignUserRoleApi
+      roleApi
         .deleteAssignRole(assignType, selectItem.projectId, roleId, selectItem.userId)
         .then((x) => {
           if (assignType == "role") {

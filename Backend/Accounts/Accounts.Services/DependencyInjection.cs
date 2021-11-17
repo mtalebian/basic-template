@@ -26,16 +26,8 @@ namespace Microsoft.Extensions.DependencyInjection
         }
         public static void AddAuthorizationService<TUser>(this IServiceCollection services) where TUser : User
         {
-            services.AddScoped<IRoleService<TUser>, RoleService<TUser>>();
-            services.AddScoped<IAzObjectFieldService, AzObjectFieldService>();
-            services.AddScoped<IAzObjectService, AzObjectService>();
-            services.AddScoped<IAzFieldService, AzFieldService>();
-            services.AddScoped<IAuthorizationService, AuthorizationService>();
-            services.AddScoped<IAzValueService, AzValueService>();
             services.AddScoped<IApplicationService, ApplicationService>();
-            services.AddScoped<ICompositeRoleService, CompositeRoleService>();
-            services.AddScoped<IUserRoleService,UserRoleService>();
-            services.AddScoped<IUserCompositeRoleService, UserCompositeRoleService>();
+            services.AddScoped<IRoleService, RoleService>();
         }
 
     }

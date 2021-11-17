@@ -13,7 +13,7 @@ namespace Accounts.Data
         {
             db = context;
         }
-        public IList<AzObjectField> GetAll(string projectId)
+        public IList<AzObjectField> GetAllAzObjectField(string projectId)
         {
             return Entities.Include(x=>x.AzField).Include(z=>z.AzObject).Where(x => x.AzObject.Project.Id == projectId).ToList();
         }

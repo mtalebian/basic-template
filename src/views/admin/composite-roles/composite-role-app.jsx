@@ -4,7 +4,7 @@ import * as bd from "react-basic-design";
 import * as icons from "../../../assets/icons";
 import { TableTitlebar } from "../../../components/table";
 import { useAccount } from "../../../app/account-context";
-import { compositeRoleApi } from "../../../api/composite-role-api";
+import { roleApi } from "../../../api/role-api";
 import { notify } from "../../../components/basic/notify";
 import { RenderTableDiv } from "../../../components/table/render-table-div";
 import { DefaultEditor } from "../../../components/table/editors";
@@ -92,7 +92,7 @@ export const CompositeRoleApp = () => {
   });
   const onChangeCurrentProject = (prj) => {
     setCurrentProject(prj);
-    compositeRoleApi
+    roleApi
       .getCompositeRoles(prj.id)
       .then((x) => {
         setCompositeRoles(x);
@@ -107,7 +107,7 @@ export const CompositeRoleApp = () => {
       setEditState({ edit: true, row: compositeRole });
       return;
     }
-    compositeRoleApi
+    roleApi
       .getCompositeRole(currentProject.id, compositeRole.id)
       .then((x) => {
         compositeRole.data = x;
