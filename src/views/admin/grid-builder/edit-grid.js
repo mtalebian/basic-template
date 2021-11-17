@@ -32,7 +32,7 @@ import { BasicSwitch } from "../../../components/basic-form/basic-switch";
 import { EditColumn } from "./edit-column";
 
 //
-export function TableDesignerEditTable({ table, group, onChanged, onGoBack }) {
+export function GridBuilderEditTable({ table, group, onChanged, onGoBack }) {
     const { t } = useTranslation();
     const [data, setData] = useState(table.dataColumns);
     const [column, setColumn] = useState(null);

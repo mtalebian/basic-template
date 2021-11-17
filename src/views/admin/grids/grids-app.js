@@ -7,39 +7,26 @@ import { BrowseTable } from "./browse-base-table";
 import { Text } from "../../../components/basic/text";
 import * as icons from "../../../assets/icons";
 import { useShell } from "../../shared/use-shell";
+import { useGrid } from "../../../components/grid/use-grid";
+import { Grid } from "../../../components/grid/grid";
 
-export function TablesApp() {
+export function GridsApp() {
     const account = useAccount();
     const [groups, setGroups] = useState(null);
     const [loadingTable, setLoadingTable] = useState(null);
     const [table, setTable] = useState(null);
+    const [selectedGridId, setSelectedGridId] = useState(null);
+    const [grid, loadData] = useGrid({ id: selectedGridId });
+    const shell = useShell();
 
-    const onTableClick = (tb) => {
-        if (loadingTable) {
-            notify.warning(<Text>system-is-busy-please-wait</Text>);
-            return false;
-        }
-        if (tb.schema) {
-            setTable(tb);
-            return false;
-        }
-        setLoadingTable(tb);
-        gridsApi
-            .browseGrid(tb.id)
-            .then((x) => {
-                tb.data = x.data;
-                tb.schema = x.schema;
-                setLoadingTable(null);
-                setTable(tb);
-            })
-            .catch((ex) => {
-                setLoadingTable(null);
-                notify.error(ex);
-            });
+    //useShell().fullWidth(true);
+
+    const onTableClick = (grid) => {
+        setSelectedGridId(grid.id);
         return false;
     };
 
-    useShell().setApp("basic-tables", null);
+    shell.setApp(!selectedGridId ? "maintain-base-tables" : "maintain-table", !selectedGridId ? null : () => setSelectedGridId(null));
 
     useEffect(() => {
         if (!groups && account.isConnected()) {
@@ -49,47 +36,33 @@ export function TablesApp() {
 
     return (
         <>
-            {!table && (
-                <>
-                    <div className="container">
-                        <Tiles>
-                            {groups &&
-                                groups
-                                    .sort((a, b) => (a.title === b.title ? 0 : a.title > b.title ? 1 : -1))
-                                    .map((g) => (
-                                        <Tile key={g.id} title={g.title}>
-                                            {g.items.map((t) => (
-                                                <Tile
-                                                    key={t.id}
-                                                    title={
-                                                        <a href="#/" onClick={(e) => onTableClick(t)}>
-                                                            {t.title}
-                                                        </a>
-                                                    }
-                                                    icon={<icons.TableView />}
-                                                    isBusy={t === loadingTable}
-                                                />
-                                            ))}
-                                        </Tile>
-                                    ))}
-                        </Tiles>
-                    </div>
-                </>
+            {!selectedGridId && (
+                <div className="container">
+                    <Tiles>
+                        {groups &&
+                            groups
+                                .sort((a, b) => (a.title === b.title ? 0 : a.title > b.title ? 1 : -1))
+                                .map((g) => (
+                                    <Tile key={g.id} title={g.title}>
+                                        {g.items.map((t) => (
+                                            <Tile
+                                                key={t.id}
+                                                title={
+                                                    <a href="#/" onClick={(e) => onTableClick(t)}>
+                                                        {t.title}
+                                                    </a>
+                                                }
+                                                icon={<icons.TableView />}
+                                                isBusy={t === loadingTable}
+                                            />
+                                        ))}
+                                    </Tile>
+                                ))}
+                    </Tiles>
+                </div>
             )}
 
-            {table && (
-                <BrowseTable
-                    table={table}
-                    onGoBack={() => {
-                        setTable(null);
-                    }}
-                />
-            )}
+            {selectedGridId && grid.id && <Grid grid={grid} loadData={loadData} />}
         </>
     );
 }
-
-TablesApp.Appbar = {
-    title: "basic-tables",
-    buttons: null,
-};

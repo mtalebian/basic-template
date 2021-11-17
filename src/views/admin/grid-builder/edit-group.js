@@ -13,7 +13,7 @@ import { BasicInput } from "../../../components/basic-form/basic-input";
 import * as yup from "yup";
 
 //
-export function TableDesignerEditGroup({ group, onChanged, onGoBack }) {
+export function GridBuilderEditGroup({ group, onChanged, onGoBack }) {
     const { t } = useTranslation();
     const [loading, setLoading] = useState(false);
     const [deleting, setDeleting] = useState(false);

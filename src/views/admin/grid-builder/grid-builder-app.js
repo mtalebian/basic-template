@@ -5,8 +5,8 @@ import * as bd from "react-basic-design";
 
 import classNames from "classnames";
 import { gridBuilderApi } from "../../../api/grid-builder-api";
-import { TableDesignerEditGroup } from "./edit-group";
-import { TableDesignerEditTable } from "./edit-grid";
+import { GridBuilderEditGroup } from "./edit-group";
+import { GridBuilderEditTable } from "./edit-grid";
 import { notify } from "../../../components/basic/notify";
 import { Tile, Tiles } from "../../../components/tilemenu/tiles";
 import * as icons from "../../../assets/icons";
@@ -15,7 +15,7 @@ import { Text } from "../../../components/basic/text";
 import { useShell } from "../../shared/use-shell";
 
 //
-export function TableDesignerApp() {
+export function GridBuilderApp() {
     const account = useAccount();
     const [groups, setGroups] = useState(null);
     const [group, setGroup] = useState(null);
@@ -136,7 +136,7 @@ export function TableDesignerApp() {
             </div>
 
             {group && !table && (
-                <TableDesignerEditGroup
+                <GridBuilderEditGroup
                     onGoBack={goBack}
                     group={group}
                     onChanged={(g) => {
@@ -163,7 +163,7 @@ export function TableDesignerApp() {
             )}
 
             {group && table && (
-                <TableDesignerEditTable
+                <GridBuilderEditTable
                     onGoBack={goBack}
                     group={group}
                     table={table.data}
@@ -194,7 +194,7 @@ export function TableDesignerApp() {
     );
 }
 
-TableDesignerApp.Appbar = {
+GridBuilderApp.Appbar = {
     title: "grid-builder",
     buttons: null,
 };

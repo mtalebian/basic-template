@@ -9,6 +9,8 @@ import { TableTitlebar } from "../table";
 import { RenderTableDiv } from "../table/render-table-div";
 import { useReactTable } from "../table/use-react-table";
 
+const emptyData = [];
+
 export const Grid = ({ grid, loadData, parameters, ...props }) => {
     const [data, setData] = useState(grid.data ?? []);
     const [editState, setEditState] = useState({ edit: false, row: null });
@@ -18,7 +20,7 @@ export const Grid = ({ grid, loadData, parameters, ...props }) => {
         grid.data = grid.data.map((row, index) => (index === rowIndex ? new_row : row));
     };
 
-    const tableApi = useReactTable({ columns: grid.columns, data, updateData, flexLayout: grid.flexLayout });
+    const tableApi = useReactTable({ columns: grid.columns, data: grid.data ?? emptyData, updateData, flexLayout: grid.flexLayout });
 
     /*
     const deleteTableRow = (row) => {
@@ -44,7 +46,7 @@ export const Grid = ({ grid, loadData, parameters, ...props }) => {
         loadData(null, parameters)
             .then((x) => {
                 tableApi.state.selectedRowIds = {};
-                setData(x);
+                //setData(x);
             })
             .catch(notify.error);
     }, [grid, loadData, parameters, tableApi]);
