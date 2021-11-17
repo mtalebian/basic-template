@@ -3,14 +3,26 @@ import { api } from "./api";
 import { apiConfig } from "./config";
 
 export const accountApi = {
-    login: ({ userName, password, captcha }) =>
-        api.directCall("post", apiConfig.accountUrl + "/login/" + settings.projectId, { userName, password, captcha }),
+  login: ({ userName, password, captcha }) =>
+    api.directCall("post", apiConfig.accountUrl + "/login/" + settings.projectId, { userName, password, captcha }),
 
-    userInfo: () => api.directCall("post", apiConfig.accountUrl + "/user-info/" + settings.projectId),
+  userInfo: () => api.directCall("post", apiConfig.accountUrl + "/user-info/" + settings.projectId),
 
-    logout: () => {
-        api.directCall("post", apiConfig.accountUrl + "/logout");
-    },
+  profileInfo: () => api.directCall("get", apiConfig.accountUrl + "/profile-info/" + settings.projectId),
 
-    refresh: () => api.refresh(settings.projectId),
+  updateUserProfile: (user) => api.directCall("put", apiConfig.accountUrl + "/update-user-profile", user),
+
+  changePassword: (info) => api.directCall("put", apiConfig.accountUrl + "/change-password", info),
+
+  forgotPassword: ({ userName , captcha}) =>
+    api.directCall("post", apiConfig.accountUrl + "/forgot-password/" + settings.projectId, { userName , captcha }),
+
+  resetPassword:({ userName , code , key}) =>
+    api.directCall("post", apiConfig.accountUrl + "/reset-password/" + settings.projectId, { userName , code , key }),
+
+  logout: () => {
+    api.directCall("post", apiConfig.accountUrl + "/logout");
+  },
+
+  refresh: () => api.refresh(settings.projectId),
 };

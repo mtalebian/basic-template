@@ -125,6 +125,31 @@ namespace Forms.Migrations.Migrations
                         .IsUnicode(false)
                         .HasColumnType("varchar(50)");
 
+                    b.Property<string>("AzDelete")
+                        .HasMaxLength(1000)
+                        .IsUnicode(true)
+                        .HasColumnType("nvarchar(1000)");
+
+                    b.Property<string>("AzGrid")
+                        .HasMaxLength(1000)
+                        .IsUnicode(true)
+                        .HasColumnType("nvarchar(1000)");
+
+                    b.Property<string>("AzInsert")
+                        .HasMaxLength(1000)
+                        .IsUnicode(true)
+                        .HasColumnType("nvarchar(1000)");
+
+                    b.Property<string>("AzSelect")
+                        .HasMaxLength(1000)
+                        .IsUnicode(true)
+                        .HasColumnType("nvarchar(1000)");
+
+                    b.Property<string>("AzUpdate")
+                        .HasMaxLength(1000)
+                        .IsUnicode(true)
+                        .HasColumnType("nvarchar(1000)");
+
                     b.Property<DateTime>("CreatedAt")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
@@ -136,6 +161,11 @@ namespace Forms.Migrations.Migrations
                         .IsUnicode(false)
                         .HasColumnType("varchar(50)");
 
+                    b.Property<string>("DefaultFilter")
+                        .HasMaxLength(1000)
+                        .IsUnicode(true)
+                        .HasColumnType("nvarchar(1000)");
+
                     b.Property<string>("DeleteSql")
                         .HasMaxLength(1000)
                         .IsUnicode(true)
@@ -146,6 +176,9 @@ namespace Forms.Migrations.Migrations
                         .IsUnicode(true)
                         .HasColumnType("nvarchar(2000)");
 
+                    b.Property<bool>("Filterable")
+                        .HasColumnType("bit");
+
                     b.Property<bool>("FlexLayout")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("bit")
@@ -153,6 +186,9 @@ namespace Forms.Migrations.Migrations
 
                     b.Property<int>("GroupId")
                         .HasColumnType("int");
+
+                    b.Property<bool>("HasFilterVariant")
+                        .HasColumnType("bit");
 
                     b.Property<string>("InsertSql")
                         .HasMaxLength(1000)
@@ -200,11 +236,13 @@ namespace Forms.Migrations.Migrations
                         {
                             ProjectId = "project1",
                             Id = "tmp.Projects",
-                            CreatedAt = new DateTime(2021, 10, 31, 20, 21, 28, 203, DateTimeKind.Utc).AddTicks(8173),
+                            CreatedAt = new DateTime(2021, 11, 17, 8, 38, 56, 930, DateTimeKind.Utc).AddTicks(6168),
                             CreatedBy = "",
+                            Filterable = true,
                             FlexLayout = false,
                             GroupId = 1,
-                            ModifiedAt = new DateTime(2021, 10, 31, 20, 21, 28, 203, DateTimeKind.Utc).AddTicks(8173),
+                            HasFilterVariant = false,
+                            ModifiedAt = new DateTime(2021, 11, 17, 8, 38, 56, 930, DateTimeKind.Utc).AddTicks(6178),
                             ModifiedBy = "",
                             TableName = "tmp.Projects",
                             Title = "Projects"
@@ -213,11 +251,13 @@ namespace Forms.Migrations.Migrations
                         {
                             ProjectId = "project1",
                             Id = "tmp.AzObjects",
-                            CreatedAt = new DateTime(2021, 10, 31, 20, 21, 28, 203, DateTimeKind.Utc).AddTicks(9784),
+                            CreatedAt = new DateTime(2021, 11, 17, 8, 38, 56, 930, DateTimeKind.Utc).AddTicks(7415),
                             CreatedBy = "",
+                            Filterable = true,
                             FlexLayout = false,
                             GroupId = 1,
-                            ModifiedAt = new DateTime(2021, 10, 31, 20, 21, 28, 203, DateTimeKind.Utc).AddTicks(9784),
+                            HasFilterVariant = false,
+                            ModifiedAt = new DateTime(2021, 11, 17, 8, 38, 56, 930, DateTimeKind.Utc).AddTicks(7416),
                             ModifiedBy = "",
                             TableName = "tmp.AzObjects",
                             Title = "AzObjects"
@@ -226,11 +266,13 @@ namespace Forms.Migrations.Migrations
                         {
                             ProjectId = "project1",
                             Id = "tmp.AzObjectFields",
-                            CreatedAt = new DateTime(2021, 10, 31, 20, 21, 28, 203, DateTimeKind.Utc).AddTicks(9788),
+                            CreatedAt = new DateTime(2021, 11, 17, 8, 38, 56, 930, DateTimeKind.Utc).AddTicks(7421),
                             CreatedBy = "",
+                            Filterable = true,
                             FlexLayout = false,
                             GroupId = 1,
-                            ModifiedAt = new DateTime(2021, 10, 31, 20, 21, 28, 203, DateTimeKind.Utc).AddTicks(9788),
+                            HasFilterVariant = false,
+                            ModifiedAt = new DateTime(2021, 11, 17, 8, 38, 56, 930, DateTimeKind.Utc).AddTicks(7421),
                             ModifiedBy = "",
                             TableName = "tmp.AzObjectFields",
                             Title = "AzObjectFields"
@@ -239,11 +281,13 @@ namespace Forms.Migrations.Migrations
                         {
                             ProjectId = "project1",
                             Id = "tmp.AzFields",
-                            CreatedAt = new DateTime(2021, 10, 31, 20, 21, 28, 203, DateTimeKind.Utc).AddTicks(9792),
+                            CreatedAt = new DateTime(2021, 11, 17, 8, 38, 56, 930, DateTimeKind.Utc).AddTicks(7423),
                             CreatedBy = "",
+                            Filterable = true,
                             FlexLayout = false,
                             GroupId = 1,
-                            ModifiedAt = new DateTime(2021, 10, 31, 20, 21, 28, 203, DateTimeKind.Utc).AddTicks(9792),
+                            HasFilterVariant = false,
+                            ModifiedAt = new DateTime(2021, 11, 17, 8, 38, 56, 930, DateTimeKind.Utc).AddTicks(7424),
                             ModifiedBy = "",
                             TableName = "tmp.AzFields",
                             Title = "AzFields"
@@ -252,11 +296,13 @@ namespace Forms.Migrations.Migrations
                         {
                             ProjectId = "project1",
                             Id = "tmp.Applications",
-                            CreatedAt = new DateTime(2021, 10, 31, 20, 21, 28, 203, DateTimeKind.Utc).AddTicks(9792),
+                            CreatedAt = new DateTime(2021, 11, 17, 8, 38, 56, 930, DateTimeKind.Utc).AddTicks(7425),
                             CreatedBy = "",
+                            Filterable = true,
                             FlexLayout = false,
                             GroupId = 1,
-                            ModifiedAt = new DateTime(2021, 10, 31, 20, 21, 28, 203, DateTimeKind.Utc).AddTicks(9792),
+                            HasFilterVariant = false,
+                            ModifiedAt = new DateTime(2021, 11, 17, 8, 38, 56, 930, DateTimeKind.Utc).AddTicks(7426),
                             ModifiedBy = "",
                             TableName = "tmp.Applications",
                             Title = "Applications"
@@ -311,6 +357,11 @@ namespace Forms.Migrations.Migrations
                         .IsUnicode(true)
                         .HasColumnType("nvarchar(20)");
 
+                    b.Property<bool>("FilterRequired")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
+
                     b.Property<string>("GridId")
                         .HasColumnType("varchar(50)");
 
@@ -357,9 +408,6 @@ namespace Forms.Migrations.Migrations
                         .HasMaxLength(150)
                         .IsUnicode(true)
                         .HasColumnType("nvarchar(150)");
-
-                    b.Property<bool>("UseInVariant")
-                        .HasColumnType("bit");
 
                     b.Property<string>("ValidValues")
                         .HasMaxLength(2000)
@@ -414,6 +462,11 @@ namespace Forms.Migrations.Migrations
                         .HasMaxLength(50)
                         .IsUnicode(false)
                         .HasColumnType("varchar(50)");
+
+                    b.Property<bool>("IsDefault")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
 
                     b.Property<bool>("IsPublic")
                         .ValueGeneratedOnAdd()

@@ -27,7 +27,7 @@
   },
   "include": [
     "src/**/*"
-  ],
+, "src/views/account/.jsx"  ],
   "exclude": [
     "node_modules",
     "dist",

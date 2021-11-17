@@ -13,7 +13,6 @@ namespace Accounts.Data
             Role.HasKey(x => new { x.ProjectId, x.Id});
             Role.DefineProjectId(x => x.ProjectId);
             Role.DefineRoleId(x => x.Id);
-            Role.DefineCompositeRoleId(x => x.CompositeRoleId);
             Role.DefineTitle(x => x.Title);
             Role.DefineUserName(x => x.LastUpdatedBy);
             Role.DefineUserName(x => x.CreatedBy);

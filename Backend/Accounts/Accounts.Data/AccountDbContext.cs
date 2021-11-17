@@ -37,7 +37,12 @@ namespace Accounts.Data
             Authorization.DefineProjectId(x => x.ProjectId);
             Authorization.DefineObjectId(x => x.ObjectId);
             Authorization.DefineRoleId(x => x.RoleId);
-            Authorization.DefineTitle(x => x.Title);
+
+            Authorization.Entity()
+               .HasOne(x => x.Role)
+               .WithMany(x => x.Authorizations)
+               .HasForeignKey(x => new { x.ProjectId, x.RoleId });
+
 
             //
             // AzField
@@ -168,8 +173,10 @@ namespace Accounts.Data
                 .HasData(
                     new Menu { ProjectId = "project1", Id = "config-admin-grids", ParentId = "config", Title = "Maintain base tables", Url = "/admin/grids" },
                     new Menu { ProjectId = "project1", Id = "config-menu", ParentId = "config", Title = "Maintain project menu", Url = "/admin/menu" },
-                    new Menu { ProjectId = "project1", Id = "config-grid-builder", ParentId = "config", Title = "Table designer", Url = "/admin/grid-builder" },
-                    new Menu { ProjectId = "project1", Id = "users", ParentId = "admin", Title = "Manage Users", Url = "/admin/users" }
+                    new Menu { ProjectId = "project1", Id = "config-table-designer", ParentId = "config", Title = "Table designer", Url = "/admin/table-designer" },
+                    new Menu { ProjectId = "project1", Id = "users", ParentId = "admin", Title = "Manage Users", Url = "/admin/users" },
+                     new Menu { ProjectId = "project1", Id = "roles", ParentId = "admin", Title = "Manage Roles", Url = "/admin/roles" },
+                     new Menu { ProjectId = "project1", Id = "composite-roles", ParentId = "admin", Title = "Manage Composite Role", Url = "/admin/composite-roles" }
                 );
 
             //
@@ -179,7 +186,6 @@ namespace Accounts.Data
             Role.HasKey(x => new { x.ProjectId, x.Id });
             Role.DefineProjectId(x => x.ProjectId);
             Role.DefineRoleId(x => x.Id);
-            Role.DefineCompositeRoleId(x => x.CompositeRoleId);
             Role.DefineTitle(x => x.Title);
             Role.DefineUserName(x => x.LastUpdatedBy);
             Role.DefineUserName(x => x.CreatedBy);
@@ -190,6 +196,7 @@ namespace Accounts.Data
                 .HasOne<Application>(x => x.Application)
                 .WithMany(x => x.Roles)
                 .HasForeignKey(x => x.ApplicationId);
+
 
             //
             // UserAgent 
@@ -212,6 +219,8 @@ namespace Accounts.Data
             UserCompositeRole.HasKey(x => new { x.UserId, x.ProjectId, x.CompositeRoleId });
             UserCompositeRole.DefineProjectId(x => x.ProjectId);
             UserCompositeRole.DefineCompositeRoleId(x => x.CompositeRoleId);
+            UserCompositeRole.DefineUserName(x => x.CreatedBy);
+            UserCompositeRole.DefaultGetDate(x => x.CreatedAt);
 
             UserCompositeRole.Entity()
                 .HasOne<User>(x => x.User)
@@ -231,6 +240,8 @@ namespace Accounts.Data
             UserRole.HasKey(x => new { x.UserId, x.ProjectId, x.RoleId });
             UserRole.DefineProjectId(x => x.ProjectId);
             UserRole.DefineRoleId(x => x.RoleId);
+            UserRole.DefineUserName(x => x.CreatedBy);
+            UserRole.DefaultGetDate(x => x.CreatedAt);
 
             UserRole.Entity()
                 .HasOne<User>(x => x.User)

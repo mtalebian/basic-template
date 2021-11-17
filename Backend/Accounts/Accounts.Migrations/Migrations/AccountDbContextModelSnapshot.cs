@@ -54,12 +54,9 @@ namespace Accounts.Migrations.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
-                    b.Property<string>("Title")
-                        .IsRequired()
-                        .HasMaxLength(150)
-                        .HasColumnType("nvarchar(150)");
-
                     b.HasKey("Id");
+
+                    b.HasIndex("ProjectId", "RoleId");
 
                     b.ToTable("Authorizations", "tmp");
                 });
@@ -279,6 +276,39 @@ namespace Accounts.Migrations.Migrations
                             SortOrder = 0,
                             Title = "Table designer",
                             Url = "/admin/table-designer"
+                        },
+                        new
+                        {
+                            ProjectId = "project1",
+                            Id = "users",
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            OpenInNewTab = false,
+                            ParentId = "admin",
+                            SortOrder = 0,
+                            Title = "Manage Users",
+                            Url = "/admin/users"
+                        },
+                        new
+                        {
+                            ProjectId = "project1",
+                            Id = "roles",
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            OpenInNewTab = false,
+                            ParentId = "admin",
+                            SortOrder = 0,
+                            Title = "Manage Roles",
+                            Url = "/admin/roles"
+                        },
+                        new
+                        {
+                            ProjectId = "project1",
+                            Id = "composite-roles",
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            OpenInNewTab = false,
+                            ParentId = "admin",
+                            SortOrder = 0,
+                            Title = "Manage Composite Role",
+                            Url = "/admin/composite-roles"
                         });
                 });
 
@@ -317,6 +347,13 @@ namespace Accounts.Migrations.Migrations
                             Id = "config",
                             SortOrder = 0,
                             Title = "Project Configuration"
+                        },
+                        new
+                        {
+                            ProjectId = "project1",
+                            Id = "admin",
+                            SortOrder = 0,
+                            Title = "Project Administartion"
                         });
                 });
 
@@ -355,11 +392,6 @@ namespace Accounts.Migrations.Migrations
 
                     b.Property<string>("ApplicationId")
                         .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("CompositeRoleId")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
 
                     b.Property<DateTime>("CreatedAt")
                         .ValueGeneratedOnAdd()
@@ -483,8 +515,8 @@ namespace Accounts.Migrations.Migrations
                         {
                             Id = 1L,
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "62124383-be76-4dcb-a445-458277aaf6f3",
-                            CreatedAt = new DateTime(2021, 10, 9, 15, 51, 37, 664, DateTimeKind.Local).AddTicks(4243),
+                            ConcurrencyStamp = "a189ccbf-f407-4ea3-b3d0-888b4846b294",
+                            CreatedAt = new DateTime(2021, 11, 15, 13, 23, 17, 483, DateTimeKind.Local).AddTicks(1130),
                             EmailConfirmed = false,
                             FirstName = "",
                             IsDeleted = false,
@@ -494,7 +526,7 @@ namespace Accounts.Migrations.Migrations
                             LockoutEnabled = false,
                             PasswordHash = "PABPyu6/prVEQ4QbBrmcATJsjw/1yoli07rNI6EJ764=",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "6a25a697-9972-4936-83a2-071bf74dd24c",
+                            SecurityStamp = "d932b541-194c-4daa-b4d2-24f4aed1e1d2",
                             UserName = "admin",
                             WindowsAuthenticate = false
                         });
@@ -559,6 +591,16 @@ namespace Accounts.Migrations.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
+                    b.Property<DateTime>("CreatedAt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("getdate()");
+
+                    b.Property<string>("CreatedBy")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
                     b.HasKey("UserId", "ProjectId", "CompositeRoleId");
 
                     b.HasIndex("ProjectId", "CompositeRoleId");
@@ -578,6 +620,16 @@ namespace Accounts.Migrations.Migrations
                     b.Property<string>("RoleId")
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("getdate()");
+
+                    b.Property<string>("CreatedBy")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.HasKey("UserId", "ProjectId", "RoleId");
 
@@ -646,6 +698,17 @@ namespace Accounts.Migrations.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("UserSessions", "tmp");
+                });
+
+            modelBuilder.Entity("Accounts.Core.Authorization", b =>
+                {
+                    b.HasOne("Accounts.Core.Role", "Role")
+                        .WithMany("Authorizations")
+                        .HasForeignKey("ProjectId", "RoleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Role");
                 });
 
             modelBuilder.Entity("Accounts.Core.AzField", b =>
@@ -862,6 +925,8 @@ namespace Accounts.Migrations.Migrations
 
             modelBuilder.Entity("Accounts.Core.Role", b =>
                 {
+                    b.Navigation("Authorizations");
+
                     b.Navigation("UserRoles");
                 });
 

@@ -1,0 +1,11 @@
+@font-face {
+    font-family: "iranyekan";
+    font-style: normal;
+    font-weight: normal;
+    /*
+    src: url(./../fonts/iranyekan/iranyekanwebregular.woff) format("woff"), url(./../fonts/iranyekan/iranyekanwebregular.ttf) format("truetype");
+    src: url(./fonts/iranyekan/iranyekanwebregular.woff) format("woff"), url(./fonts/iranyekan/iranyekanwebregular.ttf) format("truetype");
+     */
+    src: url(./iranyekanwebregular.woff) format("woff");
+    font-display: swap;
+}

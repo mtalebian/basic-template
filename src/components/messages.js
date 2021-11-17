@@ -32,6 +32,9 @@ export const messages = {
     YouAreGoingToDeleteRows: "شما در حال حذف {count} ردیف هستید!",
     Login: "وارد شوید!",
     LoginTitle: "ورود به سیستم",
+    SendCode:"ارسال كد",
+    ChangePassword:"تغيير گذرواژه",
+    SentVerificationCode:"كد اعتبار سنجي به شماره تلفن شما ارسال شده است",
     ConnectionError: "خطا در برقراری ارتباط",
     Retry: "تلاش مجدد",
 
