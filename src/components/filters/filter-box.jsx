@@ -153,6 +153,8 @@ export const FilterBox = ({
         return !d || d === "text" || d === "email" || d === "url" || d === "textarea";
     }
 
+    console.log("grid.dataColumns", grid.dataColumns);
+
     /****************************/
     return (
         <div className="bd-form-compact pt-2">
@@ -205,6 +207,7 @@ export const FilterBox = ({
                                     width="12rem"
                                     simple={x.filter === "simple"}
                                     isString={isString(x)}
+                                    checkTable={x.checkGrid}
                                 />
                             ))}
                         {children}
@@ -225,7 +228,7 @@ export const FilterBox = ({
 };
 
 const ApplyButton = ({ busy, formRef }) => (
-    <bd.Button color="primary" size="md" disabled={busy} onClick={(e) => formRef.current.submitForm()} className="densed m-e-2">
+    <bd.Button color="primary" size="md" disabled={busy} className="densed m-e-2">
         <Text>apply-filter</Text>
     </bd.Button>
 );

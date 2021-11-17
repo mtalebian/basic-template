@@ -63,17 +63,30 @@ export const FilterLookup = ({ name, title, show, setShow, isString, checkTable,
             const v = values[i];
             const x = v.x ? v.x : "";
             const y = v.y ? v.y : "";
-            if (v.rop === "x...y") {
-                if (x && y) list.push(`${x}...${y}`);
-            } else if (v.rop === "<EMPTY>" || v.rop === "!<EMPTY>") {
-                list.push(v.rop);
-            } else {
-                if (x) list.push(v.rop.replace("x", x));
+            switch (v.rop) {
+                case "x...y":
+                    if (x && y) list.push(`${x}...${y}`);
+                    break;
+
+                case "!x...y":
+                    if (x && y) list.push(`!${x}...${y}`);
+                    break;
+
+                case "<EMPTY>":
+                case "!<EMPTY>":
+                    list.push(v.rop);
+                    break;
+
+                default:
+                    if (x) list.push(v.rop.replace("x", x));
+                    break;
             }
         }
         helper.setValue(list);
         hide();
     };
+
+    console.log("checkTable", checkTable);
 
     return (
         <>
@@ -128,7 +141,7 @@ export const FilterLookup = ({ name, title, show, setShow, isString, checkTable,
                                                                         (r) =>
                                                                             (isString || !r.isPattern) && (
                                                                                 <TOption key={"!" + r.id} value={"!" + r.id}>
-                                                                                    {r.title}
+                                                                                    not-{r.title}
                                                                                 </TOption>
                                                                             )
                                                                     )}
@@ -255,7 +268,7 @@ function convertFieldValueToList(items, isString) {
     if (!Array.isArray(items)) items = [];
     var list = [];
     for (let i = 0; i < items.length; i++) {
-        const item = items[i]?.trim();
+        let item = items[i]?.trim();
         const v = { rop: "", x: "", y: "" };
         list.push(v);
 
@@ -265,52 +278,58 @@ function convertFieldValueToList(items, isString) {
             v.rop = "!<EMPTY>";
         } else if (typeof item === "string") {
             var c0 = charAt(item, 0);
+            if (c0 === "!") {
+                v.rop = "!";
+                item = item.substr(1);
+                c0 = charAt(item, 0);
+            }
+
             switch (c0) {
                 case "*":
                     if (charAt(item, -1) === "*") {
-                        v.rop = "*x*";
+                        v.rop += "*x*";
                         v.x = item.substr(1, item.length - 2);
                     } else {
-                        v.rop = "*x";
+                        v.rop += "*x";
                         v.x = item.substr(1);
                     }
                     break;
 
                 case "=":
-                    v.rop = "=x";
+                    v.rop += "=x";
                     v.x = item.substr(1);
                     break;
 
                 case "<":
                 case ">":
                     if (charAt(item, 1) === "=") {
-                        v.rop = c0 + "=x";
+                        v.rop += c0 + "=x";
                         v.x = item.substr(2);
                     } else {
-                        v.rop = c0 + "x";
+                        v.rop += c0 + "x";
                         v.x = item.substr(1);
                     }
                     break;
 
                 default:
                     if (charAt(item, -1) === "*") {
-                        v.rop = "x*";
+                        v.rop += "x*";
                         v.x = item.substr(0, item.length - 1);
                     } else {
                         const idx = item.indexOf("...");
                         if (idx >= 0) {
-                            v.rop = "x...y";
+                            v.rop += "x...y";
                             v.x = item.substr(0, idx);
                             v.y = item.substr(idx + 3);
                         } else {
-                            v.rop = "=x";
+                            v.rop += "=x";
                             v.x = item;
                         }
                     }
                     break;
             }
         } else {
-            v.rop = DEFAULT_ROP;
+            v.rop += DEFAULT_ROP;
             v.x = item;
         }
     }

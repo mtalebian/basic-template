@@ -266,7 +266,7 @@ export function TableDesignerEditTable({ table, group, onChanged, onGoBack }) {
                             <div>Created by: {table.createdBy}</div>
                         </div>
                     </div>
-                    <bd.TabStrip textColor="primary" indicatorColor="primary">
+                    {/* <bd.TabStrip textColor="primary" indicatorColor="primary">
                         <bd.TabStripItem eventKey="general" onClick={(e) => setTab(tab === "general" ? null : "general")}>
                             <Text>general</Text>
                         </bd.TabStripItem>
@@ -282,7 +282,7 @@ export function TableDesignerEditTable({ table, group, onChanged, onGoBack }) {
                         <bd.TabStripItem eventKey="columns" onClick={(e) => setTab(tab === "columns" ? null : "columns")}>
                             <Text>columns</Text>
                         </bd.TabStripItem>
-                    </bd.TabStrip>
+                    </bd.TabStrip> */}
                 </div>
             </div>
 
