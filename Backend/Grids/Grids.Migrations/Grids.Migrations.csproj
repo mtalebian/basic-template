@@ -13,8 +13,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Forms.Core\Forms.Core.csproj" />
-    <ProjectReference Include="..\Forms.Data\Forms.Data.csproj" />
+    <ProjectReference Include="..\Grids.Core\Grids.Core.csproj" />
+    <ProjectReference Include="..\Grids.Data\Grids.Data.csproj" />
   </ItemGroup>
 
 </Project>

@@ -17,23 +17,23 @@ namespace Forms.Services
         }
 
 
-        public IList<Group> GetAllGroups(string projectId)
+        public IList<GridGroup> GetAllGroups(string projectId)
         {
             return db.Groups.Where(x => x.ProjectId == projectId);
         }
 
-        public Group GetGroup(string projectId, int id)
+        public GridGroup GetGroup(string projectId, int id)
         {
             return db.Groups.FirstOrDefault(x => x.ProjectId == projectId && x.Id == id);
         }
 
-        public void Insert(Group item)
+        public void Insert(GridGroup item)
         {
             db.Groups.Add(item);
             db.SaveChanges();
         }
 
-        public void Update(ref Group item)
+        public void Update(ref GridGroup item)
         {
             var g = item;
             g = db.Groups.FirstOrDefault(x => x.ProjectId == g.ProjectId && x.Id == g.Id);

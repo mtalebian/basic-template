@@ -42,7 +42,7 @@ namespace Forms.Controllers
         [HttpPost("insert-group")]
         public Response<GroupDTO> InsertGroup(string projectId, [FromBody] GroupDTO group)
         {
-            var g = group.MapTo<Group>();
+            var g = group.MapTo<GridGroup>();
             g.ProjectId = projectId;
             service.Insert(g);
             return new Response<GroupDTO>(g.MapTo<GroupDTO>());
@@ -51,7 +51,7 @@ namespace Forms.Controllers
         [HttpPost("update-group")]
         public Response<GroupDTO> UpdateGroup(string projectId, [FromBody] GroupDTO group)
         {
-            var g = group.MapTo<Group>();
+            var g = group.MapTo<GridGroup>();
             g.ProjectId = projectId;
             service.Update(ref g);
             return new Response<GroupDTO>(g.MapTo<GroupDTO>());

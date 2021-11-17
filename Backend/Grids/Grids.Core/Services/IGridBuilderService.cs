@@ -5,10 +5,10 @@ namespace Forms.Core
 {
     public interface IGridBuilderService
     {
-        IList<Group> GetAllGroups(string projectId);
-        Group GetGroup(string projectId, int id);
-        void Insert(Group group);
-        void Update(ref Group group);
+        IList<GridGroup> GetAllGroups(string projectId);
+        GridGroup GetGroup(string projectId, int id);
+        void Insert(GridGroup group);
+        void Update(ref GridGroup group);
         void DeleteGroup(string projectId, int groupId);
 
         IList<Grid> GetGrids(string projectId, int groupId);

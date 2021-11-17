@@ -10,9 +10,9 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\Common\Common.csproj" />
-    <ProjectReference Include="..\Forms.Core\Forms.Core.csproj" />
-    <ProjectReference Include="..\Forms.Data\Forms.Data.csproj" />
-    <ProjectReference Include="..\Forms.Services\Forms.Services.csproj" />
+    <ProjectReference Include="..\Grids.Core\Grids.Core.csproj" />
+    <ProjectReference Include="..\Grids.Data\Grids.Data.csproj" />
+    <ProjectReference Include="..\Grids.Services\Grids.Services.csproj" />
   </ItemGroup>
 
 </Project>

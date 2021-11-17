@@ -5,7 +5,7 @@ namespace Forms.Core
 {
     public interface IGridService
     {
-        IList<Group> GetAllGroups(string projectId);
+        IList<GridGroup> GetAllGroups(string projectId);
         IList<Grid> GetGrids(string projectId, int groupId);
         Grid GetGrid(string projectId, string id);
         IList<GridColumn> GetGridColumns(string projectId, string gridId);

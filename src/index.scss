@@ -6,6 +6,23 @@
     max-width: 1100px;
 }
 
+.bd-list.size-sm {
+    .toolbar {
+        min-height: 34px;
+    }
+    .bd-list-label {
+        padding: 0;
+    }
+    .bd-list-icon {
+        padding-top: 0;
+        padding-bottom: 0;
+    }
+    .toolbar.toolbar-sm {
+        padding-top: 0;
+        padding-bottom: 0;
+    }
+}
+
 @import "node_modules/react-basic-design/dist/index.scss";
 
 @import "./components/forms/form.scss";

@@ -26,14 +26,19 @@ namespace Forms.Data
             //
             // Group 
             //
-            var Group = new ConfigHelper<Group>(modelBuilder, _FormsConfig.GroupsTableName);
+            var Group = new ConfigHelper<GridGroup>(modelBuilder, _FormsConfig.GroupsTableName);
             Group.HasKey(x => new { x.ProjectId, x.Id });
             Group.DefineProjectId(x => x.ProjectId);
             Group.IsAutoIncrement(x => x.Id);
             Group.DefineTitle(x => x.Title);
 
             Group.Entity()
-                .HasData(new Group { Id = 1, ProjectId = "project1", Title = "System Tables" });
+                .HasOne(x => x.Parent)
+                .WithMany(x => x.Children)
+                .HasForeignKey(x => new { x.ProjectId, x.ParentId});
+
+            Group.Entity()
+                .HasData(new GridGroup { Id = 1, ProjectId = "project1", Title = "System Tables" });
 
             //
             // Grid 

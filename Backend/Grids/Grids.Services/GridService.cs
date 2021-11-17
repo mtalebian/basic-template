@@ -20,7 +20,7 @@ namespace Forms.Services
             CurrentUserService = currentUserService;
         }
 
-        public IList<Group> GetAllGroups(string projectId)
+        public IList<GridGroup> GetAllGroups(string projectId)
         {
             return db.Groups.Where(x => x.ProjectId == projectId);
         }

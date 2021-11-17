@@ -31,7 +31,7 @@ namespace Forms.Core
         public string AzUpdate { get; set; }
         public string AzDelete { get; set; }
 
-        public virtual Group Group { get; set; }
+        public virtual GridGroup Group { get; set; }
         public virtual ICollection<GridColumn> Columns { get; set; }
         public virtual ICollection<GridVariant> Variants { get; set; }
 

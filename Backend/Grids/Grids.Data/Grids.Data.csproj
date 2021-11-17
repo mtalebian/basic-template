@@ -16,7 +16,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\Common\Common.csproj" />
-    <ProjectReference Include="..\Forms.Core\Forms.Core.csproj" />
+    <ProjectReference Include="..\Grids.Core\Grids.Core.csproj" />
   </ItemGroup>
 
 </Project>

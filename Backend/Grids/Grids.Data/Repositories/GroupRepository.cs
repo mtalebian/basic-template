@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Forms.Data
 {
-    public class GroupRepository : Repository<Group>, IGroupRepository
+    public class GroupRepository : Repository<GridGroup>, IGroupRepository
     {
         public GroupRepository(FormDbContext context) : base(context)
         {
