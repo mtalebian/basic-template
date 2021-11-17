@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { gridsApi } from "../../api/grids-api";
 import { notify } from "../basic/notify";
 
-export const useGrid = ({ id, data, onUnauthorized }) => {
+export const useGrid = ({ id, data }) => {
     const cache = useRef({});
     const [grid, setGrid] = useState({ data, columns: [] });
 
