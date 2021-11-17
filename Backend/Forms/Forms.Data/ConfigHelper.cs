@@ -10,11 +10,17 @@ namespace Forms.Data
     {
         private ModelBuilder Builder;
 
+        public string Name { get; private set; }
+        public string Schema { get; private set; }
+
+
         public ConfigHelper(ModelBuilder modelBuilder, string tableName)
         {
             Builder = modelBuilder;
+            Name = GetName(tableName);
+            Schema = GetSchema(tableName);
             Builder.Entity<T>()
-                .ToTable(GetName(tableName), GetSchema(tableName));
+                .ToTable(Name, Schema);
         }
 
         internal static string GetName(string value)
@@ -68,10 +74,10 @@ namespace Forms.Data
                 .IsRequired(required);
         }
 
-        internal void IsRequired<TProperty>([NotNull] Expression<Func<T, TProperty>> propertyExpression)
+        internal void IsRequired<TProperty>([NotNull] Expression<Func<T, TProperty>> propertyExpression, bool required = true)
         {
             Builder.Entity<T>().Property(propertyExpression)
-                .IsRequired();
+                .IsRequired(required);
         }
 
         internal void NVarChar<TProperty>([NotNull] Expression<Func<T, TProperty>> propertyExpression, int len, bool required = true)
@@ -123,5 +129,23 @@ namespace Forms.Data
                     .HasMaxLength(2000)
                     .IsUnicode(true);
         }
+
+        internal void DefineUserName<TProperty>([NotNull] Expression<Func<T, TProperty>> propertyExpression, string fieldName)
+        {
+            var p = Builder.Entity<T>().Property(propertyExpression)
+                .HasMaxLength(50)
+                .IsUnicode(false)
+                .IsRequired();
+            if (!string.IsNullOrEmpty(fieldName)) p.HasField(fieldName);
+        }
+
+        internal void DefineCreatedAt<TProperty>([NotNull] Expression<Func<T, TProperty>> propertyExpression, string fieldName)
+        {
+            var p = Builder.Entity<T>().Property(propertyExpression)
+                .HasDefaultValueSql("getdate()")
+                .IsRequired();
+            if (!string.IsNullOrEmpty(fieldName)) p.HasField(fieldName);
+        }
+
     }
 }

@@ -1,0 +1,228 @@
+/***/
+.bd-dropdown {
+    display: inline-block;
+    position: relative;
+    width: 222px;
+    font-size: 1.6rem;
+    user-select: none;
+}
+
+.bd-dropdown-menu {
+    position: absolute;
+    z-index: 10;
+    min-width: 100%;
+    max-height: 250px;
+    border: 1px solid rgb(223, 223, 223);
+    border-top: none;
+    border-bottom-left-radius: 3px;
+    border-bottom-right-radius: 3px;
+
+    -webkit-overflow-scrolling: touch;
+    overflow-y: auto;
+}
+
+.bd-dropdown-filter {
+    padding: 0.25rem 0.5rem;
+    cursor: default;
+    white-space: nowrap;
+    overflow: hidden;
+
+    .form-control {
+        position: sticky;
+        top: 0;
+        z-index: 1;
+    }
+}
+
+.bd-dropdown-item {
+    padding: 0.25rem 0.5rem;
+    cursor: default;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+/***/
+.bd-input {
+    $btn-width: 32px;
+
+    position: relative;
+
+    .icon-btn {
+        position: absolute;
+        width: 32px;
+        top: 1px;
+        bottom: 1px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.875rem;
+        cursor: pointer;
+        white-space: nowrap;
+        overflow: hidden;
+        border-radius: 3px;
+    }
+
+    .btn1 {
+        @include positionEnd(1px);
+    }
+
+    .btn2 {
+        @include positionEnd($btn-width + 1px);
+    }
+
+    .btn3 {
+        @include positionEnd($btn-width * 2 + 1px);
+    }
+
+    .form-control {
+        color: currentColor;
+
+        &.has-1-btn {
+            @include paddingEnd($btn-width);
+        }
+
+        &.has-2-btn {
+            @include paddingEnd($btn-width * 2);
+        }
+
+        &.has-3-btn {
+            @include paddingEnd($btn-width * 3);
+        }
+
+        &::placeholder {
+            color: currentColor;
+            opacity: 0.42;
+        }
+    }
+}
+
+/* 
+*/
+.bd-form {
+    .bd-form-row {
+        @include marginEnd(1rem);
+    }
+
+    .bd-form-row {
+        .switch.dense {
+            .switch-thumb:before {
+                left: 8px;
+                right: 8px;
+                top: 8px;
+                bottom: 8px;
+            }
+            & input + span + span {
+                width: 32px;
+                height: 32px;
+            }
+        }
+    }
+}
+
+.bd-form-flex {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+/*
+.form-control.densed {
+    height: 1.75rem;
+}
+*/
+
+.compact {
+    height: 1.75rem;
+}
+
+.bd-form-compact {
+    .form-control,
+    .form-select {
+        padding-left: 8px;
+        padding-right: 8px;
+        height: 1.75rem;
+    }
+
+    .btn {
+        height: 1.75rem;
+    }
+    .btn.btn-icon {
+        width: 1.75rem;
+    }
+}
+
+/*******************/
+@mixin basicForm($palette) {
+    $text: map-get($palette, text, main);
+    $bg: map-get($palette, bg, main);
+    $divider: map-get($palette, divider);
+
+    $primary: map-get($palette, primary, main);
+    $primary-light: map-get($palette, primary, light);
+    $primary-dark: map-get($palette, primary, dark);
+    $primary-text: map-get($palette, primary, text);
+
+    $error: map-get($palette, error, main);
+
+    $border: mix($bg, $text, 70%);
+    $icon: $primary-dark;
+    $active: mix($bg, $primary, 75%);
+
+    .bd-dropdown-menu {
+        border-color: $divider;
+        box-shadow: $bd-shadow-3;
+        background-color: $bg;
+
+        .form-control {
+            background-color: $bg;
+        }
+    }
+
+    .bd-dropdown-item {
+        align-items: center;
+
+        &:hover {
+            background-color: rgba($text, 5%);
+        }
+
+        &.active {
+            background-color: $active;
+            //color: $primary;
+        }
+    }
+
+    .bd-input {
+        border-color: $border;
+
+        &:hover {
+            border-color: $primary;
+        }
+
+        .btn1,
+        .btn2,
+        .btn3 {
+            color: $icon;
+        }
+
+        .icon-btn {
+            &:hover {
+                background-color: mix($bg, $primary, 85%);
+            }
+
+            &:active {
+                background-color: $icon;
+                color: $bg;
+            }
+        }
+    }
+}
+
+/*******************/
+.theme-bd.theme-light {
+    $palette: map-get($theme, light);
+    @include basicForm($palette);
+}
+
+.theme-bd.theme-dark {
+    $palette: map-get($theme, dark);
+    @include basicForm($palette);
+}

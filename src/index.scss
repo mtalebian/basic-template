@@ -1,21 +1,34 @@
-.scroll-pane {
-    display: flex;
+.min-h-100 {
+    min-height: 100%;
 }
 
-.dropdown-item.disabled {
-    opacity: 0.5;
+.modal-1024 {
+    max-width: 1100px;
 }
 
 @import "node_modules/react-basic-design/dist/index.scss";
 
+@import "./components/forms/form.scss";
+@import "./components/filters/filters.scss";
 @import "./components/basic-form/basic-form.scss";
-//@import "./components/scss/input.scss";
-//@import "./components/scss/table.scss";
-//@import "./components/basic/table/basic-table.scss";
+
 @import "./components/table/table.scss";
 @import "./components/table/table-div.scss";
 @import "./components/tilemenu/tilemenu.scss";
 @import "./components/scss/utils.scss";
+
+.lookup-tab.tabstrip {
+    @include paddingStart(1rem !important);
+
+    .nav {
+        min-height: 44px !important;
+
+        .nav-link {
+            padding: 0 0.25rem !important;
+            @include marginEnd(1.5rem !important);
+        }
+    }
+}
 
 html,
 body,
@@ -27,11 +40,6 @@ body,
     Layout
 */
 .theme-light {
-    .header > .appbar-default {
-        box-shadow: none;
-        border-bottom: 1px solid #ddd;
-        //background-color: #f5f5f5;
-    }
     main.content {
         background-color: #f7f8f9;
     }
@@ -42,38 +50,6 @@ body,
 .Toastify__toast {
     font-family: inherit !important;
     direction: inherit !important;
-}
-
-/*
-    Sidebar
-*/
-
-.theme-light {
-    .sidebar {
-        background-color: #242830;
-        background-color: #eaeaea;
-        background-color: #1a1e22;
-        //box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.3);
-        box-shadow: 0 0 3px 1px #ccc;
-        //border: 1px solid #ddd;
-        z-index: 10000;
-
-        .sidebar-content {
-            @include scrollbar(5px, #777);
-        }
-    }
-}
-
-.theme-dark {
-    .sidebar {
-        background-color: #1a1e22;
-        box-shadow: 0 0 5px 1px #333;
-        z-index: 10000;
-
-        .sidebar-content {
-            @include scrollbar(5px, #777);
-        }
-    }
 }
 
 /*
@@ -121,49 +97,27 @@ landing
     }
 }
 
-/*
-Main Tab
-*/
-.main-tab {
-    display: flex;
-    justify-content: center;
-    align-items: center;
+//
+//
+//
+//
+@mixin custom($palette) {
+    $text-primary: map-deep-get($palette, text, primary);
+    $text-secondary: map-deep-get($palette, text, secondary);
+    $bg: map-deep-get($palette, bg, main);
 
-    .nav-link {
-        border: none;
-        background-color: transparent !important;
-    }
-
-    .nav-link.active {
-        border-bottom: 3px solid currentColor;
-    }
-}
-
-@mixin main-tab-theme($palette) {
-    $text: map-get($palette, text);
-    $bg: map-get($palette, bg);
-    $border: rgba($text, 0.17);
-
-    $primary-palette: map-get($palette, primary);
-    $primary: map-get($primary-palette, main);
-    $primary-text: map-get($primary-palette, text);
-
-    .main-tab {
+    optgroup {
         background-color: $bg;
-        border-bottom: 1px solid $border;
-        .nav-link {
-            color: $text;
-        }
-        .nav-link.active {
-            color: $primary;
-        }
+        color: $text-secondary;
     }
 }
 
-.theme-light {
-    @include main-tab-theme(map-get($theme, light));
+.theme-bd.theme-light {
+    $palette: map-get($theme, light);
+    @include custom($palette);
 }
 
-.theme-dark {
-    @include main-tab-theme(map-get($theme, dark));
+.theme-bd.theme-dark {
+    $palette: map-get($theme, dark);
+    @include custom($palette);
 }

@@ -28,8 +28,10 @@ export const BasicTextArea = ({ id, label, labelSize, type, className, children,
         </>
     );
 
-    return (
-        <bd.FormRow label={label} labelSize={labelSize} htmlFor={id} className={className}>
+    return label === undefined ? (
+        field_comp
+    ) : (
+        <bd.FormRow label={label} labelSize={labelSize} htmlFor={id}>
             {field_comp}
         </bd.FormRow>
     );

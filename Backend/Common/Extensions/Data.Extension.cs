@@ -328,13 +328,14 @@ namespace System
             return tb.Rows[0].AsString(fieldName);
         }
 
-        public static List<Dictionary<string, object>> ToJSON(this DataTable dt)
+        public static IList<Dictionary<string, object>> ToJSON(this DataTable dt)
         {
             return ToJSON(dt, null);
         }
 
-        public static List<Dictionary<string, object>> ToJSON(this DataTable dt, string fields)
+        public static IList<Dictionary<string, object>> ToJSON(this DataTable dt, string fields)
         {
+            if (dt == null) return null;
             var table = new List<Dictionary<string, object>>();
             foreach (DataRow dr in dt.Rows)
                 table.Add(dr.ToJSON(fields));
@@ -396,6 +397,7 @@ namespace System
 
         public static DataTable ToTable<T>(this IEnumerable<T> list)
         {
+            if (list == null) return null;
             var type = typeof(T);
             var properties = type.GetProperties();
             var dataTable = new DataTable(typeof(T).Name);
@@ -418,6 +420,7 @@ namespace System
 
         public static List<T> MapTo<T>(this DataTable tb) where T : class, new()
         {
+            if (tb == null) return null;
             var properties = typeof(T).GetProperties();
             var list = new List<T>();
             foreach (DataRow row in tb.Rows)
@@ -432,6 +435,7 @@ namespace System
 
         public static T MapTo<T>(this DataRow row) where T : class, new()
         {
+            if (row == null) return null;
             var obj = new T();
             Map(row, obj, typeof(T).GetProperties());
             return obj;
@@ -471,8 +475,8 @@ namespace System
 
         public static IList<T> MapTo<T>(this IEnumerable src) where T : class, new()
         {
+            if (src == null) return null;
             var list = new List<T>();
-            if (src == null) return list;
             var properties = typeof(T).GetProperties();
             foreach (var item in src)
             {
@@ -485,6 +489,7 @@ namespace System
 
         public static T MapTo<T>(this object src) where T : class, new()
         {
+            if (src == null) return null;
             var obj = new T();
             MapObject(src, obj, typeof(T).GetProperties());
             return obj;
@@ -492,6 +497,7 @@ namespace System
 
         public static T MapTo<T>(this object src, T targetObj) where T : class
         {
+            if (src == null) return null;
             MapObject(src, targetObj, typeof(T).GetProperties());
             return targetObj;
         }
@@ -500,33 +506,50 @@ namespace System
         {
             foreach (var srcProp in src.GetType().GetProperties())
             {
-                var aProp = srcProp.GetCustomAttribute(typeof(IgnoreMapAttribute));
-                var aType = srcProp.PropertyType.GetCustomAttribute(typeof(IgnoreMapAttribute));
-                if (aProp == null && aType == null)
+                if (!CanIgnore(srcProp, true))
                 {
                     var value = srcProp.GetValue(src);
                     var pi = properties.Where(x => x.Name == srcProp.Name).FirstOrDefault();
-                    try
+                    if (!CanIgnore(pi, false))
                     {
-                        if (pi?.SetMethod != null)
+                        try
                         {
-                            if (srcProp.PropertyType != pi.PropertyType)
-                                throw new Exception($"Invalid type {srcProp.PropertyType.Name} => {pi.PropertyType.Name}");
-                            if (value == null)
-                                pi.SetValue(dest, null);
-                            else
-                                pi.SetValue(dest, value);
+                            if (pi?.SetMethod != null)
+                            {
+                                if (srcProp.PropertyType != pi.PropertyType)
+                                    throw new Exception($"Invalid type {srcProp.PropertyType.Name} => {pi.PropertyType.Name}");
+                                if (value == null)
+                                    pi.SetValue(dest, null);
+                                else
+                                    pi.SetValue(dest, value);
+                            }
                         }
-                    }
-                    catch (Exception ex)
-                    {
-                        var destPropName = pi == null ? "?" : pi.Name;
-                        throw new Exception($"Error in Mapping {src?.GetType().Name}.{srcProp?.Name} => {dest?.GetType().Name}.{destPropName}: {ex.Message}");
+                        catch (Exception ex)
+                        {
+                            var destPropName = pi == null ? "?" : pi.Name;
+                            throw new Exception($"Error in Mapping {src?.GetType().Name}.{srcProp?.Name} => {dest?.GetType().Name}.{destPropName}: {ex.Message}");
+                        }
                     }
                 }
             }
         }
 
-
+        private static bool CanIgnore(PropertyInfo prop, bool isSource)
+        {
+            if (prop == null) return true;
+            if (prop.GetCustomAttribute(typeof(IgnoreMapAttribute)) != null) return true;
+            if (prop.PropertyType.GetCustomAttribute(typeof(IgnoreMapAttribute)) != null) return true;
+            if (isSource)
+            {
+                if (prop.GetCustomAttribute(typeof(IgnoreSourceMapAttribute)) != null) return true;
+                if (prop.PropertyType.GetCustomAttribute(typeof(IgnoreSourceMapAttribute)) != null) return true;
+            }
+            else
+            {
+                if (prop.GetCustomAttribute(typeof(IgnoreDestinationMapAttribute)) != null) return true;
+                if (prop.PropertyType.GetCustomAttribute(typeof(IgnoreDestinationMapAttribute)) != null) return true;
+            }
+            return false;
+        }
     }
 }

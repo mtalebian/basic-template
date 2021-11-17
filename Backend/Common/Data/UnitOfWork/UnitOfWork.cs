@@ -42,10 +42,9 @@ namespace Common.Data
             }
         }
 
-        public void ExecuteSql(string sql, Dictionary<string, object> parameters)
+        public void ExecuteSql(string sql)
         {
-            var SqlParameters = parameters.Select(x => new SqlParameter(x.Key, x.Value));
-            Context.Database.ExecuteSqlRaw(sql, SqlParameters);
+            Context.Database.ExecuteSqlRaw(sql);
         }
     }
 }

@@ -19,37 +19,351 @@ namespace Forms.Migrations.Migrations
                 .HasAnnotation("ProductVersion", "5.0.9")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-            modelBuilder.Entity("Forms.Core.Column", b =>
+            modelBuilder.Entity("Forms.Core.ChangeDocumentHeader", b =>
+                {
+                    b.Property<long>("Serial")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<DateTime>("CreatedAt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("getdate()");
+
+                    b.Property<string>("ObjectClass")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(20)");
+
+                    b.Property<string>("ObjectValue")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(200)");
+
+                    b.Property<string>("Url")
+                        .IsRequired()
+                        .HasMaxLength(300)
+                        .IsUnicode(true)
+                        .HasColumnType("nvarchar(300)");
+
+                    b.Property<string>("UserName")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(50)");
+
+                    b.HasKey("Serial");
+
+                    b.ToTable("CDHDR", "tmp");
+                });
+
+            modelBuilder.Entity("Forms.Core.ChangeDocumentItem", b =>
+                {
+                    b.Property<long>("Serial")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("ChangeType")
+                        .IsRequired()
+                        .HasMaxLength(1)
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(1)");
+
+                    b.Property<string>("FieldName")
+                        .IsRequired()
+                        .HasMaxLength(30)
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(30)");
+
+                    b.Property<long>("HeaderSerial")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("NewValue")
+                        .IsRequired()
+                        .HasMaxLength(1000)
+                        .IsUnicode(true)
+                        .HasColumnType("nvarchar(1000)");
+
+                    b.Property<string>("OldValue")
+                        .IsRequired()
+                        .HasMaxLength(1000)
+                        .IsUnicode(true)
+                        .HasColumnType("nvarchar(1000)");
+
+                    b.Property<string>("TableKey")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(200)");
+
+                    b.Property<string>("TableName")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(50)");
+
+                    b.HasKey("Serial");
+
+                    b.HasIndex("HeaderSerial");
+
+                    b.ToTable("CDPOS", "tmp");
+                });
+
+            modelBuilder.Entity("Forms.Core.Grid", b =>
                 {
                     b.Property<string>("ProjectId")
                         .HasMaxLength(20)
                         .IsUnicode(false)
                         .HasColumnType("varchar(20)");
 
+                    b.Property<string>("Id")
+                        .HasMaxLength(50)
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(50)");
+
+                    b.Property<string>("AzDelete")
+                        .HasMaxLength(1000)
+                        .IsUnicode(true)
+                        .HasColumnType("nvarchar(1000)");
+
+                    b.Property<string>("AzGrid")
+                        .HasMaxLength(1000)
+                        .IsUnicode(true)
+                        .HasColumnType("nvarchar(1000)");
+
+                    b.Property<string>("AzInsert")
+                        .HasMaxLength(1000)
+                        .IsUnicode(true)
+                        .HasColumnType("nvarchar(1000)");
+
+                    b.Property<string>("AzSelect")
+                        .HasMaxLength(1000)
+                        .IsUnicode(true)
+                        .HasColumnType("nvarchar(1000)");
+
+                    b.Property<string>("AzUpdate")
+                        .HasMaxLength(1000)
+                        .IsUnicode(true)
+                        .HasColumnType("nvarchar(1000)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("getdate()");
+
+                    b.Property<string>("CreatedBy")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(50)");
+
+                    b.Property<string>("DefaultFilter")
+                        .HasMaxLength(1000)
+                        .IsUnicode(true)
+                        .HasColumnType("nvarchar(1000)");
+
+                    b.Property<string>("DeleteSql")
+                        .HasMaxLength(1000)
+                        .IsUnicode(true)
+                        .HasColumnType("nvarchar(1000)");
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(2000)
+                        .IsUnicode(true)
+                        .HasColumnType("nvarchar(2000)");
+
+                    b.Property<bool>("Filterable")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("FlexLayout")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
+
+                    b.Property<int>("GroupId")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("HasFilterVariant")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("InsertSql")
+                        .HasMaxLength(1000)
+                        .IsUnicode(true)
+                        .HasColumnType("nvarchar(1000)");
+
+                    b.Property<DateTime>("ModifiedAt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("getdate()");
+
+                    b.Property<string>("ModifiedBy")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(50)");
+
+                    b.Property<string>("SelectSql")
+                        .HasMaxLength(2000)
+                        .IsUnicode(true)
+                        .HasColumnType("nvarchar(2000)");
+
+                    b.Property<string>("TableName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasMaxLength(150)
+                        .IsUnicode(true)
+                        .HasColumnType("nvarchar(150)");
+
+                    b.Property<string>("UpdateSql")
+                        .HasMaxLength(1000)
+                        .IsUnicode(true)
+                        .HasColumnType("nvarchar(1000)");
+
+                    b.HasKey("ProjectId", "Id");
+
+                    b.HasIndex("ProjectId", "GroupId");
+
+                    b.ToTable("Grids", "tmp");
+
+                    b.HasData(
+                        new
+                        {
+                            ProjectId = "project1",
+                            Id = "tmp.Projects",
+                            CreatedAt = new DateTime(2021, 11, 17, 8, 38, 56, 930, DateTimeKind.Utc).AddTicks(6168),
+                            CreatedBy = "",
+                            Filterable = true,
+                            FlexLayout = false,
+                            GroupId = 1,
+                            HasFilterVariant = false,
+                            ModifiedAt = new DateTime(2021, 11, 17, 8, 38, 56, 930, DateTimeKind.Utc).AddTicks(6178),
+                            ModifiedBy = "",
+                            TableName = "tmp.Projects",
+                            Title = "Projects"
+                        },
+                        new
+                        {
+                            ProjectId = "project1",
+                            Id = "tmp.AzObjects",
+                            CreatedAt = new DateTime(2021, 11, 17, 8, 38, 56, 930, DateTimeKind.Utc).AddTicks(7415),
+                            CreatedBy = "",
+                            Filterable = true,
+                            FlexLayout = false,
+                            GroupId = 1,
+                            HasFilterVariant = false,
+                            ModifiedAt = new DateTime(2021, 11, 17, 8, 38, 56, 930, DateTimeKind.Utc).AddTicks(7416),
+                            ModifiedBy = "",
+                            TableName = "tmp.AzObjects",
+                            Title = "AzObjects"
+                        },
+                        new
+                        {
+                            ProjectId = "project1",
+                            Id = "tmp.AzObjectFields",
+                            CreatedAt = new DateTime(2021, 11, 17, 8, 38, 56, 930, DateTimeKind.Utc).AddTicks(7421),
+                            CreatedBy = "",
+                            Filterable = true,
+                            FlexLayout = false,
+                            GroupId = 1,
+                            HasFilterVariant = false,
+                            ModifiedAt = new DateTime(2021, 11, 17, 8, 38, 56, 930, DateTimeKind.Utc).AddTicks(7421),
+                            ModifiedBy = "",
+                            TableName = "tmp.AzObjectFields",
+                            Title = "AzObjectFields"
+                        },
+                        new
+                        {
+                            ProjectId = "project1",
+                            Id = "tmp.AzFields",
+                            CreatedAt = new DateTime(2021, 11, 17, 8, 38, 56, 930, DateTimeKind.Utc).AddTicks(7423),
+                            CreatedBy = "",
+                            Filterable = true,
+                            FlexLayout = false,
+                            GroupId = 1,
+                            HasFilterVariant = false,
+                            ModifiedAt = new DateTime(2021, 11, 17, 8, 38, 56, 930, DateTimeKind.Utc).AddTicks(7424),
+                            ModifiedBy = "",
+                            TableName = "tmp.AzFields",
+                            Title = "AzFields"
+                        },
+                        new
+                        {
+                            ProjectId = "project1",
+                            Id = "tmp.Applications",
+                            CreatedAt = new DateTime(2021, 11, 17, 8, 38, 56, 930, DateTimeKind.Utc).AddTicks(7425),
+                            CreatedBy = "",
+                            Filterable = true,
+                            FlexLayout = false,
+                            GroupId = 1,
+                            HasFilterVariant = false,
+                            ModifiedAt = new DateTime(2021, 11, 17, 8, 38, 56, 930, DateTimeKind.Utc).AddTicks(7426),
+                            ModifiedBy = "",
+                            TableName = "tmp.Applications",
+                            Title = "Applications"
+                        });
+                });
+
+            modelBuilder.Entity("Forms.Core.GridColumn", b =>
+                {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("Category")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(200)
+                        .IsUnicode(true)
+                        .HasColumnType("nvarchar(200)");
 
                     b.Property<string>("CellClassName")
+                        .HasMaxLength(100)
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(100)");
+
+                    b.Property<string>("CheckField")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CheckGrid")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ControlClassName")
+                        .HasMaxLength(100)
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(100)");
 
                     b.Property<string>("DataType")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(20)
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(20)");
 
                     b.Property<string>("DefaultValue")
-                        .HasMaxLength(2000)
+                        .HasMaxLength(500)
                         .IsUnicode(true)
-                        .HasColumnType("nvarchar(2000)");
-
-                    b.Property<string>("Direction")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(500)");
 
                     b.Property<string>("Display")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(20)
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(20)");
+
+                    b.Property<string>("Filter")
+                        .HasMaxLength(20)
+                        .IsUnicode(true)
+                        .HasColumnType("nvarchar(20)");
+
+                    b.Property<bool>("FilterRequired")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
+
+                    b.Property<string>("GridId")
+                        .HasColumnType("varchar(50)");
 
                     b.Property<bool>("IsNull")
                         .HasColumnType("bit");
@@ -58,7 +372,9 @@ namespace Forms.Migrations.Migrations
                         .HasColumnType("bit");
 
                     b.Property<bool>("IsReadOnly")
-                        .HasColumnType("bit");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
 
                     b.Property<int?>("MaxLen")
                         .HasColumnType("int");
@@ -71,6 +387,12 @@ namespace Forms.Migrations.Migrations
                         .HasColumnType("int")
                         .HasDefaultValue(0);
 
+                    b.Property<string>("ProjectId")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(20)");
+
                     b.Property<bool>("ShowInEditor")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("bit")
@@ -81,9 +403,6 @@ namespace Forms.Migrations.Migrations
                         .HasColumnType("bit")
                         .HasDefaultValue(true);
 
-                    b.Property<string>("TableName")
-                        .HasColumnType("varchar(50)");
-
                     b.Property<string>("Title")
                         .IsRequired()
                         .HasMaxLength(150)
@@ -91,13 +410,102 @@ namespace Forms.Migrations.Migrations
                         .HasColumnType("nvarchar(150)");
 
                     b.Property<string>("ValidValues")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(2000)
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(2000)");
 
-                    b.HasKey("ProjectId", "Id");
+                    b.Property<int?>("Width")
+                        .HasColumnType("int");
 
-                    b.HasIndex("ProjectId", "TableName");
+                    b.HasKey("Id");
 
-                    b.ToTable("Columns", "tmp");
+                    b.HasIndex("ProjectId", "GridId");
+
+                    b.ToTable("GridColumns", "tmp");
+                });
+
+            modelBuilder.Entity("Forms.Core.GridVariant", b =>
+                {
+                    b.Property<int>("Serial")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<bool>("AutoApply")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
+
+                    b.Property<string>("ColumnsData")
+                        .HasMaxLength(500)
+                        .IsUnicode(true)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("getdate()");
+
+                    b.Property<string>("CreatedBy")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(50)");
+
+                    b.Property<string>("FiltersData")
+                        .HasMaxLength(2000)
+                        .IsUnicode(true)
+                        .HasColumnType("nvarchar(2000)");
+
+                    b.Property<string>("GridId")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(50)");
+
+                    b.Property<bool>("IsDefault")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
+
+                    b.Property<bool>("IsPublic")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
+
+                    b.Property<DateTime>("ModifiedAt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("getdate()");
+
+                    b.Property<string>("ModifiedBy")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(50)");
+
+                    b.Property<string>("ProjectId")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(20)");
+
+                    b.Property<string>("SortsData")
+                        .HasMaxLength(500)
+                        .IsUnicode(true)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasMaxLength(150)
+                        .IsUnicode(true)
+                        .HasColumnType("nvarchar(150)");
+
+                    b.HasKey("Serial");
+
+                    b.HasIndex("ProjectId", "GridId");
+
+                    b.ToTable("GridVariants", "tmp");
                 });
 
             modelBuilder.Entity("Forms.Core.Group", b =>
@@ -131,105 +539,45 @@ namespace Forms.Migrations.Migrations
                         });
                 });
 
-            modelBuilder.Entity("Forms.Core.Table", b =>
-                {
-                    b.Property<string>("ProjectId")
-                        .HasMaxLength(20)
-                        .IsUnicode(false)
-                        .HasColumnType("varchar(20)");
-
-                    b.Property<string>("Name")
-                        .HasMaxLength(50)
-                        .IsUnicode(false)
-                        .HasColumnType("varchar(50)");
-
-                    b.Property<string>("DeleteSql")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Description")
-                        .HasMaxLength(2000)
-                        .IsUnicode(true)
-                        .HasColumnType("nvarchar(2000)");
-
-                    b.Property<bool>("Filterable")
-                        .HasColumnType("bit");
-
-                    b.Property<int>("GroupId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("InsertSql")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("SelectSql")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("SingularTitle")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("Sortable")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("Title")
-                        .IsRequired()
-                        .HasMaxLength(150)
-                        .IsUnicode(true)
-                        .HasColumnType("nvarchar(150)");
-
-                    b.Property<string>("UpdateSql")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("ProjectId", "Name");
-
-                    b.HasIndex("ProjectId", "GroupId");
-
-                    b.ToTable("Tables", "tmp");
-
-                    b.HasData(
-                        new
-                        {
-                            ProjectId = "project1",
-                            Name = "tmp.Projects",
-                            Filterable = true,
-                            GroupId = 1,
-                            SingularTitle = "Project",
-                            Sortable = true,
-                            Title = "Projects"
-                        });
-                });
-
             modelBuilder.Entity("Forms.Core.Text", b =>
                 {
                     b.Property<string>("LanguageCode")
-                        .HasMaxLength(20)
+                        .HasMaxLength(10)
                         .IsUnicode(false)
-                        .HasColumnType("varchar(20)");
+                        .HasColumnType("varchar(10)");
 
                     b.Property<string>("Name")
                         .HasMaxLength(100)
-                        .IsUnicode(false)
-                        .HasColumnType("varchar(100)");
+                        .IsUnicode(true)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("getdate()");
 
                     b.Property<string>("Value")
-                        .IsRequired()
                         .HasMaxLength(1000)
                         .IsUnicode(true)
                         .HasColumnType("nvarchar(1000)");
 
                     b.HasKey("LanguageCode", "Name");
 
-                    b.ToTable(null, "dbo");
+                    b.ToTable("Texts", "tmp");
                 });
 
-            modelBuilder.Entity("Forms.Core.Column", b =>
+            modelBuilder.Entity("Forms.Core.ChangeDocumentItem", b =>
                 {
-                    b.HasOne("Forms.Core.Table", "Table")
-                        .WithMany("Columns")
-                        .HasForeignKey("ProjectId", "TableName");
+                    b.HasOne("Forms.Core.ChangeDocumentHeader", "Header")
+                        .WithMany("Items")
+                        .HasForeignKey("HeaderSerial")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
-                    b.Navigation("Table");
+                    b.Navigation("Header");
                 });
 
-            modelBuilder.Entity("Forms.Core.Table", b =>
+            modelBuilder.Entity("Forms.Core.Grid", b =>
                 {
                     b.HasOne("Forms.Core.Group", "Group")
                         .WithMany("Tables")
@@ -240,14 +588,41 @@ namespace Forms.Migrations.Migrations
                     b.Navigation("Group");
                 });
 
+            modelBuilder.Entity("Forms.Core.GridColumn", b =>
+                {
+                    b.HasOne("Forms.Core.Grid", "Table")
+                        .WithMany("Columns")
+                        .HasForeignKey("ProjectId", "GridId");
+
+                    b.Navigation("Table");
+                });
+
+            modelBuilder.Entity("Forms.Core.GridVariant", b =>
+                {
+                    b.HasOne("Forms.Core.Grid", "Grid")
+                        .WithMany("Variants")
+                        .HasForeignKey("ProjectId", "GridId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Grid");
+                });
+
+            modelBuilder.Entity("Forms.Core.ChangeDocumentHeader", b =>
+                {
+                    b.Navigation("Items");
+                });
+
+            modelBuilder.Entity("Forms.Core.Grid", b =>
+                {
+                    b.Navigation("Columns");
+
+                    b.Navigation("Variants");
+                });
+
             modelBuilder.Entity("Forms.Core.Group", b =>
                 {
                     b.Navigation("Tables");
-                });
-
-            modelBuilder.Entity("Forms.Core.Table", b =>
-                {
-                    b.Navigation("Columns");
                 });
 #pragma warning restore 612, 618
         }

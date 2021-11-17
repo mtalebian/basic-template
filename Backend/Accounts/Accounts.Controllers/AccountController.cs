@@ -183,6 +183,7 @@ namespace Accounts.Controllers
             var ref_result = await RefreshAsync(app, user, session);
             var user_info = new UserInfoDTO
             {
+                UserName= user.UserName,
                 DisplayName = $"{user.FirstName} {user.LastName}",
                 Token = ref_result.Token,
                 Expiry = ref_result.Expiry,
@@ -217,6 +218,7 @@ namespace Accounts.Controllers
             var ref_result = await RefreshAsync(app, user, session);
             var user_info = new UserInfoDTO
             {
+                UserName = user.UserName,
                 DisplayName = $"{user.FirstName} {user.LastName}",
                 Token = ref_result.Token,
                 Expiry = ref_result.Expiry,

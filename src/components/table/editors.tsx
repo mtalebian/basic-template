@@ -49,7 +49,7 @@ export const DefaultEditor = ({ value: initialValue, row, column, updateMyData, 
                 return <div className="pre nano-scroll">{`${getDisplayValue(value)}`}</div>;
 
             case "check":
-                return <bd.Toggle model={value ?? false} color="primary" size="sm" className="p-1 m-s-1" />;
+                return <bd.Toggle model={value ?? false} color="primary" size="sm" className="p-1 m-s-1" disableRipple />;
 
             case "switch":
                 return <bd.Switch model={value ?? false} color="primary" size="sm" className="py-0" />;
@@ -103,8 +103,7 @@ export const DefaultEditor = ({ value: initialValue, row, column, updateMyData, 
 
         case "select":
             return (
-                <select className="form-select table-editor" {...field}>
-                    ;
+                <select className="form-select table-editor" {...field} onChange={(e: any) => updateValue(e.target.value)}>
                     {getValidValues().map((x: any) => (
                         <option key={x.code} value={x.code}>
                             {x.title}

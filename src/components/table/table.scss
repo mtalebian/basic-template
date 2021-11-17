@@ -6,91 +6,23 @@
     border-top: 1px solid #000;
     border-bottom: 1px solid #000;
 
-    .selection-column {
-        padding: 0 !important;
-        width: 50px;
-        display: inline-flex;
-        justify-content: center;
-        @include borderEnd(1px solid #000);
-    }
-
-    .header-label {
-        padding: 0 0.5rem;
-        height: 32px !important;
-        display: flex;
-        align-items: center;
-        flex-grow: 1;
-    }
-
-    .header-filter {
-        padding: 0 0.25rem;
-        height: 36px !important;
-        display: flex;
-        align-items: center;
-    }
-
-    .bd-tr {
-        display: flex;
+    tr {
         min-height: 32px;
     }
 
-    .bd-td {
-        padding: 0 0.5rem;
-        //height: 32px !important;
+    td,
+    th {
+        padding: 0.25rem 0.5rem;
+        min-height: 1.75rem;
     }
 
-    .bd-th,
-    .bd-td {
-        display: inline-flex !important;
+    th,
+    td {
         align-items: center;
         overflow: hidden;
         min-width: 30px;
         flex: 0 0 auto;
         white-space: nowrap;
-    }
-
-    //
-    .bd-table-editor {
-        padding: 4px 8px;
-        width: 100%;
-        //background-color: transparent !important;
-        //border: 0;
-        color: inherit;
-        margin: 2px 0;
-        //padding-top: 0.25rem;
-        //padding-bottom: 0.25rem;
-        padding-top: 3px;
-        padding-bottom: 3px;
-    }
-
-    .bd-resizer {
-        display: inline-block;
-
-        width: 6px;
-        position: absolute;
-        right: 0;
-        top: 0;
-        bottom: 0;
-        transform: translateX(50%);
-        z-index: 1;
-        touch-action: none;
-        user-select: none;
-
-        /*
-        &:after {
-            content: "";
-            position: absolute;
-            top: 10px;
-            bottom: 10px;
-            left: 2px;
-            width: 1px;
-            background-color: currentColor;
-            opacity: 0.5;
-        }
-
-        &.isResizing:after {
-            opacity: 1;
-        }*/
     }
 
     .nothing-found {
@@ -101,11 +33,11 @@
 }
 
 .bd-table-border-row {
-    .bd-thead {
+    thead {
         border-bottom: 1px solid #000;
     }
 
-    .bd-thead .bd-th {
+    thead th {
         margin-bottom: -1px;
     }
 
@@ -113,88 +45,38 @@
         border-top: 1px solid #000;
     }
 
-    .bd-tfoot .bd-tr {
+    .bd-tfoot tr {
         margin-top: -1px;
     }
 
-    .bd-tfoot .bd-th {
+    .bd-tfoot th {
         border-top: 1px solid #000;
     }
 
-    .bd-tr .bd-th,
-    .bd-tr .bd-td {
+    tr th,
+    tr td {
         border-bottom: 1px solid #000;
         height: auto !important;
     }
 
-    .bd-tr:last-child .bd-td,
-    .bd-tfoot .bd-tr:last-child .bd-th {
+    tr:last-child td,
+    .bd-tfoot tr:last-child th {
         border-bottom: 0;
     }
 
-    .bd-thead .bd-th {
+    thead th {
         @include borderEnd(1px solid #000);
     }
 
-    .bd-th:last-child,
-    .bd-td:last-child {
+    th:last-child,
+    td:last-child {
         @include borderEnd(1px solid #000);
     }
-}
-
-.bd-table-bottom {
-    display: flex;
-    align-items: center;
-}
-
-.bd-table-info {
-    white-space: nowrap;
-}
-
-.bd-table-pagination {
-    display: inline-flex;
-    justify-content: flex-end;
-    align-items: center;
-    padding: 0.25rem 0.5rem;
-    white-space: nowrap;
 }
 
 /*
 ************************
 */
-.bd-table-popin {
-    margin: 0;
-
-    & > * {
-        padding: 0;
-    }
-
-    .form-control {
-        width: auto;
-        display: inline-block;
-        border: 1px solid #000;
-        padding-top: 0.25rem;
-        padding-bottom: 0.25rem;
-    }
-}
-
-@media (min-width: $breakpoint-xl) {
-    .popin-row-lg .bd-table-popin {
-        display: none;
-    }
-}
-
-@media (min-width: $breakpoint-lg) {
-    .popin-row-md .bd-table-popin {
-        display: none;
-    }
-}
-
-@media (min-width: $breakpoint-md) {
-    .popin-row-sm .bd-table-popin {
-        display: none;
-    }
-}
 
 //
 .bd-table-border-table-row > table {
@@ -230,8 +112,7 @@
 
 //
 .bd-table-border-row > table {
-    border-top: 1px solid #000;
-    border-bottom: 1px solid #000;
+    border: 1px solid #000;
 
     tfoot {
         border-top: 1px solid #000;
@@ -258,8 +139,8 @@
 
 /*******************/
 @mixin tableTheme($palette) {
-    $text: map-get($palette, text);
-    $bg: map-get($palette, bg);
+    $text: map-get($palette, text, main);
+    $bg: map-get($palette, bg, main);
 
     $primary-palette: map-get($palette, primary);
     $primary: map-get($primary-palette, main);
@@ -281,41 +162,41 @@
     .bd-table {
         border-color: $main-border;
 
-        & .bd-tr.selected .bd-td {
+        & tr.selected td {
             background-color: $hover;
             border-bottom: 1px solid $primary;
         }
 
-        .bd-thead,
+        thead,
         .bd-tfoot {
             background-color: $bg-header;
             border-color: $main-border;
         }
 
-        .bd-th {
+        th {
             background-color: $bg-header;
             border-color: $main-border;
         }
 
-        .bd-th,
-        .bd-td {
+        th,
+        td {
             border-left-color: $main-border;
             border-right-color: $main-border;
         }
 
-        .bd-th:last-child,
-        .bd-td:last-child {
+        th:last-child,
+        td:last-child {
             border-left-color: $main-border;
             border-right-color: $main-border;
         }
 
-        .bd-td {
+        td {
             border-color: $border;
         }
 
-        .bd-tbody .bd-tr:hover {
-            .bd-td,
-            .bd-th {
+        .bd-tbody tr:hover {
+            td,
+            th {
                 background-color: rgba($text, 4%);
             }
         }

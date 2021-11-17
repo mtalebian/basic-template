@@ -35,19 +35,23 @@ import { LunchpadApp } from "./views/home/lunchpad/lunchpad-app";
 import StartupApp from "./views/home/startup/startup-app";
 import { MainLayout } from "./views/shared/main-layout2";
 
-import { TablesApp } from "./views/admin/tables/tables-app";
-import { FormDesignerApp } from "./views/admin/form-designer/form-designer-app";
-import { TableDesignerApp } from "./views/admin/table-designer/table-designer-app";
+import { TablesApp } from "./views/admin/grids/grids-app";
+import { TableDesignerApp } from "./views/admin/grid-builder/grid-builder-app";
 import { UserSettingsApp } from "./views/account/user-settings-app";
 import { UserApp } from "./views/admin/users/user-app";
 import { RoleApp } from "./views/admin/roles/role-app";
 import { CompositeRoleApp } from "./views/admin/composite-roles/composite-role-app";
 import { UserProfile } from "./views/account/user-profile";
+import { FormikTest } from "./components/forms/formik-test";
+import { GridTest } from "./components/grid/grid-test";
 
 export function App() {
   return (
     <ThemeProvider>
       <Switch>
+        <Route exact path="/test-form" render={() => <MainLayout component={FormikTest} />} />
+        <AzRoute exact path="/test-grid" render={() => <MainLayout component={GridTest} />} />
+
         <Route exact path="/" render={() => <StartupApp />} />
 
         <Route exact path="/login">
@@ -69,8 +73,6 @@ export function App() {
         <AzRoute exact path="/admin/menu" render={() => <MainLayout component={MenuApp} />} />
 
         <AzRoute exact path="/admin/table-designer" render={() => <MainLayout component={TableDesignerApp} />} />
-
-        <AzRoute exact path="/admin/form-designer" render={() => <MainLayout component={FormDesignerApp} />} />
 
         <AzRoute exact path="/admin/tables" render={() => <MainLayout component={TablesApp} />} />
 

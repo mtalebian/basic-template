@@ -3,8 +3,8 @@ import * as bd from "react-basic-design";
 import { useField } from "formik";
 
 export const BasicSwitch = ({ id, label, labelSize, size, className, children, color, ...props }) => {
-    const [field, meta] = useField({ ...props });
-    
+    const [field, meta, helper] = useField({ ...props });
+
     if (label && id === undefined) id = props.name;
 
     let field_comp = (
@@ -13,7 +13,7 @@ export const BasicSwitch = ({ id, label, labelSize, size, className, children, c
                 id={id}
                 name={field.name}
                 model={field.value}
-                onChange={field.onChange}
+                setModel={!props.readOnly && helper.setValue}
                 onBlur={field.onBlur}
                 size={size ?? "sm"}
                 color={color ?? "primary"}
@@ -26,9 +26,9 @@ export const BasicSwitch = ({ id, label, labelSize, size, className, children, c
 
     return (
         <>
-        <bd.FormRow label={label} labelSize={labelSize} htmlFor={id} className={className}>
-            {field_comp}
-        </bd.FormRow>
+            <bd.FormRow label={label} labelSize={labelSize} htmlFor={id} className={className}>
+                {field_comp}
+            </bd.FormRow>
         </>
     );
 };

@@ -4,7 +4,7 @@
 }
 
 .bd-table-div {
-    $row-height: 38px;
+    $row-height: 34px;
 
     border-spacing: 0;
     overflow: auto !important;
@@ -15,7 +15,7 @@
 
     .selection-column {
         padding: 0 !important;
-        width: 50px;
+        width: 40px;
         display: inline-flex;
         justify-content: center;
     }
@@ -103,7 +103,11 @@
     }
 
     &.selectable .td {
-        cursor: pointer;
+        cursor: default;
+
+        &.cur-pointer {
+            cursor: pointer;
+        }
     }
 
     .nothing-found {
@@ -129,6 +133,20 @@
 
     .thead .th {
         margin-bottom: -1px;
+        position: relative;
+
+        &:before {
+            content: "";
+            position: absolute;
+            top: 10px;
+            bottom: 10px;
+            @include positionStart(0);
+            @include borderStart(1px solid currentColor);
+        }
+
+        &:first-child:before {
+            display: none;
+        }
     }
 
     .tfoot {
@@ -225,8 +243,8 @@
 
 /*******************/
 @mixin tableTheme($palette) {
-    $text: map-get($palette, text);
-    $bg: map-get($palette, bg);
+    $text: map-get($palette, text, main);
+    $bg: map-get($palette, bg, main);
 
     $primary-palette: map-get($palette, primary);
     $primary: map-get($primary-palette, main);
@@ -265,6 +283,10 @@
         .td {
             border-left-color: $main-border;
             border-right-color: $main-border;
+        }
+
+        .th:before {
+            color: $main-border;
         }
 
         .th:last-child,

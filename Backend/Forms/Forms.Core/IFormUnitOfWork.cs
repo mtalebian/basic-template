@@ -4,9 +4,10 @@ namespace Forms.Core
 {
     public interface IFormUnitOfWork : IUnitOfWork
     {
-        IColumnRepository Columns { get; }
-        ITableRepository Tables { get; }
+        IGridVariantRepository GridVariants { get; }
+        IGridColumnRepository GridColumns { get; }
+        ITableRepository Grids { get; }
         IGroupRepository Groups { get; }
-        ITextRepository Texts{ get; }
+        ITextRepository Texts { get; }
     }
 }

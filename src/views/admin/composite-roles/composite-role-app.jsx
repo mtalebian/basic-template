@@ -1,4 +1,4 @@
-import { useMemo, useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import * as bd from "react-basic-design";
 import * as icons from "../../../assets/icons";
@@ -7,67 +7,29 @@ import { useAccount } from "../../../app/account-context";
 import { roleApi } from "../../../api/role-api";
 import { notify } from "../../../components/basic/notify";
 import { RenderTableDiv } from "../../../components/table/render-table-div";
-import { DefaultEditor } from "../../../components/table/editors";
 import { menuApi } from "../../../api/menu-api";
 import { EditCompositeRole } from "./edit-composite-role";
-import {
-  useTable,
-  useGlobalFilter,
-  usePagination,
-  useSortBy,
-  useFilters,
-  useGroupBy,
-  useExpanded,
-  useRowSelect,
-  useFlexLayout,
-  useResizeColumns,
-} from "react-table";
+import { useShell } from "../../shared/use-shell";
+import { T } from "../../../components/basic/text";
+import { useReactTable } from "../../../components/table/use-react-table";
 
 export const CompositeRoleApp = () => {
+  const gridColumns = useRef([
+    { Header: <T>id</T>, accessor: "id" },
+    { Header: <T>title</T>, accessor: "title" },
+  ]);
   const [initialized, setInitialized] = useState(false);
   const [projects, setProjects] = useState([]);
   const [editState, setEditState] = useState({ edit: false, row: null });
   const [currentProject, setCurrentProject] = useState(null);
-  const [compositeRoles, setCompositeRoles] = useState(null);
+  const [compositeRoles, setCompositeRoles] = useState([]);
   const { t } = useTranslation();
   const account = useAccount();
+  const shell = useShell();
 
-  const defaultPageSize = 10;
-  const skipReset = true;
+  shell.setApp(<T count={5}>composite-role @count</T>);
 
-  const tableApi = useTable(
-    {
-      initialState: { pageSize: defaultPageSize },
-      defaultColumn: {
-        Cell: DefaultEditor,
-        minWidth: 30,
-        disableGroupBy: true,
-      },
-      columns: useMemo(
-        () => [
-          { Header: t("id"), accessor: "id" },
-          { Header: t("title"), accessor: "title" },
-        ],
-        []
-      ),
-      data: useMemo(() => (compositeRoles ? compositeRoles : []), [compositeRoles]),
-      autoResetPage: !skipReset,
-      autoResetFilters: !skipReset,
-      autoResetSortBy: !skipReset,
-      autoResetSelectedRows: !skipReset,
-      autoResetGlobalFilter: !skipReset,
-      disableMultiSort: false,
-    },
-    useGlobalFilter,
-    useFilters,
-    useGroupBy,
-    useSortBy,
-    useExpanded,
-    usePagination,
-    useRowSelect,
-    useFlexLayout,
-    useResizeColumns
-  );
+  const tableApi = useReactTable({ columns: gridColumns.current, data: compositeRoles, flexLayout: false });
 
   const menuProjects = (
     <bd.Menu>
@@ -137,13 +99,13 @@ export const CompositeRoleApp = () => {
             <div className="container">
               <TableTitlebar
                 tableApi={tableApi}
-                hideSettings
                 title="Composite  Roles"
                 fixed
                 buttons={
                   <>
                     <bd.Button
-                      variant="text"
+                      variant="icon"
+                      size="md"
                       color="primary"
                       disabled={!tableApi.selectedFlatRows.length}
                       onClick={() => {
@@ -153,11 +115,13 @@ export const CompositeRoleApp = () => {
                       <icons.Edit />
                     </bd.Button>
                     <bd.Button
-                      variant="text"
+                      variant="icon"
+                      size="md"
                       color="primary"
                       onClick={() => {
                         startEditRole(null);
                       }}
+                      className="mx-1"
                     >
                       <icons.Add />
                     </bd.Button>
@@ -175,7 +139,8 @@ export const CompositeRoleApp = () => {
                 enableSorting
                 clickAction="select"
                 className="nano-scroll border"
-                hover
+                hasWhitespace
+                onShowMoreClick={(row) => startEditRole(row.original)}
               />
             </div>
           )}

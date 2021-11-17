@@ -7,7 +7,7 @@ namespace Common.Data
     public interface IUnitOfWork
     {
         DataTable GetDataTable(string sql);
-        void ExecuteSql(string sql, Dictionary<string, object> parameters);
+        void ExecuteSql(string sql);
 
         int SaveChanges();
         Task<int> SaveChangesAsync();

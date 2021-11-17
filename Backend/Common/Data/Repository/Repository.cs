@@ -13,7 +13,7 @@ namespace Common.Data
     {
         protected virtual DbContext Context { get; }
 
-        public DbSet<TEntity> Entities { get { return Context.Set<TEntity>(); } }
+        protected DbSet<TEntity> Entities { get { return Context.Set<TEntity>(); } }
 
 
 

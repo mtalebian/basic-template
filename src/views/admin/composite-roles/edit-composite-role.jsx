@@ -90,20 +90,23 @@ export const EditCompositeRole = ({ currentProjectId, originalCompositeRole, onG
 
   return (
     <>
-      <bd.Toolbar className="container">
-        <bd.Button variant="icon" onClick={() => onGoBack()} size="md" edge="start" className="m-e-2">
-          <icons.ArrowBackIos className="rtl-rotate-180" />
-        </bd.Button>
-        <h5 className="col-4">{t(titlePage)}</h5>
-        <div className="flex-grow-1" />
-        <bd.Button color="primary" disabled={busy} onClick={() => formRef.current.submitForm()}>
-          {busy && <div className="m-e-2 spinner-border spinner-border-sm"></div>}
-          <span>{t("save-changes")}</span>
-        </bd.Button>
-        <bd.Button variant="icon" menu={moreMenu} edge="end" className="m-s-1">
-          <icons.MoreVert />
-        </bd.Button>
-      </bd.Toolbar>
+      <div className="border-bottom bg-default">
+        <bd.Toolbar className="container">
+          <bd.Button variant="icon" onClick={() => onGoBack()} size="md" edge="start" className="m-e-2">
+            <icons.ArrowBackIos className="rtl-rotate-180" />
+          </bd.Button>
+          <h5 className="col-4">{t(titlePage)}</h5>
+          <div className="flex-grow-1" />
+          <bd.Button color="primary" disabled={busy} onClick={() => formRef.current.submitForm()}>
+            {busy && <div className="m-e-2 spinner-border spinner-border-sm"></div>}
+            <span>{t("save-changes")}</span>
+          </bd.Button>
+          <bd.Button variant="icon" menu={moreMenu} edge="end" className="m-s-1">
+            <icons.MoreVert />
+          </bd.Button>
+        </bd.Toolbar>
+      </div>
+
       <Formik
         initialValues={initialValue}
         validationSchema={yup.object({
