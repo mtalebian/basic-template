@@ -29,7 +29,7 @@ namespace Accounts.Core
         void DeleteAzValues(IList<AzValue> azValues);
         //..........................CompositeRoles
         IList<CompositeRole> GetAllCompositeRoles(string projectId);
-        CompositeRole GetCompositeRoleById(string projectId, string id);
+        CompositeRole GetCompositeRoleById(string projectId,string id);
         void InsertCompositeRole(CompositeRole item);
         CompositeRole UpdateCompositeRole(CompositeRole item);
         void DeleteCompositeRole(string projectId, string id);
@@ -49,5 +49,8 @@ namespace Accounts.Core
         UserRole GetUserRole(string projectId, string roleId, long userId);
         void InsertUserRole(UserRole item);
         void DeleteUserRole(string projectId, string roleId, long userId);
+        //.............................
+        RoleCompositeRole GetRoleCompositeRole(string roleId, string compositeRoleId, string ProjectId);
+        void InsertRoleCompositeRole(RoleCompositeRole item);
     }
 }

@@ -17,13 +17,14 @@ namespace Accounts.Controllers
         IRoleService roleService;
         private readonly IApplicationService applicationService;
 
-        public RoleController(IAuthenticationService<User> accountService,IRoleService roleService, IApplicationService applicationService)
+        public RoleController(IAuthenticationService<User> accountService, IRoleService roleService, IApplicationService applicationService)
         {
             this.roleService = roleService;
             this.accountService = accountService;
             this.applicationService = applicationService;
         }
 
+        #region Role
         [EnableCors("react")]
         [HttpGet("roles/{projectId}")]
         public async Task<Response<RolesInfoDTO>> GetRoles(string projectId)
@@ -282,7 +283,7 @@ namespace Accounts.Controllers
                 role.Title = model.Title;
                 role.LastUpdate = DateTime.Now;
                 role.LastUpdatedBy = currentUser.UserName;
-                
+
                 //..............................remove Authorization
                 var _authorizations = roleService.GetAuthorizationsByRoleId(model.ProjectId, model.Id);
                 if (_authorizations.Count != 0)
@@ -369,22 +370,29 @@ namespace Accounts.Controllers
             }
 
         }
+        #endregion
 
-        //............................................................
+        #region Composite Role
+
         [EnableCors("react")]
         [HttpGet("composite-roles/{projectId}")]
-        public async Task<Response<List<CompositeRolesDTO>>> GetCompositeRoles(string projectId)
+        public async Task<Response<CompositeRolesInfoDTO>> GetCompositeRoles(string projectId)
         {
             var app = await accountService.GetProjectAsync(projectId);
             if (app == null)
             {
-                return new Response<List<CompositeRolesDTO>>(Messages.InvalidProjectId);
+                return new Response<CompositeRolesInfoDTO>(Messages.InvalidProjectId);
             }
+            var _roles = roleService.GetAllRoles(projectId);
+            var listRoles = _roles.MapTo<RoleDTO>().ToList();
             var _compositeRoles = roleService.GetAllCompositeRoles(projectId);
-            if (_compositeRoles is null)
-                return new Response<List<CompositeRolesDTO>>(Messages.NotFoundInformation);
-            var result = _compositeRoles.MapTo<CompositeRolesDTO>().ToList();
-            return new Response<List<CompositeRolesDTO>>(result);
+            var listCompositeRoles = _compositeRoles.MapTo<CompositeRolesDTO>().ToList();
+            var result = new CompositeRolesInfoDTO()
+            {
+                Roles = listRoles,
+                CompositeRoles = listCompositeRoles
+            };
+            return new Response<CompositeRolesInfoDTO>(result);
         }
 
         [EnableCors("react")]
@@ -398,7 +406,7 @@ namespace Accounts.Controllers
                 {
                     return new Response<CompositeRolesDTO>(Messages.InvalidProjectId);
                 }
-                var _compositeRole = roleService.GetCompositeRoleById(projectId, id);
+                var _compositeRole = roleService.GetCompositeRoleById(projectId,id);
                 if (_compositeRole is null)
                     return new Response<CompositeRolesDTO>(Messages.NotFoundInformation);
                 var result = _compositeRole.MapTo<CompositeRolesDTO>();
@@ -422,7 +430,7 @@ namespace Accounts.Controllers
                 {
                     return new Response<CompositeRolesDTO>(string.Join(",", ModelState.GetModelStateErrors()));
                 }
-                var recentCompositeRole = roleService.GetCompositeRoleById(model.ProjectId, model.Id);
+                var recentCompositeRole = roleService.GetCompositeRoleById(model.ProjectId,model.Id);
                 if (recentCompositeRole is not null)
                 {
                     return new Response<CompositeRolesDTO>(Messages.DuplicateCompositeRole);
@@ -433,16 +441,28 @@ namespace Accounts.Controllers
                 {
                     return new Response<CompositeRolesDTO>(Messages.Error401);
                 }
-                var newCompositeRole = model.MapTo<CompositeRole>();
+                var newCompositeRole = new CompositeRole();
+                newCompositeRole.ProjectId = model.ProjectId;
+                newCompositeRole.Id = model.Id;
+                newCompositeRole.Title = model.Title;
                 newCompositeRole.CreatedBy = UserName;
                 newCompositeRole.CreatedAt = DateTime.Now;
                 newCompositeRole.LastUpdatedBy = UserName;
                 newCompositeRole.LastUpdate = DateTime.Now;
                 roleService.InsertCompositeRole(newCompositeRole);
+                foreach (var item in model.Roles)
+                {
+                    var duplicateItem = roleService.GetRoleCompositeRole(item.Id, newCompositeRole.Id, model.ProjectId);
+                    if (duplicateItem is null)
+                    {
+                        var roleCompositeRole = new RoleCompositeRole { RoleId = item.Id, CompositeRoleId = model.Id, ProjectId = model.ProjectId };
+                        roleService.InsertRoleCompositeRole(roleCompositeRole);
+                    }
+                }
                 var result = newCompositeRole.MapTo<CompositeRolesDTO>();
                 return new Response<CompositeRolesDTO>(result);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 throw;
             }
@@ -451,7 +471,7 @@ namespace Accounts.Controllers
 
         [EnableCors("react")]
         [HttpPut("update-composite-role")]
-        public async Task<Response<CompositeRolesDTO>> UpdateRole([FromBody] CompositeRolesDTO model)
+        public async Task<Response<CompositeRolesDTO>> UpdateCompositeRole([FromBody] CompositeRolesDTO model)
         {
             try
             {
@@ -459,7 +479,7 @@ namespace Accounts.Controllers
                 {
                     return new Response<CompositeRolesDTO>(string.Join(",", ModelState.GetModelStateErrors()));
                 }
-                var compositeRole = roleService.GetCompositeRoleById(model.ProjectId, model.Id);
+                var compositeRole = roleService.GetCompositeRoleById(model.ProjectId,model.Id);
                 if (compositeRole is null)
                 {
                     return new Response<CompositeRolesDTO>(Messages.InvalidInfo);
@@ -507,8 +527,9 @@ namespace Accounts.Controllers
             }
 
         }
+        #endregion
 
-        //..............................................................
+        #region User Role
         [EnableCors("react")]
         [HttpGet("user-roles/{projectId}/{userId}")]
         public async Task<Response<List<UserRoleGridDTO>>> GetUserRoles(string projectId, long userId)
@@ -611,8 +632,9 @@ namespace Accounts.Controllers
             }
 
         }
+        #endregion
 
-        //..........................................................
+        #region User Composite Role
         [EnableCors("react")]
         [HttpGet("user-composite-roles/{projectId}/{userId}")]
         public async Task<Response<List<UserCompositeRoleGridDTO>>> GetUserCompositeRoles(string projectId, long userId)
@@ -658,7 +680,7 @@ namespace Accounts.Controllers
                 {
                     return new Response<UserCompositeRoleGridDTO>(Messages.Error401);
                 }
-                var compositeRole = roleService.GetCompositeRoleById(model.ProjectId, model.RoleId);
+                var compositeRole = roleService.GetCompositeRoleById(model.ProjectId,model.RoleId);
                 if (compositeRole is null)
                 {
                     return new Response<UserCompositeRoleGridDTO>(Messages.InvalidCompositeRoleId);
@@ -716,6 +738,7 @@ namespace Accounts.Controllers
             }
 
         }
+        #endregion
 
         private async Task<User> GetUserAsync()
         {

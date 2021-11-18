@@ -31,19 +31,19 @@ export const roleApi = {
   },
   //..............................................
   getUserRoles: (assignType, projectId, userId) => {
-    var methodName = assignType == "role" ? "user-roles" : "user-composite-roles";
+    var methodName = assignType === "role" ? "user-roles" : "user-composite-roles";
     var res = api.call("get", apiConfig.roleUrl + `/${methodName}/${projectId}/${userId}`, null);
     return res;
   },
 
   assignRole: (assignType, data) => {
-    var methodName = assignType == "role" ? "insert-user-role" : "insert-user-composite-role";
+    var methodName = assignType === "role" ? "insert-user-role" : "insert-user-composite-role";
     var res = api.call("post", apiConfig.roleUrl + `/${methodName}`, data);
     return res;
   },
 
   deleteAssignRole: (assignType, projectId, id, userId) => {
-    var methodName = assignType == "role" ? "delete-user-role" : "delete-user-composite-role";
+    var methodName = assignType === "role" ? "delete-user-role" : "delete-user-composite-role";
     var res = api.call("delete", apiConfig.roleUrl + `/${methodName}/${projectId}/${id}/${userId}`, null);
     return res;
   },

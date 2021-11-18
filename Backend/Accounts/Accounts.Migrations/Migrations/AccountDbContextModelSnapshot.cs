@@ -427,20 +427,21 @@ namespace Accounts.Migrations.Migrations
 
             modelBuilder.Entity("Accounts.Core.RoleCompositeRole", b =>
                 {
-                    b.Property<string>("RoleId")
-                        .HasColumnType("nvarchar(30)");
-
-                    b.Property<string>("CompositeRoleId")
-                        .HasColumnType("nvarchar(30)");
-
                     b.Property<string>("ProjectId")
+                        .HasMaxLength(30)
+                        .HasColumnType("nvarchar(30)");
+
+                    b.Property<string>("RoleId")
+                        .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
-                    b.HasKey("RoleId", "CompositeRoleId", "ProjectId");
+                    b.Property<string>("CompositeRoleId")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
-                    b.HasIndex("CompositeRoleId", "ProjectId");
+                    b.HasKey("ProjectId", "RoleId", "CompositeRoleId");
 
-                    b.HasIndex("RoleId", "ProjectId");
+                    b.HasIndex("ProjectId", "CompositeRoleId");
 
                     b.ToTable("RoleCompositeRoles", "tmp");
                 });
@@ -535,8 +536,8 @@ namespace Accounts.Migrations.Migrations
                         {
                             Id = 1L,
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "f55f3073-c565-487e-9a2a-825a885859f0",
-                            CreatedAt = new DateTime(2021, 11, 17, 23, 4, 44, 987, DateTimeKind.Local).AddTicks(2475),
+                            ConcurrencyStamp = "39660129-1c69-4257-b686-adfe001a6c79",
+                            CreatedAt = new DateTime(2021, 11, 18, 18, 6, 33, 581, DateTimeKind.Local).AddTicks(1859),
                             EmailConfirmed = false,
                             FirstName = "",
                             IsDeleted = false,
@@ -546,7 +547,7 @@ namespace Accounts.Migrations.Migrations
                             LockoutEnabled = false,
                             PasswordHash = "PABPyu6/prVEQ4QbBrmcATJsjw/1yoli07rNI6EJ764=",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "c32de085-f2da-4f3b-b638-0a95d5964548",
+                            SecurityStamp = "060645ae-6438-48d8-8f78-4539501703d6",
                             UserName = "admin",
                             WindowsAuthenticate = false
                         });
@@ -840,13 +841,13 @@ namespace Accounts.Migrations.Migrations
                 {
                     b.HasOne("Accounts.Core.CompositeRole", "CompositeRole")
                         .WithMany("RoleCompositeRoles")
-                        .HasForeignKey("CompositeRoleId", "ProjectId")
+                        .HasForeignKey("ProjectId", "CompositeRoleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("Accounts.Core.Role", "Role")
                         .WithMany("RoleCompositeRoles")
-                        .HasForeignKey("RoleId", "ProjectId")
+                        .HasForeignKey("ProjectId", "RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 

@@ -97,11 +97,11 @@ namespace Accounts.Services
         //................................................CompositeRoles
         public IList<CompositeRole> GetAllCompositeRoles(string projectId)
         {
-            return db.CompositeRoles.Where(x => x.ProjectId == projectId).ToList();
+            return db.CompositeRoles.Where(x=>x.ProjectId==projectId).ToList();
         }
-        public CompositeRole GetCompositeRoleById(string projectId, string id)
+        public CompositeRole GetCompositeRoleById(string projectId,string id)
         {
-            return db.CompositeRoles.Where(x => x.ProjectId == projectId && x.Id == id).FirstOrDefault();
+            return db.CompositeRoles.Where(x =>x.Id == id && x.ProjectId==projectId).FirstOrDefault();
         }
         public void InsertCompositeRole(CompositeRole item)
         {
@@ -116,7 +116,7 @@ namespace Accounts.Services
         }
         public void DeleteCompositeRole(string projectId, string id)
         {
-            var compositeRole = GetCompositeRoleById(projectId, id);
+            var compositeRole = GetCompositeRoleById(projectId,id);
             if (compositeRole is null) throw new Exception("Record not found!");
             db.CompositeRoles.Remove(compositeRole);
             db.SaveChanges();
@@ -191,5 +191,18 @@ namespace Accounts.Services
         {
             return db.AzObjectFields.GetAllAzObjectField(projectId);
         }
+        //...................................................RoleCompositeRole
+        public RoleCompositeRole GetRoleCompositeRole(string roleId, string compositeRoleId, string ProjectId)
+        {
+            return db.RoleCompositeRoles.Where(x => x.RoleId == roleId && x.CompositeRoleId == compositeRoleId && x.ProjectId == ProjectId).FirstOrDefault();
+        }
+
+        public void InsertRoleCompositeRole(RoleCompositeRole item)
+        {
+            db.RoleCompositeRoles.Add(item);
+            db.SaveChanges();
+        }
+
+        
     }
 }

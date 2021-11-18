@@ -9,8 +9,14 @@ import { BasicInput } from "../../../components/basic-form/basic-input";
 import { useAccount } from "../../../app/account-context";
 import { msgbox } from "react-basic-design";
 import { roleApi } from "../../../api/role-api";
+import { Modal, Tab } from "react-bootstrap";
+import { RenderTableDiv } from "../../../components/table/render-table-div";
+import { T } from "../../../components/basic/text";
+import { useReactTable } from "../../../components/table/use-react-table";
+import { TableTitlebar } from "../../../components/table";
+import { RenderRoles } from "./render-roles";
 
-export const EditCompositeRole = ({ currentProjectId, originalCompositeRole, onGoBack, onChange }) => {
+export const EditCompositeRole = ({ currentProjectId, originalCompositeRole, roles, onGoBack, onChange }) => {
   const { t } = useTranslation();
   const formRef = useRef();
   const insertMode = !originalCompositeRole;
@@ -22,6 +28,7 @@ export const EditCompositeRole = ({ currentProjectId, originalCompositeRole, onG
     ? {
         id: "",
         title: "",
+        roles: [],
       }
     : originalCompositeRole;
 
@@ -70,6 +77,7 @@ export const EditCompositeRole = ({ currentProjectId, originalCompositeRole, onG
   );
 
   const onSubmit = (values) => {
+    alert(JSON.stringify(values));
     values.projectId = currentProjectId;
     const insertMode = !originalCompositeRole;
     if (account.isConnected()) {
@@ -106,25 +114,99 @@ export const EditCompositeRole = ({ currentProjectId, originalCompositeRole, onG
           </bd.Button>
         </bd.Toolbar>
       </div>
+      <div className="container pt-4">
+        <Formik
+          initialValues={initialValue}
+          validationSchema={yup.object({
+            id: yup.string().required("required"),
+            title: yup.string().required("required"),
+          })}
+          onSubmit={onSubmit}
+          innerRef={formRef}
+        >
+          {({ values }) => (
+            <Form>
+              <div className="row" style={{ maxWidth: 500 }}>
+                <BasicInput name="id" label={t("composite-role-id")} labelSize="4" autoComplete="off" autoFocus readOnly={!insertMode} />
+                <BasicInput name="title" label={t("title")} labelSize="4" autoComplete="off" autoFocus />
+                <div class="border-bottom">
+                  <div class="container toolbar">
+                    <h5 class="flex-grow-1">Role-list</h5>
+                    <SelectRoleForm
+                      roles={roles}
+                      onSelect={(object) => {
+                        var field = formRef.current.getFieldProps("roles");
+                        formRef.current.setFieldValue("roles", [...field.value, { ...object }]);
+                      }}
+                    />
+                  </div>
+                </div>
+                <RenderRoles data={values} />
+              </div>
+            </Form>
+          )}
+        </Formik>
+      </div>
+    </>
+  );
+};
 
-      <Formik
-        initialValues={initialValue}
-        validationSchema={yup.object({
-          id: yup.string().required("required"),
-          title: yup.string().required("required"),
-        })}
-        onSubmit={onSubmit}
-        innerRef={formRef}
-      >
-        <Form>
-          <div className="container pt-4">
-            <div style={{ maxWidth: 400 }}>
-              <BasicInput name="id" label={t("composite-role-id")} labelSize="4" autoComplete="off" autoFocus readOnly={!insertMode} />
-              <BasicInput name="title" label={t("title")} labelSize="4" autoComplete="off" autoFocus />
-            </div>
-          </div>
-        </Form>
-      </Formik>
+const SelectRoleForm = ({ roles, onSelect }) => {
+  const [show, setShow] = useState(false);
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
+  const gridColumns = useRef([
+    { Header: <T>id</T>, accessor: "id" },
+    { Header: <T>title</T>, accessor: "title" },
+  ]);
+
+  const tableApi = useReactTable({ columns: gridColumns.current, data: roles, flexLayout: false });
+
+  return (
+    <>
+      <bd.Button color="primary" variant="icon" type="button" onClick={handleShow}>
+        <icons.Add className="size-lg" />
+      </bd.Button>
+      <Modal show={show} onHide={handleClose}>
+        <Modal.Header closeButton>
+          <Modal.Title>{<T>Select Roles</T>}</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <TableTitlebar hideSettings tableApi={tableApi} title="roles" fixed />
+          <RenderTableDiv
+            tableApi={tableApi}
+            singleSelect
+            hideCheckbox
+            showTableInfo
+            showPageSize
+            enablePaging
+            enableSorting
+            clickAction="select"
+            className="nano-scroll border"
+            hasWhitespace
+            onShowMoreClick={(row) => onSelect(row.original)}
+          />
+        </Modal.Body>
+        <Modal.Footer>
+          <bd.Button
+            type="button"
+            variant="icon"
+            size="md"
+            color="primary"
+            disabled={!tableApi.selectedFlatRows.length}
+            onClick={() => {
+              tableApi.selectedFlatRows.length && onSelect(tableApi.selectedFlatRows[0].original);
+            }}
+            className="mx-1"
+          >
+            <icons.Add />
+            <T>add</T>
+          </bd.Button>
+          <bd.Button variant="secondary" onClick={handleClose} type="button">
+            Close
+          </bd.Button>
+        </Modal.Footer>
+      </Modal>
     </>
   );
 };

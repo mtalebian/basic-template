@@ -23,6 +23,7 @@ export const CompositeRoleApp = () => {
   const [editState, setEditState] = useState({ edit: false, row: null });
   const [currentProject, setCurrentProject] = useState(null);
   const [compositeRoles, setCompositeRoles] = useState([]);
+  const [roles, setRoles] = useState([]);
   const { t } = useTranslation();
   const account = useAccount();
   const shell = useShell();
@@ -57,7 +58,8 @@ export const CompositeRoleApp = () => {
     roleApi
       .getCompositeRoles(prj.id)
       .then((x) => {
-        setCompositeRoles(x);
+        setRoles(x.roles);
+        setCompositeRoles(x.compositeRoles);
       })
       .catch((ex) => {
         notify.error(ex);
@@ -107,23 +109,25 @@ export const CompositeRoleApp = () => {
                       variant="icon"
                       size="md"
                       color="primary"
-                      disabled={!tableApi.selectedFlatRows.length}
-                      onClick={() => {
-                        tableApi.selectedFlatRows.length && startEditRole(tableApi.selectedFlatRows[0].original);
-                      }}
-                    >
-                      <icons.Edit />
-                    </bd.Button>
-                    <bd.Button
-                      variant="icon"
-                      size="md"
-                      color="primary"
                       onClick={() => {
                         startEditRole(null);
                       }}
                       className="mx-1"
                     >
                       <icons.Add />
+                      <T>add</T>
+                    </bd.Button>
+                    <bd.Button
+                      variant="icon"
+                      size="md"
+                      color="primary"
+                      disabled={!tableApi.selectedFlatRows.length}
+                      onClick={() => {
+                        tableApi.selectedFlatRows.length && startEditRole(tableApi.selectedFlatRows[0].original);
+                      }}
+                    >
+                      <icons.Edit />
+                      <T>edit</T>
                     </bd.Button>
                   </>
                 }
@@ -148,6 +152,7 @@ export const CompositeRoleApp = () => {
       )}
       {editState.edit && (
         <EditCompositeRole
+          roles={roles}
           currentProjectId={currentProject.id}
           originalCompositeRole={editState.row?.data}
           onGoBack={(item) => {

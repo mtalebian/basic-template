@@ -301,23 +301,23 @@ namespace Accounts.Migrations.Migrations
                 schema: "tmp",
                 columns: table => new
                 {
-                    RoleId = table.Column<string>(type: "nvarchar(30)", nullable: false),
-                    CompositeRoleId = table.Column<string>(type: "nvarchar(30)", nullable: false),
-                    ProjectId = table.Column<string>(type: "nvarchar(50)", nullable: false)
+                    RoleId = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    CompositeRoleId = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    ProjectId = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_RoleCompositeRoles", x => new { x.RoleId, x.CompositeRoleId, x.ProjectId });
+                    table.PrimaryKey("PK_RoleCompositeRoles", x => new { x.ProjectId, x.RoleId, x.CompositeRoleId });
                     table.ForeignKey(
-                        name: "FK_RoleCompositeRoles_CompositeRoles_CompositeRoleId_ProjectId",
-                        columns: x => new { x.CompositeRoleId, x.ProjectId },
+                        name: "FK_RoleCompositeRoles_CompositeRoles_ProjectId_CompositeRoleId",
+                        columns: x => new { x.ProjectId, x.CompositeRoleId },
                         principalSchema: "tmp",
                         principalTable: "CompositeRoles",
                         principalColumns: new[] { "ProjectId", "Id" },
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_RoleCompositeRoles_Roles_RoleId_ProjectId",
-                        columns: x => new { x.RoleId, x.ProjectId },
+                        name: "FK_RoleCompositeRoles_Roles_ProjectId_RoleId",
+                        columns: x => new { x.ProjectId, x.RoleId },
                         principalSchema: "tmp",
                         principalTable: "Roles",
                         principalColumns: new[] { "ProjectId", "Id" },
@@ -462,7 +462,7 @@ namespace Accounts.Migrations.Migrations
                 schema: "tmp",
                 table: "Users",
                 columns: new[] { "Id", "AccessFailedCount", "ConcurrencyStamp", "CreatedAt", "Email", "EmailConfirmed", "FirstName", "IsDeleted", "IsDisabled", "LastAccessFailedDate", "LastName", "LockoutEnabled", "LockoutEndDate", "NationalCode", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "UserName", "WindowsAuthenticate" },
-                values: new object[] { 1L, 0, "f55f3073-c565-487e-9a2a-825a885859f0", new DateTime(2021, 11, 17, 23, 4, 44, 987, DateTimeKind.Local).AddTicks(2475), null, false, "", false, false, null, "Administrator", false, null, null, "PABPyu6/prVEQ4QbBrmcATJsjw/1yoli07rNI6EJ764=", null, false, "c32de085-f2da-4f3b-b638-0a95d5964548", "admin", false });
+                values: new object[] { 1L, 0, "39660129-1c69-4257-b686-adfe001a6c79", new DateTime(2021, 11, 18, 18, 6, 33, 581, DateTimeKind.Local).AddTicks(1859), null, false, "", false, false, null, "Administrator", false, null, null, "PABPyu6/prVEQ4QbBrmcATJsjw/1yoli07rNI6EJ764=", null, false, "060645ae-6438-48d8-8f78-4539501703d6", "admin", false });
 
             migrationBuilder.InsertData(
                 schema: "tmp",
@@ -545,16 +545,10 @@ namespace Accounts.Migrations.Migrations
                 columns: new[] { "ProjectId", "ParentId" });
 
             migrationBuilder.CreateIndex(
-                name: "IX_RoleCompositeRoles_CompositeRoleId_ProjectId",
+                name: "IX_RoleCompositeRoles_ProjectId_CompositeRoleId",
                 schema: "tmp",
                 table: "RoleCompositeRoles",
-                columns: new[] { "CompositeRoleId", "ProjectId" });
-
-            migrationBuilder.CreateIndex(
-                name: "IX_RoleCompositeRoles_RoleId_ProjectId",
-                schema: "tmp",
-                table: "RoleCompositeRoles",
-                columns: new[] { "RoleId", "ProjectId" });
+                columns: new[] { "ProjectId", "CompositeRoleId" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_Roles_ApplicationId",
