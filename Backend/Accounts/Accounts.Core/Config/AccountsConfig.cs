@@ -22,5 +22,6 @@
         public string UserCompositeRolesTableName { get; set; }
         public string UserRolesTableName { get; set; }
         public string UserSessionsTableName { get; set; }
+        public string RoleCompositeRoleTableName { get; set; }
     }
 }

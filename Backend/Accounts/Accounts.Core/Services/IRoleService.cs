@@ -15,6 +15,9 @@ namespace Accounts.Core
         IList<AzField> GetAzFieldsByObjectId(string projectId, string objectId);
         //...........................AzObjectField
         IList<AzObjectField> GetAllAzObjectField(string projectId);
+
+        //...........................RoleCompositeRole
+
         //..........................AzObject
         AzObject GetAzObjectById(string projectId, string id);
         IList<AzObject> GetAzObjects(string projectId);

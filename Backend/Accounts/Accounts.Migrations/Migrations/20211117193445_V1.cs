@@ -297,6 +297,34 @@ namespace Accounts.Migrations.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "RoleCompositeRoles",
+                schema: "tmp",
+                columns: table => new
+                {
+                    RoleId = table.Column<string>(type: "nvarchar(30)", nullable: false),
+                    CompositeRoleId = table.Column<string>(type: "nvarchar(30)", nullable: false),
+                    ProjectId = table.Column<string>(type: "nvarchar(50)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_RoleCompositeRoles", x => new { x.RoleId, x.CompositeRoleId, x.ProjectId });
+                    table.ForeignKey(
+                        name: "FK_RoleCompositeRoles_CompositeRoles_CompositeRoleId_ProjectId",
+                        columns: x => new { x.CompositeRoleId, x.ProjectId },
+                        principalSchema: "tmp",
+                        principalTable: "CompositeRoles",
+                        principalColumns: new[] { "ProjectId", "Id" },
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_RoleCompositeRoles_Roles_RoleId_ProjectId",
+                        columns: x => new { x.RoleId, x.ProjectId },
+                        principalSchema: "tmp",
+                        principalTable: "Roles",
+                        principalColumns: new[] { "ProjectId", "Id" },
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "UserRoles",
                 schema: "tmp",
                 columns: table => new
@@ -434,7 +462,7 @@ namespace Accounts.Migrations.Migrations
                 schema: "tmp",
                 table: "Users",
                 columns: new[] { "Id", "AccessFailedCount", "ConcurrencyStamp", "CreatedAt", "Email", "EmailConfirmed", "FirstName", "IsDeleted", "IsDisabled", "LastAccessFailedDate", "LastName", "LockoutEnabled", "LockoutEndDate", "NationalCode", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "UserName", "WindowsAuthenticate" },
-                values: new object[] { 1L, 0, "a189ccbf-f407-4ea3-b3d0-888b4846b294", new DateTime(2021, 11, 15, 13, 23, 17, 483, DateTimeKind.Local).AddTicks(1130), null, false, "", false, false, null, "Administrator", false, null, null, "PABPyu6/prVEQ4QbBrmcATJsjw/1yoli07rNI6EJ764=", null, false, "d932b541-194c-4daa-b4d2-24f4aed1e1d2", "admin", false });
+                values: new object[] { 1L, 0, "f55f3073-c565-487e-9a2a-825a885859f0", new DateTime(2021, 11, 17, 23, 4, 44, 987, DateTimeKind.Local).AddTicks(2475), null, false, "", false, false, null, "Administrator", false, null, null, "PABPyu6/prVEQ4QbBrmcATJsjw/1yoli07rNI6EJ764=", null, false, "c32de085-f2da-4f3b-b638-0a95d5964548", "admin", false });
 
             migrationBuilder.InsertData(
                 schema: "tmp",
@@ -454,7 +482,7 @@ namespace Accounts.Migrations.Migrations
                 columns: new[] { "Id", "ProjectId", "ApplicationId", "OpenInNewTab", "ParentId", "SortOrder", "Title", "Url" },
                 values: new object[,]
                 {
-                    { "config-admin-tables", "project1", null, false, "config", 0, "Maintain base tables", "/admin/tables" },
+                    { "config-admin-grids", "project1", null, false, "config", 0, "Maintain base tables", "/admin/grids" },
                     { "config-menu", "project1", null, false, "config", 0, "Maintain project menu", "/admin/menu" },
                     { "config-table-designer", "project1", null, false, "config", 0, "Table designer", "/admin/table-designer" },
                     { "users", "project1", null, false, "admin", 0, "Manage Users", "/admin/users" },
@@ -517,6 +545,18 @@ namespace Accounts.Migrations.Migrations
                 columns: new[] { "ProjectId", "ParentId" });
 
             migrationBuilder.CreateIndex(
+                name: "IX_RoleCompositeRoles_CompositeRoleId_ProjectId",
+                schema: "tmp",
+                table: "RoleCompositeRoles",
+                columns: new[] { "CompositeRoleId", "ProjectId" });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_RoleCompositeRoles_RoleId_ProjectId",
+                schema: "tmp",
+                table: "RoleCompositeRoles",
+                columns: new[] { "RoleId", "ProjectId" });
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Roles_ApplicationId",
                 schema: "tmp",
                 table: "Roles",
@@ -555,6 +595,10 @@ namespace Accounts.Migrations.Migrations
 
             migrationBuilder.DropTable(
                 name: "Menus",
+                schema: "tmp");
+
+            migrationBuilder.DropTable(
+                name: "RoleCompositeRoles",
                 schema: "tmp");
 
             migrationBuilder.DropTable(

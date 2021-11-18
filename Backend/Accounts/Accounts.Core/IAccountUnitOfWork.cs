@@ -11,6 +11,7 @@ namespace Accounts.Core
         IAzObjectFieldRepository AzObjectFields { get; }
         IAzValueRepository AzValues { get; }
         ICompositeRoleRepository CompositeRoles { get; }
+        IRoleCompositeRoleRepository RoleCompositeRoles { get; }
         IMenuRepository Menus { get; }
         ITCodeRepository TCodes { get; }
         IMenuFolderRepository MenuFolders { get; }

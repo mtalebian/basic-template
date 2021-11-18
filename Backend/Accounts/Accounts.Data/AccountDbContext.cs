@@ -71,6 +71,23 @@ namespace Accounts.Data
                 .HasForeignKey(s => s.FieldId);
 
             //
+            // RoleCompositeRole
+            //
+            var RoleCompositeRole = new ConfigHelper<RoleCompositeRole>(modelBuilder, _AccountsConfig.RoleCompositeRoleTableName);
+            RoleCompositeRole.HasKey(x => new { x.RoleId, x.CompositeRoleId, x.ProjectId });
+
+            RoleCompositeRole.Entity()
+               .HasOne<Role>(x => x.Role)
+               .WithMany(x => x.RoleCompositeRoles)
+               .HasForeignKey(x => new { x.RoleId, x.ProjectId });
+
+
+            RoleCompositeRole.Entity()
+                .HasOne<CompositeRole>(x => x.CompositeRole)
+                .WithMany(x => x.RoleCompositeRoles)
+               .HasForeignKey(x => new { x.CompositeRoleId, x.ProjectId });
+
+            //
             // AzObject
             //
             var AzObject = new ConfigHelper<AzObject>(modelBuilder, _AccountsConfig.AzObjectsTableName);
