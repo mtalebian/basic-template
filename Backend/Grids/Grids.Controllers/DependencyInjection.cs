@@ -6,7 +6,7 @@ namespace Microsoft.Extensions.DependencyInjection
     {
         public static void AddFormsServices(this IServiceCollection services, string connectionString) 
         {
-            services.AddFormsContext(connectionString);
+            services.AddGridsContext(connectionString);
             services.AddDataGridService();
         }
     }

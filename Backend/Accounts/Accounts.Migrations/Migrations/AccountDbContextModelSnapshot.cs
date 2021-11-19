@@ -247,13 +247,35 @@ namespace Accounts.Migrations.Migrations
                         new
                         {
                             ProjectId = "project1",
-                            Id = "config-admin-tables",
+                            Id = "config-grid-builder",
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            OpenInNewTab = false,
+                            ParentId = "config",
+                            SortOrder = 0,
+                            Title = "Grid builder",
+                            Url = "/admin/grid-builder"
+                        },
+                        new
+                        {
+                            ProjectId = "project1",
+                            Id = "config-grids",
                             CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             OpenInNewTab = false,
                             ParentId = "config",
                             SortOrder = 0,
                             Title = "Maintain base tables",
-                            Url = "/admin/tables"
+                            Url = "/admin/grids"
+                        },
+                        new
+                        {
+                            ProjectId = "project1",
+                            Id = "config-grid",
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            OpenInNewTab = false,
+                            ParentId = "config",
+                            SortOrder = 0,
+                            Title = "Maintain table",
+                            Url = "/admin/grid"
                         },
                         new
                         {
@@ -265,17 +287,6 @@ namespace Accounts.Migrations.Migrations
                             SortOrder = 0,
                             Title = "Maintain project menu",
                             Url = "/admin/menu"
-                        },
-                        new
-                        {
-                            ProjectId = "project1",
-                            Id = "config-table-designer",
-                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            OpenInNewTab = false,
-                            ParentId = "config",
-                            SortOrder = 0,
-                            Title = "Table designer",
-                            Url = "/admin/table-designer"
                         },
                         new
                         {
@@ -427,9 +438,9 @@ namespace Accounts.Migrations.Migrations
 
             modelBuilder.Entity("Accounts.Core.User", b =>
                 {
-                    b.Property<long>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint")
+                        .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<int>("AccessFailedCount")
@@ -513,10 +524,10 @@ namespace Accounts.Migrations.Migrations
                     b.HasData(
                         new
                         {
-                            Id = 1L,
+                            Id = 1,
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "a189ccbf-f407-4ea3-b3d0-888b4846b294",
-                            CreatedAt = new DateTime(2021, 11, 15, 13, 23, 17, 483, DateTimeKind.Local).AddTicks(1130),
+                            ConcurrencyStamp = "886c574f-d100-44fd-a115-3d12f57b508f",
+                            CreatedAt = new DateTime(2021, 11, 20, 0, 50, 26, 565, DateTimeKind.Local).AddTicks(7108),
                             EmailConfirmed = false,
                             FirstName = "",
                             IsDeleted = false,
@@ -526,7 +537,7 @@ namespace Accounts.Migrations.Migrations
                             LockoutEnabled = false,
                             PasswordHash = "PABPyu6/prVEQ4QbBrmcATJsjw/1yoli07rNI6EJ764=",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "d932b541-194c-4daa-b4d2-24f4aed1e1d2",
+                            SecurityStamp = "13f8fa15-3b1d-4bf6-b8ab-e922361b80be",
                             UserName = "admin",
                             WindowsAuthenticate = false
                         });
@@ -580,8 +591,8 @@ namespace Accounts.Migrations.Migrations
 
             modelBuilder.Entity("Accounts.Core.UserCompositeRole", b =>
                 {
-                    b.Property<long>("UserId")
-                        .HasColumnType("bigint");
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
 
                     b.Property<string>("ProjectId")
                         .HasMaxLength(30)
@@ -610,8 +621,8 @@ namespace Accounts.Migrations.Migrations
 
             modelBuilder.Entity("Accounts.Core.UserRole", b =>
                 {
-                    b.Property<long>("UserId")
-                        .HasColumnType("bigint");
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
 
                     b.Property<string>("ProjectId")
                         .HasMaxLength(30)
@@ -688,8 +699,8 @@ namespace Accounts.Migrations.Migrations
                     b.Property<int>("UserAgentId")
                         .HasColumnType("int");
 
-                    b.Property<long>("UserId")
-                        .HasColumnType("bigint");
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
