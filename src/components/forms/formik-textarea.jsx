@@ -33,6 +33,7 @@ export const FormikTextArea = ({
 
     if (!autoComplete) autoComplete = "off";
     if (!spellCheck) spellCheck = "false";
+    if (field.value === null || field.value === undefined) field.value = "";
 
     var inp = (
         <textarea

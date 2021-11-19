@@ -52,7 +52,7 @@ namespace Accounts.Services
             return new JwtSecurityTokenHandler().WriteToken(jwt);
         }
 
-        public async Task<TUser> GetUserByIdAsync(long userId)
+        public async Task<TUser> GetUserByIdAsync(int userId)
         {
             return await db.Users.GetAsync(userId);
         }
@@ -63,7 +63,7 @@ namespace Accounts.Services
             return await db.Users.FirstOrDefaultAsync(x => x.UserName == userName);
         }
 
-        public string[] GetUserRoles(long userId)
+        public string[] GetUserRoles(int userId)
         {
             return new string[0];
             //var q = from ua in db.UserAuthorizations.Entities
@@ -126,12 +126,12 @@ namespace Accounts.Services
             return db.Projects.GetAsync(projectId);
         }
 
-        public Task<List<MenuFolder>> GetMenuFoldersAsync(string projectId, long userId)
+        public Task<List<MenuFolder>> GetMenuFoldersAsync(string projectId, int userId)
         {
             return db.MenuFolders.WhereAsync(x => x.ProjectId == projectId);
         }
 
-        public Task<List<Menu>> GetMenusAsync(string projectId, long userId)
+        public Task<List<Menu>> GetMenusAsync(string projectId, int userId)
         {
             return db.Menus.WhereAsync(x => x.ProjectId == projectId);
         }

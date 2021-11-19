@@ -18,8 +18,7 @@ export const gridBuilderApi = {
 
     getGrid: (gridId) => api.call("post", `${apiConfig.gridBuilderUrl}/get-grid?projectId=${settings.projectId}&id=${gridId}`),
 
-    saveGrid: (groupId, grid) =>
-        api.call("post", `${apiConfig.gridBuilderUrl}/save-grid?projectId=${settings.projectId}&groupId=${groupId}`, { ...grid }),
+    saveGrid: (grid) => api.call("post", `${apiConfig.gridBuilderUrl}/save-grid?projectId=${settings.projectId}`, { ...grid }),
 
     deleteGrid: (gridId) => {
         return api.call("post", `${apiConfig.gridBuilderUrl}/delete-grid?projectId=${settings.projectId}&gridId=${gridId}`);

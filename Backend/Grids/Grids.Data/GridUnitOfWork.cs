@@ -7,24 +7,24 @@ using Microsoft.Data.SqlClient;
 
 namespace Forms.Data
 {
-    public class FormUnitOfWork : UnitOfWork, IFormUnitOfWork
+    public class GridUnitOfWork : UnitOfWork, IFormUnitOfWork
     {
-        private readonly FormDbContext context;
+        private readonly GridsDbContext context;
 
         public ITableRepository Grids { get; }
         public IGridColumnRepository GridColumns { get; }
         public IGridVariantRepository GridVariants { get; }
-        public IGroupRepository Groups { get; }
+        public IGridGroupRepository GridGroups { get; }
         public ITextRepository Texts { get; }
 
 
-        public FormUnitOfWork(FormDbContext context) : base(context)
+        public GridUnitOfWork(GridsDbContext context) : base(context)
         {
             this.context = context;
             Grids = new GridRepository(context);
             GridColumns = new GridColumnRepository(context);
             GridVariants = new GridVariantRepository(context);
-            Groups = new GroupRepository(context);
+            GridGroups = new GridGroupRepository(context);
             Texts = new TextRepository(context);
         }
     }

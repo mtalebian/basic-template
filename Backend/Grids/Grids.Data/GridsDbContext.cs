@@ -6,12 +6,12 @@ using Microsoft.Extensions.Options;
 
 namespace Forms.Data
 {
-    public class FormDbContext : BaseDbContext
+    public class GridsDbContext : BaseDbContext
     {
         private readonly FormsConfig _FormsConfig;
 
 
-        public FormDbContext(DbContextOptions<FormDbContext> options, IOptions<FormsConfig> formsConfig, ICurrentUserNameService currentUserNameService)
+        public GridsDbContext(DbContextOptions<GridsDbContext> options, IOptions<FormsConfig> formsConfig, ICurrentUserNameService currentUserNameService)
             : base(options, currentUserNameService)
         {
             _FormsConfig = formsConfig.Value;
@@ -26,11 +26,12 @@ namespace Forms.Data
             //
             // Group 
             //
-            var Group = new ConfigHelper<GridGroup>(modelBuilder, _FormsConfig.GroupsTableName);
+            var Group = new ConfigHelper<GridGroup>(modelBuilder, _FormsConfig.GridGroupsTableName);
             Group.HasKey(x => new { x.ProjectId, x.Id });
             Group.DefineProjectId(x => x.ProjectId);
             Group.IsAutoIncrement(x => x.Id);
             Group.DefineTitle(x => x.Title);
+            Group.DefineAz(x => x.AzView);
 
             Group.Entity()
                 .HasOne(x => x.Parent)
@@ -57,11 +58,11 @@ namespace Forms.Data
             Grid.NVarChar(x => x.DeleteSql, 1000, false);
             Grid.NVarChar(x => x.DefaultFilter, 1000, false);
 
-            Grid.NVarChar(x => x.AzGrid, 1000, false);
-            Grid.NVarChar(x => x.AzSelect, 1000, false);
-            Grid.NVarChar(x => x.AzInsert, 1000, false);
-            Grid.NVarChar(x => x.AzUpdate, 1000, false);
-            Grid.NVarChar(x => x.AzDelete, 1000, false);
+            Grid.DefineAz(x => x.AzView);
+            Grid.DefineAz(x => x.AzSelect);
+            Grid.DefineAz(x => x.AzInsert);
+            Grid.DefineAz(x => x.AzUpdate);
+            Grid.DefineAz(x => x.AzDelete);
 
             Grid.DefineUserName(x => x.CreatedBy, "");
             Grid.DefineUserName(x => x.ModifiedBy, "");

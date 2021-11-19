@@ -22,7 +22,7 @@ namespace Forms.Services
 
         public IList<GridGroup> GetAllGroups(string projectId)
         {
-            return db.Groups.Where(x => x.ProjectId == projectId);
+            return db.GridGroups.Where(x => x.ProjectId == projectId);
         }
 
         public IList<Grid> GetGrids(string projectId, int groupId)

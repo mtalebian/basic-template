@@ -1,4 +1,5 @@
 ﻿using Common;
+using Common.Security;
 using Forms.Core;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
@@ -17,26 +18,24 @@ namespace Forms.Controllers
     public class GridBuilderController : ControllerBase
     {
         private readonly IGridBuilderService service;
+        private readonly IAzCheckService azCheck;
 
-
-
-        public GridBuilderController(IGridBuilderService formService)
+        public GridBuilderController(IGridBuilderService formService, IAzCheckService azCheck)
         {
             this.service = formService;
+            this.azCheck = azCheck;
         }
 
         [HttpPost("get-groups")]
-        public Response<GroupInfoDTO[]> GetGroups(string projectId)
+        public Response<GroupInfoDTO> GetGroups(string projectId)
         {
             var groups = service.GetAllGroups(projectId);
-            var result = new List<GroupInfoDTO>();
-            foreach (var g in groups)
-            {
-                var dto = g.MapTo<GroupInfoDTO>();
-                dto.Items = service.GetGrids(g.ProjectId, g.Id).MapTo<GroupItemDTO>().ToArray();
-                result.Add(dto);
-            }
-            return new Response<GroupInfoDTO[]>(result.ToArray());
+            var grids = service.GetAllGrids(projectId);
+
+            var result = new GroupInfoDTO();
+            result.Groups = groups.MapTo<GroupMenuDTO>();
+            result.Grids = grids.MapTo<GridMenuDTO>();
+            return new Response<GroupInfoDTO>(result);
         }
 
         [HttpPost("insert-group")]
@@ -76,11 +75,10 @@ namespace Forms.Controllers
         }
 
         [HttpPost("save-grid")]
-        public Response<GridDTO> SaveGrid(string projectId, int groupId, [FromBody] GridDTO dto)
+        public Response<GridDTO> SaveGrid(string projectId, [FromBody] GridDTO dto)
         {
             var grd = dto.MapTo<Grid>();
             grd.ProjectId = projectId;
-            grd.GroupId = groupId;
             var columns = dto.DataColumns.MapTo<GridColumn>();
             foreach (var c in columns)
             {

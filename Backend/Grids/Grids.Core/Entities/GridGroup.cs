@@ -10,6 +10,7 @@ namespace Forms.Core
 
         public int? ParentId { get; set; }
         public string Title { get; set; }
+        public string AzView{ get; set; }
 
         [IgnoreMap]
         public ICollection<Grid> Tables { get; set; }

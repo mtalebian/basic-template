@@ -5,7 +5,7 @@ namespace Forms.Data
 {
     public class GridVariantRepository : Repository<GridVariant>, IGridVariantRepository
     {
-        public GridVariantRepository(FormDbContext context) : base(context)
+        public GridVariantRepository(GridsDbContext context) : base(context)
         {
         }
     }

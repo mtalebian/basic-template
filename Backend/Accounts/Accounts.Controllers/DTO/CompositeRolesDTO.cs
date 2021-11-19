@@ -13,6 +13,6 @@ namespace Accounts.Controllers
         public string RoleId { get; set; }
 
         [Required(ErrorMessage = "UserId Is Required")]
-        public long UserId { get; set; }
+        public int UserId { get; set; }
     }
 }

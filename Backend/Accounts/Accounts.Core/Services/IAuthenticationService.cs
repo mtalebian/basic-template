@@ -9,8 +9,8 @@ namespace Accounts.Core
         string GetToken(TUser user, int expiresAfterSeconds);
 
         Task<TUser> GetUserByNameAsync(string userName);
-        Task<TUser> GetUserByIdAsync(long userId);
-        string[] GetUserRoles(long userId);
+        Task<TUser> GetUserByIdAsync(int userId);
+        string[] GetUserRoles(int userId);
 
         Task<UserSession> GetSessionByRefreshTokenAsync(long sessionId, string refreshToken);
         Task<UserSession> CreateSessionAsync(Project project, User user, string userAgent, string ip);
@@ -18,7 +18,7 @@ namespace Accounts.Core
         Task RegenerateRefreshTokenAsync(UserSession session, string ip);
 
         ValueTask<Project> GetProjectAsync(string projectId);
-        Task<List<MenuFolder>> GetMenuFoldersAsync(string projectId, long userId);
-        Task<List<Menu>> GetMenusAsync(string projectId, long userId);
+        Task<List<MenuFolder>> GetMenuFoldersAsync(string projectId, int userId);
+        Task<List<Menu>> GetMenusAsync(string projectId, int userId);
     }
 }

@@ -26,9 +26,9 @@ namespace Accounts.Services
         {
             return db.Users.Where(x => x.NationalCode == nationalCode).FirstOrDefault();
         }
-        public User GetUser(long UserId)
+        public User GetUser(int userId)
         {
-            return db.Users.Get(UserId);
+            return db.Users.Get(userId);
         }
         public User GetUserByUserName(string userName)
         {
@@ -53,14 +53,14 @@ namespace Accounts.Services
             db.Users.Remove(user);
             db.SaveChanges();
         }
-        public void DeleteUser(long userId)
+        public void DeleteUser(int userId)
         {
             var user = db.Users.Get(userId);
             if (user is null) throw new Exception("Record not found!");
             db.Users.Remove(user);
             db.SaveChanges();
         }
-        public void ChangePassword(long userId, string newPassword)
+        public void ChangePassword(int userId, string newPassword)
         {
             var user = db.Users.FirstOrDefault(x => x.Id == userId);
             if (user is null) throw new Exception("Record not found!");

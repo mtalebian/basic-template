@@ -5,6 +5,7 @@ namespace Forms.Controllers
 {
     public class GridDTO
     {
+        public int GroupId { get; set; }
         public string Id { get; set; }
 
         public string Title { get; set; }
@@ -19,7 +20,7 @@ namespace Forms.Controllers
         public string UpdateSql { get; set; }
         public string DeleteSql { get; set; }
 
-        public string AzGrid { get; set; }
+        public string AzView { get; set; }
         public string AzSelect { get; set; }
         public string AzInsert { get; set; }
         public string AzUpdate { get; set; }

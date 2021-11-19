@@ -1,4 +1,5 @@
 ﻿using Common;
+using Common.Security;
 using Forms.Core;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
@@ -17,33 +18,58 @@ namespace Forms.Controllers
     public class GridsController : ControllerBase
     {
         private readonly IGridService service;
+        private readonly IAzCheckService azCheck;
 
-        public GridsController(IGridService formService)
+
+        public GridsController(IGridService formService, IAzCheckService azCheck)
         {
             this.service = formService;
+            this.azCheck = azCheck;
         }
 
 
         [HttpPost("get-groups")]
-        public Response<GroupInfoDTO[]> GetGroups(string projectId)
+        public Response<GroupInfoDTO> GetGroups(string projectId)
         {
+            var userName = User.Identity.Name;
+            var applicationId = "";
+            var values = new Dictionary<string, string>();
             var groups = service.GetAllGroups(projectId);
-            var result = new List<GroupInfoDTO>();
+
+            var az = groups
+                .Select(x => x.AzView??"")
+                .Distinct()
+                .ToDictionary(x => x, x => azCheck.Validate(x, userName, applicationId, values).Length == 0);
+
+            var grids = new List<Grid>();
             foreach (var g in groups)
             {
-                var dto = g.MapTo<GroupInfoDTO>();
-                dto.Items = service.GetGrids(g.ProjectId, g.Id).MapTo<GroupItemDTO>().ToArray();
-                result.Add(dto);
+                foreach (var grid in service.GetGrids(projectId, g.Id))
+                {
+                    var az_view = grid.AzView ?? "";
+                    if (!az.ContainsKey(az_view))
+                    {
+                        az.Add(az_view, azCheck.Validate(az_view, userName, applicationId, values).Length == 0);
+                    }
+                    if (az[az_view])
+                        grids.Add(grid);
+                }
             }
-            return new Response<GroupInfoDTO[]>(result.ToArray());
+
+            var result = new GroupInfoDTO();
+            result.Groups = groups.MapTo<GroupMenuDTO>();
+            result.Grids = grids.MapTo<GridMenuDTO>();
+            return new Response<GroupInfoDTO>(result);
         }
+
+
 
         [HttpPost("get-grid")]
         public Response<GridViewDTO> GetGrid(string projectId, string id)
         {
             var grid = service.GetGrid(projectId, id);
 
-            if (!service.HasPermission(grid.AzGrid, User.Identity.Name, null))
+            if (!service.HasPermission(grid.AzView, User.Identity.Name, null))
                 return new Response<GridViewDTO>(Messages.Forbidden, "403");
 
             var columns = service.GetGridColumns(grid.ProjectId, grid.Id);

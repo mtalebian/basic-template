@@ -8,12 +8,12 @@ namespace Microsoft.Extensions.DependencyInjection
     {
         public static void AddFormsContext(this IServiceCollection services, string connectionString) 
         {
-            services.AddDbContext<FormDbContext>(options => options
+            services.AddDbContext<GridsDbContext>(options => options
                 .UseSqlServer(
                     connectionString,
                     x => x.MigrationsAssembly("Forms.Migrations")
                 ));
-            services.AddScoped<IFormUnitOfWork, FormUnitOfWork>();
+            services.AddScoped<IFormUnitOfWork, GridUnitOfWork>();
         }
     }
 }

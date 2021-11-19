@@ -5,7 +5,7 @@ namespace Forms.Data
 {
     public class GridRepository : Repository<Grid>, ITableRepository
     {
-        public GridRepository(FormDbContext context) : base(context)
+        public GridRepository(GridsDbContext context) : base(context)
         {
         }
     }

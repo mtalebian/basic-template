@@ -7,14 +7,14 @@ namespace Accounts.Core
     {
         IList<User> GetUsers();
         User GetUser(string nationalCode);
-        User GetUser(long UserId);
+        User GetUser(int userId);
         User GetUserByUserName(string userName);
         void Insert(User user);
         User Update(User user);
         void DeleteUser(string nationalCode);
-        void DeleteUser(long userId);
+        void DeleteUser(int userId);
 
-        void ChangePassword(long userId, string newPassword);
+        void ChangePassword(int userId, string newPassword);
 
     }
 }

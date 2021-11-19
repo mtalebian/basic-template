@@ -1,7 +1,5 @@
 import React, { useEffect, useState } from "react";
 import * as bd from "react-basic-design";
-import { api } from "../../api/api";
-import { gridsApi } from "../../api/grids-api";
 import { notify } from "../basic/notify";
 import { T } from "../basic/text";
 import { FilterBox } from "../filters/filter-box";

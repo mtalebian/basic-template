@@ -10,7 +10,7 @@ export function MainLayout({ component: Comp, ...props }) {
         <div className="d-flex flex-column h-100">
             <AppbarShell setAppRef={setAppRef} />
 
-            <main className="content flex-grow-1">
+            <main className="content flex-grow-1 overflow-auto">
                 <Comp {...props} shell={shellApi} />
             </main>
         </div>

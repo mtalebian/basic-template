@@ -37,14 +37,14 @@ namespace Accounts.Core
         Role UpdateRole(Role item);
         void DeleteRole(string projectId, string id);
         //...........................UserCompositeRole
-        IList<UserCompositeRole> GetAllUserCompositeRole(string projectId, long userId);
-        UserCompositeRole GetUserCompositeRole(string projectId, string compositeRoleId, long userId);
+        IList<UserCompositeRole> GetAllUserCompositeRole(string projectId, int userId);
+        UserCompositeRole GetUserCompositeRole(string projectId, string compositeRoleId, int userId);
         void InsertUserCompositeRole(UserCompositeRole item);
-        void DeleteUserCompositeRole(string projectId, string compositeRoleId, long userId);
+        void DeleteUserCompositeRole(string projectId, string compositeRoleId, int userId);
         //..........................UserRole
-        IList<UserRole> GetAllUserRole(string projectId, long userId);
-        UserRole GetUserRole(string projectId, string roleId, long userId);
+        IList<UserRole> GetAllUserRole(string projectId, int userId);
+        UserRole GetUserRole(string projectId, string roleId, int userId);
         void InsertUserRole(UserRole item);
-        void DeleteUserRole(string projectId, string roleId, long userId);
+        void DeleteUserRole(string projectId, string roleId, int userId);
     }
 }

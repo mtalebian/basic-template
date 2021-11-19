@@ -6,7 +6,7 @@ namespace Accounts.Core
     {
         public string ProjectId { get; set; }
         public string CompositeRoleId { get; set; }
-        public long UserId { get; set; }
+        public int UserId { get; set; }
 
         public string CreatedBy { get; set; }
         public DateTime CreatedAt { get; set; }

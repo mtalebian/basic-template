@@ -7,7 +7,7 @@ namespace Accounts.Core
     {
         public long Id { get; set; }
 
-        public long UserId { get; set; }
+        public int UserId { get; set; }
         public string RefreshToken { get; set; }
         public int RefreshCount { get; set; } = 1;
         public DateTime RefreshTokenDate { get; set; } = DateTime.Now;
@@ -30,7 +30,7 @@ namespace Accounts.Core
         {
         }
 
-        public UserSession(Project app, long userId, int userAgentId, string ip)
+        public UserSession(Project app, int userId, int userAgentId, string ip)
         {
             UserId = userId;
             ProjectId = app.Id;

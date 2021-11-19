@@ -1,6 +1,5 @@
-import React, { useMemo, useRef, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Formik } from "formik";
 import * as yup from "yup";
 import * as bd from "react-basic-design";
 import * as bd2 from "../../../components/forms";
@@ -8,7 +7,6 @@ import * as icons from "../../../assets/icons";
 import { gridBuilderApi } from "../../../api/grid-builder-api";
 import { notify } from "../../../components/basic/notify";
 import { TableTitlebar } from "../../../components/table";
-import { BasicInput } from "../../../components/basic-form/basic-input";
 import {
     useTable,
     useGlobalFilter,
@@ -25,15 +23,14 @@ import {
 } from "react-table";
 import { RenderTableDiv } from "../../../components/table/render-table-div";
 import { DefaultEditor } from "../../../components/table/editors";
-import { BasicTextArea } from "../../../components/basic-form/basic-textarea";
-import { T, Text } from "../../../components/basic/text";
+import { T } from "../../../components/basic/text";
 import { msgbox } from "react-basic-design";
-import { BasicSwitch } from "../../../components/basic-form/basic-switch";
 import { EditColumn } from "./edit-column";
 
 //
-export function GridBuilderEditTable({ table, group, onChanged, onGoBack }) {
+export function GridBuilderEditGrid({ table, onChanged, onGoBack }) {
     const { t } = useTranslation();
+    const [gridId, setGridId] = useState(table.id);
     const [data, setData] = useState(table.dataColumns);
     const [column, setColumn] = useState(null);
     const [saving, setSaving] = useState(false);
@@ -49,16 +46,22 @@ export function GridBuilderEditTable({ table, group, onChanged, onGoBack }) {
         isReadOnly: false,
     };
 
+    useEffect(() => {
+        if (gridId === table.id) return;
+        setGridId(table.id);
+        setData(table.dataColumns);
+    }, [gridId, table]);
+
     const onSaveClick = () => {
         var values = formRef.current.values;
         setSaving(true);
         var dto = { ...values, dataColumns: data };
         gridBuilderApi
-            .saveGrid(group.id, dto, insertMode)
+            .saveGrid(dto)
             .then((x) => {
                 setSaving(false);
                 notify.info(t("changes-are-saved"));
-                onChanged(x, table, group);
+                onChanged(x, table);
             })
             .catch((ex) => {
                 setSaving(false);
@@ -67,9 +70,9 @@ export function GridBuilderEditTable({ table, group, onChanged, onGoBack }) {
     };
 
     const onDeleteClick = () => {
-        msgbox(<Text>deleting-current-grid</Text>, null, [
+        msgbox(<T>deleting-current-grid</T>, null, [
             {
-                title: <Text>delete</Text>,
+                title: <T>delete</T>,
                 action: (hide) => {
                     hide();
                     setDeleting(true);
@@ -78,7 +81,7 @@ export function GridBuilderEditTable({ table, group, onChanged, onGoBack }) {
                         .then((x) => {
                             setDeleting(false);
                             notify.info(t("row-is-deleted"));
-                            onChanged(null, table, group);
+                            onChanged(null, table);
                         })
                         .catch((ex) => {
                             setDeleting(false);
@@ -86,7 +89,7 @@ export function GridBuilderEditTable({ table, group, onChanged, onGoBack }) {
                         });
                 },
             },
-            { title: <Text>close</Text> },
+            { title: <T>close</T> },
         ]);
     };
 
@@ -198,9 +201,7 @@ export function GridBuilderEditTable({ table, group, onChanged, onGoBack }) {
         </bd.Menu>
     );
 
-    const [tab, setTab] = useState();
-
-    const canShowTab = (t) => !tab || tab === t;
+    const canShowTab = (t) => true;
 
     if (column)
         return (
@@ -211,7 +212,7 @@ export function GridBuilderEditTable({ table, group, onChanged, onGoBack }) {
                     var i = data.findIndex((x) => x.name === row.name);
                     if (row.id === undefined) {
                         if (i >= 0) {
-                            msgbox(<Text>duplicate-column</Text>, null, [{ title: <Text>close</Text> }]);
+                            msgbox(<T>duplicate-column</T>, null, [{ title: <T>close</T> }]);
                             return;
                         }
                         row.id = 0;
@@ -234,260 +235,228 @@ export function GridBuilderEditTable({ table, group, onChanged, onGoBack }) {
         <>
             <div className="border-bottom bg-default" style={{ position: "sticky", top: -100, zIndex: 1 }}>
                 <div className="bg-default" style={{ position: "sticky", top: 0, zIndex: 1 }}>
-                    <div className="container">
-                        <bd.Toolbar>
-                            <bd.Button variant="icon" onClick={onGoBack} size="md" edge="start" className="m-e-2">
-                                <icons.ArrowBackIos className="rtl-rotate-180" />
-                            </bd.Button>
+                    <bd.Toolbar>
+                        <bd.Button variant="icon" onClick={onGoBack} size="md" edge="start" className="m-e-2">
+                            <icons.ArrowBackIos className="rtl-rotate-180" />
+                        </bd.Button>
 
-                            <h5>{insertMode ? t("insert-grid") : t("edit-grid")}</h5>
+                        <h5>{insertMode ? t("insert-grid") : t("edit-grid")}</h5>
 
-                            <div className="flex-grow-1" />
+                        <div className="flex-grow-1" />
 
-                            <bd.Button color="primary" disabled={saving || deleting} onClick={() => formRef.current.submitForm()}>
-                                {saving && <div className="m-e-2 spinner-border spinner-border-sm"></div>}
-                                <span>{t("save-changes")}</span>
-                            </bd.Button>
+                        <bd.Button color="primary" disabled={saving || deleting} onClick={() => formRef.current.submitForm()}>
+                            {saving && <div className="m-e-2 spinner-border spinner-border-sm"></div>}
+                            <span>{t("save-changes")}</span>
+                        </bd.Button>
 
-                            <bd.Button variant="icon" menu={moreMenu} edge="end" className="m-s-1">
-                                <icons.MoreVert />
-                            </bd.Button>
-                        </bd.Toolbar>
-                    </div>
+                        <bd.Button variant="icon" menu={moreMenu} edge="end" className="m-s-1">
+                            <icons.MoreVert />
+                        </bd.Button>
+                    </bd.Toolbar>
                 </div>
 
-                <div className="container">
-                    <div className="m-s-4 mb-2 d-flex align-items-center">
-                        <i>
-                            <icons.TableView style={{ fontSize: 32 }} />
-                        </i>
-                        <div className="m-s-3 size-sm" style={{ lineHeight: 1.75 }}>
-                            <b>{table.id}</b>
-                            <div>Created by: {table.createdBy}</div>
-                        </div>
+                <div className="m-s-4 mb-2 d-flex align-items-center">
+                    <i>
+                        <icons.TableView style={{ fontSize: 32 }} />
+                    </i>
+                    <div className="m-s-3 size-sm" style={{ lineHeight: 1.75 }}>
+                        <b>{table.id}</b>
+                        <div>Created by: {table.createdBy}</div>
                     </div>
-                    {/* <bd.TabStrip textColor="primary" indicatorColor="primary">
-                        <bd.TabStripItem eventKey="general" onClick={(e) => setTab(tab === "general" ? null : "general")}>
-                            <Text>general</Text>
-                        </bd.TabStripItem>
-                        <bd.TabStripItem eventKey="filter" onClick={(e) => setTab(tab === "filter" ? null : "filter")}>
-                            <Text>filter</Text>
-                        </bd.TabStripItem>
-                        <bd.TabStripItem eventKey="data" onClick={(e) => setTab(tab === "data" ? null : "data")}>
-                            <Text>data</Text>
-                        </bd.TabStripItem>
-                        <bd.TabStripItem eventKey="authorization" onClick={(e) => setTab(tab === "authorization" ? null : "authorization")}>
-                            <Text>authorization</Text>
-                        </bd.TabStripItem>
-                        <bd.TabStripItem eventKey="columns" onClick={(e) => setTab(tab === "columns" ? null : "columns")}>
-                            <Text>columns</Text>
-                        </bd.TabStripItem>
-                    </bd.TabStrip> */}
                 </div>
             </div>
 
-            <div className="container" style={{ marginBottom: 70 }}>
-                <div>
-                    <bd2.FormikForm
-                        compact
-                        initialValues={table}
-                        validationSchema={yup.object({
-                            id: yup.string().max(50).required("Required"),
-                            title: yup.string().max(50).required("Required"),
-                            tableName: yup.string().max(50).required("Required"),
-                        })}
-                        onSubmit={onSaveClick}
-                        innerRef={formRef}
-                    >
-                        {canShowTab("general") && (
-                            <div className="p-s-3 pt-3">
-                                <div className="bd-form-flex">
-                                    <bd2.FormikInput
-                                        name="id"
-                                        label={<Text>grid-id</Text>}
-                                        readOnly={!insertMode}
-                                        width="12rem"
-                                        autoFocus
-                                    />
+            <div>
+                <bd2.FormikForm
+                    initialValues={table}
+                    validationSchema={yup.object({
+                        id: yup.string().max(50).required("Required"),
+                        title: yup.string().max(50).required("Required"),
+                        tableName: yup.string().max(50).required("Required"),
+                    })}
+                    enableReinitialize={true}
+                    onSubmit={onSaveClick}
+                    innerRef={formRef}
+                    compact
+                >
+                    {canShowTab("general") && (
+                        <div className="p-s-3 pt-3">
+                            <div className="bd-form-flex">
+                                <bd2.FormikInput name="id" label={<T>grid-id</T>} readOnly={!insertMode} width="12rem" />
+                                <bd2.FormikInput name="groupId" label={<T>group-id</T>} width="6rem" />
 
-                                    <bd2.FormikInput name="title" label={<Text>title</Text>} width="12rem" />
-                                    <bd2.FormikSwitch name="flexLayout" label={<Text>flex-layout</Text>} width="6rem" />
-                                    <bd2.FormikTextArea
-                                        name="description"
-                                        label={<Text>description</Text>}
-                                        height="4rem"
-                                        style={{ minWidth: 300 }}
-                                        className="flex-grow-1"
-                                    />
+                                <bd2.FormikInput name="title" label={<T>title</T>} width="15rem" />
+                                <bd2.FormikSwitch name="flexLayout" label={<T>flex-layout</T>} size="sm" width="6rem" />
+                                <bd2.FormikTextArea
+                                    name="description"
+                                    label={<T>description</T>}
+                                    height="4rem"
+                                    style={{ minWidth: 300 }}
+                                    className="flex-grow-1"
+                                />
+                            </div>
+                        </div>
+                    )}
+
+                    {canShowTab("filter") && (
+                        <bd.Panel title={<T>filter</T>} size="md">
+                            <div className="bd-form-flex p-s-3">
+                                <bd2.FormikSwitch name="filterable" label={<T>filterable</T>} size="sm" width="6rem" />
+                                <bd2.FormikSwitch name="hasFilterVariant" label={<T>filter-variant</T>} size="sm" width="6rem" />
+                                <bd2.FormikInput name="defaultFilter" label={<T>default-filter</T>} width="12rem" className="flex-grow-1" />
+                            </div>
+                        </bd.Panel>
+                    )}
+                    {canShowTab("data") && (
+                        <bd.Panel title={<T>data</T>} size="md">
+                            <div className="p-s-3">
+                                <bd2.FormikInput name="tableName" label={<T>table-name</T>} width="15rem" />
+                                <div className="bd-form-flex">
+                                    <div className="row g-0 w-100">
+                                        <div className="col-12 col-md-6 col-lg-3">
+                                            <bd2.FormikTextArea name="selectQuery" label={t("select-query")} height="4rem" />
+                                        </div>
+                                        <div className="col-12 col-md-6 col-lg-3">
+                                            <bd2.FormikTextArea name="insertQuery" label={t("insert-query")} height="4rem" />
+                                        </div>
+                                        <div className="col-12 col-md-6 col-lg-3">
+                                            <bd2.FormikTextArea name="updateQuery" label={t("update-query")} height="4rem" />
+                                        </div>
+                                        <div className="col-12 col-md-6 col-lg-3">
+                                            <bd2.FormikTextArea name="deleteQuery" label={t("delete-query")} height="4rem" />
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-                        )}
+                        </bd.Panel>
+                    )}
 
-                        {canShowTab("filter") && (
-                            <bd.Panel title={<T>filter</T>} size="md">
-                                <div className="bd-form-flex p-s-3">
-                                    <bd2.FormikSwitch name="filterable" label={<Text>filterable</Text>} width="6rem" />
-                                    <bd2.FormikSwitch name="hasFilterVariant" label={<Text>filter-variant</Text>} width="6rem" />
-                                    <bd2.FormikInput
-                                        name="defaultFilter"
-                                        label={<Text>default-filter</Text>}
-                                        width="12rem"
-                                        className="flex-grow-1"
-                                    />
-                                </div>
-                            </bd.Panel>
-                        )}
-                        {canShowTab("data") && (
-                            <bd.Panel title={<T>data</T>} size="md">
-                                <div className="p-s-3">
-                                    <bd2.FormikInput name="tableName" label={<Text>table-name</Text>} width="15rem" />
-                                    <div className="bd-form-flex">
-                                        <div className="row g-0 w-100">
-                                            <div className="col-12 col-md-6 col-lg-3">
-                                                <bd2.FormikTextArea name="selectQuery" label={t("select-query")} height="4rem" />
-                                            </div>
-                                            <div className="col-12 col-md-6 col-lg-3">
-                                                <bd2.FormikTextArea name="insertQuery" label={t("insert-query")} height="4rem" />
-                                            </div>
-                                            <div className="col-12 col-md-6 col-lg-3">
-                                                <bd2.FormikTextArea name="updateQuery" label={t("update-query")} height="4rem" />
-                                            </div>
-                                            <div className="col-12 col-md-6 col-lg-3">
-                                                <bd2.FormikTextArea name="deleteQuery" label={t("delete-query")} height="4rem" />
-                                            </div>
-                                        </div>
+                    {canShowTab("authorization") && (
+                        <bd.Panel title={<T>authorization</T>} size="md">
+                            <div className="bd-form-flex p-s-3">
+                                <div className="row g-0 w-100">
+                                    <div className="col-12 col-md-6 col-lg-4">
+                                        <bd2.FormikInput name="azGrid" label={t("azGrid")} />
+                                    </div>
+                                    <div className="col-12 col-md-6 col-lg-4">
+                                        <bd2.FormikInput name="azSelect" label={t("azSelect")} />
+                                    </div>
+                                    <div className="col-12 col-md-6 col-lg-4">
+                                        <bd2.FormikInput name="azInsert" label={t("azInsert")} />
+                                    </div>
+                                    <div className="col-12 col-md-6 col-lg-4">
+                                        <bd2.FormikInput name="azUpdate" label={t("azUpdate")} />
+                                    </div>
+                                    <div className="col-12 col-md-6 col-lg-4">
+                                        <bd2.FormikInput name="azDelete" label={t("azDelete")} />
                                     </div>
                                 </div>
-                            </bd.Panel>
-                        )}
-
-                        {canShowTab("authorization") && (
-                            <bd.Panel title={<T>authorization</T>} size="md">
-                                <div className="bd-form-flex p-s-3">
-                                    <div className="row g-0 w-100">
-                                        <div className="col-12 col-md-6 col-lg-4">
-                                            <bd2.FormikInput name="azGrid" label={t("azGrid")} />
-                                        </div>
-                                        <div className="col-12 col-md-6 col-lg-4">
-                                            <bd2.FormikInput name="azSelect" label={t("azSelect")} />
-                                        </div>
-                                        <div className="col-12 col-md-6 col-lg-4">
-                                            <bd2.FormikInput name="azInsert" label={t("azInsert")} />
-                                        </div>
-                                        <div className="col-12 col-md-6 col-lg-4">
-                                            <bd2.FormikInput name="azUpdate" label={t("azUpdate")} />
-                                        </div>
-                                        <div className="col-12 col-md-6 col-lg-4">
-                                            <bd2.FormikInput name="azDelete" label={t("azDelete")} />
-                                        </div>
-                                    </div>
-                                </div>
-                            </bd.Panel>
-                        )}
-                    </bd2.FormikForm>
-                </div>
-
-                {canShowTab("columns") && (
-                    <>
-                        <TableTitlebar
-                            tableApi={tableApi}
-                            hideSearch
-                            hideSettings
-                            title="Columns"
-                            fixed
-                            buttons={
-                                <>
-                                    <bd.Button
-                                        variant="icon"
-                                        size="md"
-                                        onClick={(e) => {
-                                            var table_name = formRef.current.values["tableName"];
-                                            gridBuilderApi
-                                                .schemaColumn(table_name)
-                                                .then((schemaColumns) => {
-                                                    let d = [...data];
-                                                    schemaColumns.forEach((x) => {
-                                                        const f = d.find((z) => z.name === x.name);
-                                                        if (!f) d = [...d, x];
-                                                        else {
-                                                            f.dataType = x.dataType;
-                                                            f.maxLen = x.maxLen;
-                                                            f.isPK = x.isPK;
-                                                            f.isNull = x.isNull;
-                                                            f.defaultValue = x.defaultValue;
-                                                            f.ordinalPosition = x.ordinalPosition;
-                                                        }
-                                                    });
-                                                    setData(d);
-                                                })
-                                                .catch((ex) => notify.error(ex));
-                                        }}
-                                    >
-                                        <icons.Sync />
-                                    </bd.Button>
-
-                                    <bd.Button variant="text" size="md" onClick={(e) => setColumn(newColumnObject)}>
-                                        <icons.Add />
-                                        <Text>add</Text>
-                                    </bd.Button>
-
-                                    <bd.Button
-                                        variant="text"
-                                        size="md"
-                                        disabled={!tableApi.selectedFlatRows.length}
-                                        onClick={(e) => {
-                                            setColumn(tableApi.selectedFlatRows[0].original);
-                                        }}
-                                    >
-                                        <icons.Edit />
-                                        <Text>edit</Text>
-                                    </bd.Button>
-
-                                    <bd.Button
-                                        variant="text"
-                                        size="md"
-                                        disabled={!tableApi.selectedFlatRows.length}
-                                        onClick={(e) => {
-                                            const updatedRows = data.filter((x, index) => !tableApi.state.selectedRowIds[index]);
-                                            setData(updatedRows);
-                                            tableApi.state.selectedRowIds = {};
-                                        }}
-                                    >
-                                        <icons.Delete />
-                                        <Text>delete</Text>
-                                    </bd.Button>
-                                </>
-                            }
-                        />
-
-                        <RenderTableDiv
-                            tableApi={tableApi}
-                            //resizable
-                            //multiSelect
-                            singleSelect
-                            hideCheckbox
-                            //hasSummary
-                            showTableInfo
-                            //showPageSize
-                            //enablePaging
-                            //enableGrouping
-                            enableSorting
-                            //editable
-                            clickAction="select"
-                            className="border nano-scroll bg-default"
-                            //style={{ minHeight: 400 }}
-                            hover
-                            //striped
-                            //hasWhitespace
-                            //stickyFooter
-                            onShowMoreClick={(row) => {
-                                tableApi.state.selectedRowIds = {};
-                                setColumn(row.values);
-                            }}
-                        />
-                    </>
-                )}
+                            </div>
+                        </bd.Panel>
+                    )}
+                </bd2.FormikForm>
             </div>
+
+            {canShowTab("columns") && (
+                <>
+                    <TableTitlebar
+                        tableApi={tableApi}
+                        hideSearch
+                        hideSettings
+                        title="Columns"
+                        fixed
+                        buttons={
+                            <>
+                                <bd.Button
+                                    variant="icon"
+                                    size="md"
+                                    onClick={(e) => {
+                                        var table_name = formRef.current.values["tableName"];
+                                        gridBuilderApi
+                                            .schemaColumn(table_name)
+                                            .then((schemaColumns) => {
+                                                let d = [...data];
+                                                schemaColumns.forEach((x) => {
+                                                    const f = d.find((z) => z.name === x.name);
+                                                    if (!f) d = [...d, x];
+                                                    else {
+                                                        f.dataType = x.dataType;
+                                                        f.maxLen = x.maxLen;
+                                                        f.isPK = x.isPK;
+                                                        f.isNull = x.isNull;
+                                                        f.defaultValue = x.defaultValue;
+                                                        f.ordinalPosition = x.ordinalPosition;
+                                                    }
+                                                });
+                                                setData(d);
+                                            })
+                                            .catch((ex) => notify.error(ex));
+                                    }}
+                                >
+                                    <icons.Sync />
+                                </bd.Button>
+
+                                <bd.Button variant="text" size="md" onClick={(e) => setColumn(newColumnObject)}>
+                                    <icons.Add />
+                                    <T>add</T>
+                                </bd.Button>
+
+                                <bd.Button
+                                    variant="text"
+                                    size="md"
+                                    disabled={!tableApi.selectedFlatRows.length}
+                                    onClick={(e) => {
+                                        setColumn(tableApi.selectedFlatRows[0].original);
+                                    }}
+                                >
+                                    <icons.Edit />
+                                    <T>edit</T>
+                                </bd.Button>
+
+                                <bd.Button
+                                    variant="text"
+                                    size="md"
+                                    disabled={!tableApi.selectedFlatRows.length}
+                                    onClick={(e) => {
+                                        const updatedRows = data.filter((x, index) => !tableApi.state.selectedRowIds[index]);
+                                        setData(updatedRows);
+                                        tableApi.state.selectedRowIds = {};
+                                    }}
+                                >
+                                    <icons.Delete />
+                                    <T>delete</T>
+                                </bd.Button>
+                            </>
+                        }
+                    />
+
+                    <RenderTableDiv
+                        tableApi={tableApi}
+                        //resizable
+                        //multiSelect
+                        singleSelect
+                        hideCheckbox
+                        //hasSummary
+                        showTableInfo
+                        //showPageSize
+                        //enablePaging
+                        //enableGrouping
+                        enableSorting
+                        //editable
+                        clickAction="select"
+                        className="nano-scroll bg-default"
+                        //style={{ minHeight: 400 }}
+                        hover
+                        //striped
+                        //hasWhitespace
+                        //stickyFooter
+                        onShowMoreClick={(row) => {
+                            tableApi.state.selectedRowIds = {};
+                            setColumn(row.values);
+                        }}
+                    />
+                </>
+            )}
         </>
     );
 }

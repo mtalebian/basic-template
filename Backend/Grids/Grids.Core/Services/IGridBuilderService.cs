@@ -11,6 +11,7 @@ namespace Forms.Core
         void Update(ref GridGroup group);
         void DeleteGroup(string projectId, int groupId);
 
+        IList<Grid> GetAllGrids(string projectId);
         IList<Grid> GetGrids(string projectId, int groupId);
         Grid GetGrid(string projectId, string tableName);
         void SaveGrid(ref Grid item, IList<GridColumn> columns);

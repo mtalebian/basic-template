@@ -107,6 +107,14 @@ namespace Forms.Data
                 .IsRequired();
         }
 
+        internal void DefineAz<TProperty>([NotNull] Expression<Func<T, TProperty>> propertyExpression)
+        {
+            Builder.Entity<T>().Property(propertyExpression)
+                .HasMaxLength(1000)
+                .IsUnicode(true)
+                .IsRequired(false);
+        }
+
         internal void DefineGroupCode<TProperty>([NotNull] Expression<Func<T, TProperty>> propertyExpression)
         {
             Builder.Entity<T>().Property(propertyExpression)

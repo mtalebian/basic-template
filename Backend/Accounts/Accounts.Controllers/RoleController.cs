@@ -511,7 +511,7 @@ namespace Accounts.Controllers
         //..............................................................
         [EnableCors("react")]
         [HttpGet("user-roles/{projectId}/{userId}")]
-        public async Task<Response<List<UserRoleGridDTO>>> GetUserRoles(string projectId, long userId)
+        public async Task<Response<List<UserRoleGridDTO>>> GetUserRoles(string projectId, int userId)
         {
             var app = await accountService.GetProjectAsync(projectId);
             if (app == null)
@@ -590,7 +590,7 @@ namespace Accounts.Controllers
 
         [EnableCors("react")]
         [HttpDelete("delete-user-role/{projectId}/{roleId}/{userId}")]
-        public async Task<Response> DeleteUserRole(string projectId, string roleId, long userId)
+        public async Task<Response> DeleteUserRole(string projectId, string roleId, int userId)
         {
             try
             {
@@ -615,7 +615,7 @@ namespace Accounts.Controllers
         //..........................................................
         [EnableCors("react")]
         [HttpGet("user-composite-roles/{projectId}/{userId}")]
-        public async Task<Response<List<UserCompositeRoleGridDTO>>> GetUserCompositeRoles(string projectId, long userId)
+        public async Task<Response<List<UserCompositeRoleGridDTO>>> GetUserCompositeRoles(string projectId, int userId)
         {
             var app = await accountService.GetProjectAsync(projectId);
             if (app == null)
@@ -695,7 +695,7 @@ namespace Accounts.Controllers
 
         [EnableCors("react")]
         [HttpDelete("delete-user-composite-role/{projectId}/{compositeRoleId}/{userId}")]
-        public async Task<Response> DeleteUserCompositeRole(string projectId, string compositeRoleId, long userId)
+        public async Task<Response> DeleteUserCompositeRole(string projectId, string compositeRoleId, int userId)
         {
             try
             {

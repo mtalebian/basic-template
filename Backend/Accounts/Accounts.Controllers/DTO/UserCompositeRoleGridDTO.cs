@@ -6,7 +6,7 @@ namespace Accounts.Controllers
     public class UserRoleGridDTO
     {
         public string projectId { get; set; }
-        public long UserId { get; set; }
+        public int UserId { get; set; }
         public string RoleId { get; set; }
         public string RoleTitle { get; set; }
         public string UserName { get; set; }

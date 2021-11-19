@@ -1,10 +1,10 @@
-﻿namespace Forms.Controllers
+﻿using System.Collections.Generic;
+
+namespace Forms.Controllers
 {
     public class GroupInfoDTO
     {
-        public int Id { get; set; }
-
-        public string Title { get; set; }
-        public GroupItemDTO[] Items { get; set; }
+        public IList<GroupMenuDTO> Groups { get; set; }
+        public IList<GridMenuDTO> Grids { get; set; }
     }
 }

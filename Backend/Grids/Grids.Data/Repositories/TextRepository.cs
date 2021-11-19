@@ -5,7 +5,7 @@ namespace Forms.Data
 {
     public class TextRepository : Repository<Text>, ITextRepository
     {
-        public TextRepository(FormDbContext context) : base(context)
+        public TextRepository(GridsDbContext context) : base(context)
         {
         }
     }
