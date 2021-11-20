@@ -6,7 +6,7 @@ namespace Accounts.Controllers
     public class UserUpdateDTO
     {
         [Required(ErrorMessage ="UserId Is Null")]
-        public long Id { get; set; }
+        public int Id { get; set; }
 
         [Required(ErrorMessage = "Enter the FirstName value")]
         [MinLength(3, ErrorMessage = "The length FirstName is at least 3 characters")]

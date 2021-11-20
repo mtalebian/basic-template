@@ -190,9 +190,12 @@ namespace Accounts.Data
 
             Menu.Entity()
                 .HasData(
-                    new Menu { ProjectId = "project1", Id = "config-admin-grids", ParentId = "config", Title = "Maintain base tables", Url = "/admin/grids" },
+                    new Menu { ProjectId = "project1", Id = "config-grid-builder", ParentId = "config", Title = "Grid builder", Url = "/admin/grid-builder" },
+                    new Menu { ProjectId = "project1", Id = "config-grids", ParentId = "config", Title = "Maintain base tables", Url = "/admin/grids" },
+                    new Menu { ProjectId = "project1", Id = "config-grid", ParentId = "config", Title = "Maintain table", Url = "/admin/grid" },
+
                     new Menu { ProjectId = "project1", Id = "config-menu", ParentId = "config", Title = "Maintain project menu", Url = "/admin/menu" },
-                    new Menu { ProjectId = "project1", Id = "config-table-designer", ParentId = "config", Title = "Table designer", Url = "/admin/table-designer" },
+
                     new Menu { ProjectId = "project1", Id = "users", ParentId = "admin", Title = "Manage Users", Url = "/admin/users" },
                      new Menu { ProjectId = "project1", Id = "roles", ParentId = "admin", Title = "Manage Roles", Url = "/admin/roles" },
                      new Menu { ProjectId = "project1", Id = "composite-roles", ParentId = "admin", Title = "Manage Composite Role", Url = "/admin/composite-roles" }

@@ -1,5 +1,6 @@
 ﻿using Accounts.Core;
 using Accounts.Services;
+using Common.Security;
 
 namespace Microsoft.Extensions.DependencyInjection
 {
@@ -24,10 +25,12 @@ namespace Microsoft.Extensions.DependencyInjection
         {
             services.AddScoped<IUserService, UserService>();
         }
+
         public static void AddAuthorizationService<TUser>(this IServiceCollection services) where TUser : User
         {
             services.AddScoped<IApplicationService, ApplicationService>();
             services.AddScoped<IRoleService, RoleService>();
+            services.AddScoped<IAzCheckService, AzCheckService>();
         }
 
     }

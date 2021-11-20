@@ -55,7 +55,7 @@ namespace Accounts.Controllers
 
         [EnableCors("react")]
         [HttpGet("user-info")]
-        public Response<UserUpdateDTO> GetUserById(long userId)
+        public Response<UserUpdateDTO> GetUserById(int userId)
         {
             if (userId == default(long))
                 return new Response<UserUpdateDTO>(Messages.InvalidInfo);
@@ -130,7 +130,7 @@ namespace Accounts.Controllers
 
         [EnableCors("react")]
         [HttpDelete("delete-user")]
-        public Response DeleteUser(long userId)
+        public Response DeleteUser(int userId)
         {
             var user = userService.GetUser(userId);
             if (user is null) return new Response(Messages.InvalidInfo);

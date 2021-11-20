@@ -3,10 +3,10 @@ using System.Collections.Generic;
 
 namespace Accounts.Core
 {
-    public interface IUserRoleRepository : IRepository<UserRole, long, string, string>
+    public interface IUserRoleRepository : IRepository<UserRole, int, string, string>
     {
-        IList<UserRole> GetAllUserRole(string projectId,long userId);
+        IList<UserRole> GetAllUserRole(string projectId, int userId);
 
-        UserRole GetUserRole(string projectId,string roleId, long userId);
+        UserRole GetUserRole(string projectId,string roleId, int userId);
     }
 }
