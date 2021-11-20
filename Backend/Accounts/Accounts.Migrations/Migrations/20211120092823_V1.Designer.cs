@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Accounts.Migrations.Migrations
 {
     [DbContext(typeof(AccountDbContext))]
-    [Migration("20211119212027_V1")]
+    [Migration("20211120092823_V1")]
     partial class V1
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -438,6 +438,27 @@ namespace Accounts.Migrations.Migrations
                     b.ToTable("Roles", "tmp");
                 });
 
+            modelBuilder.Entity("Accounts.Core.RoleCompositeRole", b =>
+                {
+                    b.Property<string>("ProjectId")
+                        .HasMaxLength(30)
+                        .HasColumnType("nvarchar(30)");
+
+                    b.Property<string>("RoleId")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("CompositeRoleId")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.HasKey("ProjectId", "RoleId", "CompositeRoleId");
+
+                    b.HasIndex("ProjectId", "CompositeRoleId");
+
+                    b.ToTable("RoleCompositeRoles", "tmp");
+                });
+
             modelBuilder.Entity("Accounts.Core.User", b =>
                 {
                     b.Property<int>("Id")
@@ -528,8 +549,8 @@ namespace Accounts.Migrations.Migrations
                         {
                             Id = 1,
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "886c574f-d100-44fd-a115-3d12f57b508f",
-                            CreatedAt = new DateTime(2021, 11, 20, 0, 50, 26, 565, DateTimeKind.Local).AddTicks(7108),
+                            ConcurrencyStamp = "08318f04-5338-4fa8-b7d4-cc976ab8e52f",
+                            CreatedAt = new DateTime(2021, 11, 20, 12, 58, 23, 567, DateTimeKind.Local).AddTicks(4375),
                             EmailConfirmed = false,
                             FirstName = "",
                             IsDeleted = false,
@@ -539,7 +560,7 @@ namespace Accounts.Migrations.Migrations
                             LockoutEnabled = false,
                             PasswordHash = "PABPyu6/prVEQ4QbBrmcATJsjw/1yoli07rNI6EJ764=",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "13f8fa15-3b1d-4bf6-b8ab-e922361b80be",
+                            SecurityStamp = "22ca5661-7ae4-43be-8a3f-c2201a1e4639",
                             UserName = "admin",
                             WindowsAuthenticate = false
                         });
@@ -829,6 +850,25 @@ namespace Accounts.Migrations.Migrations
                     b.Navigation("Application");
                 });
 
+            modelBuilder.Entity("Accounts.Core.RoleCompositeRole", b =>
+                {
+                    b.HasOne("Accounts.Core.CompositeRole", "CompositeRole")
+                        .WithMany("RoleCompositeRoles")
+                        .HasForeignKey("ProjectId", "CompositeRoleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Accounts.Core.Role", "Role")
+                        .WithMany("RoleCompositeRoles")
+                        .HasForeignKey("ProjectId", "RoleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("CompositeRole");
+
+                    b.Navigation("Role");
+                });
+
             modelBuilder.Entity("Accounts.Core.UserCompositeRole", b =>
                 {
                     b.HasOne("Accounts.Core.User", "User")
@@ -915,6 +955,8 @@ namespace Accounts.Migrations.Migrations
 
             modelBuilder.Entity("Accounts.Core.CompositeRole", b =>
                 {
+                    b.Navigation("RoleCompositeRoles");
+
                     b.Navigation("UserCompositeRoles");
                 });
 
@@ -939,6 +981,8 @@ namespace Accounts.Migrations.Migrations
             modelBuilder.Entity("Accounts.Core.Role", b =>
                 {
                     b.Navigation("Authorizations");
+
+                    b.Navigation("RoleCompositeRoles");
 
                     b.Navigation("UserRoles");
                 });

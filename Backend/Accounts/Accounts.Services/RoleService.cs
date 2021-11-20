@@ -51,11 +51,11 @@ namespace Accounts.Services
 
         //..............................................UserRole
 
-        public IList<UserRole> GetAllUserRole(string projectId, int userId)
+        public IList<UserRole> GetAllUserRole(string projectId, long userId)
         {
             return db.UserRoles.GetAllUserRole(projectId, userId);
         }
-        public UserRole GetUserRole(string projectId, string roleId, int userId)
+        public UserRole GetUserRole(string projectId, string roleId, long userId)
         {
             return db.UserRoles.GetUserRole(projectId, roleId, userId);
         }
@@ -64,7 +64,7 @@ namespace Accounts.Services
             db.UserRoles.Add(userRole);
             db.SaveChanges();
         }
-        public void DeleteUserRole(string projectId, string roleId, int userId)
+        public void DeleteUserRole(string projectId, string roleId, long userId)
         {
             var userRole = GetUserRole(projectId, roleId, userId);
             if (userRole is null) throw new Exception("Record not found!");
@@ -73,11 +73,11 @@ namespace Accounts.Services
         }
 
         //..............................................UserCompositeRole
-        public IList<UserCompositeRole> GetAllUserCompositeRole(string projectId, int userId)
+        public IList<UserCompositeRole> GetAllUserCompositeRole(string projectId, long userId)
         {
             return db.UserCompositeRoles.GetAllUserCompositeRole(projectId, userId);
         }
-        public UserCompositeRole GetUserCompositeRole(string projectId, string compositeRoleId, int userId)
+        public UserCompositeRole GetUserCompositeRole(string projectId, string compositeRoleId, long userId)
         {
             return db.UserCompositeRoles.GetUserCompositeRole(projectId, compositeRoleId, userId);
         }
@@ -87,7 +87,7 @@ namespace Accounts.Services
             db.SaveChanges();
         }
 
-        public void DeleteUserCompositeRole(string projectId, string compositeRoleId, int userId)
+        public void DeleteUserCompositeRole(string projectId, string compositeRoleId, long userId)
         {
             var userCompositeRole = GetUserCompositeRole(projectId, compositeRoleId, userId);
             if (userCompositeRole is null) throw new Exception("Record not found!");
@@ -97,11 +97,11 @@ namespace Accounts.Services
         //................................................CompositeRoles
         public IList<CompositeRole> GetAllCompositeRoles(string projectId)
         {
-            return db.CompositeRoles.Where(x => x.ProjectId == projectId).ToList();
+            return db.CompositeRoles.Where(x=>x.ProjectId==projectId).ToList();
         }
-        public CompositeRole GetCompositeRoleById(string projectId, string id)
+        public CompositeRole GetCompositeRoleById(string projectId,string id)
         {
-            return db.CompositeRoles.Where(x => x.ProjectId == projectId && x.Id == id).FirstOrDefault();
+            return db.CompositeRoles.Where(x =>x.Id == id && x.ProjectId==projectId).FirstOrDefault();
         }
         public void InsertCompositeRole(CompositeRole item)
         {
@@ -116,7 +116,7 @@ namespace Accounts.Services
         }
         public void DeleteCompositeRole(string projectId, string id)
         {
-            var compositeRole = GetCompositeRoleById(projectId, id);
+            var compositeRole = GetCompositeRoleById(projectId,id);
             if (compositeRole is null) throw new Exception("Record not found!");
             db.CompositeRoles.Remove(compositeRole);
             db.SaveChanges();
@@ -190,6 +190,34 @@ namespace Accounts.Services
         public IList<AzObjectField> GetAllAzObjectField(string projectId)
         {
             return db.AzObjectFields.GetAllAzObjectField(projectId);
+        }
+        //...................................................RoleCompositeRole
+        public IList<RoleCompositeRole> GetAllRolesCompositeRole(string projectId, string compositeRoleId)
+        {
+            return db.RoleCompositeRoles.GetAllRolesCompositeRole(projectId, compositeRoleId);
+        }
+
+        public RoleCompositeRole GetRoleCompositeRole(string roleId, string compositeRoleId, string ProjectId)
+        {
+            return db.RoleCompositeRoles.Where(x => x.RoleId == roleId && x.CompositeRoleId == compositeRoleId && x.ProjectId == ProjectId).FirstOrDefault();
+        }
+
+        public void InsertRoleCompositeRole(RoleCompositeRole item)
+        {
+            db.RoleCompositeRoles.Add(item);
+            db.SaveChanges();
+        }
+
+        public void DeleteRolesCompositeRole(IList<RoleCompositeRole> items)
+        {
+            db.RoleCompositeRoles.RemoveRange(items);
+            db.SaveChanges();
+        }
+
+        public void InsertRolesCompositeRole(IList<RoleCompositeRole> items)
+        {
+            db.RoleCompositeRoles.AddRange(items);
+            db.SaveChanges();
         }
     }
 }

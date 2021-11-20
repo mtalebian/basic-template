@@ -15,6 +15,9 @@ namespace Accounts.Core
         IList<AzField> GetAzFieldsByObjectId(string projectId, string objectId);
         //...........................AzObjectField
         IList<AzObjectField> GetAllAzObjectField(string projectId);
+
+        //...........................RoleCompositeRole
+
         //..........................AzObject
         AzObject GetAzObjectById(string projectId, string id);
         IList<AzObject> GetAzObjects(string projectId);
@@ -26,7 +29,7 @@ namespace Accounts.Core
         void DeleteAzValues(IList<AzValue> azValues);
         //..........................CompositeRoles
         IList<CompositeRole> GetAllCompositeRoles(string projectId);
-        CompositeRole GetCompositeRoleById(string projectId, string id);
+        CompositeRole GetCompositeRoleById(string projectId,string id);
         void InsertCompositeRole(CompositeRole item);
         CompositeRole UpdateCompositeRole(CompositeRole item);
         void DeleteCompositeRole(string projectId, string id);
@@ -37,14 +40,21 @@ namespace Accounts.Core
         Role UpdateRole(Role item);
         void DeleteRole(string projectId, string id);
         //...........................UserCompositeRole
-        IList<UserCompositeRole> GetAllUserCompositeRole(string projectId, int userId);
-        UserCompositeRole GetUserCompositeRole(string projectId, string compositeRoleId, int userId);
+        IList<UserCompositeRole> GetAllUserCompositeRole(string projectId, long userId);
+        UserCompositeRole GetUserCompositeRole(string projectId, string compositeRoleId, long userId);
         void InsertUserCompositeRole(UserCompositeRole item);
-        void DeleteUserCompositeRole(string projectId, string compositeRoleId, int userId);
+        void DeleteUserCompositeRole(string projectId, string compositeRoleId, long userId);
         //..........................UserRole
-        IList<UserRole> GetAllUserRole(string projectId, int userId);
-        UserRole GetUserRole(string projectId, string roleId, int userId);
+        IList<UserRole> GetAllUserRole(string projectId, long userId);
+        UserRole GetUserRole(string projectId, string roleId, long userId);
         void InsertUserRole(UserRole item);
-        void DeleteUserRole(string projectId, string roleId, int userId);
+        void DeleteUserRole(string projectId, string roleId, long userId);
+        //.............................
+        IList<RoleCompositeRole> GetAllRolesCompositeRole(string projectId, string compositeRoleId);
+        RoleCompositeRole GetRoleCompositeRole(string roleId, string compositeRoleId, string ProjectId);
+        void InsertRoleCompositeRole(RoleCompositeRole item);
+        void InsertRolesCompositeRole(IList<RoleCompositeRole> items);
+        void DeleteRolesCompositeRole(IList<RoleCompositeRole> items);
+
     }
 }

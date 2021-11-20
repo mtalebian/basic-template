@@ -16,5 +16,8 @@ namespace Accounts.Core
 
         [IgnoreMap]
         public virtual ICollection<UserCompositeRole> UserCompositeRoles { get; set; }
+
+        [IgnoreMap]
+        public virtual ICollection<RoleCompositeRole> RoleCompositeRoles { get; set; }
     }
 }

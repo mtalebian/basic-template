@@ -14,5 +14,7 @@ namespace Accounts.Controllers
 
         [Required(ErrorMessage = "Title Is Required")]
         public string Title { get; set; }
+
+        public List<RoleDTO> Roles  { get; set; }
     }
 }

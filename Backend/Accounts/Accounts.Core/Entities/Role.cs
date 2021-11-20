@@ -21,7 +21,11 @@ namespace Accounts.Core
         [IgnoreMap]
         public virtual ICollection<UserRole> UserRoles { get; set; }
 
+        [IgnoreMap]
         public ICollection<Authorization> Authorizations { get; set; }
+
+        [IgnoreMap]
+        public virtual ICollection<RoleCompositeRole> RoleCompositeRoles { get; set; }
 
         public Role()
         {
