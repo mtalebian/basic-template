@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from "react";
-
 import * as bd from "react-basic-design";
-
 import classNames from "classnames";
 import { gridBuilderApi } from "../../../api/grid-builder-api";
 import { GridBuilderEditGroup } from "./edit-group";
@@ -19,6 +17,8 @@ export function GridBuilderApp() {
     const [grids, setGrids] = useState(null);
     const [editState, setEditState] = useState({ group: null, grid: null });
     const newGridObject = (groupId) => ({ groupId, dataColumns: [], flexLayout: false, hasFilterVariant: false, filterable: true });
+
+    useShell().fullWidth(true);
 
     function goBack() {
         setEditState({ group: null, grid: null });
@@ -121,7 +121,7 @@ export function GridBuilderApp() {
 
     return (
         <>
-            <div className="container-xl h-100">
+            <div className="container-fluid h-100">
                 <div className="row h-100 h-100">
                     <bd.List
                         variant="menu"
@@ -132,6 +132,7 @@ export function GridBuilderApp() {
                                 "d-none d-lg-block": editState.group || editState.grid,
                             }
                         )}
+                        style={{ maxWidth: 350 }}
                         // header={
                         //     <div className="bg-default border-bottom px-3 py-2 mb-2">
                         //         <input
@@ -152,7 +153,7 @@ export function GridBuilderApp() {
                         />
                     </bd.List>
 
-                    <div className="nano-scroll h-100 col-12 col-lg-9 overflow-auto p-0 border-end">
+                    <div className="nano-scroll h-100 col overflow-auto p-0 border-end">
                         {!editState.group && !editState.grid && (
                             <div className="middle h-100 text-secondary-text" style={{ opacity: 0.5 }}>
                                 <div>

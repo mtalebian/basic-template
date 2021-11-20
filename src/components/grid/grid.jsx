@@ -6,10 +6,11 @@ import { FilterBox } from "../filters/filter-box";
 import { TableTitlebar } from "../table";
 import { RenderTableDiv } from "../table/render-table-div";
 import { useReactTable } from "../table/use-react-table";
+import { EditGridRow } from "./edit-grid-row";
 
 const emptyData = [];
 
-export const Grid = ({ grid, loadData, parameters, ...props }) => {
+export const Grid = ({ grid, tableRef, loadData, parameters, multiSelect, ...props }) => {
     const [data, setData] = useState(grid.data ?? []);
     const [editState, setEditState] = useState({ edit: false, row: null });
 
@@ -18,7 +19,13 @@ export const Grid = ({ grid, loadData, parameters, ...props }) => {
         grid.data = grid.data.map((row, index) => (index === rowIndex ? new_row : row));
     };
 
-    const tableApi = useReactTable({ columns: grid.columns, data: grid.data ?? emptyData, updateData, flexLayout: grid.flexLayout });
+    const tableApi = useReactTable({
+        columns: grid.columns,
+        data: grid.data ?? emptyData,
+        defaultPageSize: grid.pageSize,
+        updateData,
+        flexLayout: grid.flexLayout,
+    });
 
     /*
     const deleteTableRow = (row) => {
@@ -54,28 +61,26 @@ export const Grid = ({ grid, loadData, parameters, ...props }) => {
             {!editState.edit && (
                 <>
                     {grid.filterable && (
-                        <div className="border-bottom bg-default">
-                            <div className="container">
-                                <FilterBox
-                                    grid={grid}
-                                    initialFilters={{}}
-                                    expanded
-                                    showSettings
-                                    systemIsBusy={false}
-                                    onExecute={(filters) => {
-                                        loadData(filters, parameters)
-                                            .then((x) => {
-                                                tableApi.state.selectedRowIds = {};
-                                                setData(x);
-                                            })
-                                            .catch(notify.error);
-                                    }}
-                                ></FilterBox>
-                            </div>
+                        <div className="border-bottom bg-default px-3">
+                            <FilterBox
+                                grid={grid}
+                                initialFilters={{}}
+                                expanded
+                                showSettings
+                                systemIsBusy={false}
+                                onExecute={(filters) => {
+                                    loadData(filters, parameters)
+                                        .then((x) => {
+                                            tableApi.state.selectedRowIds = {};
+                                            setData(x);
+                                        })
+                                        .catch(notify.error);
+                                }}
+                            ></FilterBox>
                         </div>
                     )}
 
-                    <div className="container mt-2" style={{ marginBottom: 70 }}>
+                    <div className="mt-2" style={{ marginBottom: 70 }}>
                         <TableTitlebar
                             title={grid.title}
                             tableApi={tableApi}
@@ -86,52 +91,59 @@ export const Grid = ({ grid, loadData, parameters, ...props }) => {
                             fixed
                             buttons={
                                 <>
-                                    <bd.Button
-                                        variant="text"
-                                        color="primary"
-                                        size="md"
-                                        onClick={(e) => {
-                                            //     var r = newRow();
-                                            //     setData([...data, r]);
-                                            tableApi.state.selectedRowIds = { [grid.data.length]: true };
-                                            setEditState({ edit: true, row: null });
-                                        }}
-                                    >
-                                        <T>add</T>
-                                    </bd.Button>
-                                    <bd.Button
-                                        variant="text"
-                                        color="primary"
-                                        size="md"
-                                        disabled={!tableApi.selectedFlatRows.length}
-                                        onClick={(e) => {
-                                            setEditState({ edit: true, row: tableApi.selectedFlatRows[0].original });
-                                        }}
-                                    >
-                                        <T>edit</T>
-                                    </bd.Button>
-                                    <bd.Button
-                                        variant="text"
-                                        color="primary"
-                                        size="md"
-                                        disabled={!tableApi.selectedFlatRows.length}
-                                        className="m-e-1"
-                                        onClick={(e) => {
-                                            // if (tableApi.selectedFlatRows.length !== 1) return;
-                                            // msgbox(<T>deleting-selected-row</T>, null, [
-                                            //     {
-                                            //         title: "delete",
-                                            //         action: (hide) => {
-                                            //             hide();
-                                            //             deleteTableRow(tableApi.selectedFlatRows[0]);
-                                            //         },
-                                            //     },
-                                            //     { title: "cancel" },
-                                            // ]);
-                                        }}
-                                    >
-                                        <T>delete</T>
-                                    </bd.Button>
+                                    {grid.canInsert && (
+                                        <bd.Button
+                                            variant="text"
+                                            color="primary"
+                                            size="md"
+                                            onClick={(e) => {
+                                                //     var r = newRow();
+                                                //     setData([...data, r]);
+                                                tableApi.state.selectedRowIds = { [grid.data.length]: true };
+                                                setEditState({ edit: true, row: null });
+                                            }}
+                                        >
+                                            <T>add</T>
+                                        </bd.Button>
+                                    )}
+                                    {grid.canUpdate && (
+                                        <bd.Button
+                                            variant="text"
+                                            color="primary"
+                                            size="md"
+                                            disabled={!tableApi.selectedFlatRows.length}
+                                            onClick={(e) => {
+                                                setEditState({ edit: true, row: tableApi.selectedFlatRows[0].original });
+                                            }}
+                                        >
+                                            <T>edit</T>
+                                        </bd.Button>
+                                    )}
+
+                                    {grid.canDelete && (
+                                        <bd.Button
+                                            variant="text"
+                                            color="primary"
+                                            size="md"
+                                            disabled={!tableApi.selectedFlatRows.length}
+                                            className="m-e-1"
+                                            onClick={(e) => {
+                                                // if (tableApi.selectedFlatRows.length !== 1) return;
+                                                // msgbox(<T>deleting-selected-row</T>, null, [
+                                                //     {
+                                                //         title: "delete",
+                                                //         action: (hide) => {
+                                                //             hide();
+                                                //             deleteTableRow(tableApi.selectedFlatRows[0]);
+                                                //         },
+                                                //     },
+                                                //     { title: "cancel" },
+                                                // ]);
+                                            }}
+                                        >
+                                            <T>delete</T>
+                                        </bd.Button>
+                                    )}
                                 </>
                             }
                         />
@@ -139,36 +151,48 @@ export const Grid = ({ grid, loadData, parameters, ...props }) => {
                         <RenderTableDiv
                             tableApi={tableApi}
                             //resizable
-                            //multiSelect
+                            multiSelect={multiSelect}
                             singleSelect
-                            //hideCheckbox
+                            hideCheckbox={grid.hideCheckbox}
                             //hasSummary
-                            //showTableInfo
-                            showPageSize
-                            enablePaging
-                            //enableGrouping
+                            showTableInfo={grid.showTableInfo}
+                            showPageSize={grid.pageSize > 0}
+                            enablePaging={grid.pageSize > 0}
+                            enableGrouping={grid.enableGrouping}
                             enableSorting
                             //editable
                             clickAction="toggle"
-                            className="border nano-scroll bg-default"
+                            className="nano-scroll bg-default"
                             //style={{ minHeight: 400 }}
                             hover
                             //striped
                             hasWhitespace={!grid.flexLayout}
                             //stickyFooter
-                            onShowMoreClick={(row) => {
-                                setEditState({ edit: true, row: row.values });
-                            }}
+                            onShowMoreClick={
+                                (grid.canInsert || grid.canUpdate) &&
+                                ((row) => {
+                                    setEditState({ edit: true, row: row.values });
+                                })
+                            }
                         />
                     </div>
                 </>
             )}
 
-            {/* {editState.edit && (
-                <EditTableRow
-                    table={table}
+            {editState.edit && (
+                <EditGridRow
+                    grid={grid}
+                    row={editState.row}
                     onGoBack={() => setEditState({ edit: false })}
-                    onChanged={(x, original) => {
+                    onChanged={(item, original) => {
+                        let new_list;
+                        // if (!item) new_list = grids.filter((x) => x.id !== original.id);
+                        // else if (!original.id) new_list = [...grids, item];
+                        // else new_list = grids.map((x) => (x.id !== original.id ? x : item));
+
+                        // setGrids(new_list);
+                        setEditState({ edit: false });
+                        /*
                         if (!original) setData([...data, x]);
                         else {
                             var i = findIndex(original, data, table.schema.dataColumns);
@@ -176,10 +200,10 @@ export const Grid = ({ grid, loadData, parameters, ...props }) => {
                             setData(data.map((item, index) => (index === i ? x : item)));
                         }
                         setEditState({ edit: false });
+                        */
                     }}
-                    row={editState.row}
                 />
-            )} */}
+            )}
         </>
     );
 };

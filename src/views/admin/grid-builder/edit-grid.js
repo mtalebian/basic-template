@@ -336,7 +336,7 @@ export function GridBuilderEditGrid({ table, onChanged, onGoBack }) {
                             <div className="bd-form-flex p-s-3">
                                 <div className="row g-0 w-100">
                                     <div className="col-12 col-md-6 col-lg-4">
-                                        <bd2.FormikInput name="azGrid" label={t("azGrid")} />
+                                        <bd2.FormikInput name="azView" label={t("azView")} />
                                     </div>
                                     <div className="col-12 col-md-6 col-lg-4">
                                         <bd2.FormikInput name="azSelect" label={t("azSelect")} />

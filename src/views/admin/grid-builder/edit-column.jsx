@@ -1,19 +1,14 @@
 import React, { useRef, useState } from "react";
-import { Form, Formik } from "formik";
 import * as yup from "yup";
 import * as bd from "react-basic-design";
 import * as bd2 from "../../../components/forms";
 import * as icons from "../../../assets/icons";
 import { T, Text } from "../../../components/basic/text";
-import { BasicSwitch } from "../../../components/basic-form/basic-switch";
-import { BasicInput } from "../../../components/basic-form/basic-input";
-import { BasicSelect } from "../../../components/basic-form/basic-select";
 
 export const EditColumn = ({ column, onGoBack, onChanged }) => {
     const insertMode = column.id === undefined;
     const formRef = useRef();
-    const [tab, setTab] = useState();
-    const canShowTab = (t) => !tab || tab === t;
+    const canShowTab = (t) => true;
 
     const onSaveClick = () => {
         var values = formRef.current.values;
@@ -23,7 +18,7 @@ export const EditColumn = ({ column, onGoBack, onChanged }) => {
     return (
         <>
             <div className="bg-default border-bottom">
-                <bd.Toolbar className="container">
+                <bd.Toolbar>
                     <bd.Button variant="icon" onClick={onGoBack} size="md" edge="start" className="m-e-2">
                         <icons.ArrowBackIos className="rtl-rotate-180" />
                     </bd.Button>
@@ -35,7 +30,7 @@ export const EditColumn = ({ column, onGoBack, onChanged }) => {
                 </bd.Toolbar>
             </div>
 
-            <div className="container" style={{ marginBottom: 70 }}>
+            <div style={{ marginBottom: 70 }}>
                 <div className="pb-3">
                     <bd2.FormikForm
                         initialValues={column}

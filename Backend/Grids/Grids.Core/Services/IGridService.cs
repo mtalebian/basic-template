@@ -20,8 +20,5 @@ namespace Forms.Core
         GridVariant SaveGridVariant(GridVariant variant);
         void UpdateGridVaraints(IList<GridVariant> variants);
         void DeleteGridVariant(int serial);
-
-
-        bool HasPermission(string azText, string userName, Dictionary<string, object> parameters);
     }
 }

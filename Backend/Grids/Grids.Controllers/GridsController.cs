@@ -8,6 +8,7 @@ using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json;
 
 namespace Forms.Controllers
 {
@@ -18,13 +19,13 @@ namespace Forms.Controllers
     public class GridsController : ControllerBase
     {
         private readonly IGridService service;
-        private readonly IAzCheckService azCheck;
+        private readonly IAzService AzService;
 
 
-        public GridsController(IGridService formService, IAzCheckService azCheck)
+        public GridsController(IGridService formService, IAzService azService)
         {
             this.service = formService;
-            this.azCheck = azCheck;
+            this.AzService = azService;
         }
 
 
@@ -32,14 +33,12 @@ namespace Forms.Controllers
         public Response<GroupInfoDTO> GetGroups(string projectId)
         {
             var userName = User.Identity.Name;
-            var applicationId = "";
-            var values = new Dictionary<string, string>();
             var groups = service.GetAllGroups(projectId);
 
             var az = groups
-                .Select(x => x.AzView??"")
+                .Select(x => x.AzView ?? "")
                 .Distinct()
-                .ToDictionary(x => x, x => azCheck.Validate(x, userName, applicationId, values).Length == 0);
+                .ToDictionary(x => x, x => AzService.HasPermission(x, userName, null));
 
             var grids = new List<Grid>();
             foreach (var g in groups)
@@ -49,7 +48,7 @@ namespace Forms.Controllers
                     var az_view = grid.AzView ?? "";
                     if (!az.ContainsKey(az_view))
                     {
-                        az.Add(az_view, azCheck.Validate(az_view, userName, applicationId, values).Length == 0);
+                        az.Add(az_view, AzService.HasPermission(az_view, userName, null));
                     }
                     if (az[az_view])
                         grids.Add(grid);
@@ -69,16 +68,16 @@ namespace Forms.Controllers
         {
             var grid = service.GetGrid(projectId, id);
 
-            if (!service.HasPermission(grid.AzView, User.Identity.Name, null))
+            if (!AzService.HasPermission(grid.AzView, User.Identity.Name, null))
                 return new Response<GridViewDTO>(Messages.Forbidden, "403");
 
             var columns = service.GetGridColumns(grid.ProjectId, grid.Id);
             var variants = service.GetGridVariants(grid.ProjectId, grid.Id);
 
             var result = grid.MapTo<GridViewDTO>();
-            result.CanInsert = string.IsNullOrEmpty(grid.AzInsert);
-            result.CanUpdate = string.IsNullOrEmpty(grid.AzUpdate);
-            result.CanDelete = string.IsNullOrEmpty(grid.AzDelete);
+            result.CanInsert = !string.IsNullOrEmpty(grid.AzInsert);
+            result.CanUpdate = !string.IsNullOrEmpty(grid.AzUpdate);
+            result.CanDelete = !string.IsNullOrEmpty(grid.AzDelete);
             result.DataColumns = columns.MapTo<GridColumnDTO>();
             result.Variants = variants.MapTo<GridVariantDTO>();
             return new Response<GridViewDTO>(result);
@@ -90,7 +89,7 @@ namespace Forms.Controllers
             var grid = service.GetGrid(projectId, id);
             var columns = service.GetGridColumns(grid.ProjectId, grid.Id);
 
-            if (!service.HasPermission(grid.AzSelect, User.Identity.Name, null))
+            if (!AzService.HasPermission(grid.AzSelect, User.Identity.Name, null))
                 return new Response<IList<Dictionary<string, object>>>(Messages.Forbidden);
 
             var data = service.ExecuteSelect(grid, columns, request.Filters, request.Parameters);
@@ -102,8 +101,7 @@ namespace Forms.Controllers
         public Response ExecGridInsert(string projectId, string id, [FromBody] Dictionary<string, object> values)
         {
             var grid = service.GetGrid(projectId, id);
-            if (!service.HasPermission(grid.AzInsert, User.Identity.Name, values))
-                return new Response(Messages.Forbidden);
+            if (!AzService.HasPermission(grid.AzInsert, User.Identity.Name, values)) return new Response(Messages.Forbidden);
             service.ExecuteInsert(grid, values);
             return new Response();
         }
@@ -112,7 +110,7 @@ namespace Forms.Controllers
         public Response ExecGridUpdate(string projectId, string id, [FromBody] Dictionary<string, object> values)
         {
             var grid = service.GetGrid(projectId, id);
-            if (!service.HasPermission(grid.AzUpdate, User.Identity.Name, values))
+            if (!AzService.HasPermission(grid.AzUpdate, User.Identity.Name, values))
                 return new Response(Messages.Forbidden);
             service.ExecuteUpdate(grid, values);
             return new Response();
@@ -122,7 +120,7 @@ namespace Forms.Controllers
         public Response ExecGridDelete(string projectId, string id, [FromBody] Dictionary<string, object> values)
         {
             var grid = service.GetGrid(projectId, id);
-            if (!service.HasPermission(grid.AzDelete, User.Identity.Name, values))
+            if (!AzService.HasPermission(grid.AzDelete, User.Identity.Name, values))
                 return new Response(Messages.Forbidden);
             service.ExecuteDelete(grid, values);
             return new Response();

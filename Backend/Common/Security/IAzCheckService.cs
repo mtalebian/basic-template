@@ -2,9 +2,8 @@
 
 namespace Common.Security
 {
-    public interface IAzCheckService
+    public interface IAzCheck
     {
-        string[] Validate(string authorizationText, string userName, string applicationId, Dictionary<string, string> parameters);
         string[] Validate(string userName, string objectId, Dictionary<string, string> values);
     }
 }

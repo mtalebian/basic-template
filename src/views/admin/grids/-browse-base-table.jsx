@@ -100,41 +100,39 @@ export const BrowseTable = ({ table, onGoBack }) => {
             {!editState.edit && (
                 <>
                     <div className="border-bottom bg-default">
-                        <div className="container">
-                            <FilterBox
-                                initialFilters={{ f1: 1, f2: "tow", f3: true }}
-                                expanded
-                                showSettings
-                                //variants={[{ title: "standard" }]}
-                                variants={null}
-                                systemIsBusy={false}
-                                onExecute={(filters) => {
-                                    gridsApi
-                                        .browseGrid(table.id, filters)
-                                        .then((x) => {
-                                            table.data = x.data;
-                                            tableApi.state.selectedRowIds = {};
-                                            setData(x.data);
-                                        })
-                                        .catch((ex) => {
-                                            notify.error(ex);
-                                        });
-                                }}
-                            >
-                                <Filter name="f1" label="F1" onBlur={(e) => 0} width="12rem" />
-                                <Filter name="f2" label="F2" onBlur={(e) => 0} width="12rem" />
-                                <Filter name="f3" label="F3" onBlur={(e) => 0} width="12rem" />
-                                <Filter name="f4" label="F4" onBlur={(e) => 0} width="12rem" />
-                                <Filter name="f5" label="F5" onBlur={(e) => 0} width="12rem" />
-                                {/*<Filter name="f6" label="F6" onBlur={(e) => 0} width="12rem" />
+                        <FilterBox
+                            initialFilters={{ f1: 1, f2: "tow", f3: true }}
+                            expanded
+                            showSettings
+                            //variants={[{ title: "standard" }]}
+                            variants={null}
+                            systemIsBusy={false}
+                            onExecute={(filters) => {
+                                gridsApi
+                                    .browseGrid(table.id, filters)
+                                    .then((x) => {
+                                        table.data = x.data;
+                                        tableApi.state.selectedRowIds = {};
+                                        setData(x.data);
+                                    })
+                                    .catch((ex) => {
+                                        notify.error(ex);
+                                    });
+                            }}
+                        >
+                            <Filter name="f1" label="F1" onBlur={(e) => 0} width="12rem" />
+                            <Filter name="f2" label="F2" onBlur={(e) => 0} width="12rem" />
+                            <Filter name="f3" label="F3" onBlur={(e) => 0} width="12rem" />
+                            <Filter name="f4" label="F4" onBlur={(e) => 0} width="12rem" />
+                            <Filter name="f5" label="F5" onBlur={(e) => 0} width="12rem" />
+                            {/*<Filter name="f6" label="F6" onBlur={(e) => 0} width="12rem" />
                                  <Filter name="f7" label="F7" onBlur={(e) => 0} width="12rem" />
                                 <Filter name="f8" label="F8" onBlur={(e) => 0} width="12rem" />
                                 <Filter name="f9" label="F9" onBlur={(e) => 0} width="12rem" /> */}
-                            </FilterBox>
-                        </div>
+                        </FilterBox>
                     </div>
 
-                    <div className="container mt-2" style={{ marginBottom: 70 }}>
+                    <div className="mt-2" style={{ marginBottom: 70 }}>
                         <TableTitlebar
                             title={table.title}
                             tableApi={tableApi}

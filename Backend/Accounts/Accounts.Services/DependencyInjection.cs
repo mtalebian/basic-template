@@ -30,7 +30,7 @@ namespace Microsoft.Extensions.DependencyInjection
         {
             services.AddScoped<IApplicationService, ApplicationService>();
             services.AddScoped<IRoleService, RoleService>();
-            services.AddScoped<IAzCheckService, AzCheckService>();
+            services.AddScoped<IAzCheck, AzCheckService>();
         }
 
     }

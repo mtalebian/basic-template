@@ -18,9 +18,9 @@ namespace Forms.Controllers
     public class GridBuilderController : ControllerBase
     {
         private readonly IGridBuilderService service;
-        private readonly IAzCheckService azCheck;
+        private readonly IAzCheck azCheck;
 
-        public GridBuilderController(IGridBuilderService formService, IAzCheckService azCheck)
+        public GridBuilderController(IGridBuilderService formService, IAzCheck azCheck)
         {
             this.service = formService;
             this.azCheck = azCheck;

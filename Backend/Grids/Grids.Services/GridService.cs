@@ -240,12 +240,5 @@ namespace Forms.Services
             db.SaveChanges();
         }
 
-
-
-        public bool HasPermission(string azText, string userName, Dictionary<string, object> parameters)
-        {
-            return azText == "*";
-        }
-
     }
 }
