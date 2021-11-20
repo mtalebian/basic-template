@@ -83,24 +83,27 @@ export const FormikInput = ({
 
         switch (e.keyCode) {
             case ESC:
+                stopEvent(e);
                 closeAll();
-                return;
+                return false;
 
             case ENTER:
+                stopEvent(e);
                 if (!e?.shiftKey && !e?.ctrlKey) {
                     if (items) onToggleSelect();
                     else if (menu) onToggleMenu();
                 }
-                return;
+                return false;
 
             case UP:
             case DOWN:
+                stopEvent(e);
                 if (!multiSelect && Array.isArray(items)) {
                     let delta = e.keyCode === UP ? -1 : 1;
                     let idx = selectedItemIndex + delta;
                     if (idx >= 0 && idx < items.length) selectItem(items[idx]);
                 }
-                break;
+                return false;
 
             default:
                 break;

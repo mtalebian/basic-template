@@ -1,0 +1,29 @@
+﻿Add-Migration V1 -Context GridsDbContext -StartupProject Backend.Api
+
+Add-Migration V1 -Context GridsDbContext
+Update-Database -Context GridsDbContext
+
+
+
+
+
+Add-Migration V1 -Context AccountDbContext
+Update-Database -Context AccountDbContext
+
+
+
+
+
+dotnet tool install
+
+cd d:\ ... \basic-template\Backend\Grids\Accounts.Migrations
+
+dotnet ef --startup-project G:\basic-template\Backend\Backend.Api/ migrations add V3 --context AccountDbContext
+dotnet ef database update --context AccountDbContext
+
+
+
+cd d:\ ... \basic-template\Backend\Grids\Grids.Migrations
+
+dotnet ef --startup-project C:\Users\10201752\Desktop\Project\basic-template\Backend\Backend.Api/ migrations add V3 --context GridsDbContext
+dotnet ef database update --context GridsDbContext

@@ -4,6 +4,8 @@ import * as bd from "react-basic-design";
 import { Modal, Tab } from "react-bootstrap";
 import * as icons from "../../assets/icons";
 import { T, Text, TOptGroup, TOption } from "../basic/text";
+import { Grid } from "../grid/grid";
+import { useGrid } from "../grid/use-grid";
 
 const ROPs = [
     { id: "*x*", title: "contains", isPattern: true },
@@ -24,6 +26,7 @@ export const FilterLookup = ({ name, title, show, setShow, isString, checkTable,
     const [showPaste, setShowPaste] = useState(false);
     const [field, , helper] = useField({ name });
     const newRow = () => ({ rop: ROPs[isString ? 0 : 1].id, x: null, y: null });
+    const [grid, loadData] = useGrid({ id: checkTable });
 
     const hide = () => setShow(false);
     let height = window.innerHeight - 200;
@@ -108,9 +111,9 @@ export const FilterLookup = ({ name, title, show, setShow, isString, checkTable,
                         </bd.TabStrip>
                     )}
 
-                    <Modal.Body className="p-0 border-top bg-shade-3" style={{ height }}>
+                    <Modal.Body className="p-0 border-top bg-shade-3 overflow-auto" style={{ height }}>
                         <Tab.Content>
-                            <Tab.Pane eventKey="check-table">TODO</Tab.Pane>
+                            <Tab.Pane eventKey="check-table">{grid.id && <Grid grid={grid} loadData={loadData} />}</Tab.Pane>
 
                             <Tab.Pane eventKey="conditions">
                                 <div className="h-100 d-flex flex-column overflow-auto nano-scroll">

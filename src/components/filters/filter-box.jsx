@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useRef, useState } from "react";
 import * as bd from "react-basic-design";
 import * as bd2 from "../../components/forms";
 import * as icons from "../../assets/icons";
-import { Text, translate } from "../../components/basic/text";
+import { T, translate } from "../../components/basic/text";
 import { Collapse } from "react-bootstrap";
 import { FormRow } from "../forms/form-row";
 import { gridsApi } from "../../api/grids-api";
@@ -22,7 +22,6 @@ export const FilterBox = ({
     validationSchema,
     onVariantChanged,
     onExecute,
-    onOpenSettings,
     children,
     ...props
 }) => {
@@ -35,6 +34,8 @@ export const FilterBox = ({
     const [showManage, setShowManage] = useState(false);
 
     const isChanged = currentVariant && currentVariant.createdBy === account.userName;
+
+    const clearAll = () => formRef.current.setValues({});
 
     const closeAllDropdowns = () => {
         var elems = document.querySelectorAll(".dropdown.show");
@@ -90,7 +91,7 @@ export const FilterBox = ({
             .saveVaraint(grid.id, variant)
             .then((x) => {
                 setShowSaveAs(false);
-                notify.success(<Text>saved</Text>);
+                notify.success(<T>saved</T>);
             })
             .catch(notify.error);
     };
@@ -115,16 +116,16 @@ export const FilterBox = ({
                 </div>
                 <div className="px-2 pt-2 border-top mt-2 d-flex justify-content-end gap-x-2 bd-form-compact">
                     <bd.Button color="primary" variant="text" onClick={manageClickHandler}>
-                        <Text>manage</Text>
+                        <T>manage</T>
                     </bd.Button>
 
                     <bd.Button color="primary" variant={isChanged ? "text" : null} onClick={saveAsClickHandler}>
-                        <Text>save-as</Text>
+                        <T>save-as</T>
                     </bd.Button>
 
                     {isChanged && (
                         <bd.Button color="primary" onClick={(e) => onSave(currentVariant)}>
-                            <Text>save</Text>
+                            <T>save</T>
                         </bd.Button>
                     )}
                 </div>
@@ -166,9 +167,9 @@ export const FilterBox = ({
 
                     <div className="flex-grow-1"></div>
 
-                    <ApplyButton busy={systemIsBusy} formRef={formRef} />
+                    <ApplyButton busy={systemIsBusy} formRef={formRef} onClick={() => formRef.current.submitForm()} />
                     <ToggleFilterButton fixed={fixed} isExpanded={isExpanded} setIsExpanded={setIsExpanded} />
-                    <SettingsButton visible={showSettings} count={filtersCount} onClick={onOpenSettings} />
+                    <ClearButton visible={showSettings} count={filtersCount} onClick={clearAll} />
                 </bd.Toolbar>
             )}
 
@@ -214,7 +215,7 @@ export const FilterBox = ({
                         {!grid.hasFilterVariant && (
                             <FormRow label="" className="flex-grow-1 text-end" style={{ width: "auto" }}>
                                 <ApplyButton busy={systemIsBusy} formRef={formRef} />
-                                <SettingsButton visible={showSettings} count={filtersCount} onClick={onOpenSettings} />
+                                <ClearButton visible={showSettings} count={filtersCount} onClick={clearAll} />
                             </FormRow>
                         )}
                     </bd2.FormikForm>
@@ -227,9 +228,9 @@ export const FilterBox = ({
     );
 };
 
-const ApplyButton = ({ busy, formRef }) => (
-    <bd.Button color="primary" size="md" disabled={busy} className="densed m-e-2">
-        <Text>apply-filter</Text>
+const ApplyButton = ({ busy, formRef, onClick }) => (
+    <bd.Button color="primary" size="md" disabled={busy} className="densed m-e-2" onClick={onClick}>
+        <T>apply-filter</T>
     </bd.Button>
 );
 
@@ -237,15 +238,15 @@ const ToggleFilterButton = ({ fixed, isExpanded, setIsExpanded }) => {
     return (
         !fixed && (
             <bd.Button variant="text" color="primary" size="md" onClick={() => setIsExpanded(!isExpanded)} className="densed">
-                <Text>{isExpanded ? "hide-filters" : "show-filters"}</Text>
+                <T>{isExpanded ? "hide-filters" : "show-filters"}</T>
             </bd.Button>
         )
     );
 };
 
-const SettingsButton = ({ visible, count, onClick }) =>
+const ClearButton = ({ visible, count, onClick }) =>
     visible && (
         <bd.Button variant="text" color="primary" size="md" onClick={onClick} className="densed" edge="end">
-            <Text count={count}>filters (@count)</Text>
+            <T count={count}>clear-filters (@count)</T>
         </bd.Button>
     );

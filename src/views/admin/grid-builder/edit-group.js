@@ -2,18 +2,18 @@ import React, { useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import * as bd from "react-basic-design";
+import * as bd2 from "../../../components/forms";
 
 import { messages } from "../../../components/messages";
 import classNames from "classnames";
 import { gridBuilderApi } from "../../../api/grid-builder-api";
 import { notify } from "../../../components/basic/notify";
 import * as icons from "../../../assets/icons";
-import { Form, Formik } from "formik";
-import { BasicInput } from "../../../components/basic-form/basic-input";
 import * as yup from "yup";
+import { T } from "../../../components/basic/text";
 
 //
-export function TableDesignerEditGroup({ group, onChanged, onGoBack }) {
+export function GridBuilderEditGroup({ group, onChanged, onGoBack }) {
     const { t } = useTranslation();
     const [loading, setLoading] = useState(false);
     const [deleting, setDeleting] = useState(false);
@@ -29,8 +29,7 @@ export function TableDesignerEditGroup({ group, onChanged, onGoBack }) {
             .then((x) => {
                 setLoading(false);
                 notify.info(messages.ChangesAreSaved);
-                x.items = group.items ? group.items : [];
-                onChanged(x);
+                onChanged(x, group);
             })
             .catch((ex) => {
                 setLoading(false);
@@ -43,13 +42,13 @@ export function TableDesignerEditGroup({ group, onChanged, onGoBack }) {
         gridBuilderApi
             .deleteGroup(group.id)
             .then((x) => {
-                setLoading(false);
+                setDeleting(false);
                 hide();
-                notify.info(messages.RowIsDeleted);
-                onChanged(null);
+                notify.dark(messages.RowIsDeleted);
+                onChanged(null, group);
             })
             .catch((ex) => {
-                setLoading(false);
+                setDeleting(false);
                 notify.error(ex);
             });
     };
@@ -72,13 +71,13 @@ export function TableDesignerEditGroup({ group, onChanged, onGoBack }) {
     return (
         <>
             <div className="border-bottom bg-gray-5 mb-3">
-                <bd.Toolbar className="container">
+                <bd.Toolbar>
                     <bd.Button variant="icon" onClick={onGoBack} edge="start" className="m-e-2">
                         <icons.ArrowBackIos className="rtl-rotate-180" />
                     </bd.Button>
 
                     <h5>
-                        {t("edit-group")}: <b className="text-primary-text">{group.title}</b>
+                        <T>{group.id ? "edit-group" : "insert-group"}</T>
                     </h5>
 
                     <div className="flex-grow-1" />
@@ -94,7 +93,7 @@ export function TableDesignerEditGroup({ group, onChanged, onGoBack }) {
                         })}
                         type="button"
                         variant="outline"
-                        disabled={loading || deleting || (group.items && group.items.length)}
+                        disabled={loading || deleting}
                         onClick={deleteClickHandler}
                     >
                         {deleting && <div className="m-e-2 spinner-border spinner-border-sm"></div>}
@@ -103,20 +102,23 @@ export function TableDesignerEditGroup({ group, onChanged, onGoBack }) {
                 </bd.Toolbar>
             </div>
 
-            <div className="container">
-                <Formik
-                    initialValues={group}
-                    validationSchema={yup.object({
-                        title: yup.string().min(3, t("msg-too-short")).max(100, t("msg-too-long")).required("Required"),
-                    })}
-                    onSubmit={onSaveClick}
-                    innerRef={formRef}
-                >
-                    <Form style={{ maxWidth: 400 }}>
-                        <BasicInput name="title" label={t("group-title")} labelSize="4" autoFocus />
-                    </Form>
-                </Formik>
-            </div>
+            <bd2.FormikForm
+                initialValues={group}
+                validationSchema={yup.object({
+                    title: yup.string().min(3, t("msg-too-short")).max(100, t("msg-too-long")).required("Required"),
+                })}
+                onSubmit={onSaveClick}
+                innerRef={formRef}
+                className="px-3"
+                enableReinitialize
+                compact
+                flex
+            >
+                <bd2.FormikInput name="id" label={t("group-id")} width="6rem" readOnly />
+                <bd2.FormikInput name="parentId" label={t("parent-id")} width="6rem" />
+                <bd2.FormikInput name="title" label={t("group-title")} width="12rem" autoFocus />
+                <bd2.FormikInput name="azView" label={t("az-view")} width="100%" />
+            </bd2.FormikForm>
         </>
     );
 }

@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from "react";
 import * as bd from "react-basic-design";
-import { api } from "../../api/api";
-import { gridsApi } from "../../api/grids-api";
 import { notify } from "../basic/notify";
 import { T } from "../basic/text";
 import { FilterBox } from "../filters/filter-box";
 import { TableTitlebar } from "../table";
 import { RenderTableDiv } from "../table/render-table-div";
 import { useReactTable } from "../table/use-react-table";
+
+const emptyData = [];
 
 export const Grid = ({ grid, loadData, parameters, ...props }) => {
     const [data, setData] = useState(grid.data ?? []);
@@ -18,7 +18,7 @@ export const Grid = ({ grid, loadData, parameters, ...props }) => {
         grid.data = grid.data.map((row, index) => (index === rowIndex ? new_row : row));
     };
 
-    const tableApi = useReactTable({ columns: grid.columns, data, updateData, flexLayout: grid.flexLayout });
+    const tableApi = useReactTable({ columns: grid.columns, data: grid.data ?? emptyData, updateData, flexLayout: grid.flexLayout });
 
     /*
     const deleteTableRow = (row) => {
@@ -44,7 +44,7 @@ export const Grid = ({ grid, loadData, parameters, ...props }) => {
         loadData(null, parameters)
             .then((x) => {
                 tableApi.state.selectedRowIds = {};
-                setData(x);
+                //setData(x);
             })
             .catch(notify.error);
     }, [grid, loadData, parameters, tableApi]);
