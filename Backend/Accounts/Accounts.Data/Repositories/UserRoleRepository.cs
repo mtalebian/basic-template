@@ -12,12 +12,12 @@ namespace Accounts.Data
         {
         }
 
-        public IList<UserRole> GetAllUserRole(string projectId, int userId)
+        public IList<UserRole> GetAllUserRole(string projectId, long userId)
         {
             return Entities.Include(x => x.User).Include(z => z.Role).Where(x => x.ProjectId == projectId && x.UserId == userId).ToList();
         }
 
-        public UserRole GetUserRole(string projectId, string roleId, int userId)
+        public UserRole GetUserRole(string projectId, string roleId, long userId)
         {
             return Entities.Include(x => x.User).Include(z => z.Role).Where(x => x.ProjectId == projectId && x.RoleId == roleId && x.UserId == userId).FirstOrDefault();
         }
