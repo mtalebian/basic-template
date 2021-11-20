@@ -51,11 +51,11 @@ namespace Accounts.Services
 
         //..............................................UserRole
 
-        public IList<UserRole> GetAllUserRole(string projectId, int userId)
+        public IList<UserRole> GetAllUserRole(string projectId, long userId)
         {
             return db.UserRoles.GetAllUserRole(projectId, userId);
         }
-        public UserRole GetUserRole(string projectId, string roleId, int userId)
+        public UserRole GetUserRole(string projectId, string roleId, long userId)
         {
             return db.UserRoles.GetUserRole(projectId, roleId, userId);
         }
@@ -64,7 +64,7 @@ namespace Accounts.Services
             db.UserRoles.Add(userRole);
             db.SaveChanges();
         }
-        public void DeleteUserRole(string projectId, string roleId, int userId)
+        public void DeleteUserRole(string projectId, string roleId, long userId)
         {
             var userRole = GetUserRole(projectId, roleId, userId);
             if (userRole is null) throw new Exception("Record not found!");
@@ -73,11 +73,11 @@ namespace Accounts.Services
         }
 
         //..............................................UserCompositeRole
-        public IList<UserCompositeRole> GetAllUserCompositeRole(string projectId, int userId)
+        public IList<UserCompositeRole> GetAllUserCompositeRole(string projectId, long userId)
         {
             return db.UserCompositeRoles.GetAllUserCompositeRole(projectId, userId);
         }
-        public UserCompositeRole GetUserCompositeRole(string projectId, string compositeRoleId, int userId)
+        public UserCompositeRole GetUserCompositeRole(string projectId, string compositeRoleId, long userId)
         {
             return db.UserCompositeRoles.GetUserCompositeRole(projectId, compositeRoleId, userId);
         }
@@ -87,7 +87,7 @@ namespace Accounts.Services
             db.SaveChanges();
         }
 
-        public void DeleteUserCompositeRole(string projectId, string compositeRoleId, int userId)
+        public void DeleteUserCompositeRole(string projectId, string compositeRoleId, long userId)
         {
             var userCompositeRole = GetUserCompositeRole(projectId, compositeRoleId, userId);
             if (userCompositeRole is null) throw new Exception("Record not found!");

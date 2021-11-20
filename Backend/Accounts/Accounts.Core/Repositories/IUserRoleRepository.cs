@@ -5,8 +5,8 @@ namespace Accounts.Core
 {
     public interface IUserRoleRepository : IRepository<UserRole, int, string, string>
     {
-        IList<UserRole> GetAllUserRole(string projectId, int userId);
+        IList<UserRole> GetAllUserRole(string projectId, long userId);
 
-        UserRole GetUserRole(string projectId,string roleId, int userId);
+        UserRole GetUserRole(string projectId,string roleId, long userId);
     }
 }

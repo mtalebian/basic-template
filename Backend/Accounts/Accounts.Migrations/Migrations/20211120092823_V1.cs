@@ -78,7 +78,7 @@ namespace Accounts.Migrations.Migrations
                 schema: "tmp",
                 columns: table => new
                 {
-                    Id = table.Column<long>(type: "bigint", nullable: false)
+                    Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     UserName = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     FirstName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
@@ -212,7 +212,7 @@ namespace Accounts.Migrations.Migrations
                 {
                     ProjectId = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false),
                     CompositeRoleId = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    UserId = table.Column<long>(type: "bigint", nullable: false),
+                    UserId = table.Column<int>(type: "int", nullable: false),
                     CreatedBy = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "getdate()")
                 },
@@ -242,7 +242,7 @@ namespace Accounts.Migrations.Migrations
                 {
                     Id = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    UserId = table.Column<long>(type: "bigint", nullable: false),
+                    UserId = table.Column<int>(type: "int", nullable: false),
                     RefreshToken = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     RefreshCount = table.Column<int>(type: "int", nullable: false),
                     RefreshTokenDate = table.Column<DateTime>(type: "datetime2", nullable: false),
@@ -331,7 +331,7 @@ namespace Accounts.Migrations.Migrations
                 {
                     ProjectId = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false),
                     RoleId = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    UserId = table.Column<long>(type: "bigint", nullable: false),
+                    UserId = table.Column<int>(type: "int", nullable: false),
                     CreatedBy = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "getdate()")
                 },
@@ -462,7 +462,7 @@ namespace Accounts.Migrations.Migrations
                 schema: "tmp",
                 table: "Users",
                 columns: new[] { "Id", "AccessFailedCount", "ConcurrencyStamp", "CreatedAt", "Email", "EmailConfirmed", "FirstName", "IsDeleted", "IsDisabled", "LastAccessFailedDate", "LastName", "LockoutEnabled", "LockoutEndDate", "NationalCode", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "UserName", "WindowsAuthenticate" },
-                values: new object[] { 1L, 0, "39660129-1c69-4257-b686-adfe001a6c79", new DateTime(2021, 11, 18, 18, 6, 33, 581, DateTimeKind.Local).AddTicks(1859), null, false, "", false, false, null, "Administrator", false, null, null, "PABPyu6/prVEQ4QbBrmcATJsjw/1yoli07rNI6EJ764=", null, false, "060645ae-6438-48d8-8f78-4539501703d6", "admin", false });
+                values: new object[] { 1, 0, "08318f04-5338-4fa8-b7d4-cc976ab8e52f", new DateTime(2021, 11, 20, 12, 58, 23, 567, DateTimeKind.Local).AddTicks(4375), null, false, "", false, false, null, "Administrator", false, null, null, "PABPyu6/prVEQ4QbBrmcATJsjw/1yoli07rNI6EJ764=", null, false, "22ca5661-7ae4-43be-8a3f-c2201a1e4639", "admin", false });
 
             migrationBuilder.InsertData(
                 schema: "tmp",
@@ -482,9 +482,10 @@ namespace Accounts.Migrations.Migrations
                 columns: new[] { "Id", "ProjectId", "ApplicationId", "OpenInNewTab", "ParentId", "SortOrder", "Title", "Url" },
                 values: new object[,]
                 {
-                    { "config-admin-grids", "project1", null, false, "config", 0, "Maintain base tables", "/admin/grids" },
+                    { "config-grid-builder", "project1", null, false, "config", 0, "Grid builder", "/admin/grid-builder" },
+                    { "config-grids", "project1", null, false, "config", 0, "Maintain base tables", "/admin/grids" },
+                    { "config-grid", "project1", null, false, "config", 0, "Maintain table", "/admin/grid" },
                     { "config-menu", "project1", null, false, "config", 0, "Maintain project menu", "/admin/menu" },
-                    { "config-table-designer", "project1", null, false, "config", 0, "Table designer", "/admin/table-designer" },
                     { "users", "project1", null, false, "admin", 0, "Manage Users", "/admin/users" },
                     { "roles", "project1", null, false, "admin", 0, "Manage Roles", "/admin/roles" },
                     { "composite-roles", "project1", null, false, "admin", 0, "Manage Composite Role", "/admin/composite-roles" }

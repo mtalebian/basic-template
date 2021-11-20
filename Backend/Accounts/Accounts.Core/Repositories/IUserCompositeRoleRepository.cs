@@ -5,7 +5,7 @@ namespace Accounts.Core
 {
     public interface IUserCompositeRoleRepository : IRepository<UserCompositeRole, long, string, string>
     {
-        IList<UserCompositeRole> GetAllUserCompositeRole(string projectId, int userId);
-        UserCompositeRole GetUserCompositeRole(string projectId, string compositeRoleId, int userId);
+        IList<UserCompositeRole> GetAllUserCompositeRole(string projectId, long userId);
+        UserCompositeRole GetUserCompositeRole(string projectId, string compositeRoleId, long userId);
     }
 }
