@@ -36,7 +36,7 @@ namespace Forms.Data
             Group.Entity()
                 .HasOne(x => x.Parent)
                 .WithMany(x => x.Children)
-                .HasForeignKey(x => new { x.ProjectId, x.ParentId});
+                .HasForeignKey(x => new { x.ProjectId, x.ParentId });
 
             Group.Entity()
                 .HasData(new GridGroup { Id = 1, ProjectId = "project1", Title = "System Tables" });
@@ -63,6 +63,11 @@ namespace Forms.Data
             Grid.DefineAz(x => x.AzInsert);
             Grid.DefineAz(x => x.AzUpdate);
             Grid.DefineAz(x => x.AzDelete);
+
+            Grid.DefaultValue(x => x.PageSize, 0, true);
+            Grid.DefaultValue(x => x.HideCheckbox, 0, true);
+            Grid.DefaultValue(x => x.ShowTableInfo, 0, true);
+            Grid.DefaultValue(x => x.EnableGrouping, 0, true);
 
             Grid.DefineUserName(x => x.CreatedBy, "");
             Grid.DefineUserName(x => x.ModifiedBy, "");
@@ -138,7 +143,7 @@ namespace Forms.Data
             GridVariant.NVarChar(x => x.FiltersData, 2000, false);
             GridVariant.NVarChar(x => x.ColumnsData, 500, false);
             GridVariant.NVarChar(x => x.SortsData, 500, false);
-            
+
             GridVariant.DefineUserName(x => x.CreatedBy, "");
             GridVariant.DefineUserName(x => x.ModifiedBy, "");
             GridVariant.DefineCreatedAt(x => x.CreatedAt, "");

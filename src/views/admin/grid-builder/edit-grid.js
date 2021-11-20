@@ -286,13 +286,16 @@ export function GridBuilderEditGrid({ table, onChanged, onGoBack }) {
                                 <bd2.FormikInput name="groupId" label={<T>group-id</T>} width="6rem" />
 
                                 <bd2.FormikInput name="title" label={<T>title</T>} width="15rem" />
-                                <bd2.FormikSwitch name="flexLayout" label={<T>flex-layout</T>} size="sm" width="6rem" />
+                                <bd2.FormikToggle name="flexLayout" label={<T>flex-layout</T>} size="sm" width="6rem" />
+                                <bd2.FormikToggle name="hideCheckbox" label={<T>hide-checkbox</T>} size="sm" />
+                                <bd2.FormikToggle name="showTableInfo" label={<T>show-table-info</T>} size="sm" />
+                                <bd2.FormikToggle name="enableGrouping" label={<T>enable-grouping</T>} size="sm" />
+                                <bd2.FormikInput name="pageSize" label={<T>page-size</T>} size="sm" width="6rem" />
                                 <bd2.FormikTextArea
                                     name="description"
                                     label={<T>description</T>}
                                     height="4rem"
-                                    style={{ minWidth: 300 }}
-                                    className="flex-grow-1"
+                                    className="flex-grow-1 w-100"
                                 />
                             </div>
                         </div>

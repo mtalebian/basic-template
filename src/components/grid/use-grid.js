@@ -39,6 +39,13 @@ export const useGrid = ({ id, data }) => {
             }));
     };
 
+    const setData = (data) => {
+        var g = { ...grid };
+        g.data = data;
+        cache.current[id] = g;
+        setGrid({ ...g });
+    };
+
     //----------
     useEffect(() => {
         if (!id) return;
@@ -46,6 +53,7 @@ export const useGrid = ({ id, data }) => {
         if (g) {
             if (data) g.data = data;
             else if (!g.data) g.data = [];
+            g["setData"] = setData;
             setGrid(g);
             return;
         }
@@ -57,6 +65,7 @@ export const useGrid = ({ id, data }) => {
                 x.data = data;
                 x["columns"] = getColumns(x);
                 x["getDefaultVariant"] = defaultVariantThunk(x);
+                x["setData"] = setData;
                 cache.current[id] = x;
                 if (!cancelRequest) setGrid(x);
             })

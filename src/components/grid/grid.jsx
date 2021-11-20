@@ -1,5 +1,8 @@
 import React, { useEffect, useState } from "react";
 import * as bd from "react-basic-design";
+import { msgbox } from "react-basic-design";
+import { gridsApi } from "../../api/grids-api";
+import { useShell } from "../../views/shared/use-shell";
 import { notify } from "../basic/notify";
 import { T } from "../basic/text";
 import { FilterBox } from "../filters/filter-box";
@@ -13,6 +16,7 @@ const emptyData = [];
 export const Grid = ({ grid, tableRef, loadData, parameters, multiSelect, ...props }) => {
     const [data, setData] = useState(grid.data ?? []);
     const [editState, setEditState] = useState({ edit: false, row: null });
+    const shell = useShell();
 
     const updateData = (rowIndex, columnId, value) => {
         const new_row = { ...grid.data[rowIndex], [columnId]: value };
@@ -27,23 +31,24 @@ export const Grid = ({ grid, tableRef, loadData, parameters, multiSelect, ...pro
         flexLayout: grid.flexLayout,
     });
 
-    /*
     const deleteTableRow = (row) => {
         shell.setBusyMode(true);
         gridsApi
-            .delete(table.id, row.values)
-            .then((x) => {
+            .delete(grid.id, row)
+            .then(() => {
                 shell.setBusyMode(false);
-                var i = findIndex(row.values, data, table.schema.dataColumns);
-                setData(data.filter((x, index) => index !== i));
                 tableApi.state.selectedRowIds = {};
+                const pks = grid.dataColumns.filter((x) => x.isPK);
+                const eq = (a, b) => pks.every((k) => a[k.name] === b[k.name]);
+                const lst = grid.data.filter((x) => !eq(x, row));
+                grid.setData(lst);
                 notify.dark(<T>record-is-deleted</T>);
             })
             .catch((ex) => {
                 shell.setBusyMode(false);
                 notify.error(ex);
             });
-    };*/
+    };
 
     useEffect(() => {
         if (grid.data || grid.filterable) return;
@@ -128,17 +133,17 @@ export const Grid = ({ grid, tableRef, loadData, parameters, multiSelect, ...pro
                                             disabled={!tableApi.selectedFlatRows.length}
                                             className="m-e-1"
                                             onClick={(e) => {
-                                                // if (tableApi.selectedFlatRows.length !== 1) return;
-                                                // msgbox(<T>deleting-selected-row</T>, null, [
-                                                //     {
-                                                //         title: "delete",
-                                                //         action: (hide) => {
-                                                //             hide();
-                                                //             deleteTableRow(tableApi.selectedFlatRows[0]);
-                                                //         },
-                                                //     },
-                                                //     { title: "cancel" },
-                                                // ]);
+                                                if (tableApi.selectedFlatRows.length !== 1) return;
+                                                msgbox(<T>deleting-selected-row</T>, null, [
+                                                    {
+                                                        title: <T>delete</T>,
+                                                        action: (hide) => {
+                                                            hide();
+                                                            deleteTableRow(tableApi.selectedFlatRows[0].original);
+                                                        },
+                                                    },
+                                                    { title: "cancel" },
+                                                ]);
                                             }}
                                         >
                                             <T>delete</T>
