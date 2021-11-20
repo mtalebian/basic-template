@@ -77,7 +77,6 @@ export const EditCompositeRole = ({ currentProjectId, originalCompositeRole, rol
   );
 
   const onSubmit = (values) => {
-    alert(JSON.stringify(values));
     values.projectId = currentProjectId;
     const insertMode = !originalCompositeRole;
     if (account.isConnected()) {

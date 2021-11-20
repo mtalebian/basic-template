@@ -192,6 +192,11 @@ namespace Accounts.Services
             return db.AzObjectFields.GetAllAzObjectField(projectId);
         }
         //...................................................RoleCompositeRole
+        public IList<RoleCompositeRole> GetAllRolesCompositeRole(string projectId, string compositeRoleId)
+        {
+            return db.RoleCompositeRoles.GetAllRolesCompositeRole(projectId, compositeRoleId);
+        }
+
         public RoleCompositeRole GetRoleCompositeRole(string roleId, string compositeRoleId, string ProjectId)
         {
             return db.RoleCompositeRoles.Where(x => x.RoleId == roleId && x.CompositeRoleId == compositeRoleId && x.ProjectId == ProjectId).FirstOrDefault();
@@ -203,6 +208,16 @@ namespace Accounts.Services
             db.SaveChanges();
         }
 
-        
+        public void DeleteRolesCompositeRole(IList<RoleCompositeRole> items)
+        {
+            db.RoleCompositeRoles.RemoveRange(items);
+            db.SaveChanges();
+        }
+
+        public void InsertRolesCompositeRole(IList<RoleCompositeRole> items)
+        {
+            db.RoleCompositeRoles.AddRange(items);
+            db.SaveChanges();
+        }
     }
 }

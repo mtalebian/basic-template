@@ -50,7 +50,11 @@ namespace Accounts.Core
         void InsertUserRole(UserRole item);
         void DeleteUserRole(string projectId, string roleId, long userId);
         //.............................
+        IList<RoleCompositeRole> GetAllRolesCompositeRole(string projectId, string compositeRoleId);
         RoleCompositeRole GetRoleCompositeRole(string roleId, string compositeRoleId, string ProjectId);
         void InsertRoleCompositeRole(RoleCompositeRole item);
+        void InsertRolesCompositeRole(IList<RoleCompositeRole> items);
+        void DeleteRolesCompositeRole(IList<RoleCompositeRole> items);
+
     }
 }

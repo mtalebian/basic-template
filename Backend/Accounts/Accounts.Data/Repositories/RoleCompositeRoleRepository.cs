@@ -13,5 +13,9 @@ namespace Accounts.Data
         {
             db = context;
         }
+        public IList<RoleCompositeRole> GetAllRolesCompositeRole(string projectId,string compositeRoleId)
+        {
+            return Entities.Include(x => x.Role).Include(z => z.CompositeRole).Where(x => x.ProjectId == projectId && x.CompositeRoleId== compositeRoleId).ToList();
+        }
     }
 }

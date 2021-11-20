@@ -401,6 +401,7 @@ namespace Accounts.Controllers
         {
             try
             {
+                List<RoleDTO> rolesList = new();
                 var app = await accountService.GetProjectAsync(projectId);
                 if (app == null)
                 {
@@ -409,7 +410,15 @@ namespace Accounts.Controllers
                 var _compositeRole = roleService.GetCompositeRoleById(projectId,id);
                 if (_compositeRole is null)
                     return new Response<CompositeRolesDTO>(Messages.NotFoundInformation);
+                var rolesCompositeRole = roleService.GetAllRolesCompositeRole(projectId, id);
+                foreach (var item in rolesCompositeRole)
+                {
+                    var role = new RoleDTO { Id = item.Role.Id, Title = item.Role.Title };
+                    rolesList.Add(role);
+                }
+
                 var result = _compositeRole.MapTo<CompositeRolesDTO>();
+                result.Roles = rolesList;
                 return new Response<CompositeRolesDTO>(result);
             }
             catch (Exception)
@@ -490,11 +499,33 @@ namespace Accounts.Controllers
                 {
                     return new Response<CompositeRolesDTO>(Messages.Error401);
                 }
+                //......
+                var currentRoles = roleService.GetAllRolesCompositeRole(model.ProjectId, model.Id);
+                var newRoles = model.Roles.Select(x => new RoleCompositeRole
+                {
+                    ProjectId = model.ProjectId,
+                    RoleId = x.Id,
+                    CompositeRoleId = model.Id
+                }).ToList();
+                var RowsToBeDeleted = currentRoles.Where(x => !newRoles.Any(y => y.RoleId == x.RoleId && y.ProjectId==x.ProjectId)).ToList();
+                if(RowsToBeDeleted.Count!=0)
+                roleService.DeleteRolesCompositeRole(RowsToBeDeleted);
+                var RowsToBeInsert = newRoles.Where(x => !currentRoles.Any(y => y.RoleId == x.RoleId && y.ProjectId == x.ProjectId)).ToList();
+                foreach (var item in RowsToBeInsert)
+                {
+                    var duplicateItem = roleService.GetRoleCompositeRole(item.RoleId, item.CompositeRoleId, item.ProjectId);
+                    if (duplicateItem is null)
+                    {
+                        roleService.InsertRoleCompositeRole(item);
+                    }
+                }
+                //.....................................................
                 compositeRole.Title = model.Title;
                 compositeRole.LastUpdate = DateTime.Now;
                 compositeRole.LastUpdatedBy = currentUser.UserName;
                 roleService.UpdateCompositeRole(compositeRole);
                 var result = compositeRole.MapTo<CompositeRolesDTO>();
+                result.Roles = model.Roles;
                 return new Response<CompositeRolesDTO>(result);
             }
             catch (Exception)
@@ -517,6 +548,11 @@ namespace Accounts.Controllers
                 if (app == null)
                 {
                     return new Response(Messages.InvalidProjectId);
+                }
+                var roles= roleService.GetAllRolesCompositeRole(projectId, id);
+                if(roles is not null)
+                {
+                    roleService.DeleteRolesCompositeRole(roles);
                 }
                 roleService.DeleteCompositeRole(projectId, id);
                 return new Response();
