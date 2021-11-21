@@ -324,7 +324,7 @@ namespace Accounts.Controllers
                 UserSessionId = x.Id,
                 ApplicationAndOSTitle = String.Join(", ", x.ProjectId, x.UserAgent.OS),
                 DeviceAndOSTitle = String.Join(", ", !string.IsNullOrEmpty(x.UserAgent.Brand) ? x.UserAgent.Brand : x.UserAgent.Device, !string.IsNullOrEmpty(x.UserAgent.Model) ? x.UserAgent.Model : "", x.UserAgent.OS),
-                IP = x.IP + "- IR",
+                IP = x.IP,
                 SessionDate = x.UserAgent.CreatedAt.ToShortDateString(),
             }).ToList();
             return new Response<List<ActiveSessionsDTO>>(activeSessions);
