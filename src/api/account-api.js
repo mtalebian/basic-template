@@ -14,11 +14,15 @@ export const accountApi = {
 
   changePassword: (info) => api.directCall("put", apiConfig.accountUrl + "/change-password", info),
 
-  forgotPassword: ({ userName , captcha}) =>
-    api.directCall("post", apiConfig.accountUrl + "/forgot-password/" + settings.projectId, { userName , captcha }),
+  forgotPassword: ({ userName, captcha }) =>
+    api.directCall("post", apiConfig.accountUrl + "/forgot-password/" + settings.projectId, { userName, captcha }),
 
-  resetPassword:({ userName , code , key}) =>
-    api.directCall("post", apiConfig.accountUrl + "/reset-password/" + settings.projectId, { userName , code , key }),
+  resetPassword: ({ userName, code, key }) =>
+    api.directCall("post", apiConfig.accountUrl + "/reset-password/" + settings.projectId, { userName, code, key }),
+
+  getActiveSessions: () => api.directCall("get", apiConfig.accountUrl + "/active-sessions/" + settings.projectId),
+
+  terminateOtherUserSession: (sessions) => api.directCall("delete", apiConfig.accountUrl + "/terminate-sessions/" + settings.projectId, sessions),
 
   logout: () => {
     api.directCall("post", apiConfig.accountUrl + "/logout");

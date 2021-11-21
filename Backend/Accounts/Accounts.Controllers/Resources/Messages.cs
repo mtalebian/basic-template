@@ -14,6 +14,7 @@ namespace Accounts.Controllers
         public const string InvalidUserId = "كد كاربر وارد شده نامعتبر است";
         public const string InsufficientPrivilege = "شما دسترسی لازم، برای کار با این وب سایت را ندارید";
         public const string InvalidProjectId = "نام پروژه نامعتبر است";
+        public const string UnableToDeleteSession = "شما مجاز به حذف session ها نمي باشيد.";
         public const string InvalidEnterCode = "كد وارد شده نامعتبر است";
         public const string ExpiredVerificationCode = "كد وارد شده منقضي شده است";
 

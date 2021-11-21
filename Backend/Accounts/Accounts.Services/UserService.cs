@@ -34,6 +34,19 @@ namespace Accounts.Services
         {
             return db.Users.Where(x => x.UserName == userName).FirstOrDefault();
         }
+        public UserAgent GetUserAgent(int id)
+        {
+            return db.UserAgents.Where(x => x.Id == id).FirstOrDefault();
+        }
+        public IList<UserSession> GetUserSessions(long userId, string projectId)
+        {
+            return db.UserSessions.GetUserSessions(userId, projectId);
+        }
+
+        public UserSession GetUserSession(long id)
+        {
+            return db.UserSessions.Where(x => x.Id == id).FirstOrDefault();
+        }
         public void Insert(User user)
         {
             db.Users.Add(user);
@@ -67,7 +80,22 @@ namespace Accounts.Services
             user.PasswordHash = newPassword;
             Update(user);
         }
+        public void DeleteUserSession(long id)
+        {
+            var userSession = GetUserSession(id);
+            if (userSession is null) throw new Exception("Record not found!");
+            db.UserSessions.Remove(userSession);
+            db.SaveChanges();
+        }
 
+        public void DeleteUserAgent(int id)
+        {
+            var userAgent = GetUserAgent(id);
+            if (userAgent is null) throw new Exception("Record not found!");
+            db.UserAgents.Remove(userAgent);
+            db.SaveChanges();
+        }
 
+        
     }
 }
