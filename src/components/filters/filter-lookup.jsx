@@ -89,8 +89,6 @@ export const FilterLookup = ({ name, title, show, setShow, isString, checkTable,
         hide();
     };
 
-    console.log("checkTable", checkTable);
-
     return (
         <>
             <Modal show={show} onHide={hide} dialogClassName="modal-1024 px-md-4" centered fullscreen="md-down" backdrop="static">

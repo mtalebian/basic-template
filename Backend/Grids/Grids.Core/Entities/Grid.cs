@@ -32,6 +32,7 @@ namespace Forms.Core
         public string AzDelete { get; set; }
 
 
+        public int TopRecords { get; set; }
         public int PageSize { get; set; }
         public bool HideCheckbox { get; set; }
         public bool ShowTableInfo { get; set; }
