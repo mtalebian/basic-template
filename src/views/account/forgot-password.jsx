@@ -1,10 +1,9 @@
-import React, { useRef, useEffect, useState } from "react";
+import { useRef, useEffect, useState } from "react";
 import * as bd from "react-basic-design";
 import * as yup from "yup";
 import { BasicInput } from "../../components/basic-form/basic-input";
-import { Form, Formik } from "formik";
+import { Formik } from "formik";
 import { notify } from "../../components/basic/notify";
-import { useAccount } from "../../app/account-context";
 import { apiConfig } from "../../api/config";
 import { messages } from "../../components/messages";
 import { accountApi } from "../../api/account-api";
@@ -12,7 +11,6 @@ import { accountApi } from "../../api/account-api";
 export const ForgotPassword = () => {
   const [captchaCounter, setCaptchaCounter] = useState(0);
   const [uid, setUID] = useState(Date.now());
-  const account = useAccount();
   const formRef = useRef();
   const [busy, setBusy] = useState(false);
   const [currentUser, setCurrentUser] = useState(null);

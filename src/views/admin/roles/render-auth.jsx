@@ -10,7 +10,7 @@ import { BasicInput } from "../../../components/basic-form/basic-input";
  */
 export const RenderAuthorizations = ({ role }) => {
   const inputStyle = { maxWidth: 250 };
-  const [field, _, helper] = useField({ name: "authorizations" });
+  const [field, helper] = useField({ name: "authorizations" });
   const deleteObjectAt = (index) => {
     var list = [...field.value];
     list.splice(index, 1);

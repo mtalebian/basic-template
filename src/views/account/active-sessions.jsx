@@ -1,5 +1,5 @@
 import * as bd from "react-basic-design";
-import React, { useRef, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useAccount } from "../../app/account-context";
 import { accountApi } from "../../api/account-api";
 import { notify } from "../../components/basic/notify";
@@ -16,14 +16,14 @@ export const ActiveSessions = () => {
 
   shell.setApp(<T>active-sessions</T>);
   useEffect(() => {
-    if (currentSession == null && account.isConnected()) {
+    if (!currentSession && account.isConnected()) {
       accountApi
         .getActiveSessions()
         .then((result) => {
-          var sessions = result.filter((x) => x.currentSession != true);
-          var current = result.filter((x) => x.currentSession == true);
+          var sessions = result.filter((x) => x.currentSession !== true);
+          var current = result.filter((x) => x.currentSession === true);
           setCurrentSession(current);
-          if (sessions.length != 0) {
+          if (sessions.length !== 0) {
             setUserSessions(sessions);
           }
         })

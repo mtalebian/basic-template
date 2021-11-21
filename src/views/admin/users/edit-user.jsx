@@ -35,7 +35,7 @@ export const EditUser = ({ userId, onGoBack }) => {
     : user;
 
   useEffect(() => {
-    if (userId != null && user == null) {
+    if (userId != null && user === null) {
       userApi
         .getUser(userId)
         .then((x) => {
@@ -54,7 +54,7 @@ export const EditUser = ({ userId, onGoBack }) => {
     if (!formRef.current) return false;
     if (!formRef.current.isValid) return false;
     var values = formRef.current.values;
-    values.windowsAuthenticate = windowsAuth == "true" ? true : false;
+    values.windowsAuthenticate = windowsAuth === "true" ? true : false;
     setBusy(true);
     var insertMode = !userId;
     userApi
@@ -115,7 +115,7 @@ export const EditUser = ({ userId, onGoBack }) => {
             nationalCode: yup.string().required("required"),
             email: yup.string().email("email not valid"),
             password: yup.string().when("windowsAuthenticate", {
-              is: (value) => value == "false",
+              is: (value) => value === "false",
               then: yup.string().required("required"),
             }),
             repeatePassword: yup.string().when("password", {
@@ -131,7 +131,7 @@ export const EditUser = ({ userId, onGoBack }) => {
             <div className="row">
               <div className="col-md-12">
                 <Tab.Container defaultActiveKey={defaultActiveTab}>
-                  <bd.AppBar color="default" shadow="0" color="inherit">
+                  <bd.AppBar shadow="0" color="inherit">
                     <bd.TabStrip shade="primary" indicatorColor="primary">
                       <bd.TabStripItem data-toggle="tab" eventKey="general" onClick={() => setDefaultActiveTab("general")}>
                         {t("general-info-tab")}

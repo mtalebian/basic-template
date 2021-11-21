@@ -8,20 +8,20 @@ import * as bd from "react-basic-design";
 import * as icons from "../../../assets/icons";
 
 export const RenderRoles = ({ data }) => {
-  const [field, _, helper] = useField({ name: "roles" });
+  const [field, helper] = useField({ name: "roles" });
   const gridColumns = useRef([
     { Header: <T>id</T>, accessor: "id" },
     { Header: <T>title</T>, accessor: "title" },
   ]);
   const deleteRoleFromList = (item) => {
     var list = [...field.value];
-    var filtered = list.filter((x) => x.id != item.id);
+    var filtered = list.filter((x) => x.id !== item.id);
     helper.setValue(filtered);
   };
   const tableApi = useReactTable({ columns: gridColumns.current, data: data.roles, flexLayout: false });
   return (
     <div className="mt-4">
-      {data.roles.length != 0 && (
+      {data.roles.length !== 0 && (
         <>
           <TableTitlebar
             hideSettings

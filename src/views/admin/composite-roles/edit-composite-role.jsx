@@ -9,7 +9,7 @@ import { BasicInput } from "../../../components/basic-form/basic-input";
 import { useAccount } from "../../../app/account-context";
 import { msgbox } from "react-basic-design";
 import { roleApi } from "../../../api/role-api";
-import { Modal, Tab } from "react-bootstrap";
+import { Modal } from "react-bootstrap";
 import { RenderTableDiv } from "../../../components/table/render-table-div";
 import { T } from "../../../components/basic/text";
 import { useReactTable } from "../../../components/table/use-react-table";
