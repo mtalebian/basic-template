@@ -8,11 +8,11 @@ export const accountApi = {
 
   userInfo: () => api.directCall("post", apiConfig.accountUrl + "/user-info/" + settings.projectId),
 
-  profileInfo: () => api.directCall("get", apiConfig.accountUrl + "/profile-info/" + settings.projectId),
+  profileInfo: () => api.call("get", apiConfig.accountUrl + "/profile-info/" + settings.projectId),
 
-  updateUserProfile: (user) => api.directCall("put", apiConfig.accountUrl + "/update-user-profile", user),
+  updateUserProfile: (user) => api.call("put", apiConfig.accountUrl + "/update-user-profile", user),
 
-  changePassword: (info) => api.directCall("put", apiConfig.accountUrl + "/change-password", info),
+  changePassword: (info) => api.call("put", apiConfig.accountUrl + "/change-password", info),
 
   forgotPassword: ({ userName, captcha }) =>
     api.directCall("post", apiConfig.accountUrl + "/forgot-password/" + settings.projectId, { userName, captcha }),
@@ -20,9 +20,9 @@ export const accountApi = {
   resetPassword: ({ userName, code, key }) =>
     api.directCall("post", apiConfig.accountUrl + "/reset-password/" + settings.projectId, { userName, code, key }),
 
-  getActiveSessions: () => api.directCall("get", apiConfig.accountUrl + "/active-sessions/" + settings.projectId),
+  getActiveSessions: () => api.call("get", apiConfig.accountUrl + "/active-sessions/" + settings.projectId),
 
-  terminateOtherUserSession: (sessions) => api.directCall("delete", apiConfig.accountUrl + "/terminate-sessions/" + settings.projectId, sessions),
+  terminateOtherUserSession: (sessions) => api.call("delete", apiConfig.accountUrl + "/terminate-sessions/" + settings.projectId, sessions),
 
   logout: () => {
     api.directCall("post", apiConfig.accountUrl + "/logout");

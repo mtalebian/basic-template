@@ -118,28 +118,6 @@ namespace Accounts.Controllers
 
 
         [AllowAnonymous]
-        [EnableCors("react")]
-        [HttpPost("logout")]
-        public async Task<Response> Logout()
-        {
-            Request.Cookies.TryGetValue(Settings.RefTokenCookieName, out var ref_token);
-            if (string.IsNullOrEmpty(ref_token)) return new Response();
-
-            Request.Cookies.TryGetValue(Settings.SessionIdCookieName, out var sessionId);
-            if (!sessionId.ToLong().HasValue) return new Response();
-
-            Response.Cookies.Delete(Settings.RefTokenCookieName);
-            Response.Cookies.Delete(Settings.SessionIdCookieName);
-
-            var session = await accountService.GetSessionByRefreshTokenAsync(sessionId.ToLong(0), ref_token);
-            if (session == null) return new Response();
-
-            await accountService.DeleteSessionAsync(session);
-            return new Response();
-        }
-
-
-        [AllowAnonymous]
         [HttpPost("login/{projectId}")]
         public async Task<Response<UserInfoDTO>> Login(string projectId, [FromBody] LoginDTO model)
         {
@@ -282,29 +260,6 @@ namespace Accounts.Controllers
             return new Response<ProfileInfoDTO>(result);
         }
 
-        [HttpPut("change-password")]
-        public Response ChangePassword([FromBody] ChangePasswordDTO model)
-        {
-            if (!ModelState.IsValid)
-            {
-                return new Response(string.Join(",", ModelState.GetModelStateErrors()));
-            }
-            var user = userManagmentService.GetUserByUserName(model.UserName);
-            if (user is null)
-            {
-                return new Response(Messages.InvalidInfo);
-            }
-            var _PasswordHash = Common.Cryptography.Helper.HashPassword(model.OldPassword);
-            if (user.PasswordHash != _PasswordHash)
-            {
-                return new Response(Messages.InvalidOldPassword);
-            }
-            user.PasswordHash = Common.Cryptography.Helper.HashPassword(model.Password);
-            user.LastUpdate = DateTime.Now;
-            userManagmentService.Update(user);
-            return new Response();
-        }
-
         [HttpGet("active-sessions/{projectId}")]
         public async Task<Response<List<ActiveSessionsDTO>>> GetUserSesions(string projectId)
         {
@@ -348,13 +303,34 @@ namespace Accounts.Controllers
                 }
                 else
                 {
-                    userManagmentService.DeleteUserSession(item.UserSessionId);
-                    userManagmentService.DeleteUserAgent(_userSession.UserAgentId);
+                    await accountService.DeleteSessionAsync(_userSession);
                 }
             }
             return new Response();
         }
 
+        [HttpPut("change-password")]
+        public Response ChangePassword([FromBody] ChangePasswordDTO model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return new Response(string.Join(",", ModelState.GetModelStateErrors()));
+            }
+            var user = userManagmentService.GetUserByUserName(model.UserName);
+            if (user is null)
+            {
+                return new Response(Messages.InvalidInfo);
+            }
+            var _PasswordHash = Common.Cryptography.Helper.HashPassword(model.OldPassword);
+            if (user.PasswordHash != _PasswordHash)
+            {
+                return new Response(Messages.InvalidOldPassword);
+            }
+            user.PasswordHash = Common.Cryptography.Helper.HashPassword(model.Password);
+            user.LastUpdate = DateTime.Now;
+            userManagmentService.Update(user);
+            return new Response();
+        }
 
         [AllowAnonymous]
         [EnableCors("react")]
@@ -377,6 +353,7 @@ namespace Accounts.Controllers
             var result = await RefreshAsync(app, user, session);
             return new Response<RefreshResultDTO>(result);
         }
+
         private async Task<RefreshResultDTO> RefreshAsync(Project app, User user, UserSession session)
         {
             var ip = Request.HttpContext?.Connection?.RemoteIpAddress?.ToString() ?? "";
@@ -400,6 +377,27 @@ namespace Accounts.Controllers
                 Token = token,
                 Expiry = expiry,
             };
+        }
+
+        [AllowAnonymous]
+        [EnableCors("react")]
+        [HttpPost("logout")]
+        public async Task<Response> Logout()
+        {
+            Request.Cookies.TryGetValue(Settings.RefTokenCookieName, out var ref_token);
+            if (string.IsNullOrEmpty(ref_token)) return new Response();
+
+            Request.Cookies.TryGetValue(Settings.SessionIdCookieName, out var sessionId);
+            if (!sessionId.ToLong().HasValue) return new Response();
+
+            Response.Cookies.Delete(Settings.RefTokenCookieName);
+            Response.Cookies.Delete(Settings.SessionIdCookieName);
+
+            var session = await accountService.GetSessionByRefreshTokenAsync(sessionId.ToLong(0), ref_token);
+            if (session == null) return new Response();
+
+            await accountService.DeleteSessionAsync(session);
+            return new Response();
         }
 
         private async Task<User> GetUserAsync()

@@ -80,21 +80,6 @@ namespace Accounts.Services
             user.PasswordHash = newPassword;
             Update(user);
         }
-        public void DeleteUserSession(long id)
-        {
-            var userSession = GetUserSession(id);
-            if (userSession is null) throw new Exception("Record not found!");
-            db.UserSessions.Remove(userSession);
-            db.SaveChanges();
-        }
-
-        public void DeleteUserAgent(int id)
-        {
-            var userAgent = GetUserAgent(id);
-            if (userAgent is null) throw new Exception("Record not found!");
-            db.UserAgents.Remove(userAgent);
-            db.SaveChanges();
-        }
 
         
     }

@@ -16,8 +16,6 @@ namespace Accounts.Core
         User Update(User user);
         void DeleteUser(string nationalCode);
         void DeleteUser(int userId);
-        void DeleteUserSession(long id);
-        void DeleteUserAgent(int id);
         void ChangePassword(int userId, string newPassword);
 
     }
