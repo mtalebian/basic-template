@@ -145,8 +145,16 @@
     .btn {
         height: 1.75rem;
     }
+
     .btn.btn-icon {
         width: 1.75rem;
+    }
+    .row {
+        .col-form-label {
+            padding-top: 0;
+            padding-bottom: 0;
+            line-height: 28px;
+        }
     }
 }
 

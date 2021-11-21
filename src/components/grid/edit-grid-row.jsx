@@ -3,18 +3,16 @@ import * as bd from "react-basic-design";
 import { Text } from "../basic/text";
 import * as bd2 from "../forms";
 import * as icons from "../../assets/icons";
-import { BasicInput } from "../basic-form/basic-input";
-import { BasicToggle } from "../basic-form/basic-toggle";
-import { BasicSwitch } from "../basic-form/basic-switch";
 import { BasicSelect } from "../basic-form/basic-select";
-import { BasicTextArea } from "../basic-form/basic-textarea";
 
 import { notify } from "../basic/notify";
 import { gridsApi } from "../../api/grids-api";
+import { FormLookup } from "./form-lookup";
 
 export const EditGridRow = ({ grid, row, onGoBack, onChanged }) => {
     const insertMode = row === null;
     const [saving, setSaving] = useState(false);
+    const [openLookup, setOpenLookup] = useState(false);
     const formRef = useRef();
 
     const onSaveClick = () => {
@@ -33,7 +31,7 @@ export const EditGridRow = ({ grid, row, onGoBack, onChanged }) => {
             });
     };
 
-    function getFieldProps(x) {
+    function getFieldProps(x, lookup) {
         var props = {
             key: x.id,
             name: x.name,
@@ -48,6 +46,10 @@ export const EditGridRow = ({ grid, row, onGoBack, onChanged }) => {
         else if (x.display === "email") props["type"] = "email";
         else if (x.display === "url") props["type"] = "url";
         if (x.maxLen > 0) props["maxLength"] = x.maxLen;
+        if (lookup && x.checkGrid) {
+            props.buttonTitle = <icons.OpenInNew style={{ fontSize: "1.125rem" }} />;
+            props.buttonOnClick = (e) => setOpenLookup(true);
+        }
         return props;
     }
 
@@ -101,28 +103,32 @@ export const EditGridRow = ({ grid, row, onGoBack, onChanged }) => {
                         // })}
                         onSubmit={onSaveClick}
                         innerRef={formRef}
+                        compact
                     >
                         {grid.dataColumns
                             .filter((x) => x.showInEditor)
-                            .map((x, xIndex) =>
-                                x.display === "textarea" ? (
-                                    <bd2.FormikTextArea {...getFieldProps(x)} />
-                                ) : x.display === "select" ? (
-                                    <BasicSelect {...getFieldProps(x)}>
-                                        {getValidValues(x).map((z) => (
-                                            <option key={z.code} value={z.code}>
-                                                {z.title}
-                                            </option>
-                                        ))}
-                                    </BasicSelect>
-                                ) : x.display === "check" ? (
-                                    <bd2.FormikToggle {...getFieldProps(x)} />
-                                ) : x.display === "switch" ? (
-                                    <bd2.FormikSwitch {...getFieldProps(x)} />
-                                ) : (
-                                    <bd2.FormikInput {...getFieldProps(x)} autoFocus={xIndex === 0} />
-                                )
-                            )}
+                            .map((x, xIndex) => (
+                                <>
+                                    {x.display === "textarea" ? (
+                                        <bd2.FormikTextArea {...getFieldProps(x)} />
+                                    ) : x.display === "select" ? (
+                                        <BasicSelect {...getFieldProps(x)}>
+                                            {getValidValues(x).map((z) => (
+                                                <option key={z.code} value={z.code}>
+                                                    {z.title}
+                                                </option>
+                                            ))}
+                                        </BasicSelect>
+                                    ) : x.display === "check" ? (
+                                        <bd2.FormikToggle {...getFieldProps(x)} />
+                                    ) : x.display === "switch" ? (
+                                        <bd2.FormikSwitch {...getFieldProps(x)} />
+                                    ) : (
+                                        <bd2.FormikInput {...getFieldProps(x, true)} autoFocus={xIndex === 0} />
+                                    )}
+                                    <FormLookup show={openLookup} setShow={setOpenLookup} checkTable={x.checkGrid} />
+                                </>
+                            ))}
                     </bd2.FormikForm>
                 </div>
             </div>
