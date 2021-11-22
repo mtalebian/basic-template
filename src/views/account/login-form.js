@@ -20,6 +20,7 @@ export const LoginForm = ({ inline, ...props }) => {
     const initialValue = {
         userName: "",
         password: "",
+        captcha: "",
     };
     function refreshCaptcha() {
         setUID(Date.now());
