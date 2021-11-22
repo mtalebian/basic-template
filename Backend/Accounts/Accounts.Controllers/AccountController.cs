@@ -119,28 +119,6 @@ namespace Accounts.Controllers
 
 
         [AllowAnonymous]
-        [EnableCors("react")]
-        [HttpPost("logout")]
-        public async Task<Response> Logout()
-        {
-            Request.Cookies.TryGetValue(Settings.RefTokenCookieName, out var ref_token);
-            if (string.IsNullOrEmpty(ref_token)) return new Response();
-
-            Request.Cookies.TryGetValue(Settings.SessionIdCookieName, out var sessionId);
-            if (!sessionId.ToLong().HasValue) return new Response();
-
-            Response.Cookies.Delete(Settings.RefTokenCookieName);
-            Response.Cookies.Delete(Settings.SessionIdCookieName);
-
-            var session = await accountService.GetSessionByRefreshTokenAsync(sessionId.ToLong(0), ref_token);
-            if (session == null) return new Response();
-
-            await accountService.DeleteSessionAsync(session);
-            return new Response();
-        }
-
-
-        [AllowAnonymous]
         [HttpPost("login/{projectId}")]
         public async Task<Response<UserInfoDTO>> Login(string projectId, [FromBody] LoginDTO model)
         {
@@ -184,7 +162,7 @@ namespace Accounts.Controllers
             var ref_result = await RefreshAsync(app, user, session);
             var user_info = new UserInfoDTO
             {
-                UserName= user.UserName,
+                UserName = user.UserName,
                 DisplayName = $"{user.FirstName} {user.LastName}",
                 Token = ref_result.Token,
                 Expiry = ref_result.Expiry,
@@ -202,7 +180,6 @@ namespace Accounts.Controllers
         [HttpPost("user-info/{projectId}")]
         public async Task<Response<UserInfoDTO>> GetUserInfo(string projectId)
         {
-            //Thread.Sleep(1000);
             var app = await accountService.GetProjectAsync(projectId);
             if (app == null)
             {
@@ -283,6 +260,55 @@ namespace Accounts.Controllers
             return new Response<ProfileInfoDTO>(result);
         }
 
+        [HttpGet("active-sessions/{projectId}")]
+        public async Task<Response<List<ActiveSessionsDTO>>> GetUserSesions(string projectId)
+        {
+            var app = await accountService.GetProjectAsync(projectId);
+            if (app == null)
+            {
+                return new Response<List<ActiveSessionsDTO>>(Messages.InvalidProjectId);
+            }
+            Request.Cookies.TryGetValue(Settings.SessionIdCookieName, out var sessionId);
+            Request.Cookies.TryGetValue(Settings.RefTokenCookieName, out var ref_token);
+            var currentSession = await accountService.GetSessionByRefreshTokenAsync(sessionId.ToLong(0), ref_token);
+
+            var userSessions = userManagmentService.GetUserSessions(currentSession.UserId, projectId).Where(x => x.IsDeleted == false).ToList();
+            var activeSessions = userSessions.Select(x => new ActiveSessionsDTO()
+            {
+                CurrentSession = x.Id == currentSession.Id,
+                UserSessionId = x.Id,
+                ApplicationAndOSTitle = String.Join(", ", x.ProjectId, x.UserAgent.OS),
+                DeviceAndOSTitle = String.Join(", ", !string.IsNullOrEmpty(x.UserAgent.Brand) ? x.UserAgent.Brand : x.UserAgent.Device, !string.IsNullOrEmpty(x.UserAgent.Model) ? x.UserAgent.Model : "", x.UserAgent.OS),
+                IP = x.IP,
+                SessionDate = x.UserAgent.CreatedAt.ToShortDateString(),
+            }).ToList();
+            return new Response<List<ActiveSessionsDTO>>(activeSessions);
+        }
+
+        [HttpDelete("terminate-sessions/{projectId}")]
+        public async Task<Response> TerminateLastSessions(string projectId, List<ActiveSessionsDTO> model)
+        {
+            var app = await accountService.GetProjectAsync(projectId);
+            if (app == null)
+            {
+                return new Response(Messages.InvalidProjectId);
+            }
+            var user = await GetUserAsync();
+            foreach (var item in model)
+            {
+                var _userSession = userManagmentService.GetUserSession(item.UserSessionId);
+                if (_userSession.UserId != user.Id)
+                {
+                    return new Response(Messages.UnableToDeleteSession);
+                }
+                else
+                {
+                    await accountService.DeleteSessionAsync(_userSession);
+                }
+            }
+            return new Response();
+        }
+
         [HttpPut("change-password")]
         public Response ChangePassword([FromBody] ChangePasswordDTO model)
         {
@@ -328,7 +354,6 @@ namespace Accounts.Controllers
             return new Response<RefreshResultDTO>(result);
         }
 
-
         private async Task<RefreshResultDTO> RefreshAsync(Project app, User user, UserSession session)
         {
             var ip = Request.HttpContext?.Connection?.RemoteIpAddress?.ToString() ?? "";
@@ -352,6 +377,27 @@ namespace Accounts.Controllers
                 Token = token,
                 Expiry = expiry,
             };
+        }
+
+        [AllowAnonymous]
+        [EnableCors("react")]
+        [HttpPost("logout")]
+        public async Task<Response> Logout()
+        {
+            Request.Cookies.TryGetValue(Settings.RefTokenCookieName, out var ref_token);
+            if (string.IsNullOrEmpty(ref_token)) return new Response();
+
+            Request.Cookies.TryGetValue(Settings.SessionIdCookieName, out var sessionId);
+            if (!sessionId.ToLong().HasValue) return new Response();
+
+            Response.Cookies.Delete(Settings.RefTokenCookieName);
+            Response.Cookies.Delete(Settings.SessionIdCookieName);
+
+            var session = await accountService.GetSessionByRefreshTokenAsync(sessionId.ToLong(0), ref_token);
+            if (session == null) return new Response();
+
+            await accountService.DeleteSessionAsync(session);
+            return new Response();
         }
 
         private async Task<User> GetUserAsync()

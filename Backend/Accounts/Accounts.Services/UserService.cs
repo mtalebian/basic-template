@@ -34,6 +34,19 @@ namespace Accounts.Services
         {
             return db.Users.Where(x => x.UserName == userName).FirstOrDefault();
         }
+        public UserAgent GetUserAgent(int id)
+        {
+            return db.UserAgents.Where(x => x.Id == id).FirstOrDefault();
+        }
+        public IList<UserSession> GetUserSessions(long userId, string projectId)
+        {
+            return db.UserSessions.GetUserSessions(userId, projectId);
+        }
+
+        public UserSession GetUserSession(long id)
+        {
+            return db.UserSessions.Where(x => x.Id == id).FirstOrDefault();
+        }
         public void Insert(User user)
         {
             db.Users.Add(user);
@@ -68,6 +81,6 @@ namespace Accounts.Services
             Update(user);
         }
 
-
+        
     }
 }

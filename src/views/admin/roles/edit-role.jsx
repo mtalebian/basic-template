@@ -214,7 +214,6 @@ const SelectAzObjectForm = ({ currentProjectId, azObjects, onSelect }) => {
                 <bd.Button
                   size="sm"
                   color="inherit"
-                  size
                   onClick={() => {
                     addNewAzObjectClick(row.original);
                   }}

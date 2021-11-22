@@ -1,10 +1,10 @@
-import React, { useRef, useEffect, useState } from "react";
+import { useRef, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import * as bd from "react-basic-design";
 import * as icons from "../../assets/icons";
 import * as yup from "yup";
 import { BasicInput } from "../../components/basic-form/basic-input";
-import { Form, Formik } from "formik";
+import { Formik } from "formik";
 import { accountApi } from "../../api/account-api";
 import { notify } from "../../components/basic/notify";
 import { useAccount } from "../../app/account-context";
@@ -195,12 +195,11 @@ export const UserProfile = () => {
     );
   };
   const profileStyle = {
-    
     maxWidth: 350,
     border: "1px groove #ddd2d263",
     boxShadow: "rgb(0 0 0 / 24%) 0px 3px 8px",
     borderRadius: 9,
-    margin: "22px auto"
+    margin: "22px auto",
   };
   return (
     <>
