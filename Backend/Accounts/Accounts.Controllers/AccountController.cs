@@ -180,7 +180,6 @@ namespace Accounts.Controllers
         [HttpPost("user-info/{projectId}")]
         public async Task<Response<UserInfoDTO>> GetUserInfo(string projectId)
         {
-            //Thread.Sleep(1000);
             var app = await accountService.GetProjectAsync(projectId);
             if (app == null)
             {
