@@ -41,6 +41,25 @@ namespace Accounts.Migrations.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Logs",
+                schema: "tmp",
+                columns: table => new
+                {
+                    Id = table.Column<long>(type: "bigint", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    ProjectId = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false),
+                    SessionId = table.Column<long>(type: "bigint", nullable: false),
+                    LogType = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
+                    UserName = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
+                    Message = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    CreateOn = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "getdate()")
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Logs", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Projects",
                 schema: "tmp",
                 columns: table => new
@@ -462,7 +481,7 @@ namespace Accounts.Migrations.Migrations
                 schema: "tmp",
                 table: "Users",
                 columns: new[] { "Id", "AccessFailedCount", "ConcurrencyStamp", "CreatedAt", "Email", "EmailConfirmed", "FirstName", "IsDeleted", "IsDisabled", "LastAccessFailedDate", "LastName", "LockoutEnabled", "LockoutEndDate", "NationalCode", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "UserName", "WindowsAuthenticate" },
-                values: new object[] { 1, 0, "08318f04-5338-4fa8-b7d4-cc976ab8e52f", new DateTime(2021, 11, 20, 12, 58, 23, 567, DateTimeKind.Local).AddTicks(4375), null, false, "", false, false, null, "Administrator", false, null, null, "PABPyu6/prVEQ4QbBrmcATJsjw/1yoli07rNI6EJ764=", null, false, "22ca5661-7ae4-43be-8a3f-c2201a1e4639", "admin", false });
+                values: new object[] { 1, 0, "4745abd2-e819-448a-999d-76c47b0043e8", new DateTime(2021, 11, 22, 12, 22, 27, 517, DateTimeKind.Local).AddTicks(4915), null, false, "", false, false, null, "Administrator", false, null, null, "PABPyu6/prVEQ4QbBrmcATJsjw/1yoli07rNI6EJ764=", null, false, "f1d4dd24-f7e3-4e57-b001-72ff63556393", "admin", false });
 
             migrationBuilder.InsertData(
                 schema: "tmp",
@@ -586,6 +605,10 @@ namespace Accounts.Migrations.Migrations
         {
             migrationBuilder.DropTable(
                 name: "AzValues",
+                schema: "tmp");
+
+            migrationBuilder.DropTable(
+                name: "Logs",
                 schema: "tmp");
 
             migrationBuilder.DropTable(

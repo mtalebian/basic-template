@@ -14,6 +14,7 @@ namespace Accounts.Core
 
         Task<UserSession> GetSessionByRefreshTokenAsync(long sessionId, string refreshToken);
         Task<UserSession> CreateSessionAsync(Project project, User user, string userAgent, string ip);
+        void SessionLoger(string projectId, long sessionId,string userName, string message);
         Task DeleteSessionAsync(UserSession session);
         Task RegenerateRefreshTokenAsync(UserSession session, string ip);
 

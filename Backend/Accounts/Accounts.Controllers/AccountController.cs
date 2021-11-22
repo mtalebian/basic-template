@@ -347,6 +347,7 @@ namespace Accounts.Controllers
             var session = await accountService.GetSessionByRefreshTokenAsync(sessionId.ToLong(0), ref_token);
             if (session == null)
             {
+                accountService.SessionLoger(projectId, sessionId.ToLong(0),null, "expired-Token");
                 return new Response<RefreshResultDTO>(Messages.Error401);
             }
             var user = await accountService.GetUserByIdAsync(session.UserId);
@@ -360,11 +361,13 @@ namespace Accounts.Controllers
             if (session != null)
             {
                 await accountService.RegenerateRefreshTokenAsync(session, ip);
+                accountService.SessionLoger(app.Id, session.Id, user.UserName, "Refresh-Token");
             }
             else
             {
                 var userAgent = Request.Headers["User-Agent"].ToString();
                 session = await accountService.CreateSessionAsync(app, user, userAgent, ip);
+                accountService.SessionLoger(app.Id, session.Id, user.UserName, "Create-Session");
             }
 
             var expiry = _Configuration["Jwt:expiry"].ToInt(Settings.DefaultExpiry);
