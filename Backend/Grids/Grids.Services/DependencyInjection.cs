@@ -11,6 +11,7 @@ namespace Microsoft.Extensions.DependencyInjection
             services.AddScoped<IGridBuilderService, GridBuilderService>();
             services.AddScoped<IGridService, GridService>();
             services.AddScoped<ILocaleService, LocalesService>();
+            services.AddScoped<IAzService, AzService>();
         }
 
     }

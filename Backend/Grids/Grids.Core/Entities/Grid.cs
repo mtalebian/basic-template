@@ -31,6 +31,15 @@ namespace Forms.Core
         public string AzUpdate { get; set; }
         public string AzDelete { get; set; }
 
+
+        public int TopRecords { get; set; }
+        public int PageSize { get; set; }
+        public bool HideCheckbox { get; set; }
+        public bool ShowTableInfo { get; set; }
+        public bool EnableGrouping { get; set; }
+
+
+
         public virtual GridGroup Group { get; set; }
         public virtual ICollection<GridColumn> Columns { get; set; }
         public virtual ICollection<GridVariant> Variants { get; set; }

@@ -286,13 +286,16 @@ export function GridBuilderEditGrid({ table, onChanged, onGoBack }) {
                                 <bd2.FormikInput name="groupId" label={<T>group-id</T>} width="6rem" />
 
                                 <bd2.FormikInput name="title" label={<T>title</T>} width="15rem" />
-                                <bd2.FormikSwitch name="flexLayout" label={<T>flex-layout</T>} size="sm" width="6rem" />
+                                <bd2.FormikToggle name="flexLayout" label={<T>flex-layout</T>} size="sm" width="6rem" />
+                                <bd2.FormikToggle name="hideCheckbox" label={<T>hide-checkbox</T>} size="sm" />
+                                <bd2.FormikToggle name="showTableInfo" label={<T>show-table-info</T>} size="sm" />
+                                <bd2.FormikToggle name="enableGrouping" label={<T>enable-grouping</T>} size="sm" />
+                                <bd2.FormikInput name="pageSize" label={<T>page-size</T>} size="sm" width="6rem" />
                                 <bd2.FormikTextArea
                                     name="description"
                                     label={<T>description</T>}
                                     height="4rem"
-                                    style={{ minWidth: 300 }}
-                                    className="flex-grow-1"
+                                    className="flex-grow-1 w-100"
                                 />
                             </div>
                         </div>
@@ -310,7 +313,10 @@ export function GridBuilderEditGrid({ table, onChanged, onGoBack }) {
                     {canShowTab("data") && (
                         <bd.Panel title={<T>data</T>} size="md">
                             <div className="p-s-3">
-                                <bd2.FormikInput name="tableName" label={<T>table-name</T>} width="15rem" />
+                                <div className="bd-form-flex">
+                                    <bd2.FormikInput name="tableName" label={<T>table-name</T>} width="15rem" />
+                                    <bd2.FormikInput name="topRecords" label={<T>top-records</T>} width="7rem" type="number" />
+                                </div>
                                 <div className="bd-form-flex">
                                     <div className="row g-0 w-100">
                                         <div className="col-12 col-md-6 col-lg-3">
@@ -336,7 +342,7 @@ export function GridBuilderEditGrid({ table, onChanged, onGoBack }) {
                             <div className="bd-form-flex p-s-3">
                                 <div className="row g-0 w-100">
                                     <div className="col-12 col-md-6 col-lg-4">
-                                        <bd2.FormikInput name="azGrid" label={t("azGrid")} />
+                                        <bd2.FormikInput name="azView" label={t("azView")} />
                                     </div>
                                     <div className="col-12 col-md-6 col-lg-4">
                                         <bd2.FormikInput name="azSelect" label={t("azSelect")} />
@@ -452,7 +458,7 @@ export function GridBuilderEditGrid({ table, onChanged, onGoBack }) {
                         //stickyFooter
                         onShowMoreClick={(row) => {
                             tableApi.state.selectedRowIds = {};
-                            setColumn(row.values);
+                            setColumn(row.original);
                         }}
                     />
                 </>

@@ -43,13 +43,24 @@ namespace Forms.Services
 
         public DataTable ExecuteSelect(Grid grid, IList<GridColumn> columns, Dictionary<string, object> filters, Dictionary<string, object> parameters)
         {
-            var fields = columns.Select(x => x.Name).ToArray();
-            var sql = $"select {string.Join(",", fields)} from {grid.TableName}";
+            var sql = grid.SelectSql;
+            if (string.IsNullOrEmpty(sql))
+            {
+                var fields = columns.Select(x => x.Name).ToArray();
+                var top_records = grid.TopRecords > 0 ? $"TOP {grid.TopRecords}" : null;
+                sql = $"select {top_records} {string.Join(",", fields)} from {grid.TableName}";
+            }
             var where = new List<string>();
             FilterParser.AddFilter(where, columns, filters);
             FilterParser.AddFilter(where, columns, grid.GetDefaultFilter());
 
-            if (where.Count > 0) sql += " where " + string.Join(" AND ", where);
+            if (where.Count > 0)
+            {
+                if (!sql.ToLower().Split('\r', '\n', ' ').Contains("where"))
+                    sql += " where ";
+                else sql += " AND ";
+                sql += string.Join(" AND ", where);
+            }
             return db.GetDataTable(sql);
         }
 
@@ -238,13 +249,6 @@ namespace Forms.Services
                 }
             }
             db.SaveChanges();
-        }
-
-
-
-        public bool HasPermission(string azText, string userName, Dictionary<string, object> parameters)
-        {
-            return azText == "*";
         }
 
     }

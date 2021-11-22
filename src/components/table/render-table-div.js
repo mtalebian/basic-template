@@ -126,6 +126,11 @@ export function RenderTableDiv({
         return { ...props, ...remUserProps, className: cn, onClick: () => onTdClick(row, cell, rowIndex) };
     }
 
+    const onToggleAllClick = () => {
+        tableApi.toggleAllRowsSelected(!tableApi.isAllRowsSelected);
+        //selectionChanged();
+    };
+
     const onTdClick = (row, cell, rowIndex) => {
         if (row.isGrouped) return;
         if (cell && onCellClick) onCellClick(row, cell, rowIndex);
@@ -137,11 +142,13 @@ export function RenderTableDiv({
                 if (is_selected && multiSelect) break;
                 if (singleSelect) tableApi.toggleAllRowsSelected(false);
                 row.toggleRowSelected();
+                //selectionChanged();
                 break;
 
             case "toggle":
                 if (singleSelect) tableApi.toggleAllRowsSelected(false);
                 if (!is_selected || multiSelect) row.toggleRowSelected();
+                //selectionChanged();
                 break;
 
             default:
@@ -160,10 +167,7 @@ export function RenderTableDiv({
                     {tableApi.headerGroups.map((headerGroup) => (
                         <div {...headerGroup.getHeaderGroupProps()} className="tr">
                             {!hideCheckbox && multiSelect && (
-                                <div
-                                    className="th selection-column"
-                                    onClick={() => tableApi.toggleAllRowsSelected(!tableApi.isAllRowsSelected)}
-                                >
+                                <div className="th selection-column" onClick={() => onToggleAllClick()}>
                                     <bd.Toggle
                                         size="sm"
                                         color="primary"
@@ -228,7 +232,7 @@ export function RenderTableDiv({
                                 onClick={() => onRowClick && onRowClick(row, rowIndex)}
                             >
                                 {!hideCheckbox && multiSelect && (
-                                    <div className="td selection-column" onClick={() => row.toggleRowSelected()}>
+                                    <div className="td selection-column" onClick={() => onTdClick(row)}>
                                         <bd.Toggle
                                             size="sm"
                                             color="primary"

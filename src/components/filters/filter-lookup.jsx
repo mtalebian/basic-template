@@ -89,8 +89,6 @@ export const FilterLookup = ({ name, title, show, setShow, isString, checkTable,
         hide();
     };
 
-    console.log("checkTable", checkTable);
-
     return (
         <>
             <Modal show={show} onHide={hide} dialogClassName="modal-1024 px-md-4" centered fullscreen="md-down" backdrop="static">
@@ -120,7 +118,7 @@ export const FilterLookup = ({ name, title, show, setShow, isString, checkTable,
                                     <div className="p-3 flex-grow-1">
                                         {values &&
                                             values.map((item, itemIndex) => (
-                                                <div key={itemIndex} className="container-flluid">
+                                                <div key={itemIndex} className="container-fluid">
                                                     <div className="row mb-2 gx-2">
                                                         <div className="mb-2 col-12 col-sm-2">
                                                             <select

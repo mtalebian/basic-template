@@ -1,27 +1,25 @@
 import React, { useRef, useState } from "react";
 import * as bd from "react-basic-design";
-import { Text } from "../../../components/basic/text";
-import * as icons from "../../../assets/icons";
-import { useShell } from "../../shared/use-shell";
-import { BasicInput } from "../../../components/basic-form/basic-input";
-import { Formik } from "formik";
-import { BasicToggle } from "../../../components/basic-form/basic-toggle";
-import { BasicSwitch } from "../../../components/basic-form/basic-switch";
-import { BasicSelect } from "../../../components/basic-form/basic-select";
-import { BasicTextArea } from "../../../components/basic-form/basic-textarea";
-import { gridsApi } from "../../../api/grids-api";
-import { notify } from "../../../components/basic/notify";
+import { Text } from "../basic/text";
+import * as bd2 from "../forms";
+import * as icons from "../../assets/icons";
+import { BasicSelect } from "../basic-form/basic-select";
 
-export const EditTableRow = ({ table, row, onGoBack, onChanged }) => {
+import { notify } from "../basic/notify";
+import { gridsApi } from "../../api/grids-api";
+import { FormLookup } from "./form-lookup";
+
+export const EditGridRow = ({ grid, row, onGoBack, onChanged }) => {
     const insertMode = row === null;
     const [saving, setSaving] = useState(false);
+    const [openLookup, setOpenLookup] = useState(false);
     const formRef = useRef();
 
     const onSaveClick = () => {
         var values = formRef.current.values;
         setSaving(true);
         gridsApi
-            .save(table.id, values, insertMode)
+            .save(grid.id, values, insertMode)
             .then((x) => {
                 setSaving(false);
                 notify.info(<Text>changes-are-saved</Text>);
@@ -33,9 +31,7 @@ export const EditTableRow = ({ table, row, onGoBack, onChanged }) => {
             });
     };
 
-    useShell().setApp("edit-table-row", onGoBack);
-
-    function getFieldProps(x) {
+    function getFieldProps(x, lookup) {
         var props = {
             key: x.id,
             name: x.name,
@@ -50,6 +46,10 @@ export const EditTableRow = ({ table, row, onGoBack, onChanged }) => {
         else if (x.display === "email") props["type"] = "email";
         else if (x.display === "url") props["type"] = "url";
         if (x.maxLen > 0) props["maxLength"] = x.maxLen;
+        if (lookup && x.checkGrid) {
+            props.buttonTitle = <icons.OpenInNew style={{ fontSize: "1.125rem" }} />;
+            props.buttonOnClick = (e) => setOpenLookup(true);
+        }
         return props;
     }
 
@@ -69,11 +69,16 @@ export const EditTableRow = ({ table, row, onGoBack, onChanged }) => {
     }
     return (
         <>
-            <div className="">
+            <div>
                 <div className="border-bottom py-2 bg-default">
-                    <bd.Toolbar className="container">
+                    <bd.Toolbar size="sm" style={{ maxWidth: 800 }}>
                         <h4 className="d-flex align-items-center">
-                            {table.title}
+                            <bd.Button variant="icon" color="default" onClick={() => onGoBack()}>
+                                <icons.ArrowBackIos size="md" className="rtl-rotate-180" />
+                            </bd.Button>
+
+                            {grid.title}
+
                             <span className="px-2 size-sm">
                                 <icons.ArrowForward className="rtl-rotate-180" />
                             </span>
@@ -88,40 +93,43 @@ export const EditTableRow = ({ table, row, onGoBack, onChanged }) => {
                             <Text>cancel</Text>
                         </bd.Button>
                     </bd.Toolbar>
-                    <div className="container"></div>
                 </div>
 
-                <div className="container py-3">
-                    <Formik
+                <div className="py-3" style={{ maxWidth: 800 }}>
+                    <bd2.FormikForm
                         initialValues={row || {}}
                         // validationSchema={yup.object({
                         //     title: yup.string().min(3, t("msg-too-short")).max(100, t("msg-too-long")).required("Required"),
                         // })}
                         onSubmit={onSaveClick}
                         innerRef={formRef}
+                        compact
                     >
-                        <form style={{ maxWidth: 700 }}>
-                            {table.schema.dataColumns.map((x, index) =>
-                                x.display === "textarea" ? (
-                                    <BasicTextArea {...getFieldProps(x)} />
-                                ) : x.display === "select" ? (
-                                    <BasicSelect {...getFieldProps(x)}>
-                                        {getValidValues(x).map((z) => (
-                                            <option key={z.code} value={z.code}>
-                                                {z.title}
-                                            </option>
-                                        ))}
-                                    </BasicSelect>
-                                ) : x.display === "check" ? (
-                                    <BasicToggle {...getFieldProps(x)} />
-                                ) : x.display === "switch" ? (
-                                    <BasicSwitch {...getFieldProps(x)} />
-                                ) : (
-                                    <BasicInput {...getFieldProps(x)} autoFocus={index === 0} />
-                                )
-                            )}
-                        </form>
-                    </Formik>
+                        {grid.dataColumns
+                            .filter((x) => x.showInEditor)
+                            .map((x, xIndex) => (
+                                <>
+                                    {x.display === "textarea" ? (
+                                        <bd2.FormikTextArea {...getFieldProps(x)} />
+                                    ) : x.display === "select" ? (
+                                        <BasicSelect {...getFieldProps(x)}>
+                                            {getValidValues(x).map((z) => (
+                                                <option key={z.code} value={z.code}>
+                                                    {z.title}
+                                                </option>
+                                            ))}
+                                        </BasicSelect>
+                                    ) : x.display === "check" ? (
+                                        <bd2.FormikToggle {...getFieldProps(x)} />
+                                    ) : x.display === "switch" ? (
+                                        <bd2.FormikSwitch {...getFieldProps(x)} />
+                                    ) : (
+                                        <bd2.FormikInput {...getFieldProps(x, true)} autoFocus={xIndex === 0} />
+                                    )}
+                                    <FormLookup show={openLookup} setShow={setOpenLookup} checkTable={x.checkGrid} />
+                                </>
+                            ))}
+                    </bd2.FormikForm>
                 </div>
             </div>
         </>

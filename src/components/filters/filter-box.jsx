@@ -58,7 +58,6 @@ export const FilterBox = ({
 
     const onSubmitHandler = (e) => {
         var filters = formRef.current.values;
-        console.log("filters", filters);
         onExecute(filters);
     };
 
@@ -79,7 +78,7 @@ export const FilterBox = ({
     useEffect(() => {
         if (!!currentVariant) return;
         var v = grid.getDefaultVariant();
-        if (!v) return;
+        if (!v || v?.serial === currentVariant?.serial) return;
         onVariantChangedHandler(v);
     }, [currentVariant, grid, onVariantChangedHandler]);
 
@@ -153,8 +152,6 @@ export const FilterBox = ({
         var d = col.display;
         return !d || d === "text" || d === "email" || d === "url" || d === "textarea";
     }
-
-    console.log("grid.dataColumns", grid.dataColumns);
 
     /****************************/
     return (

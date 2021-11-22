@@ -15,8 +15,12 @@ namespace Forms.Controllers
         
         public bool CanInsert { get; set; } 
         public bool CanUpdate { get; set; } 
-        public bool CanDelete { get; set; } 
+        public bool CanDelete { get; set; }
 
+        public int PageSize { get; set; }
+        public bool HideCheckbox { get; set; }
+        public bool ShowTableInfo { get; set; }
+        public bool EnableGrouping { get; set; }
 
 
         [IgnoreSourceMap]

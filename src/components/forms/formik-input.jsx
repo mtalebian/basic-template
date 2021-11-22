@@ -110,8 +110,9 @@ export const FormikInput = ({
         }
     }
 
-    const getValue = (item) => (typeof item !== "object" ? item : "id" in item ? item["id"] : "code" in item ? item["code"] : item);
-    const getText = (item) => (typeof item !== "object" ? item : "title" in item ? item["title"] : item);
+    const getValue = (item) =>
+        !item || typeof item !== "object" ? item : "id" in item ? item["id"] : "code" in item ? item["code"] : item;
+    const getText = (item) => (!item || typeof item !== "object" ? item : "title" in item ? item["title"] : item);
     const getDisplayText = (item) => (showValues ? getValue(item) : getText(item));
     const selectedItemIndex = multiSelect || !Array.isArray(items) ? -1 : items.findIndex((x) => getValue(x) === field.value);
 
