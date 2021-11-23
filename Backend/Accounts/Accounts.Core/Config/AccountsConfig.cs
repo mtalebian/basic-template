@@ -23,5 +23,6 @@
         public string UserRolesTableName { get; set; }
         public string UserSessionsTableName { get; set; }
         public string RoleCompositeRoleTableName { get; set; }
+        public string LogTableName { get; set; }
     }
 }

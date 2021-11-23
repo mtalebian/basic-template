@@ -22,7 +22,7 @@ namespace Accounts.Core
         IUserRoleRepository UserRoles { get; }
         IUserSessionRepository UserSessions { get; }
         IApplicationRepository Applications { get; }
-
+        ILogRepository Logs { get; }
         
     }
 }

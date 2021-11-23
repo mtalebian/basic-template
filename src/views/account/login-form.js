@@ -1,35 +1,28 @@
-import React, { useState } from "react";
-import { Form } from "react-final-form";
+import { useRef, useState } from "react";
 import { useHistory } from "react-router-dom";
-
-import * as bs from "react-basic-design";
-import { Captcha } from "./captcha";
+import * as yup from "yup";
+import * as bd from "react-basic-design";
+import { BasicInput } from "../../components/basic-form/basic-input";
 import { messages } from "../../components/messages";
 import settings from "../../app/settings";
-import { FinalField } from "../../components/basic/final-form";
+import { Form, Formik } from "formik";
 import { notify } from "../../components/basic/notify";
 import { useAccount } from "../../app/account-context";
+import { Captcha } from "./captcha";
 
 export const LoginForm = ({ inline, ...props }) => {
     const [captchaCounter, setCaptchaCounter] = useState(0);
     const [loading, setLoading] = useState(false);
     const history = useHistory();
     const account = useAccount();
+    const formRef = useRef();
+    const initialValue = {
+        userName: "",
+        password: "",
+        captcha: "",
+    };
 
     const onSubmit = (values) => {
-        if (!values.userName || values.userName.trim().length < 3) {
-            notify.error(messages.InvalidUserName);
-            return;
-        }
-        if (!values.password || values.password.trim().length < 3) {
-            notify.error(messages.InvalidPassword);
-            return;
-        }
-        if (!values.captcha || values.captcha.trim().length !== 5) {
-            notify.error(messages.InvalidCaptcha);
-            return;
-        }
-        //----
         setLoading(true);
         account
             .login(values)
@@ -45,53 +38,48 @@ export const LoginForm = ({ inline, ...props }) => {
                 notify.error(ex);
             });
     };
-    /*
-    const myValidator = BasicValidator((builder) =>
-        builder.object({
-            userName: builder.string().required().userName(),
-            password: builder.string().required().password(),
-            captcha: builder.string().required().length(5),
-        })
-    );*/
 
     return (
-        <Form
-            initialValues={{}}
-            onSubmit={onSubmit}
-            render={({ handleSubmit, form, submitting, pristine, invalid, values, errors, ...args }) => (
-                <form onSubmit={handleSubmit} className="mx-auto ltr" style={{ width: 280 }}>
-                    <div>
-                        {!inline && <h3 className="text-center text-primary">{settings.title}</h3>}
+        <div className="mx-auto ltr" style={{ width: 280 }}>
+            <Formik
+                initialValues={initialValue}
+                validationSchema={yup.object({
+                    userName: yup.string().required("required"),
+                    password: yup.string().required("required"),
+                    captcha: yup.string().required("required"),
+                })}
+                onSubmit={onSubmit}
+                innerRef={formRef}
+            >
+                <Form>
+                    {!inline && <h3 className="text-center text-primary">{settings.title}</h3>}
+                    <BasicInput className="mb-2" name="userName" placeholder="User name" type="text" autoComplete="off" autoFocus />
+                    <BasicInput className="mb-2" name="password" placeholder="Password" type="password" />
+                    <Captcha counter={captchaCounter} />
+                    <bd.Button color="primary" type="submit" className="w-100" onClick={() => formRef.current.submitForm()} disabled={loading}>
+                        {loading && <div className="m-e-2 spinner-border spinner-border-sm"></div>}
+                        <span>{messages.LoginTitle}</span>{" "}
+                    </bd.Button>
+                </Form>
+            </Formik>
 
-                        <FinalField name="userName" placeholder="User name" type="text" autoComplete="off" autoFocus />
-                        <FinalField name="password" placeholder="Password" type="password" />
-                        <Captcha counter={captchaCounter} />
-
-                        <bs.Button color="primary" type="submit" className="w-100" disabled={loading || submitting || invalid}>
-                            {loading && <div className="m-e-2 spinner-border spinner-border-sm"></div>}
-                            <span>{messages.LoginTitle}</span>
-                        </bs.Button>
-
-                        {!inline && (
-                            <div className="text-center">
-                                <p className="pt-3">
-                                    <a className="text-decoration-none text-primary" href="/account/forgot-password">
-                                        {messages.IForgotMyPassword}
-                                    </a>
-                                </p>
-                                <p>
-                                    <a className="text-decoration-none text-primary" href="/account/register">
-                                        {messages.IDontHaveAccount}
-                                    </a>
-                                </p>
-                                <footer className="small mt-4">
-                                    {messages.SupportTel}: <span className="ltr d-inline-block">{settings.supportTel}</span>
-                                </footer>
-                            </div>
-                        )}
-                    </div>
-                </form>
+            {!inline && (
+                <div className="text-center">
+                    <p className="pt-3">
+                        <a className="text-decoration-none text-primary" href="/account/forgot-password">
+                            {messages.IForgotMyPassword}
+                        </a>
+                    </p>
+                    <p>
+                        <a className="text-decoration-none text-primary" href="/account/register">
+                            {messages.IDontHaveAccount}
+                        </a>
+                    </p>
+                    <footer className="small mt-4">
+                        {messages.SupportTel}: <span className="ltr d-inline-block">{settings.supportTel}</span>
+                    </footer>
+                </div>
             )}
-        />
+        </div>
     );
 };

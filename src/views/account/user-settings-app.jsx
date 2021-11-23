@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next";
 import i18next from "i18next";
 import * as bd from "react-basic-design";
 import settings from "../../app/settings";
+import { useShell } from "../shared/use-shell";
 
 const defaultLanguageCode = "fa";
 const languages = [
@@ -20,10 +21,13 @@ const languages = [
 ];
 
 export const UserSettingsApp = () => {
+    const shell = useShell();
     const { t } = useTranslation();
     const [darkMode, setDarkMode] = useState(bd.helper.isDarkMode());
     const currentLanguageCode = settings.getLanguageCode() || defaultLanguageCode;
     const currentLanguage = languages.find((l) => l.code === currentLanguageCode);
+
+    shell.setApp(t("setting"));
 
     const changeDarkMode = (value) => {
         bd.helper.setTheme(value ? "bd-dark" : "bd-light");
@@ -57,13 +61,7 @@ export const UserSettingsApp = () => {
                     className="border-bottom"
                 >
                     {languages.map((x) => (
-                        <bd.ListItem
-                            key={x.code}
-                            primary={x.name}
-                            radio
-                            checked={currentLanguage === x}
-                            onClick={(e) => changeLanguage(x)}
-                        />
+                        <bd.ListItem key={x.code} primary={x.name} radio checked={currentLanguage === x} onClick={(e) => changeLanguage(x)} />
                     ))}
                 </bd.ListItem>
             </bd.List>
