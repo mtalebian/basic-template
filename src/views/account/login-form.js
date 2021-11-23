@@ -8,12 +8,11 @@ import settings from "../../app/settings";
 import { Form, Formik } from "formik";
 import { notify } from "../../components/basic/notify";
 import { useAccount } from "../../app/account-context";
-import { apiConfig } from "../../api/config";
+import { Captcha } from "./captcha";
 
 export const LoginForm = ({ inline, ...props }) => {
     const [captchaCounter, setCaptchaCounter] = useState(0);
     const [loading, setLoading] = useState(false);
-    const [uid, setUID] = useState(Date.now());
     const history = useHistory();
     const account = useAccount();
     const formRef = useRef();
@@ -22,9 +21,7 @@ export const LoginForm = ({ inline, ...props }) => {
         password: "",
         captcha: "",
     };
-    function refreshCaptcha() {
-        setUID(Date.now());
-    }
+
     const onSubmit = (values) => {
         setLoading(true);
         account
@@ -58,17 +55,7 @@ export const LoginForm = ({ inline, ...props }) => {
                     {!inline && <h3 className="text-center text-primary">{settings.title}</h3>}
                     <BasicInput className="mb-2" name="userName" placeholder="User name" type="text" autoComplete="off" autoFocus />
                     <BasicInput className="mb-2" name="password" placeholder="Password" type="password" />
-                    <div className="middle gap-3">
-                        <BasicInput placeholder="Security Code" name="captcha" maxLength="5" autoComplete="off" />
-                        <div className="mb-2">
-                            <img
-                                className="cur-pointer border rounded"
-                                alt="Captcha"
-                                src={`${apiConfig.baseUrl}/captcha?${uid}_${captchaCounter}`}
-                                onClick={refreshCaptcha}
-                            />
-                        </div>
-                    </div>
+                    <Captcha counter={captchaCounter} />
                     <bd.Button color="primary" type="submit" className="w-100" onClick={() => formRef.current.submitForm()} disabled={loading}>
                         {loading && <div className="m-e-2 spinner-border spinner-border-sm"></div>}
                         <span>{messages.LoginTitle}</span>{" "}

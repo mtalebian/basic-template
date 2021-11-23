@@ -4,13 +4,12 @@ import * as yup from "yup";
 import { BasicInput } from "../../components/basic-form/basic-input";
 import { Formik } from "formik";
 import { notify } from "../../components/basic/notify";
-import { apiConfig } from "../../api/config";
 import { messages } from "../../components/messages";
 import { accountApi } from "../../api/account-api";
+import { Captcha } from "./captcha";
 
 export const ForgotPassword = () => {
     const [captchaCounter, setCaptchaCounter] = useState(0);
-    const [uid, setUID] = useState(Date.now());
     const formRef = useRef();
     const [busy, setBusy] = useState(false);
     const [currentUser, setCurrentUser] = useState(null);
@@ -32,10 +31,6 @@ export const ForgotPassword = () => {
 
         return <div className="text-center text-danger">مدت زمان اعتبار :{currentCount}</div>;
     };
-
-    function refreshCaptcha() {
-        setUID(Date.now());
-    }
 
     const onResetPasswordClick = (e) => {
         if (!formRef.current) return false;
@@ -96,17 +91,7 @@ export const ForgotPassword = () => {
                     <form style={{ width: "250px" }}>
                         <h5 className="text-center text-primary pb-2">بازیابی رمز عبور</h5>
                         <BasicInput placeholder="UserName" name="userName" autoComplete="off" autoFocus />
-                        <div className="middle gap-3">
-                            <BasicInput placeholder="Security Code" name="captcha" maxLength="5" autoComplete="off" />
-                            <div className="mb-3">
-                                <img
-                                    className="cur-pointer border rounded"
-                                    alt="Captcha"
-                                    src={`${apiConfig.baseUrl}/captcha?${uid}_${captchaCounter}`}
-                                    onClick={refreshCaptcha}
-                                />
-                            </div>
-                        </div>
+                        <Captcha counter={captchaCounter} />
                         <bd.Button className="w-100" color="primary" autofocus disabled={busy} onClick={() => formRef.current.submitForm()}>
                             {busy && <div className="m-e-2 spinner-border spinner-border-sm"></div>}
                             <span>{messages.SendCode}</span>
