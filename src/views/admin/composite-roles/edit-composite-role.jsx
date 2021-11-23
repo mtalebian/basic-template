@@ -17,6 +17,7 @@ import { TableTitlebar } from "../../../components/table";
 import { RenderRoles } from "./render-roles";
 
 export const EditCompositeRole = ({ currentProjectId, originalCompositeRole, roles, onGoBack, onChange }) => {
+    const [roleList, setRoleList] = useState(roles);
     const { t } = useTranslation();
     const formRef = useRef();
     const insertMode = !originalCompositeRole;
@@ -34,7 +35,7 @@ export const EditCompositeRole = ({ currentProjectId, originalCompositeRole, rol
 
     const onDeleteCompositeRoleClick = (hide) => {
         if (account.isConnected()) {
-            setBusy(true);
+            setDeleting(true);
             roleApi
                 .deleteCompositeRole(currentProjectId, originalCompositeRole.id)
                 .then((x) => {
@@ -42,12 +43,10 @@ export const EditCompositeRole = ({ currentProjectId, originalCompositeRole, rol
                     hide();
                     notify.info(t("composit-role-is-deleted"));
                     onChange(null, originalCompositeRole);
-                    setBusy(false);
                 })
                 .catch((ex) => {
                     setDeleting(false);
                     notify.error(ex);
-                    setBusy(false);
                 });
         }
     };
@@ -139,15 +138,22 @@ export const EditCompositeRole = ({ currentProjectId, originalCompositeRole, rol
                                     <div class="container toolbar">
                                         <h5 class="flex-grow-1">Role-list</h5>
                                         <SelectRoleForm
-                                            roles={roles}
+                                            roles={roleList}
                                             onSelect={(object) => {
                                                 var field = formRef.current.getFieldProps("roles");
                                                 formRef.current.setFieldValue("roles", [...field.value, { ...object }]);
+                                                var newRoles = roleList.filter((x) => x.id != object.id);
+                                                setRoleList([...newRoles]);
                                             }}
                                         />
                                     </div>
                                 </div>
-                                <RenderRoles data={values} />
+                                <RenderRoles
+                                    data={values}
+                                    onDelete={(object) => {
+                                        setRoleList([...roleList, object]);
+                                    }}
+                                />
                             </div>
                             <input type="submit" className="d-none" />
                         </Form>
@@ -179,20 +185,22 @@ const SelectRoleForm = ({ roles, onSelect }) => {
                     <Modal.Title>{<T>Select Roles</T>}</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    <TableTitlebar hideSettings tableApi={tableApi} title="roles" fixed />
-                    <RenderTableDiv
-                        tableApi={tableApi}
-                        singleSelect
-                        hideCheckbox
-                        showTableInfo
-                        showPageSize
-                        enablePaging
-                        enableSorting
-                        clickAction="select"
-                        className="nano-scroll border"
-                        hasWhitespace
-                        onShowMoreClick={(row) => onSelect(row.original)}
-                    />
+                    <>
+                        <TableTitlebar hideSettings tableApi={tableApi} title="roles" fixed />
+                        <RenderTableDiv
+                            tableApi={tableApi}
+                            singleSelect
+                            hideCheckbox
+                            showTableInfo
+                            showPageSize
+                            enablePaging
+                            enableSorting
+                            clickAction="select"
+                            className="nano-scroll border"
+                            hasWhitespace
+                            onShowMoreClick={(row) => onSelect(row.original)}
+                        />
+                    </>
                 </Modal.Body>
                 <Modal.Footer>
                     <bd.Button

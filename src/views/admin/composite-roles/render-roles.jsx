@@ -7,7 +7,7 @@ import { TableTitlebar } from "../../../components/table";
 import * as bd from "react-basic-design";
 import * as icons from "../../../assets/icons";
 
-export const RenderRoles = ({ data }) => {
+export const RenderRoles = ({ data, onDelete }) => {
     const [field, _, helper] = useField({ name: "roles" });
     const gridColumns = useRef([
         { Header: <T>id</T>, accessor: "id" },
@@ -17,6 +17,7 @@ export const RenderRoles = ({ data }) => {
         var list = [...field.value];
         var filtered = list.filter((x) => x.id !== item.id);
         helper.setValue(filtered);
+        onDelete(item);
     };
     const tableApi = useReactTable({ columns: gridColumns.current, data: data.roles, flexLayout: false });
     return (
