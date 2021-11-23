@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Forms.Core
+namespace CommonServices.Core
 {
     public interface ILocaleService
     {

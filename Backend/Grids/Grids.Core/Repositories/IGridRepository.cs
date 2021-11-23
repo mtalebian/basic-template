@@ -2,7 +2,7 @@
 
 namespace Forms.Core
 {
-    public interface ITableRepository : IRepository<Grid>
+    public interface IGridRepository : IRepository<Grid>
     {
     }
 }

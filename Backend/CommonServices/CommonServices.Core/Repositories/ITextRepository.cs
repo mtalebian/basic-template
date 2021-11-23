@@ -1,6 +1,6 @@
 ﻿using Common.Data;
 
-namespace Forms.Core
+namespace CommonServices.Core
 {
     public interface ITextRepository : IRepository<Text>
     {

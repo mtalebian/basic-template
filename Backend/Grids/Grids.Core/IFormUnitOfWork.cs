@@ -6,8 +6,8 @@ namespace Forms.Core
     {
         IGridVariantRepository GridVariants { get; }
         IGridColumnRepository GridColumns { get; }
-        ITableRepository Grids { get; }
+        IGridRepository Grids { get; }
         IGridGroupRepository GridGroups { get; }
-        ITextRepository Texts { get; }
+        //ITextRepository Texts { get; }
     }
 }

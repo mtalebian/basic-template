@@ -6,7 +6,7 @@ namespace Microsoft.Extensions.DependencyInjection
 {
     public static class DependencyInjection
     {
-        public static void AddGridsContext(this IServiceCollection services, string connectionString) 
+        public static void AddGridsData(this IServiceCollection services, string connectionString) 
         {
             services.AddDbContext<GridsDbContext>(options => options
                 .UseSqlServer(

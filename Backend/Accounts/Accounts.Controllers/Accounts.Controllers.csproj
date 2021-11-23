@@ -18,8 +18,6 @@
   <ItemGroup>
     <ProjectReference Include="..\..\Common\Common.csproj" />
     <ProjectReference Include="..\Accounts.Core\Accounts.Core.csproj" />
-    <ProjectReference Include="..\Accounts.Data\Accounts.Data.csproj" />
-    <ProjectReference Include="..\Accounts.Services\Accounts.Services.csproj" />
   </ItemGroup>
 
   <ItemGroup>

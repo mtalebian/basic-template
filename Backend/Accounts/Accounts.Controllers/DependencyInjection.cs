@@ -1,4 +1,4 @@
-﻿using Accounts.Core;
+﻿/*using Accounts.Core;
 
 namespace Microsoft.Extensions.DependencyInjection
 {
@@ -20,4 +20,4 @@ namespace Microsoft.Extensions.DependencyInjection
             services.AddAuthorizationService<TUser>();
         }
     }
-}
+}*/

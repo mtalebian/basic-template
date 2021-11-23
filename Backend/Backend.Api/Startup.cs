@@ -122,16 +122,38 @@ namespace Backend.Api
             //-- Accounts 
             var connectionString = Configuration["ConnectionString"];
             var formAuthentication = true;
-            services.AddAccountsServices<User>(formAuthentication, connectionString);
+            //services.AddAccountsServices<User>(formAuthentication, connectionString);
+            services.AddAccountsContext<User>(connectionString);
+            if (formAuthentication)
+            {
+                services.AddFormAccountsService<User>();
+            }
+            else
+            {
+                services.AddWindowsAccountsService<User>();
+            }
+            services.AddMenuService();
+            services.AddUserManagmentService();
+            services.AddAuthorizationService<User>();
             //services.AddMvc()
             //    .AddApplicationPart(Assembly.Load("Accounts.Controllers"))
             //    .AddControllersAsServices();
 
 
-            //-- Forms
-            services.AddFormsServices(connectionString);
+            //-- Grids
+            services.AddGridsData(connectionString);
+            services.AddGridsService();
+
             //services.AddMvc()
-            //    .AddApplicationPart(Assembly.Load("Forms.Controllers"))
+            //    .AddApplicationPart(Assembly.Load("Grids.Controllers"))
+            //    .AddControllersAsServices();
+
+            //-- CommonServices
+            services.AddCommonServicesData(connectionString);
+            services.AddCommonServicesService();
+
+            //services.AddMvc()
+            //    .AddApplicationPart(Assembly.Load("Grids.Controllers"))
             //    .AddControllersAsServices();
 
             services.AddEmailServices();
