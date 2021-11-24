@@ -1,5 +1,6 @@
 using Accounts.Core;
 using Common.Security;
+using CommonServices.Core;
 using Forms.Core;
 using Message.Core;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -31,6 +32,7 @@ namespace Backend.Api
             services.Configure<JwtConfig>(Configuration.GetSection(JwtConfig.SectionName));
             services.Configure<AccountsConfig>(Configuration.GetSection(AccountsConfig.SectionName));
             services.Configure<FormsConfig>(Configuration.GetSection(FormsConfig.SectionName));
+            services.Configure<CommonServiceConfig>(Configuration.GetSection(CommonServiceConfig.SectionName));
             services.Configure<EmailConfig>(Configuration.GetSection(EmailConfig.SectionName));
 
             //-- Swagger
