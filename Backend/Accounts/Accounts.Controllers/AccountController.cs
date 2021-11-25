@@ -209,6 +209,7 @@ namespace Accounts.Controllers
         [HttpGet("profile-info/{projectId}")]
         public async Task<Response<ProfileInfoDTO>> GetProfileInfo(string projectId)
         {
+            throw new Exception("Exception while fetching all the students from the storage.");
             var app = await accountService.GetProjectAsync(projectId);
             if (app == null)
             {

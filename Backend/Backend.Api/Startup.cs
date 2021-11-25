@@ -12,6 +12,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using Serilog;
 using System;
 using System.Text;
 
@@ -24,6 +25,9 @@ namespace Backend.Api
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
+            Serilog.Log.Logger = new LoggerConfiguration()
+            .ReadFrom.Configuration(configuration)
+            .CreateLogger();
         }
 
 
