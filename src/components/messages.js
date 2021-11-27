@@ -6,7 +6,7 @@ export const messages = {
     Error403: "دسترسی غیر مجاز - 403",
     Error404: "صفحه مورد نظر یافت نشد",
     Error405: "خطای برنامه - 405",
-    Error500: "خطایی در سمت سرور رخ داده است",
+    Error500: "خطایی در سمت سرور رخ داده است..",
 
     InvalidUserName: "نام کاربری نامعتبر است",
     InvalidPassword: "رمز ورود نامعتبر است",
@@ -32,9 +32,9 @@ export const messages = {
     YouAreGoingToDeleteRows: "شما در حال حذف {count} ردیف هستید!",
     Login: "وارد شوید!",
     LoginTitle: "ورود به سیستم",
-    SendCode:"ارسال كد",
-    ChangePassword:"تغيير گذرواژه",
-    SentVerificationCode:"كد اعتبار سنجي به شماره تلفن شما ارسال شده است",
+    SendCode: "ارسال كد",
+    ChangePassword: "تغيير گذرواژه",
+    SentVerificationCode: "كد اعتبار سنجي به شماره تلفن شما ارسال شده است",
     ConnectionError: "خطا در برقراری ارتباط",
     Retry: "تلاش مجدد",
 

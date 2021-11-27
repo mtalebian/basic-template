@@ -1,4 +1,5 @@
 using Accounts.Core;
+using Backend.Api.Controllers;
 using Common.Extensions;
 using Common.Security;
 using Forms.Core;
@@ -100,7 +101,7 @@ namespace Backend.Api
                 "https://localhost:3001",
             };
 
-           
+
 
             services.AddCors(o => o.AddPolicy("react", builder =>
             {
@@ -116,6 +117,7 @@ namespace Backend.Api
             //-- Common
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddSingleton<ICurrentUserNameService, CurrentUserNameService>();
+            services.AddSingleton<IExceptionTextTranslator, ExceptionTextTranslator>();
 
 
             //--modelState
@@ -165,7 +167,7 @@ namespace Backend.Api
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
-            app.ConfigureExceptionHandler();
+            app.UseCommonExceptionHandler();
             app.UseHttpsRedirection();
             app.UseRouting();
             app.UseStaticFiles();
@@ -187,3 +189,4 @@ namespace Backend.Api
         }
     }
 }
+

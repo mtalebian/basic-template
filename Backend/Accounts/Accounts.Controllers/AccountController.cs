@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
+using Serilog.Context;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -180,6 +181,11 @@ namespace Accounts.Controllers
         [HttpPost("user-info/{projectId}")]
         public async Task<Response<UserInfoDTO>> GetUserInfo(string projectId)
         {
+            Logger.Info("GetUserInfo:", projectId);
+
+            if (!Request.Cookies.ContainsKey("i18next"))
+                Response.Cookies.Append("i18next", "fa");
+
             var app = await accountService.GetProjectAsync(projectId);
             if (app == null)
             {
@@ -209,7 +215,6 @@ namespace Accounts.Controllers
         [HttpGet("profile-info/{projectId}")]
         public async Task<Response<ProfileInfoDTO>> GetProfileInfo(string projectId)
         {
-            throw new Exception("Exception while fetching all the students from the storage.");
             var app = await accountService.GetProjectAsync(projectId);
             if (app == null)
             {
@@ -348,7 +353,7 @@ namespace Accounts.Controllers
             var session = await accountService.GetSessionByRefreshTokenAsync(sessionId.ToLong(0), ref_token);
             if (session == null)
             {
-                accountService.SessionLoger(projectId, sessionId.ToLong(0),null, "expired-Token");
+                Logger.Info("expired-Token", $"projectId={projectId}", $"SessionId={sessionId.ToLong(0)}");
                 return new Response<RefreshResultDTO>(Messages.Error401);
             }
             var user = await accountService.GetUserByIdAsync(session.UserId);
@@ -362,13 +367,13 @@ namespace Accounts.Controllers
             if (session != null)
             {
                 await accountService.RegenerateRefreshTokenAsync(session, ip);
-                accountService.SessionLoger(app.Id, session.Id, user.UserName, "Refresh-Token");
+                Logger.Info("Refresh-Token", $"projectId={app.Id}", $"SessionId={session.Id}");
             }
             else
             {
                 var userAgent = Request.Headers["User-Agent"].ToString();
                 session = await accountService.CreateSessionAsync(app, user, userAgent, ip);
-                accountService.SessionLoger(app.Id, session.Id, user.UserName, "Create-Session");
+                Logger.Info("Create-Session", $"projectId={app.Id}", $"SessionId={session.Id}");
             }
 
             var expiry = _Configuration["Jwt:expiry"].ToInt(Settings.DefaultExpiry);

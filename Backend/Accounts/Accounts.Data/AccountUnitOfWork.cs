@@ -24,7 +24,6 @@ namespace Accounts.Data
         public IUserSessionRepository UserSessions { get; }
         public IApplicationRepository Applications { get; }
         public IRoleCompositeRoleRepository RoleCompositeRoles { get; }
-        public ILogRepository Logs { get; }
 
         public AccountUnitOfWork(AccountDbContext context) : base(context)
         {
@@ -46,7 +45,6 @@ namespace Accounts.Data
             UserSessions = new UserSessionRepository(context);
             Applications = new ApplicationRepository(context);
             RoleCompositeRoles = new RoleCompositeRoleRepository(context);
-            Logs = new LogRepository(context);
         }
     }
 }
