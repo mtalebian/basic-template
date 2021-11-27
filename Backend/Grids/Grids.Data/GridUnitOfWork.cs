@@ -11,11 +11,11 @@ namespace Forms.Data
     {
         private readonly GridsDbContext context;
 
-        public ITableRepository Grids { get; }
+        public IGridRepository Grids { get; }
         public IGridColumnRepository GridColumns { get; }
         public IGridVariantRepository GridVariants { get; }
         public IGridGroupRepository GridGroups { get; }
-        public ITextRepository Texts { get; }
+        //public ITextRepository Texts { get; }
 
 
         public GridUnitOfWork(GridsDbContext context) : base(context)
@@ -25,7 +25,7 @@ namespace Forms.Data
             GridColumns = new GridColumnRepository(context);
             GridVariants = new GridVariantRepository(context);
             GridGroups = new GridGroupRepository(context);
-            Texts = new TextRepository(context);
+            //Texts = new TextRepository(context);
         }
     }
 }

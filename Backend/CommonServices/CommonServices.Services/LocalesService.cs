@@ -1,19 +1,19 @@
-﻿using Forms.Core;
+﻿using CommonServices.Core;
 using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Forms.Services
+namespace CommonServices.Services
 {
     internal class LocalesService : ILocaleService
     {
         private static readonly object sync = new object();
-        private readonly IFormUnitOfWork db;
+        private readonly ICommonServiceUnitOfWork db;
 
 
-        public LocalesService(IFormUnitOfWork db)
+        public LocalesService(ICommonServiceUnitOfWork db)
         {
             this.db = db;
         }

@@ -155,7 +155,7 @@ namespace Forms.Data
                 .HasForeignKey(x => new { x.ProjectId, x.GridId });
 
 
-
+            /*
             //
             // Text
             //
@@ -165,7 +165,7 @@ namespace Forms.Data
             Text.NVarChar(x => x.Name, 100, true);
             Text.NVarChar(x => x.Value, 1000, false);
             Text.DefineCreatedAt(x => x.CreatedAt, "_CreatedAt");
-
+            */
 
 
             //

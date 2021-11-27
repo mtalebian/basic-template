@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Forms.Core
+namespace CommonServices.Core
 {
     public class Text
     {

@@ -27,7 +27,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "3 - Grids", "3 - Grids", "{
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "4- Messaging", "4- Messaging", "{44D95F19-9666-4595-B6F0-5C37EF6A3981}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Message.Core", "Messaging\Message.Core\Message.Core.csproj", "{7BE20D0F-C0FD-46D8-A303-FDFB700C590A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Messages.Core", "Messaging\Message.Core\Messages.Core.csproj", "{7BE20D0F-C0FD-46D8-A303-FDFB700C590A}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Messages.Controllers", "Messaging\Messages.Controllers\Messages.Controllers.csproj", "{AC870ECF-D66B-40CD-A5E7-390C19307B67}"
 EndProject
@@ -42,6 +42,18 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Grids.Migrations", "Grids\Grids.Migrations\Grids.Migrations.csproj", "{ABB509E4-9FE2-425B-A589-C020B82D318D}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Grids.Services", "Grids\Grids.Services\Grids.Services.csproj", "{F337F172-9739-45EC-95A2-8FC784C09967}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "5 - Common Services", "5 - Common Services", "{9DA531E1-6B84-4ECA-864D-52275109EA30}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CommonServices.Core", "CommonServices\CommonServices.Core\CommonServices.Core.csproj", "{859F795B-B1AA-4FE3-BB35-BC22DF062229}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CommonServices.Data", "CommonServices\CommonServices.Data\CommonServices.Data.csproj", "{B8B0315A-A55E-4E4B-B16A-8C7EAB754C0F}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CommonServices.Services", "CommonServices\CommonServices.Services\CommonServices.Services.csproj", "{4802DDF3-B85D-4966-8948-BF079A2477A7}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CommonServices.Controllers", "CommonServices\CommonServices.Controllers\CommonServices.Controllers.csproj", "{7692EF9E-C203-4A78-A027-4004DE327F7A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CommonServices.Migrations", "CommonServices\CommonServices.Migrations\CommonServices.Migrations.csproj", "{182FB6B5-1ED6-47E0-A129-C10A23268344}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -109,6 +121,26 @@ Global
 		{F337F172-9739-45EC-95A2-8FC784C09967}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F337F172-9739-45EC-95A2-8FC784C09967}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F337F172-9739-45EC-95A2-8FC784C09967}.Release|Any CPU.Build.0 = Release|Any CPU
+		{859F795B-B1AA-4FE3-BB35-BC22DF062229}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{859F795B-B1AA-4FE3-BB35-BC22DF062229}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{859F795B-B1AA-4FE3-BB35-BC22DF062229}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{859F795B-B1AA-4FE3-BB35-BC22DF062229}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B8B0315A-A55E-4E4B-B16A-8C7EAB754C0F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B8B0315A-A55E-4E4B-B16A-8C7EAB754C0F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B8B0315A-A55E-4E4B-B16A-8C7EAB754C0F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B8B0315A-A55E-4E4B-B16A-8C7EAB754C0F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4802DDF3-B85D-4966-8948-BF079A2477A7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4802DDF3-B85D-4966-8948-BF079A2477A7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4802DDF3-B85D-4966-8948-BF079A2477A7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4802DDF3-B85D-4966-8948-BF079A2477A7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7692EF9E-C203-4A78-A027-4004DE327F7A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7692EF9E-C203-4A78-A027-4004DE327F7A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7692EF9E-C203-4A78-A027-4004DE327F7A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7692EF9E-C203-4A78-A027-4004DE327F7A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{182FB6B5-1ED6-47E0-A129-C10A23268344}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{182FB6B5-1ED6-47E0-A129-C10A23268344}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{182FB6B5-1ED6-47E0-A129-C10A23268344}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{182FB6B5-1ED6-47E0-A129-C10A23268344}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -129,6 +161,11 @@ Global
 		{8E49B3E8-31DC-4E77-82FA-A472A027D1A9} = {AEDBDD72-574B-4198-AD15-3F62E6DC034B}
 		{ABB509E4-9FE2-425B-A589-C020B82D318D} = {AEDBDD72-574B-4198-AD15-3F62E6DC034B}
 		{F337F172-9739-45EC-95A2-8FC784C09967} = {AEDBDD72-574B-4198-AD15-3F62E6DC034B}
+		{859F795B-B1AA-4FE3-BB35-BC22DF062229} = {9DA531E1-6B84-4ECA-864D-52275109EA30}
+		{B8B0315A-A55E-4E4B-B16A-8C7EAB754C0F} = {9DA531E1-6B84-4ECA-864D-52275109EA30}
+		{4802DDF3-B85D-4966-8948-BF079A2477A7} = {9DA531E1-6B84-4ECA-864D-52275109EA30}
+		{7692EF9E-C203-4A78-A027-4004DE327F7A} = {9DA531E1-6B84-4ECA-864D-52275109EA30}
+		{182FB6B5-1ED6-47E0-A129-C10A23268344} = {9DA531E1-6B84-4ECA-864D-52275109EA30}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {7C5A8690-C530-4ECF-A48A-016E33C3970C}

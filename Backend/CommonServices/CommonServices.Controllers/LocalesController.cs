@@ -1,11 +1,11 @@
-﻿using Forms.Core;
+﻿using CommonServices.Core;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using System.Collections.Generic;
 
-namespace Forms.Controllers
+namespace CommonServices.Controllers
 {
     [ApiController]
     [Route("[controller]")]

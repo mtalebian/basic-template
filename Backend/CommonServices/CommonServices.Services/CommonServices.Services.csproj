@@ -5,12 +5,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.Cors" Version="2.2.0" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\..\Common\Common.csproj" />
-    <ProjectReference Include="..\Grids.Core\Grids.Core.csproj" />
+    <ProjectReference Include="..\CommonServices.Core\CommonServices.Core.csproj" />
   </ItemGroup>
 
 </Project>

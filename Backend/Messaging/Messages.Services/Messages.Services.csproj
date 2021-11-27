@@ -17,7 +17,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\Common\Common.csproj" />
-    <ProjectReference Include="..\Message.Core\Message.Core.csproj" />
+    <ProjectReference Include="..\Message.Core\Messages.Core.csproj" />
   </ItemGroup>
 
   <ItemGroup>
