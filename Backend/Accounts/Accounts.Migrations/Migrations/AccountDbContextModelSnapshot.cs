@@ -198,43 +198,6 @@ namespace Accounts.Migrations.Migrations
                     b.ToTable("CompositeRoles", "tmp");
                 });
 
-            modelBuilder.Entity("Accounts.Core.Log", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<DateTime>("CreateOn")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("datetime2")
-                        .HasDefaultValueSql("getdate()");
-
-                    b.Property<string>("LogType")
-                        .IsRequired()
-                        .HasMaxLength(20)
-                        .HasColumnType("nvarchar(20)");
-
-                    b.Property<string>("Message")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ProjectId")
-                        .IsRequired()
-                        .HasMaxLength(30)
-                        .HasColumnType("nvarchar(30)");
-
-                    b.Property<long>("SessionId")
-                        .HasColumnType("bigint");
-
-                    b.Property<string>("UserName")
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Logs", "tmp");
-                });
-
             modelBuilder.Entity("Accounts.Core.Menu", b =>
                 {
                     b.Property<string>("ProjectId")
@@ -584,8 +547,8 @@ namespace Accounts.Migrations.Migrations
                         {
                             Id = 1,
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "4745abd2-e819-448a-999d-76c47b0043e8",
-                            CreatedAt = new DateTime(2021, 11, 22, 12, 22, 27, 517, DateTimeKind.Local).AddTicks(4915),
+                            ConcurrencyStamp = "ff19e81a-b002-4f1c-8093-ed6910bf51ba",
+                            CreatedAt = new DateTime(2021, 11, 27, 14, 27, 24, 800, DateTimeKind.Local).AddTicks(6393),
                             EmailConfirmed = false,
                             FirstName = "",
                             IsDeleted = false,
@@ -595,7 +558,7 @@ namespace Accounts.Migrations.Migrations
                             LockoutEnabled = false,
                             PasswordHash = "PABPyu6/prVEQ4QbBrmcATJsjw/1yoli07rNI6EJ764=",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "f1d4dd24-f7e3-4e57-b001-72ff63556393",
+                            SecurityStamp = "3b314a6a-e82c-44eb-b857-03a867b4144e",
                             UserName = "admin",
                             WindowsAuthenticate = false
                         });
