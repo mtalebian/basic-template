@@ -1,10 +1,7 @@
 ﻿using Common;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
 using System;
-using System.Collections.Generic;
-using System.Linq;
+
 
 namespace Backend.Api.Controllers
 {
@@ -22,7 +19,6 @@ namespace Backend.Api.Controllers
         {
             var lang = httpContextAccessor.HttpContext.Request.Cookies["i18next"];
             return lang == "fa" && text == "LOGIN" ? "ورود" : text;
-
             //Logger.Fatal(new Exception(text), "Exception not translated");
         }
     }

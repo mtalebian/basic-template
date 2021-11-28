@@ -32,15 +32,14 @@ namespace Common
             catch (Exception ex)
             {
                 Serilog.Log.Error(ex, ExceptionTranslator.GetErrorMessage(ex));
-                await HandleExceptionAsync(httpContext, ex, "0");
+                await HandleExceptionAsync(httpContext, ex);
             }
         }
 
-
-        private async Task HandleExceptionAsync(HttpContext context, Exception exception, string logId)
+        private async Task HandleExceptionAsync(HttpContext context, Exception exception)
         {
             var msg = ExceptionTranslator.Translate(exception, textTranslator.Translate);
-
+            
             context.Response.ContentType = "application/json";
             context.Response.StatusCode = (int)HttpStatusCode.OK;
             var resp = new Response
