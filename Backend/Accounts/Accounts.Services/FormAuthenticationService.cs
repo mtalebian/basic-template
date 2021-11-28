@@ -136,11 +136,5 @@ namespace Accounts.Services
             return db.Menus.WhereAsync(x => x.ProjectId == projectId);
         }
 
-        public void SessionLoger(string projectId, long sessionId, string userName, string message)
-        {
-            var log = new Log() { LogType = "session-info", ProjectId = projectId, SessionId = sessionId, UserName = userName, Message = message, CreateOn = DateTime.Now };
-            db.Logs.Add(log);
-            db.SaveChanges();
-        }
     }
 }

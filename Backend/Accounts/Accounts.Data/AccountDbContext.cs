@@ -334,20 +334,6 @@ namespace Accounts.Data
                 .HasOne<User>(x => x.User)
                 .WithMany(x => x.UserSessions)
                 .HasForeignKey(x => x.UserId);
-
-            //
-            //log
-            //
-            var Log = new ConfigHelper<Log>(modelBuilder, _AccountsConfig.LogTableName);
-            Log.HasKey(x => x.Id);
-            Log.IsAutoIncrement(x => x.Id);
-            Log.DefineProjectId(x => x.ProjectId);
-            Log.Varchar20(x => x.LogType);
-            Log.HasMaxLength(x => x.UserName, 100, false);
-            Log.DefaultGetDate(x => x.CreateOn);
-            Log.IsRequired(x => x.SessionId);
-            Log.IsRequired(x => x.ProjectId);
-            Log.IsRequired(x => x.LogType);
             
         }
     }
