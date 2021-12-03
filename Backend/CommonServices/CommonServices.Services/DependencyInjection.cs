@@ -9,6 +9,8 @@ namespace Microsoft.Extensions.DependencyInjection
         public static void AddCommonServicesService(this IServiceCollection services)
         {
             services.AddScoped<ILocaleService, LocalesService>();
+            services.AddScoped<INumberRangeService, NumberRangeService>();
+            services.AddScoped<IMaintainNumberRange, IMaintainNumberRange>();
         }
 
     }

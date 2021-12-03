@@ -7,7 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Backend.Host", "Backend.Api
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "1 - Backend", "1 - Backend", "{70176948-AFD8-484F-835C-190C8DC848DB}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "5 - Lib", "5 - Lib", "{AC3B90F4-16E2-4979-973E-CEB7978D880F}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "6 - Lib", "6 - Lib", "{AC3B90F4-16E2-4979-973E-CEB7978D880F}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "2 - Accounts", "2 - Accounts", "{669ABE87-ADE2-4AC8-A36A-683037796FF2}"
 EndProject
@@ -53,7 +53,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CommonServices.Services", "
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CommonServices.Controllers", "CommonServices\CommonServices.Controllers\CommonServices.Controllers.csproj", "{7692EF9E-C203-4A78-A027-4004DE327F7A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CommonServices.Migrations", "CommonServices\CommonServices.Migrations\CommonServices.Migrations.csproj", "{182FB6B5-1ED6-47E0-A129-C10A23268344}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CommonServices.Migrations", "CommonServices\CommonServices.Migrations\CommonServices.Migrations.csproj", "{182FB6B5-1ED6-47E0-A129-C10A23268344}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "0 - Tools", "0 - Tools", "{BCAA2598-400E-491C-A3FB-2C8A000837BA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WinFormsApp1", "Tools\WinFormsApp1\WinFormsApp1.csproj", "{54B59A57-8568-460E-9A2F-1507163EDE38}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -141,6 +145,10 @@ Global
 		{182FB6B5-1ED6-47E0-A129-C10A23268344}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{182FB6B5-1ED6-47E0-A129-C10A23268344}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{182FB6B5-1ED6-47E0-A129-C10A23268344}.Release|Any CPU.Build.0 = Release|Any CPU
+		{54B59A57-8568-460E-9A2F-1507163EDE38}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{54B59A57-8568-460E-9A2F-1507163EDE38}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{54B59A57-8568-460E-9A2F-1507163EDE38}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{54B59A57-8568-460E-9A2F-1507163EDE38}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -166,6 +174,7 @@ Global
 		{4802DDF3-B85D-4966-8948-BF079A2477A7} = {9DA531E1-6B84-4ECA-864D-52275109EA30}
 		{7692EF9E-C203-4A78-A027-4004DE327F7A} = {9DA531E1-6B84-4ECA-864D-52275109EA30}
 		{182FB6B5-1ED6-47E0-A129-C10A23268344} = {9DA531E1-6B84-4ECA-864D-52275109EA30}
+		{54B59A57-8568-460E-9A2F-1507163EDE38} = {BCAA2598-400E-491C-A3FB-2C8A000837BA}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {7C5A8690-C530-4ECF-A48A-016E33C3970C}

@@ -1,9 +1,5 @@
-﻿using CommonServices.Core;
-using Common.Data;
-using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
-using System.Linq;
-using Microsoft.Data.SqlClient;
+﻿using Common.Data;
+using CommonServices.Core;
 
 namespace CommonServices.Data
 {
@@ -12,12 +8,14 @@ namespace CommonServices.Data
         private readonly CommonServiceDbContext context;
 
         public ITextRepository Texts { get; }
+        public INumberRangeRepository NumberRanges { get; }
 
 
         public CommonServiceUnitOfWork(CommonServiceDbContext context) : base(context)
         {
             this.context = context;
             Texts = new TextRepository(context);
+            NumberRanges = new NumberRangeRepository(context);
         }
     }
 }
