@@ -27,6 +27,11 @@ namespace WinFormsApp1
                     var j = File.ReadAllText(SettingsFileName);
                     var dic = JsonConvert.DeserializeObject<Dictionary<string, string>>(j);
                     databaseControl1.ConnectionString = dic["ConnectionString"];
+                    txtEntitiesFolder.Text = dic["EntitiesFolder"];
+                    txtIRepositoryFolder.Text = dic["IRepositoryFolder"];
+                    txtRepositoryFolder.Text = dic["RepositoryFolder"];
+                    txtUnitOfWorkFile.Text = dic["UnitOfWorkFile"];
+                    txtDbContextFile.Text = dic["DbContextFile"];
                 }
                 catch (Exception ex)
                 {
@@ -41,6 +46,11 @@ namespace WinFormsApp1
             {
                 var dic = new Dictionary<string, string>();
                 dic["ConnectionString"] = databaseControl1.ConnectionString;
+                dic["EntitiesFolder"] = txtEntitiesFolder.Text;
+                dic["IRepositoryFolder"] = txtIRepositoryFolder.Text;
+                dic["RepositoryFolder"] = txtRepositoryFolder.Text;
+                dic["UnitOfWorkFile"] = txtUnitOfWorkFile.Text;
+                dic["DbContextFile"] = txtDbContextFile.Text;
                 var j = JsonConvert.SerializeObject(dic);
                 File.WriteAllText(SettingsFileName, j);
                 base.OnFormClosed(e);

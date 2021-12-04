@@ -10,7 +10,6 @@ namespace Microsoft.Extensions.DependencyInjection
         {
             services.AddScoped<ILocaleService, LocalesService>();
             services.AddScoped<INumberRangeService, NumberRangeService>();
-            services.AddScoped<IMaintainNumberRange, IMaintainNumberRange>();
         }
 
     }

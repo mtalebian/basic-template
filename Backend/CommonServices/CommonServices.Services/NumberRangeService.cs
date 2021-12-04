@@ -18,7 +18,7 @@ namespace CommonServices.Services
             this.db = db;
         }
 
-        public IList<NumberRange> GetNumberRange(string objectClass, string category, string year)
+        public IList<NumberRange> GetNumberRanges(string companyId, string objectClass, string category, string year)
         {
             return db.NumberRanges.Where(x => x.ObjectClass == objectClass &&
                 (!string.IsNullOrEmpty(category) && x.Category == category) &&
@@ -46,11 +46,11 @@ namespace CommonServices.Services
         }
 
 
-        public string Generate(string objectClass, string category, string year)
+        public string Generate(string companyId, string objectClass, string category, string year)
         {
             lock (sync)
             {
-                var ranges = GetNumberRange(objectClass, category, year);
+                var ranges = GetNumberRanges(companyId, objectClass, category, year);
                 foreach (var r in ranges)
                 {
                     var next = r.GetNextNumber();

@@ -53,6 +53,7 @@ namespace WinFormsApp1
 
         private void UpdateTree(TreeNodeCollection nodes, TableSchemaCollection tables)
         {
+            var counter = 0;
             nodes.Clear();
             foreach (var schema in tables.Select(x => x.Owner).Distinct())
             {
@@ -62,9 +63,10 @@ namespace WinFormsApp1
                 {
                     var n = CreateNode(tb.Name, tb);
                     nSchema.Nodes.Add(n);
+                    counter += 1;
                 }
             }
-            treeView1.ExpandAll();
+            if (counter < 50) treeView1.ExpandAll();
         }
 
         private TreeNode CreateNode(string title, TableSchema tb)

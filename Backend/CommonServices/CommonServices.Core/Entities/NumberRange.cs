@@ -4,6 +4,7 @@ namespace CommonServices.Core
 {
     public class NumberRange : Common.Data.FullAuditEntity
     {
+        public string CompanyId { get; set; }
         public string ObjectClass { get; set; }
         public string Year { get; set; }
         public string Category { get; set; }
