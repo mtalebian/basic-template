@@ -1,0 +1,182 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{23FB92C9-D4EB-45AB-BC81-7DD6EB0768AC}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <RootNamespace>Db2Code</RootNamespace>
+    <AssemblyName>Db2Code</AssemblyName>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <Deterministic>true</Deterministic>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Newtonsoft.Json.13.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data.Entity.Design" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Deployment" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="DbHelper\Convert.cs" />
+    <Compile Include="DbHelper\DbEngine\DbManager\0\DbManagerHelper.cs" />
+    <Compile Include="DbHelper\DbEngine\DbManager\0\IDbManager.cs" />
+    <Compile Include="DbHelper\DbEngine\DbManager\0\IDbManagerObject.cs" />
+    <Compile Include="DbHelper\DbEngine\DbManager\0\IDbManagerOwnerNamedObject.cs" />
+    <Compile Include="DbHelper\DbEngine\DbManager\DbManagerColumnSchema.cs" />
+    <Compile Include="DbHelper\DbEngine\DbManager\DbManagerDataSchema.cs" />
+    <Compile Include="DbHelper\DbEngine\DbManager\DbManagerIndexColumnSchema.cs" />
+    <Compile Include="DbHelper\DbEngine\DbManager\DbManagerIndexSchema.cs" />
+    <Compile Include="DbHelper\DbEngine\DbManager\DbManagerParameterMode.cs" />
+    <Compile Include="DbHelper\DbEngine\DbManager\DbManagerParameterSchema.cs" />
+    <Compile Include="DbHelper\DbEngine\DbManager\DbManagerProcedureSchema.cs" />
+    <Compile Include="DbHelper\DbEngine\DbManager\DbManagerRelationConditionSchema.cs" />
+    <Compile Include="DbHelper\DbEngine\DbManager\DbManagerRelationSchema.cs" />
+    <Compile Include="DbHelper\DbEngine\DbManager\DbManagerTableSchema.cs" />
+    <Compile Include="DbHelper\DbEngine\SqlEngine.cs" />
+    <Compile Include="DbHelper\DbHelper.cs" />
+    <Compile Include="DbHelper\GetDate\DbGetDate.cs" />
+    <Compile Include="DbHelper\GetDate\OracleGetDate.cs" />
+    <Compile Include="DbHelper\GetDate\SqlGetDate.cs" />
+    <Compile Include="DbHelper\ReadonlyTypeEnumerable.cs" />
+    <Compile Include="DbHelper\Schema\DataSchema.cs" />
+    <Compile Include="DbHelper\Schema\DBMSType.cs" />
+    <Compile Include="DbHelper\Schema\Objects\ColumnSchema.cs" />
+    <Compile Include="DbHelper\Schema\Objects\ColumnSchemaCollection.cs" />
+    <Compile Include="DbHelper\Schema\Objects\DataType.cs" />
+    <Compile Include="DbHelper\Schema\Objects\DataTypes.cs" />
+    <Compile Include="DbHelper\Schema\Objects\DbObjectSchema.cs" />
+    <Compile Include="DbHelper\Schema\Objects\DbObjectSchemaCollection.cs" />
+    <Compile Include="DbHelper\Schema\Objects\IndexColumnSchema.cs" />
+    <Compile Include="DbHelper\Schema\Objects\IndexColumnSchemaCollection.cs" />
+    <Compile Include="DbHelper\Schema\Objects\IndexSchema.cs" />
+    <Compile Include="DbHelper\Schema\Objects\IndexSchemaCollection.cs" />
+    <Compile Include="DbHelper\Schema\Objects\ParameterSchema.cs" />
+    <Compile Include="DbHelper\Schema\Objects\ParameterSchemaCollection.cs" />
+    <Compile Include="DbHelper\Schema\Objects\ProcedureSchema.cs" />
+    <Compile Include="DbHelper\Schema\Objects\ProcedureSchemaCollection.cs" />
+    <Compile Include="DbHelper\Schema\Objects\RelationField.cs" />
+    <Compile Include="DbHelper\Schema\Objects\RelationFields.cs" />
+    <Compile Include="DbHelper\Schema\Objects\RelationSchema.cs" />
+    <Compile Include="DbHelper\Schema\Objects\RelationSchemaCollection.cs" />
+    <Compile Include="DbHelper\Schema\Objects\SPColumnSchema.cs" />
+    <Compile Include="DbHelper\Schema\Objects\SPColumnSchemaCollection.cs" />
+    <Compile Include="DbHelper\Schema\Objects\TableSchema.cs" />
+    <Compile Include="DbHelper\Schema\Objects\TableSchemaCollection.cs" />
+    <Compile Include="DbHelper\Schema\Objects\TypeMapping.cs" />
+    <Compile Include="DbHelper\Schema\Objects\TypeSchema.cs" />
+    <Compile Include="DbHelper\SqlBuilder\QueryExpression.cs" />
+    <Compile Include="DbHelper\SqlBuilder\QueryField.cs" />
+    <Compile Include="DbHelper\SqlBuilder\QueryFieldCollection.cs" />
+    <Compile Include="DbHelper\SqlBuilder\QueryFrom.cs" />
+    <Compile Include="DbHelper\SqlBuilder\QueryFromCollection.cs" />
+    <Compile Include="DbHelper\SqlBuilder\QueryGroupBy.cs" />
+    <Compile Include="DbHelper\SqlBuilder\QueryGroupByCollection.cs" />
+    <Compile Include="DbHelper\SqlBuilder\QueryOrderBy.cs" />
+    <Compile Include="DbHelper\SqlBuilder\QueryOrderByCollection.cs" />
+    <Compile Include="DbHelper\SqlBuilder\QueryParameter.cs" />
+    <Compile Include="DbHelper\SqlBuilder\QueryParameterCollection .cs" />
+    <Compile Include="DbHelper\SqlBuilder\QueryText.cs" />
+    <Compile Include="DbHelper\SqlBuilder\QueryType.cs" />
+    <Compile Include="DbHelper\SqlBuilder\QueryValue.cs" />
+    <Compile Include="DbHelper\SqlBuilder\QueryValueCollection.cs" />
+    <Compile Include="DbHelper\SqlBuilder\QueryWhere.cs" />
+    <Compile Include="DbHelper\SqlBuilder\QueryWhereCollection.cs" />
+    <Compile Include="DbHelper\String.Extension.cs" />
+    <Compile Include="DbHelper\TypeEnumerable.cs" />
+    <Compile Include="FrmMain.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FrmMain.Designer.cs">
+      <DependentUpon>FrmMain.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="UI\DatabaseControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UI\DatabaseControl.Designer.cs">
+      <DependentUpon>DatabaseControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\SourceComponentControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UI\SourceComponentControl.Designer.cs">
+      <DependentUpon>SourceComponentControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\SrourceFileControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UI\SrourceFileControl.Designer.cs">
+      <DependentUpon>SrourceFileControl.cs</DependentUpon>
+    </Compile>
+    <EmbeddedResource Include="FrmMain.resx">
+      <DependentUpon>FrmMain.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <EmbeddedResource Include="UI\DatabaseControl.resx">
+      <DependentUpon>DatabaseControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\SourceComponentControl.resx">
+      <DependentUpon>SourceComponentControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\SrourceFileControl.resx">
+      <DependentUpon>SrourceFileControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <None Include="packages.config" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

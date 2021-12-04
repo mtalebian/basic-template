@@ -10,7 +10,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace WinFormsApp1
+namespace Db2Code
 {
     public partial class FrmMain : Form
     {
@@ -76,6 +76,15 @@ namespace WinFormsApp1
         {
             try
             {
+                if (databaseControl1.SelectedTable == null)
+                {
+                    cmpAccounts.Visible = false;
+                }
+                else
+                {
+                    cmpAccounts.Visible = true;
+                    cmpAccounts.SetTableSchema(databaseControl1.SelectedTable);
+                }
             }
             catch (Exception ex)
             {
