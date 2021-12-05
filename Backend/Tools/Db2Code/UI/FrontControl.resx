@@ -117,4 +117,15 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="textBox2.Text" xml:space="preserve">
+    <value>import * as bd from "react-basic-design";
+import * as icons from "../../../assets/icons";
+import * as bd2 from "../../../components/forms";
+
+/****/
+useShell().fullWidth(true);
+useShell().setApp(&lt;T&gt;page-name&lt;/T&gt;, null);
+
+/****/</value>
+  </data>
 </root>

@@ -27,11 +27,8 @@ namespace Db2Code
                     var j = File.ReadAllText(SettingsFileName);
                     var dic = JsonConvert.DeserializeObject<Dictionary<string, string>>(j);
                     databaseControl1.ConnectionString = dic["ConnectionString"];
-                    //txtEntitiesFolder.Text = dic["EntitiesFolder"];
-                    //txtIRepositoryFolder.Text = dic["IRepositoryFolder"];
-                    //txtRepositoryFolder.Text = dic["RepositoryFolder"];
-                    //txtUnitOfWorkFile.Text = dic["UnitOfWorkFile"];
-                    //txtDbContextFile.Text = dic["DbContextFile"];
+                    cmp.Namespace = dic["Namespace"];
+                    cmp.Root = dic["Root"];
                 }
                 catch (Exception ex)
                 {
@@ -46,11 +43,9 @@ namespace Db2Code
             {
                 var dic = new Dictionary<string, string>();
                 dic["ConnectionString"] = databaseControl1.ConnectionString;
-                //dic["EntitiesFolder"] = txtEntitiesFolder.Text;
-                //dic["IRepositoryFolder"] = txtIRepositoryFolder.Text;
-                //dic["RepositoryFolder"] = txtRepositoryFolder.Text;
-                //dic["UnitOfWorkFile"] = txtUnitOfWorkFile.Text;
-                //dic["DbContextFile"] = txtDbContextFile.Text;
+                dic["Namespace"] = cmp.Namespace;
+                dic["Root"] = cmp.Root;
+
                 var j = JsonConvert.SerializeObject(dic);
                 File.WriteAllText(SettingsFileName, j);
                 base.OnFormClosed(e);
@@ -78,12 +73,12 @@ namespace Db2Code
             {
                 if (databaseControl1.SelectedTable == null)
                 {
-                    cmpAccounts.Visible = false;
+                    cmp.Visible = false;
                 }
                 else
                 {
-                    cmpAccounts.Visible = true;
-                    cmpAccounts.SetTableSchema(databaseControl1.SelectedTable);
+                    cmp.Visible = true;
+                    cmp.SetTableSchema(databaseControl1.SelectedTable);
                 }
             }
             catch (Exception ex)

@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 
@@ -88,7 +89,7 @@ namespace Db2Code
                     last_was_pk = false;
                     sb.AppendLine("");
                 }
-                var typ = GetTypeName(c.GetColumnType());
+                var typ = GetCSharpTypeName(c.GetColumnType(), c.IsNullable);
                 sb.AppendLine($"        public {typ} {c.Name} {{ get; set; }}");
             }
 
@@ -111,7 +112,6 @@ namespace Db2Code
 
             foreach (var r in table.Relations)
             {
-
                 sb.AppendLine("");
                 sb.AppendLine("        [IgnoreMap]");
                 sb.AppendLine("        public virtual ICollection<" + GetSingularName(r.Table2.Name) + "> " + r.Table2.Name + " { get; set; }");
@@ -129,12 +129,17 @@ namespace Db2Code
             UpdateStatus();
         }
 
-        private object GetTypeName(Type type)
+        private object GetCSharpTypeName(Type type, bool nullable)
         {
+            var q = nullable ? "?" : "";
             if (type == typeof(string)) return "string";
-            if (type == typeof(int)) return "int";
-            if (type == typeof(DateTime)) return "DateTime";
-            return type.Name;
+            if (type == typeof(int)) return "int" + q;
+            if (type == typeof(Int64)) return "long" + q;
+            if (type == typeof(Boolean)) return "bool" + q;
+            if (type == typeof(DateTime)) return "DateTime" + q;
+            if (type == typeof(byte)) return "byte" + q;
+            if (type == typeof(byte[])) return "byte[]" + q;
+            return type.Name + q;
         }
 
 
@@ -194,17 +199,22 @@ namespace Db2Code
         public void GenerateRepository(TableSchema table, string nameSpaceName)
         {
             var singular = GetSingularName(table.Name);
+            var singularNamespace = GetSingularName(nameSpaceName);
             FileName = singular + "Repository.cs";
             bOpen.Text = FileName;
 
             //-------
             var sb = new StringBuilder();
+            sb.AppendLine("using {}.Core;".Replace("{}", nameSpaceName));
             sb.AppendLine("using Common.Data;");
             sb.AppendLine("");
             sb.AppendLine("namespace {}.Data".Replace("{}", nameSpaceName));
             sb.AppendLine("{");
-            sb.AppendLine("    public class " + singular + "Repository : Repository<" + singular + ">, I" + singular + "RepositoryIRepository");
+            sb.AppendLine("    public class " + singular + "Repository : Repository<" + singular + ">, I" + singular + "Repository");
             sb.AppendLine("    {");
+            sb.AppendLine("        public " + singular + "Repository(" + singularNamespace + "DbContext context) : base(context)");
+            sb.AppendLine("        {");
+            sb.AppendLine("        }");
             sb.AppendLine("    }");
             sb.AppendLine("}");
 
@@ -222,7 +232,7 @@ namespace Db2Code
 
             //-------
             var sb = new StringBuilder();
-            sb.AppendLine("using {}.Core".Replace("{}", nameSpaceName));
+            sb.AppendLine("using {}.Core;".Replace("{}", nameSpaceName));
             sb.AppendLine("using Microsoft.EntityFrameworkCore;");
             sb.AppendLine("");
             sb.AppendLine("namespace {}.Data".Replace("{}", nameSpaceName));
@@ -231,19 +241,58 @@ namespace Db2Code
             sb.AppendLine("    {");
             sb.AppendLine("        public " + singular + "Config(ModelBuilder modelBuilder)");
             sb.AppendLine("        {");
-            sb.AppendLine("            var helper = new ConfigHelper<Application>(modelBuilder, \"" + table.ToString() + "\");");
-            foreach (var c in table.Columns)
-            {
-                if (c.IsPK)
-                {
-                    sb.AppendLine("            helper.HasKey(x => x.Id);");
-                }
-            }
+            sb.AppendLine("            var helper = new ConfigHelper<" + singular + ">(modelBuilder, \"" + table.ToString() + "\");");
+
+            var keys = table.Columns.Where(x => x.IsPK).Select(x => x.Name).ToArray();
+            if (keys.Length == 1)
+                sb.AppendLine("            helper.HasKey(x => x." + keys[0] + ");");
+            else if (keys.Length > 1)
+                sb.AppendLine("            helper.HasKey(x => new { x." + string.Join(", x.", keys) + " });");
 
             foreach (var c in table.Columns)
             {
-                sb.AppendLine("            helper." + c.TypeSchema.InternalType.Name + "(x => x." + c.Name + ", " + c.Length + ", " + (!c.IsNullable).ToJson() + ");");
+                sb.AppendLine("            helper.IsAutoIncrement(x => x." + c.Name + ");");
+
+                var typ = c.TypeSchema.InternalType.Name;
+                if (typ.eq("char") || typ.eq("nchar") || typ.eq("varchar") || typ.eq("nvarchar"))
+                {
+                    sb.AppendLine("            helper." + typ + "(x => x." + c.Name + ", " + c.Length + ", " + (!c.IsNullable).ToJson() + ");");
+                }
+                else
+                {
+                    sb.AppendLine("            helper.IsRequired(x => x." + c.Name + ");");
+                }
             }
+
+
+            foreach (var tb in table.Schema.Tables)
+            {
+                if (table.ToString() != tb.ToString())
+                {
+                    foreach (var rel in tb.Relations)
+                    {
+                        if (table.ToString() == rel.Table2.ToString())
+                        {
+                            var singular1 = GetSingularName(rel.Table1.Name);
+                            sb.AppendLine("");
+                            sb.AppendLine("            helper.Entity()");
+                            sb.AppendLine("               .HasOne(x => x." + singular1 + ")");
+                            sb.AppendLine("               .WithMany(x => x." + table.Name + ")");
+                            if (rel.Conditions.Count == 1)
+                            {
+                                sb.AppendLine("               .HasForeignKey(x => x." + rel.Conditions[0].Column2.Name + ");");
+                            }
+                            else
+                            {
+                                var rel_keys = rel.Conditions.Select(x => x.Column2.Name).ToArray();
+                                sb.AppendLine("               .HasForeignKey(x => new { x." + string.Join(", x.", rel_keys) + " });");
+                            }
+                        }
+                    }
+                }
+            }
+
+
 
             sb.AppendLine("        }");
             sb.AppendLine("    }");
@@ -257,6 +306,75 @@ namespace Db2Code
 
         public void GenerateUnitOfWork(TableSchema table, string nameSpaceName)
         {
+            var singular = GetSingularName(table.Name);
+            var singularNamespace = GetSingularName(nameSpaceName);
+            FileName = singularNamespace + "UnitOfWork.cs";
+            bOpen.Text = FileName;
+
+            //-------
+            var sb = new StringBuilder();
+            sb.AppendLine("using {}.Core;".Replace("{}", nameSpaceName));
+            sb.AppendLine("using Common.Data;");
+            sb.AppendLine("");
+            sb.AppendLine("namespace {}.Data".Replace("{}", nameSpaceName));
+            sb.AppendLine("{");
+            sb.AppendLine("    public class " + singularNamespace + " : UnitOfWork, I" + singularNamespace + "UnitOfWork");
+            sb.AppendLine("    {");
+            sb.AppendLine("        public I" + singular + "Repository " + table.Name + " { get; }");
+            sb.AppendLine("");
+            sb.AppendLine("");
+            sb.AppendLine("        public " + singularNamespace + "(" + singularNamespace + "DbContext context) : base(context)");
+            sb.AppendLine("        {");
+            sb.AppendLine("            " + table.Name + " = new " + singular + "Repository(context);");
+            sb.AppendLine("        }");
+            sb.AppendLine("    }");
+            sb.AppendLine("}");
+
+            var code = sb.ToString();
+            txtCode.Text = code;
+
+            lbStatus.Visible = false;
+        }
+
+
+        public void GenerateDbContext(TableSchema table, string nameSpaceName)
+        {
+            var singular = GetSingularName(table.Name);
+            var singularNamespace = GetSingularName(nameSpaceName);
+            FileName = singularNamespace + "DbContext.cs";
+            bOpen.Text = FileName;
+
+            //-------
+            var sb = new StringBuilder();
+            sb.AppendLine("using {}.Core;".Replace("{}", nameSpaceName));
+            sb.AppendLine("using Common.Data;");
+            sb.AppendLine("using Common.Security;");
+            sb.AppendLine("using Microsoft.EntityFrameworkCore;");
+            sb.AppendLine("using Microsoft.Extensions.Options;");
+            sb.AppendLine("");
+            sb.AppendLine("namespace {}.Data".Replace("{}", nameSpaceName));
+            sb.AppendLine("{");
+            sb.AppendLine("    public class " + singularNamespace + "DbContext : DbContext");
+            sb.AppendLine("    {");
+            sb.AppendLine("");
+            sb.AppendLine("        public " + singularNamespace + "DbContext(DbContextOptions<" + singularNamespace + "DbContext> options, ICurrentUserNameService currentUserNameService)");
+            sb.AppendLine("            : base(options, currentUserNameService)");
+            sb.AppendLine("        {");
+            sb.AppendLine("        }");
+            sb.AppendLine("");
+            sb.AppendLine("        protected override void OnModelCreating(ModelBuilder modelBuilder)");
+            sb.AppendLine("        {");
+            sb.AppendLine("            base.OnModelCreating(modelBuilder);");
+            sb.AppendLine("");
+            sb.AppendLine("            new " + singular + "Config(modelBuilder);");
+            sb.AppendLine("        }");
+            sb.AppendLine("    }");
+            sb.AppendLine("}");
+
+            var code = sb.ToString();
+            txtCode.Text = code;
+
+            lbStatus.Visible = false;
         }
 
     }

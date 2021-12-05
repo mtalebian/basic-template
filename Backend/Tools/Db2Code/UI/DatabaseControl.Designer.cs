@@ -40,10 +40,11 @@ namespace Db2Code
             // treeView1
             // 
             this.treeView1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.treeView1.Location = new System.Drawing.Point(0, 30);
+            this.treeView1.HideSelection = false;
+            this.treeView1.Location = new System.Drawing.Point(0, 26);
             this.treeView1.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.treeView1.Name = "treeView1";
-            this.treeView1.Size = new System.Drawing.Size(571, 394);
+            this.treeView1.Size = new System.Drawing.Size(489, 341);
             this.treeView1.TabIndex = 0;
             this.treeView1.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeView1_AfterSelect);
             // 
@@ -56,7 +57,7 @@ namespace Db2Code
             this.panel1.Location = new System.Drawing.Point(0, 0);
             this.panel1.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(571, 30);
+            this.panel1.Size = new System.Drawing.Size(489, 26);
             this.panel1.TabIndex = 1;
             // 
             // txtConnection
@@ -69,18 +70,18 @@ namespace Db2Code
                 "=SSPI",
             "Server=DBSO1D1TS05; Database=Logistics; persist security info=True; Integrated Se" +
                 "curity=SSPI"});
-            this.txtConnection.Location = new System.Drawing.Point(86, 3);
+            this.txtConnection.Location = new System.Drawing.Point(74, 3);
             this.txtConnection.Name = "txtConnection";
-            this.txtConnection.Size = new System.Drawing.Size(429, 23);
+            this.txtConnection.Size = new System.Drawing.Size(368, 21);
             this.txtConnection.TabIndex = 2;
             // 
             // bGo
             // 
             this.bGo.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.bGo.Location = new System.Drawing.Point(523, 2);
+            this.bGo.Location = new System.Drawing.Point(448, 2);
             this.bGo.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.bGo.Name = "bGo";
-            this.bGo.Size = new System.Drawing.Size(43, 22);
+            this.bGo.Size = new System.Drawing.Size(37, 19);
             this.bGo.TabIndex = 2;
             this.bGo.Text = "GO";
             this.bGo.UseVisualStyleBackColor = true;
@@ -89,21 +90,21 @@ namespace Db2Code
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(10, 6);
+            this.label1.Location = new System.Drawing.Point(9, 5);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(69, 15);
+            this.label1.Size = new System.Drawing.Size(61, 13);
             this.label1.TabIndex = 0;
             this.label1.Text = "Connection";
             // 
             // DatabaseControl
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.treeView1);
             this.Controls.Add(this.panel1);
             this.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.Name = "DatabaseControl";
-            this.Size = new System.Drawing.Size(571, 424);
+            this.Size = new System.Drawing.Size(489, 367);
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
             this.ResumeLayout(false);

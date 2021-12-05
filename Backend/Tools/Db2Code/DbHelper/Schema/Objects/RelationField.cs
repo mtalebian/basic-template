@@ -23,7 +23,7 @@ namespace Common.Data.Schema
 
         public override string ToString()
         {
-            return Column1.ToString() + "=" + Column1.ToString();
+            return Column1.ToString() + "=" + Column2.ToString();
         }
     }
 

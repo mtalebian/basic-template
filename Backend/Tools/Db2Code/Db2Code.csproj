@@ -124,17 +124,23 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="UI\FrontControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UI\FrontControl.Designer.cs">
+      <DependentUpon>FrontControl.cs</DependentUpon>
+    </Compile>
     <Compile Include="UI\DatabaseControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="UI\DatabaseControl.Designer.cs">
       <DependentUpon>DatabaseControl.cs</DependentUpon>
     </Compile>
-    <Compile Include="UI\SourceComponentControl.cs">
+    <Compile Include="UI\ComponentControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="UI\SourceComponentControl.Designer.cs">
-      <DependentUpon>SourceComponentControl.cs</DependentUpon>
+    <Compile Include="UI\ComponentControl.Designer.cs">
+      <DependentUpon>ComponentControl.cs</DependentUpon>
     </Compile>
     <Compile Include="UI\SrourceFileControl.cs">
       <SubType>UserControl</SubType>
@@ -157,8 +163,11 @@
     <EmbeddedResource Include="UI\DatabaseControl.resx">
       <DependentUpon>DatabaseControl.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="UI\SourceComponentControl.resx">
-      <DependentUpon>SourceComponentControl.cs</DependentUpon>
+    <EmbeddedResource Include="UI\ComponentControl.resx">
+      <DependentUpon>ComponentControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\FrontControl.resx">
+      <DependentUpon>FrontControl.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="UI\SrourceFileControl.resx">
       <DependentUpon>SrourceFileControl.cs</DependentUpon>
