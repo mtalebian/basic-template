@@ -29,6 +29,7 @@ namespace Db2Code
             sfConfig.GenerateConfig(table, txtNamespace.Text);
             sfUnitOfWork.GenerateUnitOfWork(table, txtNamespace.Text);
             sfDbContext.GenerateDbContext(table, txtNamespace.Text);
+            sfDTO.GenerateDTO(table, txtNamespace.Text);
             txtNamespace_TextChanged(null, null);
         }
 
@@ -41,6 +42,7 @@ namespace Db2Code
             sfConfig.Folder = Path.Combine(root, txtNamespace.Text + ".Data", "Configurations");
             sfUnitOfWork.Folder = Path.Combine(root, txtNamespace.Text + ".Data");
             sfDbContext.Folder = Path.Combine(root, txtNamespace.Text + ".Data");
+            sfDTO.Folder = Path.Combine(root, txtNamespace.Text + ".Controllers", "DTO");
         }
     }
 }

@@ -356,29 +356,35 @@ namespace Common.Data.Schema
         {
             using (DataTable tb = new DataTable())
             {
-                dbh.Fill(tb, "exec SP_FKeys '" + table.Name + "', '" + table.Owner + "'", CommandType.Text);
-                dbh.Close();
-                for (int i = 0; i < tb.Rows.Count; ++i)
+                try
                 {
-                    string FKName = (string)tb.Rows[i]["FK_Name"];
-                    string FKTable_Owner = (string)tb.Rows[i]["FKTABLE_OWNER"];
-                    string FKTable_Name = (string)tb.Rows[i]["FKTABLE_Name"];
-                    TableSchema FKTable = Tables.Find(FKTable_Owner, FKTable_Name);
-                    if (FKTable != null)
+                    dbh.Fill(tb, "exec SP_FKeys '" + table.Name + "', '" + table.Owner + "'", CommandType.Text);
+                    dbh.Close();
+                    for (int i = 0; i < tb.Rows.Count; ++i)
                     {
-                        RelationSchema rs = table.Relations.Find(FKName);
-                        if (rs == null)
+                        string FKName = (string)tb.Rows[i]["FK_Name"];
+                        string FKTable_Owner = (string)tb.Rows[i]["FKTABLE_OWNER"];
+                        string FKTable_Name = (string)tb.Rows[i]["FKTABLE_Name"];
+                        TableSchema FKTable = Tables.Find(FKTable_Owner, FKTable_Name);
+                        if (FKTable != null)
                         {
-                            rs = new RelationSchema(FKName, table, FKTable);
-                            table.Relations.Add(rs);
+                            RelationSchema rs = table.Relations.Find(FKName);
+                            if (rs == null)
+                            {
+                                rs = new RelationSchema(FKName, table, FKTable);
+                                table.Relations.Add(rs);
+                            }
+                            string PKCOLUMN_Name = (string)tb.Rows[i]["PKCOLUMN_Name"];
+                            string FKCOLUMN_Name = (string)tb.Rows[i]["FKCOLUMN_Name"];
+                            ColumnSchema PKCOLUMN = table.Columns.Find(PKCOLUMN_Name);
+                            ColumnSchema FKCOLUMN = FKTable.Columns.Find(FKCOLUMN_Name);
+                            if (PKCOLUMN != null && FKCOLUMN != null)
+                                rs.Conditions.Add(new RelationField(table, PKCOLUMN, FKTable, FKCOLUMN));
                         }
-                        string PKCOLUMN_Name = (string)tb.Rows[i]["PKCOLUMN_Name"];
-                        string FKCOLUMN_Name = (string)tb.Rows[i]["FKCOLUMN_Name"];
-                        ColumnSchema PKCOLUMN = table.Columns.Find(PKCOLUMN_Name);
-                        ColumnSchema FKCOLUMN = FKTable.Columns.Find(FKCOLUMN_Name);
-                        if (PKCOLUMN != null && FKCOLUMN != null)
-                            rs.Conditions.Add(new RelationField(table, PKCOLUMN, FKTable, FKCOLUMN));
                     }
+                }
+                catch
+                {
                 }
             }
         }

@@ -54,7 +54,7 @@ namespace Common.Data.Schema
             Add("Guid", DataTypes.Guid);
             Add("Object", DataTypes.Object);
 
-            Add("tinyint", DataTypes.SByte);
+            Add("tinyint", DataTypes.Byte);
             Add("short", DataTypes.SmallInt);
             Add("number", DataTypes.Int);
             Add("int16", DataTypes.Int);

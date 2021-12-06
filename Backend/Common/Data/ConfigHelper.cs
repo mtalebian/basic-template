@@ -5,7 +5,7 @@ using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq.Expressions;
 
-namespace Accounts.Data
+namespace Common.Data
 {
     public class ConfigHelper<T> where T : class
     {

@@ -57,16 +57,54 @@ namespace Db2Code
 
         private void bCreateIfNew_Click(object sender, EventArgs e)
         {
-            if (File.Exists(FullName))
+            try
             {
-                MessageBox.Show("ERROR: File exists!", "ERROR", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
+                if (File.Exists(FullName))
+                {
+                    MessageBox.Show("ERROR: File exists!", "ERROR", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+                File.WriteAllText(FullName, txtCode.Text);
+                MessageBox.Show("Copied");
             }
-            File.WriteAllText(FullName, txtCode.Text);
-            MessageBox.Show("Copied");
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
 
 
+        public void GenerateDTO(TableSchema table, string nameSpaceName)
+        {
+            FileName = GetSingularName(table.Name) + "DTO.cs";
+            bOpen.Text = FileName;
+            //-------
+            var sb = new StringBuilder();
+            sb.AppendLine("using System;");
+            sb.AppendLine("");
+            sb.AppendLine("namespace {}.Controllers".Replace("{}", nameSpaceName));
+            sb.AppendLine("{");
+            sb.AppendLine("    public class " + GetSingularName(table.Name) + "DTO");
+            sb.AppendLine("    {");
+
+            var last_was_pk = true;
+            foreach (var c in table.Columns)
+            {
+                if (!c.IsPK && last_was_pk)
+                {
+                    last_was_pk = false;
+                    sb.AppendLine("");
+                }
+                var typ = GetCSharpTypeName(c.GetColumnType(), c.IsNullable);
+                sb.AppendLine($"        public {typ} {c.Name} {{ get; set; }}");
+            }
+
+            sb.AppendLine("    }");
+            sb.AppendLine("}");
+            var code = sb.ToString();
+            txtCode.Text = code;
+            UpdateStatus();
+        }
 
         public void GenerateEntity(TableSchema table, string nameSpaceName)
         {
@@ -133,6 +171,7 @@ namespace Db2Code
         {
             var q = nullable ? "?" : "";
             if (type == typeof(string)) return "string";
+            if (type == typeof(char)) return "string";
             if (type == typeof(int)) return "int" + q;
             if (type == typeof(Int64)) return "long" + q;
             if (type == typeof(Boolean)) return "bool" + q;
@@ -232,6 +271,7 @@ namespace Db2Code
 
             //-------
             var sb = new StringBuilder();
+            sb.AppendLine("using Common.Data;");
             sb.AppendLine("using {}.Core;".Replace("{}", nameSpaceName));
             sb.AppendLine("using Microsoft.EntityFrameworkCore;");
             sb.AppendLine("");
@@ -251,14 +291,17 @@ namespace Db2Code
 
             foreach (var c in table.Columns)
             {
-                sb.AppendLine("            helper.IsAutoIncrement(x => x." + c.Name + ");");
+                if (c.IsAutoIncrement)
+                {
+                    sb.AppendLine("            helper.IsAutoIncrement(x => x." + c.Name + ");");
+                }
 
                 var typ = c.TypeSchema.InternalType.Name;
                 if (typ.eq("char") || typ.eq("nchar") || typ.eq("varchar") || typ.eq("nvarchar"))
                 {
                     sb.AppendLine("            helper." + typ + "(x => x." + c.Name + ", " + c.Length + ", " + (!c.IsNullable).ToJson() + ");");
                 }
-                else
+                else if (!c.IsNullable)
                 {
                     sb.AppendLine("            helper.IsRequired(x => x." + c.Name + ");");
                 }
